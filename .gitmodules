@@ -1,0 +1,10 @@
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://www.github.com/ocornut/imgui
+	branch = docking
+[submodule "lib/glfw"]
+	path = lib/glfw
+	url = https://github.com/glfw/glfw
+[submodule "lib/nfd"]
+	path = lib/nfd
+	url = git@github.com:mlabbe/nativefiledialog
