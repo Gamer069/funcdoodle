@@ -6,7 +6,7 @@
 
 namespace FuncDoodle {
     typedef struct {
-        unsigned char r = 0, g = 0, b = 0;
+        unsigned char r = 255, g = 255, b = 255;
     } Col;
     class ImageArray {
         public:
