@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(FuncDoodle C CXX OBJC)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -14,6 +14,10 @@ set(CMAKE_BUILD_TYPE Release)
 set(GLAD_SOURCES
     lib/glad/src/glad.c
 )
+
+file(GLOB OPENAL_SOURCES "lib/openal-soft/**.cpp" "lib/openal-soft/core/**.cpp" "lib/openal-soft/alc/**.cpp" "lib/openal-soft/al/**.cpp")
+
+message(STATUS ${OPENAL_SOURCES})
 
 # ImGui sources
 set(IMGUI_SOURCES
@@ -29,6 +33,7 @@ set(IMGUI_SOURCES
 set(NFD_SOURCES lib/nfd/src/nfd_cocoa.m lib/nfd/src/nfd_common.c)
 
 add_subdirectory(lib/glfw)
+add_subdirectory(lib/openal-soft)
 
 file(GLOB SRC "src/*.cc")
 
@@ -37,17 +42,21 @@ add_executable(FuncDoodle
     ${GLAD_SOURCES}
     ${IMGUI_SOURCES}
     ${NFD_SOURCES}
+    ${OPENAL_SOURCES}
     ${SRC}
 )
 
 # Include directories
 target_include_directories(FuncDoodle PRIVATE
     lib/glfw/include/
+    lib/openal-soft/include
     lib/imgui
     lib/imgui/backends
     lib/glad/include
     lib/nfd/src/include
 )
+
+include_directories(lib/openal-soft/common lib/openal-soft/alc lib/openal-soft/al lib/openal-soft)
 
 # Link libraries based on platform
 if(APPLE)
@@ -67,10 +76,10 @@ endif()
 
 # Build options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(FuncDoodle PRIVATE DEBUG)
+    target_compile_definitions(FuncDoodle PRIVATE DEBUG ALSOFT_EAX)
     target_compile_options(FuncDoodle PRIVATE -g)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(FuncDoodle PRIVATE NDEBUG)
+    target_compile_definitions(FuncDoodle PRIVATE NDEBUG ALSOFT_EAX)
     target_compile_options(FuncDoodle PRIVATE -O3)
 endif()
 

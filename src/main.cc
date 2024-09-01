@@ -4,6 +4,8 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 #include <stdio.h>
 #include "App.h"
 
@@ -55,6 +57,16 @@ int main(int argc, char** argv) {
     // Setup Platform/Renderer bindings
     ImGui_ImplGlfw_InitForOpenGL(win, true);
     ImGui_ImplOpenGL3_Init("#version 410");
+
+    ALCdevice* soundDevice = alcOpenDevice(nullptr);
+    if (!soundDevice) {
+        std::cerr << "Failed to open openal device" << std::endl;
+    }
+    ALCcontext* context = alcCreateContext(soundDevice, nullptr);
+    if (!alcMakeContextCurrent(context)) {
+        std::cerr << "Failed to make the openal audio context current" << std::endl;
+        alcCloseDevice(soundDevice);
+    }
 
     FuncDoodle::Application* application = new FuncDoodle::Application();
 
