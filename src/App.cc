@@ -10,7 +10,8 @@
 
 namespace FuncDoodle {
     // TODO: temporary m_FilePath in application
-    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("", 900, 900, "", 0, "")), m_Manager(new AnimationManager(nullptr)) {}
+    // ;.............mnv,.
+    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("", 1, 1, "", 0, "")), m_Manager(new AnimationManager(nullptr)) { std::cout << "WHAT" << std::endl; }
     Application::~Application() {}
     void Application::RenderImGui() {
         if (ImGui::BeginMainMenuBar()) {
@@ -45,8 +46,8 @@ namespace FuncDoodle {
 
         if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
             char name[256] = "";
-            int width = 0;
-            int height = 0;
+            int width = 32;
+            int height = 32;
             char author[100] = "";
             int fps = 0;
             char desc[512] = "";
@@ -58,25 +59,33 @@ namespace FuncDoodle {
                 fps = m_CacheProj->AnimFPS();
                 strcpy(desc, m_CacheProj->AnimDesc());
             }
-            ImGui::InputText("Name", name, sizeof(name));
-            ImGui::InputInt("Width", &width);
-            ImGui::InputInt("Height", &height);
-            ImGui::InputText("Author", author, sizeof(name));
-            ImGui::InputInt("FPS", &fps);
-            ImGui::InputText("Description", desc, sizeof(name));
-
-            m_CacheProj->SetAnimName(name);
-            m_CacheProj->SetAnimWidth(width);
-            m_CacheProj->SetAnimHeight(height);
-            m_CacheProj->SetAnimAuthor(author);
-            m_CacheProj->SetAnimFPS(fps);
-            m_CacheProj->SetAnimDesc(desc);
+            if (ImGui::InputText("Name", name, sizeof(name))) {
+                m_CacheProj->SetAnimName(name);
+            }
+            if (ImGui::InputInt("Width", &width)) {
+                m_CacheProj->SetAnimWidth(width);
+            }
+            if (ImGui::InputInt("Height", &height)) {
+                m_CacheProj->SetAnimHeight(height);
+            }
+            if (ImGui::InputText("Author", author, sizeof(name))) {
+                m_CacheProj->SetAnimAuthor(author);
+            }
+            if (ImGui::InputInt("FPS", &fps)) {
+                m_CacheProj->SetAnimFPS(fps);
+            }
+            if (ImGui::InputText("Description", desc, sizeof(name))) {
+                m_CacheProj->SetAnimDesc(desc);
+            }
 
             if (ImGui::Button("Close")) { m_NewProjOpen = false; ImGui::CloseCurrentPopup(); }
             if (ImGui::Button("OK")) {
+                std::cout << "Width: " << m_CacheProj->AnimWidth() << ", Height: " << m_CacheProj->AnimHeight() << std::endl;
                 m_CurrentProj = m_CacheProj;
                 m_Manager->SetProj(m_CurrentProj);
                 m_NewProjOpen = false;
+
+                std::cout << "Width: " << m_CurrentProj->AnimWidth() << ", Height: " << m_CurrentProj->AnimHeight() << std::endl;
             }
             ImGui::EndPopup();
         }

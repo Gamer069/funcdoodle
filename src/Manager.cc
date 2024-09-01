@@ -13,7 +13,7 @@
 #include <random>
 
 namespace FuncDoodle {
-    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0) {}
+    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_FrameRenderer(new FrameRenderer(nullptr, true)) {}
     AnimationManager::~AnimationManager() {}
     void AnimationManager::RenderTimeline() {
         // Set scrollbar size (thickness)
@@ -68,9 +68,9 @@ namespace FuncDoodle {
             if (m_SelectedFrame == i) {
                 drawList->AddRect(ImVec2(topLeft.x - 3, topLeft.y - 3), ImVec2(bottomRight.x + 3, bottomRight.y + 3), IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 5.0f);
                 const auto frames = m_Proj->AnimFrames();
-                const auto frame = frames->get(i);
-                FrameRenderer* renderer = new FrameRenderer(frame);
-                renderer->RenderFrame();
+                auto frame = frames->get(i);
+                m_FrameRenderer->SetFrame(&frame);
+                m_FrameRenderer->RenderFrame();
             }
             topLeft.x += frameWidth + padding;
             bottomRight.x += frameWidth + padding;

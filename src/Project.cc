@@ -30,7 +30,6 @@ namespace FuncDoodle {
         strcpy(m_Desc, desc);
         m_Frames = LongIndexArray<Frame>();
         m_Frames.push_back(Frame(m_Width, m_Height));
-        m_Frames.push_back(Frame(m_Width, m_Height));
     }
     ProjectFile::~ProjectFile() {}
 
@@ -45,6 +44,9 @@ namespace FuncDoodle {
         return m_Width;
     }
     void ProjectFile::SetAnimWidth(int width) {
+        for (long i = 0; i < AnimFrameCount(); ++i) {
+            m_Frames.get(i).SetWidth(width);
+        }
         m_Width = width;
     }
 
@@ -52,6 +54,9 @@ namespace FuncDoodle {
         return m_Height;
     }
     void ProjectFile::SetAnimHeight(int height) {
+        for (long i = 0; i < AnimFrameCount(); ++i) {
+            m_Frames.get(i).SetHeight(height);
+        }
         m_Height = height;
     }
 

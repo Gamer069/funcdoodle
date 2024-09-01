@@ -1,1 +1,3 @@
-Implement OpenAL, fix errors
+Add tool manager: have an enum of all the tools. Render a radio button for each tool. For now therell be only one tool: pencil.
+Add more tools... eraser, etc.
+Implement OpenAL for sounds.

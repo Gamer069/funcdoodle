@@ -23,6 +23,16 @@ namespace FuncDoodle {
                     }
                 }
 
+            void RedoColorAdjustment() {
+                data.resize(width * height);
+
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        set(x,y,Col());
+                    }
+                }
+            }
+
             // Set the color at the specified (x, y) position
             void set(int x, int y, const Col& color) {
                 if (x < 0 || x >= width || y < 0 || y >= height) {
@@ -43,8 +53,16 @@ namespace FuncDoodle {
                 return width;
             }
 
+            void setWidth(int width) {
+                this->width = width;
+            }
+
             int getHeight() const {
                 return height;
+            }
+
+            void setHeight(int height) {
+                this->height = height;
             }
 
         private:
@@ -57,11 +75,25 @@ namespace FuncDoodle {
             Frame() : m_Pixels(nullptr) {};
             Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
             ~Frame() {};
-            const ImageArray* Pixels() const {
+            __inline__ const ImageArray* Pixels() const {
                 return m_Pixels;
             }
             void SetPixel(int x, int y, Col px) {
                 m_Pixels->set(x, y, px);
+            }
+            __inline__ const int Width() {
+                return m_Pixels->getWidth();
+            }
+            void SetWidth(int width) {
+                m_Pixels->setWidth(width);
+                m_Pixels->RedoColorAdjustment();
+            }
+            __inline__ const int Height() {
+                return m_Pixels->getHeight();
+            }
+            void SetHeight(int height) {
+                m_Pixels->setHeight(height);
+                m_Pixels->RedoColorAdjustment();
             }
         private:
             ImageArray* m_Pixels;
