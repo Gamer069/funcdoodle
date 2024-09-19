@@ -11,7 +11,7 @@
 namespace FuncDoodle {
     // TODO: temporary m_FilePath in application
     // ;.............mnv,.
-    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("", 1, 1, "", 0, "")), m_Manager(new AnimationManager(nullptr)) { std::cout << "WHAT" << std::endl; }
+    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf")), m_Manager(new AnimationManager(nullptr)) { std::cout << "WHAT" << std::endl; }
     Application::~Application() {}
     void Application::RenderImGui() {
         if (ImGui::BeginMainMenuBar()) {
@@ -135,6 +135,12 @@ namespace FuncDoodle {
         std::cout << "Reading project file: " << m_FilePath << std::endl;
 
         std::cout << "WARNING: READING PROJECT FILES COMING SOON NOT YET SUPPORTED" << std::endl;
+        
+        if (m_CurrentProj == nullptr) {
+            m_CurrentProj = new ProjectFile("", 1, 1, "", 0, "");
+        }
+
+        m_CurrentProj->ReadAndPopulate(m_FilePath);
     }
     void Application::SaveProjectFile() {
         if (m_FilePath == "???") {

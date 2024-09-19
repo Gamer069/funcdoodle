@@ -4,10 +4,74 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <portaudio.h>
 #include <stdio.h>
+
+#include <cmath>
+
 #include "App.h"
+
+float SAMPLE_RATE = 44100.0;
+
+std::vector<double> notes = {
+    261.63, // C4
+    293.66, // D4
+    329.63, // E4
+    349.23, // F4
+    392.00, // G4
+    440.00, // A4
+    493.88,  // B4
+    523.25, // C5
+};
+
+enum Note {
+    C4, D4, E4, F4, G4, A4, B4, C5
+};
+
+std::vector<std::pair<Note, double>> melody = {
+};
+
+static int AudioCB(const void* inputBuffer, void* outputBuffer,
+                         unsigned long framesPerBuffer,
+                         const PaStreamCallbackTimeInfo* timeInfo,
+                         PaStreamCallbackFlags statusFlags,
+                         void* userData) {
+    float* out = static_cast<float*>(outputBuffer);
+    static double phase = 0.0;
+    static size_t noteIndex = 0;
+    static double phaseIncrement = 0.0;
+    static double noteDuration = 0.0;
+    static double noteTimer = 0.0;
+
+    if (noteIndex >= melody.size()) {
+        // End of melody
+        return paComplete;
+    }
+
+    double frequency = notes[melody[noteIndex].first];
+    phaseIncrement = 2.0 * 3.141592653589793238462643383279502884719 * frequency / SAMPLE_RATE;
+    noteDuration = melody[noteIndex].second * SAMPLE_RATE;
+    noteTimer += framesPerBuffer;
+
+    for (unsigned long i = 0; i < framesPerBuffer; ++i) {
+        if (noteTimer >= noteDuration) {
+            noteTimer = 0.0;
+            noteIndex++;
+            if (noteIndex < melody.size()) {
+                frequency = notes[melody[noteIndex].first];
+                phaseIncrement = 2.0 * 3.141592653589793238462643383279502884719 * frequency / SAMPLE_RATE;
+                noteDuration = melody[noteIndex].second * SAMPLE_RATE;
+            }
+        }
+        out[i] = static_cast<float>(std::sin(phase));
+        phase += phaseIncrement;
+        if (phase >= 2.0 * 3.141592653589793238462643383279502884719) {
+            phase -= 2.0 * 3.141592653589793238462643383279502884719;
+        }
+    }
+
+    return paContinue;
+}
 
 int main(int argc, char** argv) {
     if (!glfwInit()) {
@@ -58,14 +122,22 @@ int main(int argc, char** argv) {
     ImGui_ImplGlfw_InitForOpenGL(win, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 
-    ALCdevice* soundDevice = alcOpenDevice(nullptr);
-    if (!soundDevice) {
-        std::cerr << "Failed to open openal device" << std::endl;
+    PaStream* stream;
+
+    PaError err = Pa_Initialize();
+    if (err != paNoError) {
+        std::cerr << "Failed to initialize port audio: " << Pa_GetErrorText(err) << std::endl;
+        exit(-1);
     }
-    ALCcontext* context = alcCreateContext(soundDevice, nullptr);
-    if (!alcMakeContextCurrent(context)) {
-        std::cerr << "Failed to make the openal audio context current" << std::endl;
-        alcCloseDevice(soundDevice);
+    err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB, nullptr);
+    if (err != paNoError) {
+        std::cerr << "Failed to open default stream: " << Pa_GetErrorText(err) << std::endl;
+        exit(-1);
+    }
+    err = Pa_StartStream(stream);
+    if (err != paNoError) {
+        std::cerr << "Failed to start stream: " << Pa_GetErrorText(err) << std::endl;
+        exit(-1);
     }
 
     FuncDoodle::Application* application = new FuncDoodle::Application();
@@ -100,6 +172,10 @@ int main(int argc, char** argv) {
 
         glfwSwapBuffers(win);
     }
+
+    Pa_StopStream(stream);
+    Pa_CloseStream(stream);
+    Pa_Terminate();
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();

@@ -5,9 +5,18 @@
 #include <iostream>
 
 namespace FuncDoodle {
-    typedef struct {
+    struct Col {
         unsigned char r = 255, g = 255, b = 255;
-    } Col;
+
+        bool operator==(const Col& other) const {
+            return r == other.r && g == other.g & b == other.b;
+        }
+        bool operator<(const Col& other) const {
+            if (r != other.r) return r < other.r;
+            if (g != other.g) return g < other.g;
+            return b < other.b;
+        }
+    };
     class ImageArray {
         public:
             ImageArray(int width, int height)
@@ -54,6 +63,9 @@ namespace FuncDoodle {
             }
 
             void setWidth(int width) {
+                if (this == nullptr) {
+                    std::cout << "WHAT THIS IS NULLPTR?" << std::endl;
+                }
                 this->width = width;
             }
 
@@ -72,7 +84,7 @@ namespace FuncDoodle {
     };
     class Frame {
         public:
-            Frame() : m_Pixels(nullptr) {};
+            Frame() : m_Pixels(nullptr) { std::cout << "Oops: nulptr ImageArray" << std::endl; };
             Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
             ~Frame() {};
             __inline__ const ImageArray* Pixels() const {
@@ -85,14 +97,22 @@ namespace FuncDoodle {
                 return m_Pixels->getWidth();
             }
             void SetWidth(int width) {
-                m_Pixels->setWidth(width);
+                if (m_Pixels == nullptr) {
+                    m_Pixels = new ImageArray(width, 1);
+                } else {
+                    m_Pixels->setWidth(width);
+                }
                 m_Pixels->RedoColorAdjustment();
             }
             __inline__ const int Height() {
                 return m_Pixels->getHeight();
             }
             void SetHeight(int height) {
-                m_Pixels->setHeight(height);
+                if (m_Pixels == nullptr) {
+                    m_Pixels = new ImageArray(1, height);
+                } else {
+                    m_Pixels->setHeight(height);
+                }
                 m_Pixels->RedoColorAdjustment();
             }
         private:

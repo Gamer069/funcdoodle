@@ -27,13 +27,14 @@ namespace FuncDoodle {
             void SetAnimFrameCount(long count);
             LongIndexArray<Frame>* AnimFrames();
             void Write(char* filePath);
+            void ReadAndPopulate(char* filePath);
         private:
-            char m_Name[256];
-            int m_Width;
-            int m_Height;
-            char m_Author[100];
-            int m_FPS;
-            char m_Desc[512];
+            char m_Name[256]; // 256
+            int m_Width = 0;
+            int m_Height = 0;
+            char m_Author[100]; // 100
+            int m_FPS = 0;
+            char m_Desc[512]; // 512
             LongIndexArray<Frame> m_Frames;
     };
 }

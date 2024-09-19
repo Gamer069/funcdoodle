@@ -78,6 +78,7 @@
     "type_traits": "cpp",
     "utility": "cpp",
     "format": "cpp",
-    "stop_token": "cpp"
+    "stop_token": "cpp",
+    "__functional_base": "cpp"
   }
 }

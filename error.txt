@@ -1,0 +1,338 @@
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:8: error: use of undeclared identifier 'alGenAuxiliaryEffectSlotsDirect'
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:8: error: use of undeclared identifier 'alGenAuxiliaryEffectSlotsDirect'
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:12: note: expanded from macro 'DECL_FUNC2'
+    return Name##Direct(context.get(), n1, n2);                               \
+           ^
+<scratch space>:147:1: note: expanded from here
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:12: note: expanded from macro 'DECL_FUNC2'
+    return Name##Direct(context.get(), n1, n2);                               \
+           ^
+<scratch space>:147:1: note: expanded from here
+alGenAuxiliaryEffectSlotsDirect
+^
+alGenAuxiliaryEffectSlotsDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:370:8: error: use of undeclared identifier 'alDeleteAuxiliaryEffectSlotsDirect'; did you mean 'alGenAuxiliaryEffectSlotsDirect'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:370:8: error: use of undeclared identifier 'alDeleteAuxiliaryEffectSlotsDirect'; did you mean 'alGenAuxiliaryEffectSlotsDirect'?
+AL_API DECL_FUNC2(void, alDeleteAuxiliaryEffectSlots, ALsizei,n, const ALuint*,effectslots)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:12: note: expanded from macro 'DECL_FUNC2'
+    return Name##Direct(context.get(), n1, n2);                               \
+           ^
+AL_API DECL_FUNC2(void, alDeleteAuxiliaryEffectSlots, ALsizei,n, const ALuint*,effectslots)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:12: note: expanded from macro 'DECL_FUNC2'
+    return Name##Direct(context.get(), n1, n2);                               \
+           ^
+<scratch space>:148:1: <scratch space>:148:1: note: expanded from here
+alDeleteAuxiliaryEffectSlotsDirect
+^
+note: expanded from here
+alDeleteAuxiliaryEffectSlotsDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:321:30: note: 'alGenAuxiliaryEffectSlotsDirect' declared here
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:321:30: note: 'alGenAuxiliaryEffectSlotsDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alGenAuxiliaryEffectSlotsDirect(ALCcontext *context, ALsizei n,
+                             ^
+FORCE_ALIGN void AL_APIENTRY alGenAuxiliaryEffectSlotsDirect(ALCcontext *context, ALsizei n,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:370:80: error: cannot initialize a parameter of type 'ALuint *' (aka 'unsigned int *') with an lvalue of type 'const ALuint *' (aka 'const unsigned int *')
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:370:80: error: cannot initialize a parameter of type 'ALuint *' (aka 'unsigned int *') with an lvalue of type 'const ALuint *' (aka 'const unsigned int *')
+AL_API DECL_FUNC2(void, alDeleteAuxiliaryEffectSlots, ALsizei,n, const ALuint*,effectslots)
+                                                                               ^~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:44: note: AL_API DECL_FUNC2(void, alDeleteAuxiliaryEffectSlots, ALsizei,n, const ALuint*,effectslots)
+                                                                               ^~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:35:44: note: expanded from macro 'DECL_FUNC2'
+expanded from macro 'DECL_FUNC2'
+    return Name##Direct(context.get(), n1, n2);                               \
+                                           ^~
+    return Name##Direct(context.get(), n1, n2);                               \
+                                           ^~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:322:13: note: passing argument to parameter 'effectslots' here
+    ALuint *effectslots) noexcept
+            ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:322:13: note: passing argument to parameter 'effectslots' here
+    ALuint *effectslots) noexcept
+            ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:424:8: error: use of undeclared identifier 'alIsAuxiliaryEffectSlotDirect'; did you mean 'alGenAuxiliaryEffectSlots'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:424:8: error: use of undeclared identifier 'alIsAuxiliaryEffectSlotDirect'; did you mean 'alGenAuxiliaryEffectSlots'?
+AL_API DECL_FUNC1(ALboolean, alIsAuxiliaryEffectSlot, ALuint,effectslot)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:27:12: note: expanded from macro 'DECL_FUNC1'
+AL_API DECL_FUNC1(ALboolean, alIsAuxiliaryEffectSlot, ALuint,effectslot)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:27:12: note: expanded from macro 'DECL_FUNC1'
+    return Name##Direct(context.get(), n1);                                   \
+           ^
+    return Name##Direct(context.get(), n1);                                   \
+           ^
+<scratch space>:149<scratch space>:149:1: note: expanded from here
+:1: note: expanded from here
+alIsAuxiliaryEffectSlotDirect
+alIsAuxiliaryEffectSlotDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:25: 25: note: 'alGenAuxiliaryEffectSlots' declared here
+note: 'alGenAuxiliaryEffectSlots' declared here
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+                        ^
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+                        ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:424/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:424::8: error: cannot initialize a parameter of type 'ALsizei' (aka 'int') with an rvalue of type 'ALCcontext *'
+AL_API DECL_FUNC1(ALboolean, alIsAuxiliaryEffectSlot, ALuint,effectslot)
+       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:27:25: note: expanded from macro 'DECL_FUNC1'
+    return Name##Direct(context.get(), n1);                                   \
+                        ^~~~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:60: note: passing argument to parameter 'n' here
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+                                                           ^
+8: error: cannot initialize a parameter of type 'ALsizei' (aka 'int') with an rvalue of type 'ALCcontext *'
+AL_API DECL_FUNC1(ALboolean, alIsAuxiliaryEffectSlot, ALuint,effectslot)
+       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:27:25: note: expanded from macro 'DECL_FUNC1'
+    return Name##Direct(context.get(), n1);                                   \
+                        ^~~~~~~~~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:320:60: note: passing argument to parameter 'n' here
+AL_API DECL_FUNC2(void, alGenAuxiliaryEffectSlots, ALsizei,n, ALuint*,effectslots)
+                                                           ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:468:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotiDirect'
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:468:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotiDirect'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:150:1: note: expanded from here
+alAuxiliaryEffectSlotiDirect
+^
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:150:1: note: expanded from here
+alAuxiliaryEffectSlotiDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:645:8:/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:645:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotivDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+ error: use of undeclared identifier 'alAuxiliaryEffectSlotivDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, const ALint*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, const ALint*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:151:1: note<scratch space>:151:1: note: expanded from here
+: expanded from here
+alAuxiliaryEffectSlotivDirect
+^
+alAuxiliaryEffectSlotivDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30: note: /Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30: note: 'alAuxiliaryEffectSlotiDirect' declared here
+'alAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:645:96/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:645:96: error: cannot initialize a parameter of type 'ALint' (aka 'int') with an lvalue of type 'const ALint *' (aka 'const int *')
+: error: cannot initialize a parameter of type 'ALint' (aka 'int') with an lvalue of type 'const ALint *' (aka 'const int *')
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, const ALint*,values)
+                                                                                               ^~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:48: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, const ALint*,values)
+                                                                                               ^~~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:48: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:470:25: note: passing argument to parameter 'value' here/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:470:25: note: passing argument to parameter 'value' here
+
+    ALenum param, ALint value) noexcept
+                        ^
+    ALenum param, ALint value) noexcept
+                        ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:675:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotfDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:675:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotfDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:152:1<scratch space>:152:1: note: expanded from here
+: note: expanded from here
+alAuxiliaryEffectSlotfDirect
+^
+alAuxiliaryEffectSlotfDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30:/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30: note: 'alAuxiliaryEffectSlotiDirect' declared here
+ note: 'alAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:705:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotfvDirect'
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:705:8: error: use of undeclared identifier 'alAuxiliaryEffectSlotfvDirect'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotfv, ALuint,effectslot, ALenum,param, const ALfloat*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alAuxiliaryEffectSlotfv, ALuint,effectslot, ALenum,param, const ALfloat*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+
+<scratch space>:153:1: note: <scratch space>:153:1: note: expanded from here
+expanded from here
+alAuxiliaryEffectSlotfvDirect
+^
+alAuxiliaryEffectSlotfvDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:732:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotiDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:732:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotiDirect'; did you mean 'alAuxiliaryEffectSlotiDirect'?
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint*,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12:AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint*,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+ note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space><scratch space>::154:1: 154:1: note: expanded from here
+note: expanded from here
+alGetAuxiliaryEffectSlotiDirect
+^
+alGetAuxiliaryEffectSlotiDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30: note: 'alAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:469:30: note: 'alAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alAuxiliaryEffectSlotiDirect(ALCcontext *context, ALuint effectslot,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:732:92: error/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:732:92: error: cannot initialize a parameter of type 'ALint' (aka 'int') with an lvalue of type 'ALint *' (aka 'int *')
+: cannot initialize a parameter of type 'ALint' (aka 'int') with an lvalue of type 'ALint *' (aka 'int *')
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint*,value)
+                                                                                           ^~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:48: AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSloti, ALuint,effectslot, ALenum,param, ALint*,value)
+                                                                                           ^~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:48: note: expanded from macro 'DECL_FUNC3'
+note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:470:25: note: passing argument to parameter 'value' here
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:470:25: note: passing argument to parameter 'value' here
+    ALenum param, ALint value) noexcept
+    ALenum param, ALint value) noexcept
+                        ^
+                        ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:776:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotivDirect'; did you mean 'alGetAuxiliaryEffectSlotiDirect'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:776:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotivDirect'; did you mean 'alGetAuxiliaryEffectSlotiDirect'?
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, ALint*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotiv, ALuint,effectslot, ALenum,param, ALint*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+
+           ^
+<scratch space>:155:1: <scratch space>:155:1: note: expanded from here
+note: expanded from here
+alGetAuxiliaryEffectSlotivDirect
+^
+alGetAuxiliaryEffectSlotivDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:733:/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:733:3030: note: 'alGetAuxiliaryEffectSlotiDirect' declared here
+: note: 'alGetAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alGetAuxiliaryEffectSlotiDirect(ALCcontext *context,
+                             ^
+FORCE_ALIGN void AL_APIENTRY alGetAuxiliaryEffectSlotiDirect(ALCcontext *context,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:806:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotfDirect'; did you mean 'alGetAuxiliaryEffectSlotiDirect'?
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:806:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotfDirect'; did you mean 'alGetAuxiliaryEffectSlotiDirect'?
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat*,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat*,value)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:156:1: note: <scratch space>:156:1: note: expanded from here
+expanded from here
+alGetAuxiliaryEffectSlotfDirect
+^
+alGetAuxiliaryEffectSlotfDirect
+^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:733:30: note/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:733:30: note: 'alGetAuxiliaryEffectSlotiDirect' declared here
+: 'alGetAuxiliaryEffectSlotiDirect' declared here
+FORCE_ALIGN void AL_APIENTRY alGetAuxiliaryEffectSlotiDirect(ALCcontext *context,
+                             ^
+FORCE_ALIGN void AL_APIENTRY alGetAuxiliaryEffectSlotiDirect(ALCcontext *context,
+                             ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:806:94: error: cannot initialize a parameter of type 'ALint *' (aka 'int *') with an lvalue of type 'ALfloat *' (aka 'float *')
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:806:94: error: cannot initialize a parameter of type 'ALint *' (aka 'int *') with an lvalue of type 'ALfloat *' (aka 'float *')
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat*,value)
+                                                                                             ^~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotf, ALuint,effectslot, ALenum,param, ALfloat*,value)
+                                                                                             ^~~~~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:48: note: expanded from macro 'DECL_FUNC3'48: note: expanded from macro 'DECL_FUNC3'
+
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:734:45    return Name##Direct(context.get(), n1, n2, n3);                           \
+                                               ^~
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:734:45: note: passing argument to parameter 'value' here
+: note: passing argument to parameter 'value' here
+    ALuint effectslot, ALenum param, ALint *value) noexcept
+                                            ^
+    ALuint effectslot, ALenum param, ALint *value) noexcept
+                                            ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:828:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotfvDirect'
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp:828:8: error: use of undeclared identifier 'alGetAuxiliaryEffectSlotfvDirect'
+AL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotfv, ALuint,effectslot, ALenum,param, ALfloat*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: noteAL_API DECL_FUNC3(void, alGetAuxiliaryEffectSlotfv, ALuint,effectslot, ALenum,param, ALfloat*,values)
+       ^
+/Users/illia/Desktop/proj/@c/funcdoodle/lib/openal-soft/al/direct_defs.h:43:12: note: expanded from macro 'DECL_FUNC3'
+: expanded from macro 'DECL_FUNC3'
+    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:2:1    return Name##Direct(context.get(), n1, n2, n3);                           \
+           ^
+<scratch space>:2:1: note: expanded from here
+: note: expanded from here
+alGetAuxiliaryEffectSlotfvDirect
+^
+alGetAuxiliaryEffectSlotfvDirect
+^
+16 errors generated.
+16 errors generated.
+make[2]: *** [CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o] Error 1
+make[2]: *** [CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o] Error 1
+make[1]: make[1]: *** [CMakeFiles/FuncDoodle.dir/all] Error 2
+*** [CMakeFiles/FuncDoodle.dir/all] Error 2
+make: *** [all] Error 2make: *** [all] Error 2
+

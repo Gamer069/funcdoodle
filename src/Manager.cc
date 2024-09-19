@@ -8,12 +8,14 @@
 
 #include "FrameRenderer.h"
 
+#include "ToolManager.h"
+
 #include <string>
 #include <iostream>
 #include <random>
 
 namespace FuncDoodle {
-    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_FrameRenderer(new FrameRenderer(nullptr, true)) {}
+    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_ToolManager(new ToolManager()) { m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager); }
     AnimationManager::~AnimationManager() {}
     void AnimationManager::RenderTimeline() {
         // Set scrollbar size (thickness)
@@ -49,11 +51,13 @@ namespace FuncDoodle {
             if (m_SelectedFrame > 0) m_SelectedFrame--;
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_RightBracket))) {
-            if (m_SelectedFrame < m_Proj->AnimFrameCount()-1) m_SelectedFrame++;
+            if (m_SelectedFrame < m_Proj->AnimFrameCount()-1) ++m_SelectedFrame;
+            std::cout << m_SelectedFrame << std::endl;
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P))) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-            m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, frame);
+            m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, frame);
+            m_SelectedFrame++;
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_O))) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
@@ -81,5 +85,7 @@ namespace FuncDoodle {
 
         ImGui::EndChild();
         ImGui::End();
+
+        m_ToolManager->RenderTools();
     }
 }

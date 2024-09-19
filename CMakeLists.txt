@@ -8,7 +8,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set build configurations
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_BUILD_TYPE Release)
+# set(CMAKE_BUILD_TYPE Release)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
+set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 
 # Glad sources
 set(GLAD_SOURCES
@@ -32,8 +35,19 @@ set(IMGUI_SOURCES
 
 set(NFD_SOURCES lib/nfd/src/nfd_cocoa.m lib/nfd/src/nfd_common.c)
 
+set(PORTAUDIO_DIR "" CACHE STRING "required")
+
+if(NOT PORTAUDIO_DIR)
+    if(APPLE)
+        set(PORTAUDIO_DIR "/usr/local/opt/portaudio/lib/")
+    elseif(UNIX AND NOT APPLE)
+        set(PORTAUDIO_DIR "/usr/local/lib/")
+    elseif(WIN32)
+        set(PORTAUDIO_DIR "C:\\Program Files\\PortAudio\\lib\\")
+    endif()
+endif()
+
 add_subdirectory(lib/glfw)
-add_subdirectory(lib/openal-soft)
 
 file(GLOB SRC "src/*.cc")
 
@@ -49,28 +63,42 @@ add_executable(FuncDoodle
 # Include directories
 target_include_directories(FuncDoodle PRIVATE
     lib/glfw/include/
-    lib/openal-soft/include
+    lib/portaudio/include
     lib/imgui
     lib/imgui/backends
     lib/glad/include
     lib/nfd/src/include
+    /usr/local/opt/portaudio/include
 )
 
 include_directories(lib/openal-soft/common lib/openal-soft/alc lib/openal-soft/al lib/openal-soft)
 
+target_link_libraries(FuncDoodle
+    glfw
+    ${CMAKE_DL_LIBS}
+    m
+    pthread
+    dl
+)
+ 
+
 # Link libraries based on platform
 if(APPLE)
     target_link_libraries(FuncDoodle
+        ${PORTAUDIO_DIR}libportaudio.dylib
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
         "-framework CoreFoundation"
         "-framework AppKit"
-        glfw
-        ${CMAKE_DL_LIBS}
-        m
-        pthread
-        dl
+   )
+elseif(UNIX AND NOT APPLE)
+    target_link_libraries(FuncDoodle
+        ${PORTAUDIO_DIR}libportaudio.so
+    )
+elseif(WIN32)
+    target_link_libraries(FuncDoodle
+        ${PORTAUDIO_DIR}portaudio.dll
     )
 endif()
 

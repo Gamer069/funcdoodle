@@ -1,6 +1,3 @@
 # Hashes of file build rules.
-819f89a86e2fab288e2054a1e090422f lib/glfw/CMakeFiles/uninstall
-f269ac72f43c28fc8778689961c0d5f5 lib/glfw/src/CMakeFiles/update_mappings
-455c559626dbcf565d8c943d2df6ad72 lib/openal-soft/CMakeFiles/build_version
-36856abd3e4c9499dc2bfe9f7dbcee69 lib/openal-soft/default_hrtf.txt
-cae6680e6f4b1b87aad485bd73e90cb6 lib/openal-soft/version_witness.txt
+883c92d4f9bd4bfbf7729ea35e652acd lib/glfw/CMakeFiles/uninstall
+575ffc3dab752e011763f883cc80c3f9 lib/glfw/src/CMakeFiles/update_mappings

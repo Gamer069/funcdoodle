@@ -4,6 +4,8 @@
 
 #include "FrameRenderer.h"
 
+#include "ToolManager.h"
+
 namespace FuncDoodle {
     class AnimationManager {
         public:
@@ -17,5 +19,6 @@ namespace FuncDoodle {
             ProjectFile* m_Proj;
             long m_SelectedFrame;
             FrameRenderer* m_FrameRenderer;
+            ToolManager* m_ToolManager;
     };
 }
