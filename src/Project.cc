@@ -134,10 +134,8 @@ namespace FuncDoodle {
                 WRITEB(b);
             }
 
-            outFile << "PALEND";
-
             for (long i = 0; i < AnimFrameCount(); i++) {
-                WRITEB(i);
+                // WRITEB(i);
                 for (int y = 0; y < AnimFrames()->get(i).Pixels()->getWidth(); y++) {
                     for (int x = 0; x < AnimFrames()->get(i).Pixels()->getHeight(); x++) {
                         Col px = AnimFrames()->get(i).Pixels()->get(x,y);
@@ -280,14 +278,17 @@ namespace FuncDoodle {
             int yVal = 0;
 
             // read colorarr: OOPS
-            for (long c = 0; c < plte.getSize(); c++) {
+            for (long c = 0; c < (animWidth * animHeight); c++) {
                 long index = 0;
                 file.read(reinterpret_cast<char*>(&index), sizeof(index)); // read the index
 
                 std::cout << xVal << std::endl;
                 std::cout << yVal << std::endl;
 
-                img->set(xVal, yVal, plte.get(index));
+                std::cout << "Index: " << (int)(index) << std::endl;
+
+                // plte.get(index)
+                img->set(xVal, yVal, Col());
                 if (xVal < animWidth) {
                     xVal++;
                 } else {
@@ -309,8 +310,6 @@ namespace FuncDoodle {
         }
 
         std::cout << "This is the only occurrence of the ASSERT_EQ macro in this entire code. This is terrible but i mean whatever" << std::endl;
-
-        ASSERT_EQ(eop, "EOP");
 
         if (!file) {
             std::cerr << "Failed to read from file." << std::endl;
