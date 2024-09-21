@@ -1,3 +1,16 @@
 Add more tools...
 Make modding framework.
 Fix segfault when opening file.
+Add play button.
+Fix drawing
+Github actions automation..?
+Sounds for animations
+Version system.
+Use modding framework in this project.
+Write tests for modding framework. 
+Test cmakelists on multiple platforms.
+Add more macros for dev.
+Make it so something like asserts get nuked at dist build 
+Add dist build.
+Style everything.
+Write proper .gitignore
