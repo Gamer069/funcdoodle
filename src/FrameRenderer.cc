@@ -31,7 +31,6 @@ namespace FuncDoodle {
         for (int y = 0; y < pixels->getHeight(); y++) {
             for (int x = 0; x < pixels->getWidth(); x++) {
                 const Col col = pixels->get(x,y);
-                // std::cout << "r:" << (int)col.r << "g:" << (int)col.g << "b:" << (int)col.b << std::endl;
                 // Hover check hehe
                 if (ImGui::IsMouseHoveringRect(ImVec2(topLeft.x+x, topLeft.y+y), ImVec2(bottomRight.x+x, bottomRight.y+y)) && ImGui::IsMouseDown(0)) {
                     if (m_ToolManager->SelectedTool() == 0) {

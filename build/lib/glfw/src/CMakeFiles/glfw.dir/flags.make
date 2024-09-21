@@ -7,15 +7,15 @@ C_DEFINES = -D_GLFW_COCOA
 
 C_INCLUDES = -I/Users/antzhdanov/code/funcdoodle/lib/glfw/include -I/Users/antzhdanov/code/funcdoodle/lib/glfw/src -I/Users/antzhdanov/code/funcdoodle/build/lib/glfw/src
 
-C_FLAGSarm64 = -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
+C_FLAGSarm64 = -g -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
 
-C_FLAGS = -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
+C_FLAGS = -g -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
 
 OBJC_DEFINES = -D_GLFW_COCOA
 
 OBJC_INCLUDES = -I/Users/antzhdanov/code/funcdoodle/lib/glfw/include -I/Users/antzhdanov/code/funcdoodle/lib/glfw/src -I/Users/antzhdanov/code/funcdoodle/build/lib/glfw/src
 
-OBJC_FLAGSarm64 = -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
+OBJC_FLAGSarm64 = -g -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
 
-OBJC_FLAGS = -O3 -DNDEBUG -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
+OBJC_FLAGS = -g -std=c99 -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -fPIC -Wall
 

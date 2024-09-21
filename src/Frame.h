@@ -45,6 +45,7 @@ namespace FuncDoodle {
             // Set the color at the specified (x, y) position
             void set(int x, int y, const Col& color) {
                 if (x < 0 || x >= width || y < 0 || y >= height) {
+                    // no
                     throw std::out_of_range("Index out of range");
                 }
                 data[y * width + x] = color;
@@ -53,6 +54,7 @@ namespace FuncDoodle {
             // Get the color at the specified (x, y) position
             Col get(int x, int y) const {
                 if (x < 0 || x >= width || y < 0 || y >= height) {
+                    // no
                     throw std::out_of_range("Index out of range");
                 }
                 return data[y * width + x];
@@ -63,9 +65,6 @@ namespace FuncDoodle {
             }
 
             void setWidth(int width) {
-                if (this == nullptr) {
-                    std::cout << "WHAT THIS IS NULLPTR?" << std::endl;
-                }
                 this->width = width;
             }
 
@@ -84,8 +83,9 @@ namespace FuncDoodle {
     };
     class Frame {
         public:
-            Frame() : m_Pixels(nullptr) { std::cout << "Oops: nulptr ImageArray" << std::endl; };
+            Frame() : m_Pixels(nullptr) { };
             Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
+            Frame(ImageArray* arr) : m_Pixels(arr) {};
             ~Frame() {};
             __inline__ const ImageArray* Pixels() const {
                 return m_Pixels;

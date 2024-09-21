@@ -1,0 +1,86 @@
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+0
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+0
+Before: 0
+After: 1
+Before: 1
+After: 2
+WHAT
+Open file (opening file dialog)
+Selected: /Users/antzhdanov/Documents/test.fdp
+Reading project file: /Users/antzhdanov/Documents/test.fdp
+WARNING: READING PROJECT FILES COMING SOON NOT YET SUPPORTED
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+0
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+0
+Before: 0
+After: 1
+Before: 1
+After: 2
+READ?
+Yep
+verMajor: 0
+verMinor: 1
+frameCount: 2
+animWidth: 32
+animHeight: 32
+animFPS: 1
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+Oops: nulptr ImageArray
+0
+Size: Hehe
+0
+0
+0
+ERROR? App.cc1
+Nope App.cc1
+ProjectFile::AnimFrameCount()
+END
+Hehe
+0

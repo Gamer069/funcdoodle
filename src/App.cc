@@ -11,7 +11,7 @@
 namespace FuncDoodle {
     // TODO: temporary m_FilePath in application
     // ;.............mnv,.
-    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf")), m_Manager(new AnimationManager(nullptr)) { std::cout << "WHAT" << std::endl; }
+    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf")), m_Manager(new AnimationManager(nullptr)) {}
     Application::~Application() {}
     void Application::RenderImGui() {
         if (ImGui::BeginMainMenuBar()) {
@@ -21,11 +21,9 @@ namespace FuncDoodle {
                 }
                 
                 if (ImGui::MenuItem("Open")) {
-                    std::cout << "Open file (opening file dialog)" << std::endl;
                     this->OpenFileDialog();
                 }
                 if (ImGui::MenuItem("Save")) {
-                    std::cout << "Save file (saving file dialog)" << std::endl;
                     this->SaveFileDialog();
                 }
                 if (ImGui::MenuItem("Exit")) {
@@ -80,12 +78,9 @@ namespace FuncDoodle {
 
             if (ImGui::Button("Close")) { m_NewProjOpen = false; ImGui::CloseCurrentPopup(); }
             if (ImGui::Button("OK")) {
-                std::cout << "Width: " << m_CacheProj->AnimWidth() << ", Height: " << m_CacheProj->AnimHeight() << std::endl;
                 m_CurrentProj = m_CacheProj;
                 m_Manager->SetProj(m_CurrentProj);
                 m_NewProjOpen = false;
-
-                std::cout << "Width: " << m_CurrentProj->AnimWidth() << ", Height: " << m_CurrentProj->AnimHeight() << std::endl;
             }
             ImGui::EndPopup();
         }
@@ -99,12 +94,9 @@ namespace FuncDoodle {
         nfdresult_t result = NFD_OpenDialog("fdp", 0, &outPath);
 
         if (result == NFD_OKAY) {
-            std::cout << "Selected: " << outPath << std::endl;
             m_FilePath = outPath;
             ReadProjectFile();
-            std::cout << "ERROR? App.cc1" << std::endl;
             free(outPath);
-            std::cout << "Nope App.cc1" << std::endl;
         } else if (result == NFD_CANCEL) {
             std::cout << "Cancelled" << std::endl;
         } else {
@@ -116,7 +108,6 @@ namespace FuncDoodle {
         nfdresult_t result = NFD_SaveDialog("fdp", 0, &outPath);
 
         if (result == NFD_OKAY) {
-            std::cout << "Saving to file: " << outPath << std::endl;
             m_FilePath = outPath;
             SaveProjectFile();
             free(outPath);
@@ -132,23 +123,20 @@ namespace FuncDoodle {
             std::cout << "Congratulations! You've found a weird bug that i've never seen before! Please screen record urself and make a github issue on this project. I rlly wanna fix this." << std::endl;
             return;
         }
-        std::cout << "Reading project file: " << m_FilePath << std::endl;
-
-        std::cout << "WARNING: READING PROJECT FILES COMING SOON NOT YET SUPPORTED" << std::endl;
         
         if (m_CurrentProj == nullptr) {
             m_CurrentProj = new ProjectFile("", 1, 1, "", 0, "");
         }
 
         m_CurrentProj->ReadAndPopulate(m_FilePath);
+
+        m_Manager->SetProj(m_CurrentProj);
     }
     void Application::SaveProjectFile() {
         if (m_FilePath == "???") {
             std::cout << "Congratulations! You've found a weird bug that i've never seen before! Please screen record urself and make a github issue on this project. I rlly wanna fix this." << std::endl;
             return;
         }
-        std::cout << "Saving project file: " << m_FilePath << std::endl;
-
         m_CurrentProj->Write(m_FilePath);
     }
 }

@@ -209,640 +209,10 @@ CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_common.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_common.c.s"
 	/usr/bin/clang $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/nfd/src/nfd_common.c -o CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_common.c.s
 
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/auxeffectslot.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/buffer.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/buffer.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/buffer.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/buffer.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/debug.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/debug.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/debug.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/debug.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/effect.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/effect.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/effect.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/effect.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/error.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/error.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/error.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/error.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/event.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/event.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/event.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/event.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/extension.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/extension.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/extension.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/extension.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/filter.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/filter.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/filter.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/filter.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/listener.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/listener.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/listener.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/listener.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/source.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/source.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/source.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/source.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/state.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/state.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/state.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/al/state.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alc.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alc.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alc.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alc.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alconfig.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alconfig.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alconfig.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alconfig.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alu.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alu.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alu.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/alu.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/context.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/context.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/context.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/context.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/device.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_26) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/device.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/device.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/device.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/events.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_27) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/events.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/events.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/events.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/panning.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_28) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/panning.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/panning.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/alc/panning.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambdec.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambdec.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambdec.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambdec.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambidefs.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambidefs.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambidefs.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/ambidefs.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bformatdec.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bformatdec.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bformatdec.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bformatdec.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bs2b.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_32) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bs2b.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bs2b.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bs2b.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bsinc_tables.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_33) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bsinc_tables.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bsinc_tables.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/bsinc_tables.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/buffer_storage.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_34) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/buffer_storage.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/buffer_storage.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/buffer_storage.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/context.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_35) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/context.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/context.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/context.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/converter.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_36) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/converter.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/converter.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/converter.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cpu_caps.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_37) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cpu_caps.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cpu_caps.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cpu_caps.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cubic_tables.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_38) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cubic_tables.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cubic_tables.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/cubic_tables.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/dbus_wrap.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_39) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/dbus_wrap.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/dbus_wrap.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/dbus_wrap.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/devformat.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_40) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/devformat.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/devformat.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/devformat.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/device.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_41) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/device.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/device.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/device.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/effectslot.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_42) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/effectslot.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/effectslot.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/effectslot.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/except.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_43) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/except.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/except.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/except.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fmt_traits.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_44) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fmt_traits.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fmt_traits.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fmt_traits.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fpu_ctrl.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_45) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fpu_ctrl.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fpu_ctrl.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/fpu_ctrl.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/helpers.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_46) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/helpers.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/helpers.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/helpers.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/hrtf.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_47) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/hrtf.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/hrtf.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/hrtf.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/logging.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_48) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/logging.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/logging.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/logging.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mastering.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_49) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mastering.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mastering.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mastering.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mixer.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_50) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mixer.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mixer.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/mixer.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/rtkit.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_51) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/rtkit.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/rtkit.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/rtkit.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/storage_formats.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_52) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/storage_formats.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/storage_formats.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/storage_formats.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uhjfilter.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_53) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uhjfilter.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uhjfilter.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uhjfilter.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uiddefs.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_54) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uiddefs.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uiddefs.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/uiddefs.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.s
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o: CMakeFiles/FuncDoodle.dir/flags.make
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o: /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/voice.cpp
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_55) "Building CXX object CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o -MF CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o.d -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o -c /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/voice.cpp
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.i"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/voice.cpp > CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.i
-
-CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.s"
-	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/lib/openal-soft/core/voice.cpp -o CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.s
-
 CMakeFiles/FuncDoodle.dir/src/App.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
 CMakeFiles/FuncDoodle.dir/src/App.cc.o: /Users/antzhdanov/code/funcdoodle/src/App.cc
 CMakeFiles/FuncDoodle.dir/src/App.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_56) "Building CXX object CMakeFiles/FuncDoodle.dir/src/App.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/FuncDoodle.dir/src/App.cc.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/App.cc.o -MF CMakeFiles/FuncDoodle.dir/src/App.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/App.cc.o -c /Users/antzhdanov/code/funcdoodle/src/App.cc
 
 CMakeFiles/FuncDoodle.dir/src/App.cc.i: cmake_force
@@ -856,7 +226,7 @@ CMakeFiles/FuncDoodle.dir/src/App.cc.s: cmake_force
 CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
 CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o: /Users/antzhdanov/code/funcdoodle/src/FrameRenderer.cc
 CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_57) "Building CXX object CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o -MF CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o -c /Users/antzhdanov/code/funcdoodle/src/FrameRenderer.cc
 
 CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.i: cmake_force
@@ -870,7 +240,7 @@ CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.s: cmake_force
 CMakeFiles/FuncDoodle.dir/src/Manager.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
 CMakeFiles/FuncDoodle.dir/src/Manager.cc.o: /Users/antzhdanov/code/funcdoodle/src/Manager.cc
 CMakeFiles/FuncDoodle.dir/src/Manager.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_58) "Building CXX object CMakeFiles/FuncDoodle.dir/src/Manager.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/FuncDoodle.dir/src/Manager.cc.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/Manager.cc.o -MF CMakeFiles/FuncDoodle.dir/src/Manager.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/Manager.cc.o -c /Users/antzhdanov/code/funcdoodle/src/Manager.cc
 
 CMakeFiles/FuncDoodle.dir/src/Manager.cc.i: cmake_force
@@ -884,7 +254,7 @@ CMakeFiles/FuncDoodle.dir/src/Manager.cc.s: cmake_force
 CMakeFiles/FuncDoodle.dir/src/Project.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
 CMakeFiles/FuncDoodle.dir/src/Project.cc.o: /Users/antzhdanov/code/funcdoodle/src/Project.cc
 CMakeFiles/FuncDoodle.dir/src/Project.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_59) "Building CXX object CMakeFiles/FuncDoodle.dir/src/Project.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/FuncDoodle.dir/src/Project.cc.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/Project.cc.o -MF CMakeFiles/FuncDoodle.dir/src/Project.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/Project.cc.o -c /Users/antzhdanov/code/funcdoodle/src/Project.cc
 
 CMakeFiles/FuncDoodle.dir/src/Project.cc.i: cmake_force
@@ -895,10 +265,24 @@ CMakeFiles/FuncDoodle.dir/src/Project.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/src/Project.cc.s"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/src/Project.cc -o CMakeFiles/FuncDoodle.dir/src/Project.cc.s
 
+CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
+CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o: /Users/antzhdanov/code/funcdoodle/src/ToolManager.cc
+CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o -MF CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o -c /Users/antzhdanov/code/funcdoodle/src/ToolManager.cc
+
+CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.i"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/antzhdanov/code/funcdoodle/src/ToolManager.cc > CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.i
+
+CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.s"
+	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/antzhdanov/code/funcdoodle/src/ToolManager.cc -o CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.s
+
 CMakeFiles/FuncDoodle.dir/src/main.cc.o: CMakeFiles/FuncDoodle.dir/flags.make
 CMakeFiles/FuncDoodle.dir/src/main.cc.o: /Users/antzhdanov/code/funcdoodle/src/main.cc
 CMakeFiles/FuncDoodle.dir/src/main.cc.o: CMakeFiles/FuncDoodle.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_60) "Building CXX object CMakeFiles/FuncDoodle.dir/src/main.cc.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/FuncDoodle.dir/src/main.cc.o"
 	/usr/bin/clang++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/FuncDoodle.dir/src/main.cc.o -MF CMakeFiles/FuncDoodle.dir/src/main.cc.o.d -o CMakeFiles/FuncDoodle.dir/src/main.cc.o -c /Users/antzhdanov/code/funcdoodle/src/main.cc
 
 CMakeFiles/FuncDoodle.dir/src/main.cc.i: cmake_force
@@ -921,55 +305,11 @@ FuncDoodle_OBJECTS = \
 "CMakeFiles/FuncDoodle.dir/lib/imgui/backends/imgui_impl_opengl3.cpp.o" \
 "CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_cocoa.m.o" \
 "CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_common.c.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o" \
-"CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o" \
 "CMakeFiles/FuncDoodle.dir/src/App.cc.o" \
 "CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o" \
 "CMakeFiles/FuncDoodle.dir/src/Manager.cc.o" \
 "CMakeFiles/FuncDoodle.dir/src/Project.cc.o" \
+"CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o" \
 "CMakeFiles/FuncDoodle.dir/src/main.cc.o"
 
 # External object files for target FuncDoodle
@@ -985,60 +325,17 @@ FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/imgui/backends/imgui_impl_glfw.cpp.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/imgui/backends/imgui_impl_opengl3.cpp.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_cocoa.m.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/nfd/src/nfd_common.c.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/auxeffectslot.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/buffer.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/debug.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/effect.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/error.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/event.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/extension.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/filter.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/listener.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/source.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/al/state.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alc.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alconfig.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/alu.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/context.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/device.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/events.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/alc/panning.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambdec.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/ambidefs.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bformatdec.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bs2b.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/bsinc_tables.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/buffer_storage.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/context.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/converter.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cpu_caps.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/cubic_tables.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/dbus_wrap.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/devformat.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/device.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/effectslot.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/except.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fmt_traits.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/fpu_ctrl.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/helpers.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/hrtf.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/logging.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mastering.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/mixer.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/rtkit.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/storage_formats.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uhjfilter.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/uiddefs.cpp.o
-FuncDoodle: CMakeFiles/FuncDoodle.dir/lib/openal-soft/core/voice.cpp.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/src/App.cc.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/src/FrameRenderer.cc.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/src/Manager.cc.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/src/Project.cc.o
+FuncDoodle: CMakeFiles/FuncDoodle.dir/src/ToolManager.cc.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/src/main.cc.o
 FuncDoodle: CMakeFiles/FuncDoodle.dir/build.make
 FuncDoodle: lib/glfw/src/libglfw3.a
+FuncDoodle: /usr/local/opt/portaudio/lib/libportaudio.dylib
 FuncDoodle: CMakeFiles/FuncDoodle.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_61) "Linking CXX executable FuncDoodle"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/antzhdanov/code/funcdoodle/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Linking CXX executable FuncDoodle"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/FuncDoodle.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

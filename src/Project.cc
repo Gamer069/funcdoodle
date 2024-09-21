@@ -4,6 +4,8 @@
 
 #include "Frame.h"
 
+#include "Macro.h"
+
 #include <string.h>
 
 #include <fstream>
@@ -38,9 +40,9 @@ namespace FuncDoodle {
         return m_Width;
     }
     void ProjectFile::SetAnimWidth(int width) {
+        // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
             m_Frames.get(i).SetWidth(width);
-            std::cout << "Wat" << std::endl;
         }
         m_Width = width;
     }
@@ -49,6 +51,7 @@ namespace FuncDoodle {
         return m_Height;
     }
     void ProjectFile::SetAnimHeight(int height) {
+        // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
             m_Frames.get(i).SetHeight(height);
         }
@@ -77,8 +80,6 @@ namespace FuncDoodle {
     }
 
     const long ProjectFile::AnimFrameCount() const {
-        std::cout << "ProjectFile::AnimFrameCount()" << std::endl;
-        std::cout << "END" << std::endl;
         return m_Frames.getSize();
     }
     LongIndexArray<Frame>* ProjectFile::AnimFrames() {
@@ -89,7 +90,6 @@ namespace FuncDoodle {
     void ProjectFile::Write(char* fileName) {
         std::ofstream outFile(fileName, std::ios::binary);
         if (outFile.is_open()) {
-            std::cout << "Writing file header" << std::endl;
             outFile << "FDProj";
             int major = 0;
             int minor = 1;
@@ -126,7 +126,6 @@ namespace FuncDoodle {
             std::vector<Col> uniqueVec(uniqueSet.begin(), uniqueSet.end());
 
             for (int i = 0; i < uniqueVec.size(); i++) {
-                std::cout << "Color" << std::endl;
                 int r = uniqueVec[i].r;
                 int g = uniqueVec[i].g;
                 int b = uniqueVec[i].b;
@@ -136,9 +135,6 @@ namespace FuncDoodle {
             }
 
             outFile << "PALEND";
-
-            std::cout << "E" << std::endl;
-            std::cout << outFile.tellp() << std::endl;
 
             for (long i = 0; i < AnimFrameCount(); i++) {
                 WRITEB(i);
@@ -154,8 +150,6 @@ namespace FuncDoodle {
                             std::cerr << "Failed to find color in the palette: Terminating..." << std::endl;
                             exit(-1);
                         }
-            
-                       outFile << "COLOREND";
                     }
                 }
                 WRITEB(null);
@@ -170,11 +164,8 @@ namespace FuncDoodle {
     }
     void ProjectFile::ReadAndPopulate(char* filePath) {
         if (this == nullptr) {
-            std::cout << "Nullptr..?" << std::endl;
             std::exit(-1);
         }
-
-        std::cout << "READ?" << std::endl;
 
         std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
@@ -189,34 +180,25 @@ namespace FuncDoodle {
         file.read(&str[0], numBytes);
 
 
-        if (str == "FDProj") {
-            std::cout << "Yep" << std::endl;
-        } else {
+        if (str != "FDProj") {
             std::cerr << "This isn't a funcdooodle project" << std::endl;
             std::exit(-1);
         }
 
         int verMajor = 0;
         file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
-
         int verMinor = 0;
         file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
-
         long frameCount = 0;
         file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
-
         int animWidth = 0;
         file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
-
         int animHeight = 0;
         file.read(reinterpret_cast<char*>(&animHeight), sizeof(animHeight));
-
         int animFPS = 0;
         file.read(reinterpret_cast<char*>(&animFPS), sizeof(animFPS));
-
         char* colorSpace = "";
         char cur;
-        
         while (file.get(cur)) {  // Read one character at a time
             colorSpace += cur;
             if (cur == '.') {  // Stop if we encounter the null terminator
@@ -251,13 +233,6 @@ namespace FuncDoodle {
             }
         }
 
-        std::cout << "verMajor: " << verMajor << std::endl;
-        std::cout << "verMinor: " << verMinor << std::endl;
-        std::cout << "frameCount: " << frameCount << std::endl;
-        std::cout << "animWidth: " << animWidth << std::endl;
-        std::cout << "animHeight: " << animHeight << std::endl;
-        std::cout << "animFPS: " << animFPS << std::endl;
-
         for (int i = 0; i < strlen(m_Name); i++) {
             m_Name[i] = animName[i];
         }
@@ -270,15 +245,72 @@ namespace FuncDoodle {
             m_Author[i] = animAuthor[i];
         }
 
+        // TODO: read palette
+
+        LongIndexArray<Col> plte;
+
+        for (long i = 0; i < frameCount; i++) {
+            // long value = 0;
+            // file.read(reinterpret_cast<char*>(&value), sizeof(long));
+            // std::cout << value << std::endl;
+            // ASSERT_EQ(value, i);
+
+            // read the rgb
+            unsigned char r = 0;
+            unsigned char g = 0;
+            unsigned char b = 0;
+            file.read(reinterpret_cast<char*>(&r), sizeof(r));
+            file.read(reinterpret_cast<char*>(&g), sizeof(g));
+            file.read(reinterpret_cast<char*>(&b), sizeof(b));
+
+            plte.push_back(Col{.r = r, .g = g, .b = b});
+        }
+
+        for (int i = 0; i < plte.getSize(); i++) {
+            std::cout << i << std::endl;
+            std::cout << (unsigned int)(plte[i].r) << ";" << (unsigned int)(plte[i].g) << ";" << (unsigned int)(plte[i].b) << ";" << std::endl;
+        }
+
         m_Frames = LongIndexArray<Frame>();
 
-        std::cout << "Size: " << m_Frames.getSize() << std::endl;
+        // TODO: if this code is wrong fix it
+        for (long i = 0; i < frameCount; i++) {
+            ImageArray* img = new ImageArray(animWidth, animHeight);
+            int xVal = 0;
+            int yVal = 0;
 
-        // TODO: change frames
+            // read colorarr: OOPS
+            for (long c = 0; c < plte.getSize(); c++) {
+                long index = 0;
+                file.read(reinterpret_cast<char*>(&index), sizeof(index)); // read the index
+
+                std::cout << xVal << std::endl;
+                std::cout << yVal << std::endl;
+
+                img->set(xVal, yVal, plte.get(index));
+                if (xVal < animWidth) {
+                    xVal++;
+                } else {
+                    yVal++;
+                    xVal = 0;
+                }
+            }
+            m_Frames.push_back(Frame(img));
+        }
         m_Width = animWidth;
         m_Height = animHeight;
         m_FPS = animFPS;
         // TODO: color space
+
+        char eop[3];
+        for (int i = 0; i < 3; i++) {
+            file.get(cur);
+            eop[i] = cur;
+        }
+
+        std::cout << "This is the only occurrence of the ASSERT_EQ macro in this entire code. This is terrible but i mean whatever" << std::endl;
+
+        ASSERT_EQ(eop, "EOP");
 
         if (!file) {
             std::cerr << "Failed to read from file." << std::endl;

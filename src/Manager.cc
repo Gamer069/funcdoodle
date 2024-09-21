@@ -52,7 +52,6 @@ namespace FuncDoodle {
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_RightBracket))) {
             if (m_SelectedFrame < m_Proj->AnimFrameCount()-1) ++m_SelectedFrame;
-            std::cout << m_SelectedFrame << std::endl;
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P))) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
