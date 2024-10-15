@@ -48,7 +48,6 @@ namespace FuncDoodle {
                 }
 
                 drawList->AddRectFilled(ImVec2(topLeft.x+x, topLeft.y+y), ImVec2(bottomRight.x+x, bottomRight.y+y), IM_COL32(col.r, col.g, col.b, 255));
-
             }
         }
     }

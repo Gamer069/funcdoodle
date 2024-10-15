@@ -5,7 +5,7 @@
 
 ## More about the format:
 
-<span  style="color: red;">__it's little endian hehehehe__</span>
+<span style="color: red;">__it's little endian hehehehe__</span>
 
   
 
@@ -15,17 +15,17 @@
 
 | Type | Description |
 | ---- | ----------- |
-| str | Must be "FDProj". If it's not this, isn't an .fdp file |
-| int | Version major |
-| int | Version minor |
+| str  | Must be "FDProj". If it's not this, isn't an .fdp file |
+| int  | Version major |
+| int  | Version minor |
 | long | Length of animation in frames |
-| int | Animation width |
-| int | Animation height |
-| int | Animation FPS |
-| str | Color space eg. sRGB, terminating with '.' |
-| str | Animation display name, terminating with byte 0 |
-| str | Animation description, terminating with byte 0 |
-| str | Animation author, terminating with byte 0 |
+| int  | Animation width |
+| int  | Animation height |
+| int  | Animation FPS |
+| str  | Color space eg. sRGB, terminating with '.' |
+| str  | Animation display name, terminating with byte 0 |
+| str  | Animation description, terminating with byte 0 |
+| str  | Animation author, terminating with byte 0 |
 
   
 
@@ -36,9 +36,9 @@ For each color in the palette, this is the structure:
 | Type | Description |
 | ---- | ----------- |
 | long | color index |
-| int | r |
-| int | g |
-| int | b |
+| int  | r |
+| int  | g |
+| int  | b |
 
   
   
@@ -67,4 +67,4 @@ Also the origin for colors in frames is the top-left corner.
 
 | Type | Description |
 | ---- | ----------- |
-| str | A constant of EOP (end of project)
+| str  | A constant of EOP (end of project)
