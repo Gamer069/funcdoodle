@@ -141,8 +141,8 @@ namespace FuncDoodle {
             for (long i = 0; i < AnimFrameCount(); i++) {
                 std::cout << "I SAVING: " << i << std::endl;
                 //WRITEB(i);
-                for (int y = 0; y < AnimFrames()->get(i).Pixels()->getWidth(); y++) {
-                    for (int x = 0; x < AnimFrames()->get(i).Pixels()->getHeight(); x++) {
+                for (int y = 0; y < AnimFrames()->get(i).Pixels()->getHeight(); y++) {
+                    for (int x = 0; x < AnimFrames()->get(i).Pixels()->getWidth(); x++) {
                         Col px = AnimFrames()->get(i).Pixels()->get(x,y);
                         auto it = uniqueSet.find(px);
 
@@ -273,8 +273,8 @@ namespace FuncDoodle {
             ImageArray* img = new ImageArray(animWidth, animHeight);
 
             // read colorarr: OOPS
-            for (int x = 0; x < animWidth; x++) {
-                for (int y = 0; y < animHeight; y++) {
+            for (int y = 0; y < animHeight; y++) {
+                for (int x = 0; x < animWidth; x++) {
                     int index = 0;
                     file.read(reinterpret_cast<char*>(&index), sizeof(index)); // read the index
 
