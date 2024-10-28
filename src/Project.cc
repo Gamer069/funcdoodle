@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <map>
 
 #define WRITEB(b) do { outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); } while (0)
 
@@ -89,82 +90,76 @@ namespace FuncDoodle {
 
     void ProjectFile::Write(char* fileName) {
         std::ofstream outFile(fileName, std::ios::binary);
-        if (outFile.is_open()) {
-            outFile << "FDProj";
-            int major = 0;
-            int minor = 1;
-            long frames = m_Frames.getSize();
-            WRITEB(major); // version major
-            WRITEB(minor); // version minor
-            WRITEB(frames); // frame count (default)
-            WRITEB(m_Width); // animation width
-            WRITEB(m_Height); // animation height
-            WRITEB(m_FPS); // animation fps
-            unsigned char null = 0;
-            outFile << m_Name; // animation name
-            WRITEB(null);
-            outFile << m_Desc; // animation description
-            WRITEB(null);
-            outFile << m_Author; // animation author
-            WRITEB(null);
-
-            LongIndexArray<Frame>* frameData = AnimFrames();
-
-            std::vector<Col> colors = std::vector<Col>();
-
-            for (long i = 0; i < AnimFrameCount(); i++) {
-                auto pixels = frameData->get(i).Pixels();
-                for (int x = 0; x < pixels->getWidth(); x++) {
-                    for (int y = 0; y < pixels->getHeight(); y++) {
-                        colors.push_back(pixels->get(x,y));
-                    }
-                }
-            }
-
-            std::set<Col> uniqueSet(colors.begin(), colors.end()); // Set automatically handles uniqueness
-            std::vector<Col> uniqueVec(uniqueSet.begin(), uniqueSet.end());
-
-            std::size_t plteLen = uniqueVec.size();
-            WRITEB(plteLen);
-
-            for (int i = 0; i < uniqueVec.size(); i++) {
-                int r = uniqueVec[i].r;
-                int g = uniqueVec[i].g;
-                int b = uniqueVec[i].b;
-                WRITEB(r);
-                WRITEB(g);
-                WRITEB(b);
-
-                std::cout << r << "," << g << "," << b << std::endl;
-            }
-
-            for (long i = 0; i < AnimFrameCount(); i++) {
-                std::cout << "I SAVING: " << i << std::endl;
-                //WRITEB(i);
-                for (int y = 0; y < AnimFrames()->get(i).Pixels()->getHeight(); y++) {
-                    for (int x = 0; x < AnimFrames()->get(i).Pixels()->getWidth(); x++) {
-                        Col px = AnimFrames()->get(i).Pixels()->get(x,y);
-                        auto it = uniqueSet.find(px);
-
-                        if (it != uniqueSet.end()) {
-                            int index = std::distance(uniqueSet.begin(), it);
-                            std::cout << "SAV INDEX: " << index << std::endl;
-                            WRITEB(index);
-                        } else {
-                            std::cerr << "Failed to find color in the palette: Terminating..." << std::endl;
-                            exit(-1);
-                        }
-                    }
-                }
-                WRITEB(null);
-            }
-
-            outFile << "EOP";
-
-            outFile.close(); // close the out file
-        } else {
-            std::cerr << "Failed to write project file" << std::endl;
+        if (!outFile.is_open()) {
+            std::cerr << "Failed to open file for writing" << std::endl;
+            return;
         }
+
+        outFile << "FDProj";
+        int major = 0;
+        int minor = 1;
+        long frames = m_Frames.getSize();
+        WRITEB(major); // version major
+        WRITEB(minor); // version minor
+        WRITEB(frames); // frame count (default)
+        WRITEB(m_Width); // animation width
+        WRITEB(m_Height); // animation height
+        WRITEB(m_FPS); // animation fps
+        unsigned char null = 0;
+        outFile << m_Name; // animation name
+        WRITEB(null);
+        outFile << m_Desc; // animation description
+        WRITEB(null);
+        outFile << m_Author; // animation author
+        WRITEB(null);
+
+        LongIndexArray<Frame>* frameData = AnimFrames();
+
+        // Use a vector and maintain stable indices
+        std::vector<Col> uniqueColors;
+        std::map<Col, int> colorToIndex;  // Map each color to its stable index
+
+        // First pass: collect unique colors with stable ordering
+        for (long i = 0; i < AnimFrameCount(); i++) {
+            auto pixels = frameData->get(i).Pixels();
+            for (int x = 0; x < pixels->getWidth(); x++) {
+                for (int y = 0; y < pixels->getHeight(); y++) {
+                    Col px = pixels->get(x,y);
+                    if (colorToIndex.find(px) == colorToIndex.end()) {
+                        colorToIndex[px] = uniqueColors.size();
+                        uniqueColors.push_back(px);
+                    }
+                }
+            }
+        }
+
+        // Write palette size
+        std::size_t plteLen = uniqueColors.size();
+        WRITEB(plteLen);
+
+        // Write palette colors
+        for (const Col& col : uniqueColors) {
+            WRITEB(col.r);
+            WRITEB(col.g);
+            WRITEB(col.b);
+        }
+
+        // Write frame data using stable indices
+        for (long i = 0; i < AnimFrameCount(); i++) {
+            auto pixels = frameData->get(i).Pixels();
+            for (int y = 0; y < pixels->getHeight(); y++) {
+                for (int x = 0; x < pixels->getWidth(); x++) {
+                    Col px = pixels->get(x,y);
+                    int index = colorToIndex[px];  // Get stable index
+                    WRITEB(index);
+                }
+            }
+            unsigned char null = 0;
+            WRITEB(null);
+        }
+
+        outFile << "EOP";
+        outFile.close();
     }
     void ProjectFile::ReadAndPopulate(char* filePath) {
         if (this == nullptr) {
@@ -275,23 +270,33 @@ namespace FuncDoodle {
             // read colorarr: OOPS
             for (int y = 0; y < animHeight; y++) {
                 for (int x = 0; x < animWidth; x++) {
-                    int index = 0;
-                    file.read(reinterpret_cast<char*>(&index), sizeof(index)); // read the index
+                    // Read raw bytes first
+                    unsigned char bytes[sizeof(int)];
+                    file.read(reinterpret_cast<char*>(bytes), sizeof(int));
+                    
+                    // Convert to index
+                    int index = *reinterpret_cast<int*>(bytes);
 
                     if (index > plteLen) {
-                        brokenIndexC++;
-                        lastBrokenFrame = i;
+                        std::cerr << "ERROR: INDEX OUT OF BOUNDS" << std::endl;
+                        std::exit(-1);
                     }
-                    std::cout << "Index: " << index << std::endl;
+                    
+                    // Debug output for first few pixels of each frame
+                    std::cout << "Frame " << i << " at (" << x << "," << y << "): " << "Raw bytes: [";
+                    for(size_t b = 0; b < sizeof(int); b++) {
+                        std::cout << std::hex << (int)bytes[b] << " ";
+                    }
+                    std::cout << std::dec << "] -> Index: " << index << std::endl;
 
-                    // plte.get(index)
-                    img->set(x, y, Col());
+                    img->set(x, y, plte[index]);
                 }
             }
             m_Frames.push_back(Frame(img));
+
+            unsigned char null;
+            file.read(reinterpret_cast<char*>(&null), 1);
         }
-        std::cerr << "BROKEN INDEX COUNT: " << brokenIndexC << std::endl;
-        std::cerr << "LAST BROKEN FRAME: " << lastBrokenFrame << std::endl;
         m_Width = animWidth;
         m_Height = animHeight;
         m_FPS = animFPS;
@@ -300,7 +305,7 @@ namespace FuncDoodle {
         char eop[4];
         file.getline(eop, sizeof(eop), '\0');
 
-        if (eop == "EOP") {
+        if (strcmp(eop, "EOP") == 0) {
             std::cout << "SUCCESS!" << std::endl;
         }
 
