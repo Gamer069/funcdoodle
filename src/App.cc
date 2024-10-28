@@ -11,7 +11,7 @@
 namespace FuncDoodle {
     // TODO: temporary m_FilePath in application
     // ;.............mnv,.
-    Application::Application() : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf")), m_Manager(new AnimationManager(nullptr)) {}
+    Application::Application(GLFWwindow* win) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr)), m_Window(win) {}
     Application::~Application() {}
     void Application::RenderImGui() {
         if (ImGui::BeginMainMenuBar()) {
@@ -87,6 +87,10 @@ namespace FuncDoodle {
 
         if (m_CurrentProj) {
             m_Manager->RenderTimeline();
+            m_Manager->RenderControls();
+
+            m_Manager->Player()->Play();
+            m_CurrentProj->DisplayFPS();
         }
     }
     void Application::OpenFileDialog() {
@@ -125,7 +129,7 @@ namespace FuncDoodle {
         }
         
         if (m_CurrentProj == nullptr) {
-            m_CurrentProj = new ProjectFile("", 1, 1, "", 0, "");
+            m_CurrentProj = new ProjectFile("", 1, 1, "", 0, "", m_Window);
         }
 
         m_CurrentProj->ReadAndPopulate(m_FilePath);

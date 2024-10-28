@@ -15,7 +15,8 @@
 #include <random>
 
 namespace FuncDoodle {
-    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_ToolManager(new ToolManager()) { m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager); }
+    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_ToolManager(new ToolManager()), m_Player(new AnimationPlayer(proj)), m_FrameRenderer(new FrameRenderer(nullptr, m_ToolManager)) {
+    }
     AnimationManager::~AnimationManager() {}
     void AnimationManager::RenderTimeline() {
         // Set scrollbar size (thickness)
@@ -86,5 +87,15 @@ namespace FuncDoodle {
         ImGui::End();
 
         m_ToolManager->RenderTools();
+    }
+
+    void AnimationManager::RenderControls() {
+        ImGui::Begin("Controls");
+        // TODO: use unicode chars ⏸ ▶
+        if (ImGui::Button(m_Player->Playing() ? "|" : ">")) {
+            m_Player->SetPlaying(!m_Player->Playing());
+        }
+
+        ImGui::End();
     }
 }

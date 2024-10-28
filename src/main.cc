@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         exit(-1);
     }
 
-    FuncDoodle::Application* application = new FuncDoodle::Application();
+    FuncDoodle::Application* application = new FuncDoodle::Application(win);
 
     while (!glfwWindowShouldClose(win)) {
         glfwPollEvents();

@@ -82,6 +82,9 @@
     "stop_token": "cpp",
     "__functional_base": "cpp",
     "__tree": "cpp",
-    "set": "cpp"
+    "set": "cpp",
+    "map": "cpp",
+    "queue": "cpp",
+    "stack": "cpp"
   }
 }

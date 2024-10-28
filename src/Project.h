@@ -6,10 +6,12 @@
 
 #include <iostream>
 
+#include <GLFW/glfw3.h>
+
 namespace FuncDoodle {
     class ProjectFile {
         public:
-            ProjectFile(char name[256], int width, int height, char author[100], int fps, char desc[512]);
+            ProjectFile(char name[256], int width, int height, char author[100], int fps, char desc[512], GLFWwindow* win);
             ~ProjectFile();
             const char* AnimName() const;
             void SetAnimName(char name[256]);
@@ -28,6 +30,8 @@ namespace FuncDoodle {
             LongIndexArray<Frame>* AnimFrames();
             void Write(char* filePath);
             void ReadAndPopulate(char* filePath);
+            constexpr inline GLFWwindow* Window() const { return m_Window; }
+            void DisplayFPS();
         private:
             char m_Name[256]; // 256
             int m_Width = 0;
@@ -36,5 +40,6 @@ namespace FuncDoodle {
             int m_FPS = 0;
             char m_Desc[512]; // 512
             LongIndexArray<Frame> m_Frames;
+            GLFWwindow* m_Window;
     };
 }

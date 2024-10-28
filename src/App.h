@@ -6,7 +6,7 @@
 namespace FuncDoodle {
     class Application {
         public:
-            Application();
+            Application(GLFWwindow* win);
             ~Application();
             void RenderImGui();
             void OpenFileDialog();
@@ -19,5 +19,6 @@ namespace FuncDoodle {
             ProjectFile* m_CurrentProj;
             ProjectFile* m_CacheProj;
             AnimationManager* m_Manager;
+            GLFWwindow* m_Window;
     };
 }

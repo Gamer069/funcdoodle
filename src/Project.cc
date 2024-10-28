@@ -13,11 +13,14 @@
 #include <vector>
 #include <set>
 #include <map>
+#include <sstream>
+
+#include <GLFW/glfw3.h>
 
 #define WRITEB(b) do { outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); } while (0)
 
 namespace FuncDoodle {
-    ProjectFile::ProjectFile(char name[], int width, int height, char author[], int fps, char desc[]) {
+    ProjectFile::ProjectFile(char name[], int width, int height, char author[], int fps, char desc[], GLFWwindow* win) : m_Window(win) {
         strcpy(m_Name, name);
         m_Width = width;
         m_Height = height;
@@ -315,5 +318,20 @@ namespace FuncDoodle {
         }
 
         file.close();
+    }
+
+    void ProjectFile::DisplayFPS() {
+        double last = glfwGetTime();
+        int frameCount = 0;
+        double cur = glfwGetTime();
+        frameCount++;
+        if (cur - last >= 1.0) {
+            std::cout << "FPS: " << frameCount << std::endl;
+            std::stringstream title;
+            title << "FuncDoodle -- " << AnimName() << " (" << frameCount << ")";
+            glfwSetWindowTitle(m_Window, title.str().c_str());
+            frameCount = 0;
+            last = cur;
+        }
     }
 }
