@@ -1,1 +1,0 @@
-/usr/bin/clang++ -O3 -DNDEBUG -arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/uhjencoder.dir/utils/uhjencoder.cpp.o -o uhjencoder  libalcommon.a -pthread /opt/homebrew/lib/libsndfile.dylib

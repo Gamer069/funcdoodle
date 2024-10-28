@@ -1,0 +1,10 @@
+release.sh
+CMakeCache.txt
+CMakeFiles/
+Makefile
+FuncDoodle
+FuncDoodle.app
+pkg_app.sh
+build_*/
+builds/
+.git
