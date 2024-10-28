@@ -8,3 +8,4 @@ pkg_app.sh
 build_*/
 builds/
 .git
+script.scpt
