@@ -10,10 +10,10 @@ namespace FuncDoodle {
             ToolManager();
             ~ToolManager();
             void RenderTools();
-            __inline__ const int SelectedTool() const { return m_SelectedTool; }
-            __inline__ const float* Col() const { return m_Col; }
+            const int SelectedTool() { return m_SelectedTool; }
+            const float* Col() { return m_Col; }
         private:
-            int m_SelectedTool;
+            int m_SelectedTool = 0;
             float m_Col[3] = {0.0f, 0.0f, 0.0f};
     };
 }

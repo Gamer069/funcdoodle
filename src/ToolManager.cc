@@ -4,7 +4,7 @@
 #include "Tool.h"
 
 namespace FuncDoodle {
-    ToolManager::ToolManager() {
+    ToolManager::ToolManager() : m_SelectedTool(0) {
     } 
     ToolManager::~ToolManager() {
     }
@@ -15,6 +15,7 @@ namespace FuncDoodle {
         for (int i = 0; i < (sizeof(types) / sizeof(ToolType)); i++) {
             if (ImGui::RadioButton(typeName[i], &m_SelectedTool, i)) {
                 std::cout << typeName[i] << std::endl;
+                std::cout << i << std::endl;
             }
         }
         if (m_SelectedTool == 0) {

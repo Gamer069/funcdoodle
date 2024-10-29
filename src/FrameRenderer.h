@@ -7,8 +7,8 @@
 namespace FuncDoodle {
     class FrameRenderer {
         public:
-            FrameRenderer(Frame* frame, ToolManager* toolManager) : m_Frame(frame), m_ToolManager(toolManager) {}
-            ~FrameRenderer() {}
+            FrameRenderer(Frame* frame, ToolManager* manager) : m_Frame(frame), m_ToolManager(manager) {}
+            ~FrameRenderer() { CleanupFrame(); }
             void RenderFrame();
             void InitPixels();
 
@@ -16,8 +16,16 @@ namespace FuncDoodle {
             void SetFrame(Frame* frame) { m_Frame = frame; }
             __inline__ const ToolManager* GetToolManager() const { return m_ToolManager; }
             void SetToolManager(ToolManager* toolManager) { m_ToolManager = toolManager; }
+
+            void CleanupFrame() {
+                if (m_Frame != nullptr) {
+                    delete m_Frame;
+                    m_Frame = nullptr;
+                }
+            }
         private:
             Frame* m_Frame;
             ToolManager* m_ToolManager;
+            int m_PixelScale = 8;
     };
 }

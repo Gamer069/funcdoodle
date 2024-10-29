@@ -15,7 +15,9 @@
 #include <random>
 
 namespace FuncDoodle {
-    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_ToolManager(new ToolManager()), m_Player(new AnimationPlayer(proj)), m_FrameRenderer(new FrameRenderer(nullptr, m_ToolManager)) {
+    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)) {
+        m_ToolManager = new ToolManager();
+        m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager);
     }
     AnimationManager::~AnimationManager() {}
     void AnimationManager::RenderTimeline() {
@@ -70,11 +72,19 @@ namespace FuncDoodle {
 
             drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(255, 255, 255, 255));
             if (m_SelectedFrame == i) {
-                drawList->AddRect(ImVec2(topLeft.x - 3, topLeft.y - 3), ImVec2(bottomRight.x + 3, bottomRight.y + 3), IM_COL32(255, 0, 0, 255), 0.0f, ImDrawFlags_None, 5.0f);
                 const auto frames = m_Proj->AnimFrames();
-                auto frame = frames->get(i);
-                m_FrameRenderer->SetFrame(&frame);
+                Frame frame = frames->get(i);
+                m_FrameRenderer->CleanupFrame();  // Clean up old frame
+                m_FrameRenderer->SetFrame(new Frame(frame));
                 m_FrameRenderer->RenderFrame();
+                drawList->AddRect(
+                    topLeft, 
+                    bottomRight, 
+                    IM_COL32(255, 0, 0, 255),  // Red color
+                    0.0f,   // rounding
+                    0,      // flags
+                    8.0f    // thickness - increased to make it much thicker
+                );
             }
             topLeft.x += frameWidth + padding;
             bottomRight.x += frameWidth + padding;
