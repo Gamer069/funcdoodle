@@ -85,6 +85,8 @@
     "set": "cpp",
     "map": "cpp",
     "queue": "cpp",
-    "stack": "cpp"
+    "stack": "cpp",
+    "execution": "cpp",
+    "print": "cpp"
   }
 }

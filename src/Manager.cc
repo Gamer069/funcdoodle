@@ -29,7 +29,7 @@ namespace FuncDoodle {
         ImGui::SetNextWindowSizeConstraints(ImVec2(0, fixedHeight), ImVec2(FLT_MAX, fixedHeight));
 
         // Begin the window with horizontal scrollbar enabled
-        ImGui::Begin("Timeline", nullptr, ImGuiWindowFlags_HorizontalScrollbar);
+        ImGui::Begin("Timeline", nullptr, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_NoBackground);
         ImDrawList* drawList = ImGui::GetWindowDrawList();
 
         // Define frame size and padding

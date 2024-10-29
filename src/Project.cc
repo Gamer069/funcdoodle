@@ -264,9 +264,6 @@ namespace FuncDoodle {
         long brokenIndexC = 0;
         long lastBrokenFrame = 0;
 
-        // TODO: if this code is wrong fix it
-        std::cout << "FRAME COUNT:";
-        std::cout << frameCount << std::endl;
         for (long i = 0; i < frameCount; i++) {
             ImageArray* img = new ImageArray(animWidth, animHeight);
 
@@ -285,12 +282,9 @@ namespace FuncDoodle {
                         std::exit(-1);
                     }
                     
-                    // Debug output for first few pixels of each frame
-                    std::cout << "Frame " << i << " at (" << x << "," << y << "): " << "Raw bytes: [";
-                    for(size_t b = 0; b < sizeof(int); b++) {
+                    for (size_t b = 0; b < sizeof(int); b++) {
                         std::cout << std::hex << (int)bytes[b] << " ";
                     }
-                    std::cout << std::dec << "] -> Index: " << index << std::endl;
 
                     img->set(x, y, plte[index]);
                 }

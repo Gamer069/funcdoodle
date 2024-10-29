@@ -9,3 +9,5 @@ build_*/
 builds/
 .git
 script.scpt
+.editorconfig
+.vscode/

@@ -13,6 +13,7 @@ namespace FuncDoodle {
             void SaveFileDialog();
             void ReadProjectFile();
             void SaveProjectFile();
+            void CheckKeybinds(char* newProj, char* open, char* save);
         private:
             char* m_FilePath;
             bool m_NewProjOpen;

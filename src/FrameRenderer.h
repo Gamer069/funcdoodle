@@ -27,5 +27,6 @@ namespace FuncDoodle {
             Frame* m_Frame;
             ToolManager* m_ToolManager;
             int m_PixelScale = 8;
+            ImVec2 m_LastMousePos = ImVec2(-1, -1);
     };
 }

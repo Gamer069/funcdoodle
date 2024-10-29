@@ -16,3 +16,8 @@ Style everything.
 Write proper .gitignore
 
 Setup github releases with ./release.sh
+
+
+
+MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed. 
+Fix pixel scaling
