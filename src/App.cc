@@ -7,12 +7,17 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <cmath>
+#include <imgui.h>
+#include <cstring>
+#include <unordered_map>
+#include <stdint.h>
 
 namespace FuncDoodle
 {
     // TODO: temporary m_FilePath in application
     // ;.............mnv,.
-    Application::Application(GLFWwindow* win) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr)), m_Window(win) {}
+    Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr)), m_Window(win), m_AssetLoader(assetLoader) {}
     Application::~Application() {}
     char* GlobalGetShortcut(const char* key, bool shift, bool super)
     {
@@ -46,10 +51,6 @@ namespace FuncDoodle
 
         return shortcut;
     }
-
-#include <imgui.h>
-#include <cstring>
-#include <unordered_map>
 
     void Application::CheckKeybinds(char* newProj, char* open, char* save) {
         ImGuiIO& io = ImGui::GetIO();
@@ -124,6 +125,9 @@ namespace FuncDoodle
         char* openShortcut = GlobalGetShortcut("O", false, false);
         char* saveShortcut = GlobalGetShortcut("S", false, false);
         CheckKeybinds(newProjShortcut, openShortcut, saveShortcut);
+
+        if (!m_CurrentProj) RenderOptions();
+
         if (ImGui::BeginMainMenuBar())
         {
             if (ImGui::BeginMenu("File"))
@@ -202,12 +206,13 @@ namespace FuncDoodle
                 m_CacheProj->SetAnimDesc(desc);
             }
 
-            if (ImGui::Button("Close"))
+            if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false))
             {
                 m_NewProjOpen = false;
                 ImGui::CloseCurrentPopup();
             }
-            if (ImGui::Button("OK"))
+            ImGui::SameLine();
+            if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false))
             {
                 m_CurrentProj = m_CacheProj;
                 m_Manager->SetProj(m_CurrentProj);
@@ -296,5 +301,69 @@ namespace FuncDoodle
             return;
         }
         m_CurrentProj->Write(m_FilePath);
+    }
+    void Application::RenderOptions()
+    {
+        // Get the viewport dimensions
+        ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImVec2 viewportPos = viewport->WorkPos;
+        ImVec2 viewportSize = viewport->WorkSize;
+        float menuBarHeight = ImGui::GetFrameHeight();
+
+        // Calculate center of viewport
+        ImVec2 center(
+            viewportPos.x + (viewportSize.x * 0.5f),
+            viewportPos.y + (viewportSize.y * 0.5f)
+        );
+
+        ImVec4 btnNewCol = ImVec4(1, 1, 1, 1);
+        ImVec4 btnOpenCol = ImVec4(1, 1, 1, 1);
+        ImVec4 tintNew = ImVec4(0, 0, 0, 1);
+        ImVec4 tintOpen = ImVec4(0, 0, 0, 1);
+
+        // Get the draw list for the viewport
+        ImDrawList* drawList = ImGui::GetBackgroundDrawList();
+
+        auto invertColor = [](ImVec4& col) {
+            col.x = 1.0f - col.x;
+            col.y = 1.0f - col.y;
+            col.z = 1.0f - col.z;
+            col.w = 1.0f;
+        };
+
+        int btnWidth = 50;
+        int btnHeight = 50;
+
+        ImVec2 safePosAdd = ImVec2(viewportPos.x, viewportPos.y);
+        ImVec2 safePosAddMax = ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight);
+
+        ImVec2 safePosOpen = ImVec2(viewportPos.x, viewportPos.y + 55);
+        ImVec2 safePosOpenMax = ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight);
+
+        drawList->AddRectFilled(viewportPos, ImVec2(viewportPos.x + viewportSize.x, viewportPos.y + viewportSize.y), IM_COL32(50, 50, 50, 255));
+
+        ImVec2 mousePos = ImGui::GetMousePos();
+        if (mousePos.x >= safePosAdd.x && mousePos.x <= safePosAddMax.x &&
+            mousePos.y >= safePosAdd.y && mousePos.y <= safePosAddMax.y) {
+            invertColor(btnNewCol);
+            invertColor(tintNew);
+            if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+                m_NewProjOpen = true;
+            }
+        }
+
+        if (mousePos.x >= safePosOpen.x && mousePos.x <= safePosOpenMax.x &&
+            mousePos.y >= safePosOpen.y && mousePos.y <= safePosOpenMax.y) {
+            invertColor(btnOpenCol);
+            invertColor(tintOpen);
+            if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+                OpenFileDialog();
+            }
+        }
+
+        drawList->AddRectFilled(safePosAdd, safePosAddMax, ImGui::ColorConvertFloat4ToU32(btnNewCol), 10.0f);
+        m_AssetLoader->RenderImage("add.png", drawList, safePosAdd, ImVec2(btnWidth, btnHeight), tintNew);
+        drawList->AddRectFilled(safePosOpen, safePosOpenMax, ImGui::ColorConvertFloat4ToU32(btnOpenCol), 10.0f);
+        m_AssetLoader->RenderImage("folder.png", drawList, safePosOpen, ImVec2(btnWidth, btnHeight), tintOpen);
     }
 }

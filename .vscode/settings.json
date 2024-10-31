@@ -87,6 +87,7 @@
     "queue": "cpp",
     "stack": "cpp",
     "execution": "cpp",
-    "print": "cpp"
+    "print": "cpp",
+    "text_encoding": "cpp"
   }
 }

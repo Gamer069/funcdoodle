@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "mkdir -p build && cd build && cmake .. && make && ./FuncDoodle",
+            "command": "mkdir -p build && cd build && cmake .. && make && cp -r ../assets . && ./FuncDoodle",
             "problemMatcher": []
         },
         { 

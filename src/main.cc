@@ -6,9 +6,11 @@
 #include <imgui_impl_opengl3.h>
 #include <portaudio.h>
 #include <stdio.h>
+#include <filesystem>
 
 #include <cmath>
 
+#include "AssetLoader.h"
 #include "App.h"
 
 float SAMPLE_RATE = 44100.0;
@@ -74,6 +76,24 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 }
 
 int main(int argc, char** argv) {
+    const char* path = argv[0];
+    const char* lastSlash = strrchr(path, '/');
+    if (!lastSlash) {
+        lastSlash = strrchr(path, '\\');
+    }
+    char dirPath[1024];
+    if (lastSlash) {
+        size_t len = lastSlash - path;
+        strncpy(dirPath, path, len);
+        dirPath[len] = '\0';
+    } else {
+        strncpy(dirPath, path, sizeof(dirPath) - 1);
+        dirPath[sizeof(dirPath) - 1] = '\0';
+    }
+
+    std::filesystem::path assetsPath(dirPath);
+    assetsPath /= "assets";
+
     if (!glfwInit()) {
         const char* description;
         int error = glfwGetError(&description);
@@ -127,10 +147,12 @@ int main(int argc, char** argv) {
 
     // Set overall style parameters
     style->WindowRounding = 10.0f;
-    style->FrameRounding = 3.0f;
-    style->PopupRounding = 6.0f;
+    style->FrameRounding = 5.0f;
+    style->PopupRounding = 12.0f;
     style->ScrollbarRounding = 10.0f;
     style->GrabRounding = 6.0f;
+    style->TabRounding = 12.0f;
+    style->ChildRounding = 12.0f;
 
     // Set padding
     style->WindowPadding = ImVec2(10, 10);
@@ -202,7 +224,8 @@ int main(int argc, char** argv) {
         exit(-1);
     }
 
-    FuncDoodle::Application* application = new FuncDoodle::Application(win);
+    FuncDoodle::AssetLoader assetLoader(assetsPath);
+    FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
     while (!glfwWindowShouldClose(win)) {
         glfwPollEvents();
