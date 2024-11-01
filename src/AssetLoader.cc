@@ -56,4 +56,27 @@ namespace FuncDoodle {
 
         drawList->AddImage((void*)(intptr_t)textureID, pos, ImVec2(pos.x + size.x, pos.y + size.y), ImVec2(0, 0), ImVec2(1, 1), ImGui::ColorConvertFloat4ToU32(tint));
     }
+    uint AssetLoader::LoadImage(const char* name) {
+        int width, height, channels;
+        unsigned char* data = stbi_load((m_AssetsPath / name).c_str(), &width, &height, &channels, 0);
+        if (!data) {
+            std::cerr << "Failed to load image " << (m_AssetsPath / name).c_str() << std::endl;
+            std::cerr << "Error: " << stbi_failure_reason() << std::endl;
+            std::cerr << "Image dimensions: " << width << "x" << height << ", channels: " << channels << std::endl;
+            std::cerr << "Attempted to load from assets path: " << m_AssetsPath << std::endl;
+            std::exit(-1);
+        }
+
+        uint textureID;
+        glGenTextures(1, &textureID);
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+
+        return textureID;
+    }
 }

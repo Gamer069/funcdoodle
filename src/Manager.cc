@@ -12,10 +12,11 @@
 
 #include <string>
 #include <iostream>
-#include <random>
+
+#include "LoadedImages.h"
 
 namespace FuncDoodle {
-    AnimationManager::AnimationManager(ProjectFile* proj) : m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)) {
+    AnimationManager::AnimationManager(ProjectFile* proj, AssetLoader* assetLoader) : m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)), m_AssetLoader(assetLoader) {
         m_ToolManager = new ToolManager();
         m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager);
     }
@@ -71,7 +72,7 @@ namespace FuncDoodle {
             drawList->AddText(font, fontSize, m_SelectedFrame == i ? ImVec2(topLeft.x + frameWidth/2, bottomRight.y + 10) : ImVec2(topLeft.x + frameWidth/2, bottomRight.y), IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
             drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(255, 255, 255, 255));
-            if (m_SelectedFrame == i) {
+            if ((m_Player->Playing() && m_Player->CurFrame() == i) || (!m_Player->Playing() && m_SelectedFrame == i)) {
                 const auto frames = m_Proj->AnimFrames();
                 Frame frame = frames->get(i);
                 m_FrameRenderer->CleanupFrame();  // Clean up old frame
@@ -101,9 +102,29 @@ namespace FuncDoodle {
 
     void AnimationManager::RenderControls() {
         ImGui::Begin("Controls");
-        // TODO: use unicode chars ⏸ ▶
-        if (ImGui::Button(m_Player->Playing() ? "|" : ">")) {
+        
+        uint texId;
+        if (m_Player->Playing()) texId = s_PauseTexId;
+        else texId = s_PlayTexId;
+        std::cout << "texId: " << texId << std::endl;
+        if (ImGui::ImageButton("togglePlay", (void*)(intptr_t)texId, ImVec2(20, 20))) {
             m_Player->SetPlaying(!m_Player->Playing());
+        }
+
+        ImGui::SameLine();
+
+        texId = s_RewindTexId;
+        if (ImGui::ImageButton("rewind", (void*)(intptr_t)texId, ImVec2(20, 20))) {
+            m_SelectedFrame = 0;
+            m_Player->Rewind();
+        }
+
+        ImGui::SameLine();
+
+        texId = s_EndTexId;
+        if (ImGui::ImageButton("end", (void*)(intptr_t)texId, ImVec2(20, 20))) {
+            m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
+            m_Player->End();
         }
 
         ImGui::End();

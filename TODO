@@ -1,23 +1,10 @@
-Add more tools...
+Add more tools
 Make modding framework.
-Fix segfault when opening file.
-Add play button.
-Fix drawing
-Github actions automation..?
+Implement controls.
 Sounds for animations
-Version system.
-Use modding framework in this project.
-Write tests for modding framework. 
-Test cmakelists on multiple platforms.
-Add more macros for dev.
-Make it so something like asserts get nuked at dist build 
-Add dist build.
-Style everything.
-Write proper .gitignore
-
+Test cmakelists on multiple platforms with vms.
 Setup github releases with ./release.sh
 
+MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed -- Fix drawing
 
-
-MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed. 
-Fix pixel scaling
+BIG TODO: Add edit project menu and fix the null m_CacheProj which i caused on purpose to see if m_CurrentProj was just created.

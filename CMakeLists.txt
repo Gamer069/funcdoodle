@@ -106,7 +106,8 @@ endif()
 # Build options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(FuncDoodle PRIVATE DEBUG ALSOFT_EAX)
-    target_compile_options(FuncDoodle PRIVATE -g)
+    target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
+    target_link_options(FuncDoodle PRIVATE -fsanitize=address)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     target_compile_definitions(FuncDoodle PRIVATE NDEBUG ALSOFT_EAX)
     target_compile_options(FuncDoodle PRIVATE -O3)
@@ -114,4 +115,3 @@ endif()
 
 # Extra flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
-

@@ -13,11 +13,13 @@
 #include <unordered_map>
 #include <stdint.h>
 
+#include "LoadedImages.h"
+
 namespace FuncDoodle
 {
     // TODO: temporary m_FilePath in application
     // ;.............mnv,.
-    Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr)), m_Window(win), m_AssetLoader(assetLoader) {}
+    Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
     Application::~Application() {}
     char* GlobalGetShortcut(const char* key, bool shift, bool super)
     {
@@ -215,7 +217,8 @@ namespace FuncDoodle
             if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false))
             {
                 m_CurrentProj = m_CacheProj;
-                m_Manager->SetProj(m_CurrentProj);
+                std::cout << "CREATE NEW PROJ" << std::endl;
+                m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
                 m_NewProjOpen = false;
             }
             ImGui::EndPopup();
@@ -225,9 +228,9 @@ namespace FuncDoodle
         {
             m_Manager->RenderTimeline();
             m_Manager->RenderControls();
-
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
+            m_CacheProj = nullptr;
         }
     }
     void Application::OpenFileDialog()

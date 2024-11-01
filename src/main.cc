@@ -13,6 +13,8 @@
 #include "AssetLoader.h"
 #include "App.h"
 
+#include "LoadedImages.h"
+
 float SAMPLE_RATE = 44100.0;
 
 std::vector<double> notes = {
@@ -31,6 +33,10 @@ enum Note {
 };
 
 std::vector<std::pair<Note, double>> melody = {
+    {C4, 1},
+    {D4, 1},
+    {C4, 1},
+    {D4, 1}
 };
 
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
@@ -226,6 +232,8 @@ int main(int argc, char** argv) {
 
     FuncDoodle::AssetLoader assetLoader(assetsPath);
     FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
+
+    FuncDoodle::GlobalLoadImages(&assetLoader);
 
     while (!glfwWindowShouldClose(win)) {
         glfwPollEvents();

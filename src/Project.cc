@@ -17,6 +17,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "MacroUtils.h"
+
 #define WRITEB(b) do { outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); } while (0)
 
 namespace FuncDoodle {
@@ -70,6 +72,10 @@ namespace FuncDoodle {
     }
 
     const int ProjectFile::AnimFPS() const {
+        if (this == nullptr) {
+            std::cerr << "ProjectFile is nullptr" << std::endl;
+            std::exit(-1);
+        }
         return m_FPS;
     }
     void ProjectFile::SetAnimFPS(int FPS) {
@@ -315,17 +321,20 @@ namespace FuncDoodle {
     }
 
     void ProjectFile::DisplayFPS() {
-        double last = glfwGetTime();
-        int frameCount = 0;
-        double cur = glfwGetTime();
+        static double lastTime = glfwGetTime();
+        static int frameCount = 0;
+        
+        double currentTime = glfwGetTime();
         frameCount++;
-        if (cur - last >= 1.0) {
-            std::cout << "FPS: " << frameCount << std::endl;
+
+        // Update FPS counter every second
+        if (currentTime - lastTime >= 1.0) {
             std::stringstream title;
-            title << "FuncDoodle -- " << AnimName() << " (" << frameCount << ")";
+            title << "FuncDoodle -- " << FUNCVER << " -- " << AnimName() << " (" << frameCount << " FPS)";
             glfwSetWindowTitle(m_Window, title.str().c_str());
+            
             frameCount = 0;
-            last = cur;
+            lastTime = currentTime;
         }
     }
 }

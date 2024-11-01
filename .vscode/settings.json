@@ -88,6 +88,8 @@
     "stack": "cpp",
     "execution": "cpp",
     "print": "cpp",
-    "text_encoding": "cpp"
+    "text_encoding": "cpp",
+    "codecvt": "cpp",
+    "span": "cpp"
   }
 }

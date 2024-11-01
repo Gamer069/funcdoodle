@@ -13,6 +13,7 @@ namespace FuncDoodle {
             void LoadAssets();
             void UnloadAssets();
             void RenderImage(const char* name, ImDrawList* drawList, const ImVec2& pos, const ImVec2& size, const ImVec4& tint = ImVec4(1, 1, 1, 1));
+            uint LoadImage(const char* name);
         private:
             std::filesystem::path m_AssetsPath;
     };
