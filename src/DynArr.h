@@ -1,7 +1,5 @@
 #pragma once
 
-#include <execinfo.h>
-
 namespace FuncDoodle {
     template <typename T>
         class LongIndexArray {
@@ -58,6 +56,32 @@ namespace FuncDoodle {
                     data[index] = value;
                     ++size;
                 }
+                void moveBackward(long i) {
+                    if (i <= 0 || i >= size) return;  // Bounds check
+                    T temp = data[i];
+                    data[i] = data[i - 1];
+                    data[i - 1] = temp;
+                }
+
+                void moveForward(long i) {
+                    if (i < 0 || i >= size - 1) return;  // Bounds check
+                    T temp = data[i];
+                    data[i] = data[i + 1];
+                    data[i + 1] = temp;
+                }
+                
+                void remove(long index) {
+                    if (index < 0 || index >= size) {
+                        throw std::out_of_range("Index out of range");
+                    }
+
+                    // Shift all elements after index one position to the left
+                    for (long i = index; i < size - 1; i++) {
+                        data[i] = data[i + 1];
+                    }
+                    size--;
+                }
+
                 T& operator[](long index) {
                     if (index < 0 || index >= size) {
                         std::cout << "[]" << std::endl;
@@ -76,10 +100,6 @@ namespace FuncDoodle {
                 T& get(long index) {
                     if (index < 0 || index >= size) {
                         std::cout << "get (DynArr)" << std::endl;
-                        void* arr[10];
-                        size_t size = backtrace(arr, 10);
-                        backtrace_symbols_fd(arr, size, 2);
-                        std::cout << index << std::endl;
                         throw std::out_of_range("Index out of range");
                     }
                     return data[index];

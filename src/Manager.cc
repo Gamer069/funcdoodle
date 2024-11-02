@@ -51,19 +51,31 @@ namespace FuncDoodle {
         ImFont* font = ImGui::GetFont();
         float fontSize = ImGui::GetFontSize();
 
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_LeftBracket))) {
+        if (ImGui::IsKeyPressed(ImGuiKey_LeftBracket, true)) {
             if (m_SelectedFrame > 0) m_SelectedFrame--;
         }
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_RightBracket))) {
+        if (ImGui::IsKeyPressed(ImGuiKey_RightBracket, true)) {
             if (m_SelectedFrame < m_Proj->AnimFrameCount()-1) ++m_SelectedFrame;
         }
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P))) {
+        if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
             m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, frame);
         }
-        if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_O))) {
+        if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
             m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, frame);
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
+            m_Proj->AnimFrames()->moveForward(m_SelectedFrame);
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
+            m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
+            if (m_Proj->AnimFrameCount() != 1) m_Proj->AnimFrames()->remove(m_SelectedFrame);
+        }
+        if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
+            m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
         }
 
         // Render frames
@@ -86,6 +98,38 @@ namespace FuncDoodle {
                     8.0f    // thickness - increased to make it much thicker
                 );
             }
+            ImVec2 mousePos = ImGui::GetMousePos();
+            bool isHovered = (mousePos.x >= topLeft.x && mousePos.x <= bottomRight.x &&
+                            mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
+
+            char menuName[32];  // Make buffer big enough for "frame" + numbers + "menu" + null terminator
+            sprintf(menuName, "##frame%dmenu", i);
+            char* menuNamePtr = menuName;
+
+            // Create unique ID for this popup
+            if (isHovered && ImGui::IsMouseClicked(1)) {
+                ImGui::OpenPopup(menuNamePtr);
+            }
+
+            if (isHovered && ImGui::IsMouseClicked(0)) {
+                m_SelectedFrame = i;
+            }
+
+            if (ImGui::BeginPopup(menuNamePtr)) {
+                if (ImGui::MenuItem("Delete", "\\")) {
+                    if (m_Proj->AnimFrameCount() != 1) m_Proj->AnimFrames()->remove(i);
+                }
+                if (ImGui::MenuItem("Insert before", "O")) {
+                    Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
+                    m_Proj->AnimFrames()->insertBefore(i, frame);
+                }
+                if (ImGui::MenuItem("Insert after", "P")) {
+                    Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
+                    m_Proj->AnimFrames()->insertAfter(i, frame);
+                }
+                ImGui::EndPopup();
+            }
+
             topLeft.x += frameWidth + padding;
             bottomRight.x += frameWidth + padding;
         }
@@ -104,20 +148,20 @@ namespace FuncDoodle {
 
         GlobalLoadImages(m_AssetLoader);
         
-        if (ImGui::ImageButton("rewind", (void*)(intptr_t)s_RewindTexId, ImVec2(20, 20))) {
+        if (ImGui::ImageButton("rewind", (void*)(intptr_t)s_RewindTexId, ImVec2(20, 20)) || ImGui::IsKeyPressed(ImGuiKey_J, true)) {
             m_SelectedFrame = 0;
             m_Player->Rewind();
         }
 
         ImGui::SameLine();
 
-        if (ImGui::ImageButton("togglePlay", m_Player->Playing() ? (void*)(intptr_t)s_PauseTexId : (void*)(intptr_t)s_PlayTexId, ImVec2(20, 20))) {
+        if (ImGui::ImageButton("togglePlay", m_Player->Playing() ? (void*)(intptr_t)s_PauseTexId : (void*)(intptr_t)s_PlayTexId, ImVec2(20, 20)) || ImGui::IsKeyPressed(ImGuiKey_K, true)) {
             m_Player->SetPlaying(!m_Player->Playing());
         }
 
         ImGui::SameLine();
 
-        if (ImGui::ImageButton("end", (void*)(intptr_t)s_EndTexId, ImVec2(20, 20))) {
+        if (ImGui::ImageButton("end", (void*)(intptr_t)s_EndTexId, ImVec2(20, 20)) || ImGui::IsKeyPressed(ImGuiKey_L, true)) {
             m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
             m_Player->End();
         }

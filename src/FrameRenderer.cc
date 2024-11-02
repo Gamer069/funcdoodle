@@ -14,6 +14,19 @@ namespace FuncDoodle
 
         if (!m_Frame || !m_ToolManager)
             return;
+
+        if (ImGui::BeginPopupContextWindow()) {
+            if (ImGui::MenuItem("Zoom out", "-")) {
+                m_PixelScale--;
+            }
+            if (ImGui::MenuItem("Zoom equal", "0")) {
+                m_PixelScale = 1;
+            }
+            if (ImGui::MenuItem("Zoom in", "=")) {
+                m_PixelScale++;
+            }
+            ImGui::EndPopup();
+        }
         InitPixels();
 
         // set has rendered to false if changing the actual pixel data
@@ -34,18 +47,16 @@ namespace FuncDoodle
         {
             if (ImGui::IsKeyPressed(ImGuiKey_Equal))
             { // = key for zoom in
-                // Calculate max scale that would fit in window
-                int maxScaleWidth = static_cast<int>(contentRegion.x / pixels->getWidth());
-                int maxScaleHeight = static_cast<int>(contentRegion.y / pixels->getHeight());
-                int maxAllowedScale = std::min(maxScaleWidth, maxScaleHeight);
-
                 m_PixelScale += 1;
-                m_PixelScale = std::min(maxAllowedScale, m_PixelScale);
             }
             if (ImGui::IsKeyPressed(ImGuiKey_Minus))
             { // - key for zoom out
                 m_PixelScale -= 1;
                 m_PixelScale = std::max(1, m_PixelScale); // Minimum of 1
+            }
+
+            if (ImGui::IsKeyPressed(ImGuiKey_0)) {
+                m_PixelScale = 1;
             }
         }
 
