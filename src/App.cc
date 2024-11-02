@@ -295,6 +295,8 @@ namespace FuncDoodle
             m_Manager->RenderControls();
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
+        } else {
+            glfwSetWindowTitle(m_Window, "FuncDoodle"); 
         }
     }
     void Application::OpenFileDialog()
