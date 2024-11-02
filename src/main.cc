@@ -231,9 +231,10 @@ int main(int argc, char** argv) {
     }
 
     FuncDoodle::AssetLoader assetLoader(assetsPath);
-    FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
     FuncDoodle::GlobalLoadImages(&assetLoader);
+
+    FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
     while (!glfwWindowShouldClose(win)) {
         glfwPollEvents();

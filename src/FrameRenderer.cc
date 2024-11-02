@@ -82,6 +82,8 @@ namespace FuncDoodle
             if (currentPixel.x >= 0 && currentPixel.x < pixels->getWidth() &&
                 currentPixel.y >= 0 && currentPixel.y < pixels->getHeight())
             {
+                int selectedTool = m_ToolManager->SelectedTool();
+
                 // If we have a valid last position, interpolate
                 if (m_LastMousePos.x >= 0 && m_LastMousePos.y >= 0)
                 {
@@ -91,13 +93,31 @@ namespace FuncDoodle
 
                     // Pre-calculate color values outside the loop
                     unsigned char colNew[3] = {255, 255, 255}; // Default white for eraser
-                    if (m_ToolManager->SelectedTool() == 0)
+                    if (selectedTool == 0)
                     {
                         const float *colOld = m_ToolManager->Col();
                         for (int j = 0; j < 3; j++)
                         {
                             colNew[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
                         }
+                    } else if (selectedTool == 2) {
+                        const float* colOld = m_ToolManager->Col();
+                        unsigned char colResult[3];
+                        for (int j = 0; j < 3; j++) {
+                            colResult[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
+                        }
+                        // FLOODFILL
+                        Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
+                        FloodFill(currentPixel.x, currentPixel.y, curPixelCol, Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
+                        colNew[0] = colResult[0];
+                        colNew[1] = colResult[1];
+                        colNew[2] = colResult[2];
+                    } else if (selectedTool == 3) {
+                        m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
+                        colNew[0] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).r;
+                        colNew[1] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).g;
+                        colNew[2] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).b;
+                        steps = 0;
                     }
 
                     for (int i = 0; i <= steps; i++)
@@ -112,20 +132,44 @@ namespace FuncDoodle
                             m_Frame->SetPixel(interpX, interpY, Col{.r = colNew[0], .g = colNew[1], .b = colNew[2]});
                         }
                     }
+                    if (selectedTool == 3) {
+                        m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{.r = colNew[0], .g = colNew[1], .b = colNew[2]});
+                    }
                 }
                 else
                 {
                     // Draw single pixel if no last position
                     unsigned char colNew[3] = {255, 255, 255}; // Default white for eraser
-                    if (m_ToolManager->SelectedTool() == 0)
+                    if (selectedTool == 0)
                     {
                         const float *colOld = m_ToolManager->Col();
                         for (int j = 0; j < 3; j++)
                         {
                             colNew[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
                         }
+                    } else if (selectedTool == 2) {
+                        const float* colOld = m_ToolManager->Col();
+                        unsigned char colResult[3];
+                        for (int j = 0; j < 3; j++) {
+                            colResult[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
+                        }
+                        // FLOODFILL
+                        Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
+                        FloodFill(currentPixel.x, currentPixel.y, curPixelCol, Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
+                        colNew[0] = colResult[0];
+                        colNew[1] = colResult[1];
+                        colNew[2] = colResult[2];
+                    } else if (selectedTool == 3) {
+                        // For color picker, we just pick the color - no drawing
+                        m_ToolManager->SetCol(pixels->get(currentPixel.x, currentPixel.y));
+                        colNew[0] = pixels->get(currentPixel.x, currentPixel.y).r;
+                        colNew[1] = pixels->get(currentPixel.x, currentPixel.y).g;
+                        colNew[2] = pixels->get(currentPixel.x, currentPixel.y).b;
                     }
-                    m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{.r = colNew[0], .g = colNew[1], .b = colNew[2]});
+                    
+                    if (selectedTool != 3) { // Only draw if not using color picker
+                        m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{.r = colNew[0], .g = colNew[1], .b = colNew[2]});
+                    }
                 }
                 m_LastMousePos = currentPixel;
             }
@@ -174,5 +218,21 @@ namespace FuncDoodle
                 }
             }
         }
+    }
+
+    void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol) {
+        std::cout << "FLOODFILL TIME YE BABY" << std::endl;
+        if (x < 0 || x >= m_Frame->Pixels()->getWidth() || y < 0 || y >= m_Frame->Pixels()->getHeight())
+            return;
+
+        if (m_Frame->Pixels()->get(x, y) != targetCol || m_Frame->Pixels()->get(x, y) == fillCol)
+            return;
+
+        m_Frame->SetPixel(x, y, fillCol);
+
+        FloodFill(x + 1, y, targetCol, fillCol);
+        FloodFill(x - 1, y, targetCol, fillCol);
+        FloodFill(x, y + 1, targetCol, fillCol);
+        FloodFill(x, y - 1, targetCol, fillCol);
     }
 }

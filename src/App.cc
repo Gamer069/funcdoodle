@@ -17,8 +17,6 @@
 
 namespace FuncDoodle
 {
-    // TODO: temporary m_FilePath in application
-    // ;.............mnv,.
     Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
     Application::~Application() {}
     char* GlobalGetShortcut(const char* key, bool shift, bool super)

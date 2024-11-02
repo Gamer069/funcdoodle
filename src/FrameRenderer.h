@@ -23,6 +23,8 @@ namespace FuncDoodle {
                     m_Frame = nullptr;
                 }
             }
+
+            void FloodFill(int x, int y, Col targetCol, Col fillCol);
         private:
             Frame* m_Frame;
             ToolManager* m_ToolManager;

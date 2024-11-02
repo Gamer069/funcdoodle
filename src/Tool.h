@@ -8,6 +8,8 @@ namespace FuncDoodle {
     enum class ToolType {
         Pencil,
         Eraser,
+        Bucket,
+        Picker
     };
     typedef struct {
         ToolType Type;

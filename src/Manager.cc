@@ -59,8 +59,7 @@ namespace FuncDoodle {
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_P))) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-            m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, frame);
-            m_SelectedFrame++;
+            m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, frame);
         }
         if (ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_O))) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
@@ -102,27 +101,23 @@ namespace FuncDoodle {
 
     void AnimationManager::RenderControls() {
         ImGui::Begin("Controls");
+
+        GlobalLoadImages(m_AssetLoader);
         
-        uint texId;
-        if (m_Player->Playing()) texId = s_PauseTexId;
-        else texId = s_PlayTexId;
-        std::cout << "texId: " << texId << std::endl;
-        if (ImGui::ImageButton("togglePlay", (void*)(intptr_t)texId, ImVec2(20, 20))) {
-            m_Player->SetPlaying(!m_Player->Playing());
-        }
-
-        ImGui::SameLine();
-
-        texId = s_RewindTexId;
-        if (ImGui::ImageButton("rewind", (void*)(intptr_t)texId, ImVec2(20, 20))) {
+        if (ImGui::ImageButton("rewind", (void*)(intptr_t)s_RewindTexId, ImVec2(20, 20))) {
             m_SelectedFrame = 0;
             m_Player->Rewind();
         }
 
         ImGui::SameLine();
 
-        texId = s_EndTexId;
-        if (ImGui::ImageButton("end", (void*)(intptr_t)texId, ImVec2(20, 20))) {
+        if (ImGui::ImageButton("togglePlay", m_Player->Playing() ? (void*)(intptr_t)s_PauseTexId : (void*)(intptr_t)s_PlayTexId, ImVec2(20, 20))) {
+            m_Player->SetPlaying(!m_Player->Playing());
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::ImageButton("end", (void*)(intptr_t)s_EndTexId, ImVec2(20, 20))) {
             m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
             m_Player->End();
         }

@@ -9,7 +9,7 @@ namespace FuncDoodle {
         unsigned char r = 255, g = 255, b = 255;
 
         bool operator==(const Col& other) const {
-            return r == other.r && g == other.g & b == other.b;
+            return r == other.r && g == other.g && b == other.b;
         }
         bool operator<(const Col& other) const {
             if (r != other.r) return r < other.r;

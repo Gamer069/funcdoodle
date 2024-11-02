@@ -1,9 +1,8 @@
-Add more tools
 Make modding framework.
-Implement controls.
 Sounds for animations
 Test cmakelists on multiple platforms with vms.
 Setup github releases with ./release.sh
+In Manager.cc, RenderControls renders the images every frame. This is bad. Fix it.
 
 MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed -- Fix drawing
 

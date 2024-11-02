@@ -223,8 +223,6 @@ namespace FuncDoodle {
         std::cout << m_Desc << " -- DESC" << std::endl;
         std::cout << m_Author << " -- AUTH" << std::endl;
 
-        // TODO: read palette
-
         std::vector<Col> plte;
 
         std::size_t plteLen = 0;
@@ -303,7 +301,7 @@ namespace FuncDoodle {
         m_Width = animWidth;
         m_Height = animHeight;
         m_FPS = animFPS;
-        // TODO: color space
+        // maybe decide if the color space is needed cos everything is sRGB nowadays.
         
         char eop[4];
         file.getline(eop, sizeof(eop), '\0');

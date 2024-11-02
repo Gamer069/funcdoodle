@@ -30,20 +30,15 @@ namespace FuncDoodle {
                         resize(capacity * 2);
                     }
 
+                    // Shift elements to the right, starting from the end
                     for (long i = size; i > index + 1; --i) {
                         data[i] = data[i-1];
                     }
 
-                    for (long i = size; i > index + 1; --i) {
-                        data[i] = data[i-1];
-                    }
-
-
-                    if (size + 1 == index) {
-                        data[index+1] = value;
-                    }
+                    // Insert the new value after the specified index
+                    data[index + 1] = value;
                     ++size;
-                }   
+                }
                 void insertBefore(long index, const T& value) {
                     if (index < 0 || index >= size) {
                         std::cout << "insert before" << std::endl;
