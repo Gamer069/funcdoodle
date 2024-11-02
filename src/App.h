@@ -22,6 +22,7 @@ namespace FuncDoodle {
             ProjectFile* m_CurrentProj;
             ProjectFile* m_CacheProj;
             AnimationManager* m_Manager;
+            bool m_EditProjOpen;
             GLFWwindow* m_Window;
             AssetLoader* m_AssetLoader;
     };

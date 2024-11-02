@@ -6,4 +6,5 @@ In Manager.cc, RenderControls renders the images every frame. This is bad. Fix i
 
 MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed -- Fix drawing
 
-BIG TODO: Add edit project menu and fix the null m_CacheProj which i caused on purpose to see if m_CurrentProj was just created.
+TODO: make it so you can properly edit the width and height of the animation with edit project.
+TODO: make it so close menu item properly works

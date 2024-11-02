@@ -145,6 +145,15 @@ namespace FuncDoodle
                 {
                     this->SaveFileDialog();
                 }
+                if (m_CurrentProj) {
+                    if (ImGui::MenuItem("Close")) {
+                        m_CurrentProj = nullptr;
+                        m_Manager = new AnimationManager(nullptr, m_AssetLoader);
+                    }
+                    if (ImGui::MenuItem("Edit project")) {
+                        m_EditProjOpen = true;
+                    }
+                }
                 if (ImGui::MenuItem("Exit", GlobalGetShortcut("Q", false, false)))
                 {
                     std::exit(0);
@@ -152,6 +161,64 @@ namespace FuncDoodle
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
+        }
+
+        if (m_EditProjOpen) {
+            ImGui::OpenPopup("EditProj");
+        }
+
+        if (ImGui::IsPopupOpen("EditProj")) {
+            ImGui::SetNextWindowFocus();
+        }
+
+        if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+            char name[256];
+            strcpy(name, m_CurrentProj->AnimName());
+            int width = m_CurrentProj->AnimWidth();
+            int height = m_CurrentProj->AnimHeight();
+            char author[100];
+            strcpy(author, m_CurrentProj->AnimAuthor());
+            int fps = m_CurrentProj->AnimFPS();
+            char desc[512];
+            strcpy(desc, m_CurrentProj->AnimDesc());
+            if (m_CacheProj) {
+                strcpy(name, m_CacheProj->AnimName());
+                width = m_CacheProj->AnimWidth();
+                height = m_CacheProj->AnimHeight();
+                strcpy(author, m_CacheProj->AnimAuthor());
+                fps = m_CacheProj->AnimFPS();
+                strcpy(desc, m_CacheProj->AnimDesc());
+            }
+            if (ImGui::InputText("Name", name, sizeof(name))) {
+                m_CacheProj->SetAnimName(name);
+            }
+            if (ImGui::InputInt("Width", &width)) {
+                m_CacheProj->SetAnimWidth(width);
+            }
+            if (ImGui::InputInt("Height", &height)) {
+                m_CacheProj->SetAnimHeight(height);
+            }
+            if (ImGui::InputText("Author", author, sizeof(author))) {
+                m_CacheProj->SetAnimAuthor(author);
+            }
+            if (ImGui::InputInt("FPS", &fps)) {
+                m_CacheProj->SetAnimFPS(fps);
+            }
+            if (ImGui::InputText("Description", desc, sizeof(desc))) {
+                m_CacheProj->SetAnimDesc(desc);
+            }
+
+            if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+                m_EditProjOpen = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+                m_CurrentProj = m_CacheProj;
+                m_EditProjOpen = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
         }
 
         if (m_NewProjOpen)
@@ -228,7 +295,6 @@ namespace FuncDoodle
             m_Manager->RenderControls();
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
-            m_CacheProj = nullptr;
         }
     }
     void Application::OpenFileDialog()
