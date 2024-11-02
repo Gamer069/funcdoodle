@@ -5,3 +5,4 @@ In Manager.cc, RenderControls renders the images every frame. This is bad. Fix i
 MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed -- Fix drawing
 TODO: make it so you can properly edit the width and height of the animation with edit project.
 Make every window have a proper default position (look at perfect imgui.ini)
+Duplicate,copy,paste frames.
