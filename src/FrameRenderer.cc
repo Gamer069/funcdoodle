@@ -29,8 +29,6 @@ namespace FuncDoodle
         }
         InitPixels();
 
-        // set has rendered to false if changing the actual pixel data
-
         ImGui::End();
     }
     void FrameRenderer::InitPixels()
