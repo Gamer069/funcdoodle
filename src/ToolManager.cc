@@ -18,8 +18,22 @@ namespace FuncDoodle {
                 std::cout << i << std::endl;
             }
         }
-        if (m_SelectedTool == 0 || m_SelectedTool == 2 || m_SelectedTool == 3) {
+        if (m_SelectedTool < 2) {
+            ImGui::SliderInt("##Size", &m_Size, 1, 100, "%dpx");
+            ImGui::SameLine();
+            ImGui::InputInt("##SizeText", &m_Size, 1, 100, 0);
+        }
+
+        if (m_SelectedTool != 1) {
             ImGui::ColorPicker3("Col", m_Col);
+        }
+        
+        // if (m_Size < 1) m_Size = 1;
+
+        if (ImGui::IsKeyPressed(ImGuiKey_Semicolon, true)) {
+            m_Size--;
+        } else if (ImGui::IsKeyPressed(ImGuiKey_Apostrophe, true)) {
+            m_Size++;
         }
         ImGui::End();
     }

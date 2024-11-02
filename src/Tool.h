@@ -11,10 +11,4 @@ namespace FuncDoodle {
         Bucket,
         Picker
     };
-    typedef struct {
-        ToolType Type;
-        int Size = 1; // pixel
-        Col* Col;
-        std::function<void(int, int, Frame*)> Callback;
-    } Tool;
 }

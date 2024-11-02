@@ -32,7 +32,7 @@ do { \
 // VERSION SCHEME -- major, minor, patch, modifier -- minor/&debug || (m)ajor/&debug
 
 #ifdef NDEBUG
-#define FUNCVER "v0.0.1m"
+#define FUNCVER "v0.0.1a"
 #else
-#define FUNCVER "v0.0.1md"
+#define FUNCVER "v0.0.1ad"
 #endif

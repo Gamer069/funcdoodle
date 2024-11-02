@@ -20,8 +20,13 @@ namespace FuncDoodle {
                     m_Col[j] = static_cast<unsigned char>(colArr[j] * 255.0f + 0.5f);
                 }   
             }
+            const int Size() const { return m_Size; }
+            void SetSize(int size) {
+                m_Size = size;
+            }
         private:
             int m_SelectedTool = 0;
             float m_Col[3] = {0.0f, 0.0f, 0.0f};
+            int m_Size = 1;
     };
 }
