@@ -1,0 +1,5 @@
+SETTING 0,0 to ?,,
+CURRENT PIXEL 31.9375,18.8125
+LAST MOUSE POS: 31.9375,18.8125
+float dx = currentPixel.x - m_LastMousePos.x;
+float dy = currentPixel.y - m_LastMousePos.y;

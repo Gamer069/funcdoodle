@@ -98,7 +98,7 @@ namespace FuncDoodle
                 {
                     float dx = currentPixel.x - m_LastMousePos.x;
                     float dy = currentPixel.y - m_LastMousePos.y;
-                    int steps = std::max(abs(static_cast<int>(dx)), abs(static_cast<int>(dy)));
+                    int steps = std::max(1, std::max(abs(static_cast<int>(dx)), abs(static_cast<int>(dy))));
 
                     // Pre-calculate color values outside the loop
                     unsigned char colNew[3] = { 255, 255, 255 }; // Default white for eraser
@@ -152,9 +152,11 @@ namespace FuncDoodle
                     }
                     else if (selectedTool == 3) {
                         m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
-                        colNew[0] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).r;
-                        colNew[1] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).g;
-                        colNew[2] = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y).b;
+			Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+			colNew[0] = curPxCol.r;
+			colNew[1] = curPxCol.g;
+			colNew[2] = curPxCol.b;
+			std::cout << "CURRENT PIXEL: " << currentPixel.x << ", " << currentPixel.y << std::endl;
                         steps = 0;
                     }
 
@@ -164,14 +166,21 @@ namespace FuncDoodle
                         int interpX = static_cast<int>(m_LastMousePos.x + dx * t);
                         int interpY = static_cast<int>(m_LastMousePos.y + dy * t);
 
+			if (interpX == 0 && interpY == 0) {
+			    std::cout << "STEPS -- " << steps << '\n';
+			    std::cout << "Last mouse pos (0) -> " << m_LastMousePos.x << "," << m_LastMousePos.y << "." << '\n';
+			    std::cout << "D -- " << dx << "," << dy << '\n';
+			    std::cout << "T -- " << t << '\n';
+			}
+
                         if (interpX >= 0 && interpX < pixels->getWidth() &&
                             interpY >= 0 && interpY < pixels->getHeight())
                         {
+			    //std::cout << "SETTING " << interpX << "," << interpY << " to " << colNew[0] << "," << colNew[1] << "," << colNew[2] << '\n';
+			    //std::cout << "CURRENT PIXEL " << currentPixel.x << "," << currentPixel.y << '\n';
+			    //std::cout << "LAST MOUSE POS: " << m_LastMousePos.x << "," << m_LastMousePos.y << '\n';
                             m_Frame->SetPixel(interpX, interpY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                         }
-                    }
-                    if (selectedTool == 3) {
-                        m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                     }
                 }
                 else
