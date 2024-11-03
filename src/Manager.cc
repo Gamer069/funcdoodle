@@ -149,6 +149,23 @@ namespace FuncDoodle {
                     Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
                     m_Proj->AnimFrames()->insertAfter(i, frame);
                 }
+                if (ImGui::MenuItem("Move forward", "I")) {
+                    m_Proj->AnimFrames()->moveForward(i);
+                }
+                if (ImGui::MenuItem("Move backward", "U")) {
+                    m_Proj->AnimFrames()->moveBackward(i);
+                }
+                if (ImGui::MenuItem("Copy", ",")) {
+                    m_Proj->AnimFrames()->get(i).CopyToClipboard();
+                }
+                if (ImGui::MenuItem("Paste before", ".")) {
+                    Frame* frame = Frame::PastedFrame();
+                    m_Proj->AnimFrames()->insertBefore(i, *frame);
+                }
+                if (ImGui::MenuItem("Paste after", "/")) {
+                    Frame* frame = Frame::PastedFrame();
+                    m_Proj->AnimFrames()->insertAfter(i, *frame);
+                }
                 ImGui::EndPopup();
             }
 
