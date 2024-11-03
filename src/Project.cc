@@ -19,6 +19,9 @@
 
 #include "MacroUtils.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+
 #define WRITEB(b) do { outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); } while (0)
 
 namespace FuncDoodle {
@@ -40,6 +43,19 @@ namespace FuncDoodle {
     }
     void ProjectFile::SetAnimName(char name[]) {
         strcpy(m_Name, name);
+    }
+
+    void ProjectFile::Export(char* filePath) {
+        std::cout << "Exporting to " << filePath << std::endl;
+
+        LongIndexArray<Frame>* frames = AnimFrames();
+
+        char curFilePath[512];
+
+        for (long i = 0; i < AnimFrameCount(); i++) {
+            sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
+            frames->get(i).Export(curFilePath);
+        }
     }
 
     const int ProjectFile::AnimWidth() const {

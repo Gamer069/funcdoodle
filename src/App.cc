@@ -153,6 +153,9 @@ namespace FuncDoodle
                     if (ImGui::MenuItem("Edit project")) {
                         m_EditProjOpen = true;
                     }
+                    if (ImGui::MenuItem("Export")) {
+                        ExportFileDialog();
+                    }
                 }
                 if (ImGui::MenuItem("Exit", GlobalGetShortcut("Q", false, false)))
                 {
@@ -297,6 +300,20 @@ namespace FuncDoodle
             m_CurrentProj->DisplayFPS();
         } else {
             glfwSetWindowTitle(m_Window, "FuncDoodle"); 
+        }
+    }
+    void Application::ExportFileDialog() {
+        nfdchar_t* outPath = 0;
+        nfdresult_t result = NFD_PickFolder(0, &outPath);
+
+        if (result == NFD_OKAY) {
+            std::cout << "Exporting to " << outPath << std::endl;
+            m_CurrentProj->Export(outPath);
+            free(outPath);
+        } else if (result == NFD_CANCEL) {
+            std::cout << "Cancelled" << std::endl;
+        } else {
+            std::cout << "Failed to export: " << NFD_GetError() << std::endl;
         }
     }
     void Application::OpenFileDialog()

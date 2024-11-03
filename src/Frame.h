@@ -6,6 +6,8 @@
 
 #include "Gui.h"
 
+#include "stb_image_write.h"
+
 namespace FuncDoodle {
     struct Col {
         unsigned char r = 255, g = 255, b = 255;
@@ -76,6 +78,10 @@ namespace FuncDoodle {
 
             void setHeight(int height) {
                 this->height = height;
+            }
+
+            const std::vector<Col>& Data() const {
+                return data;
             }
 
         private:
@@ -201,6 +207,12 @@ namespace FuncDoodle {
                 }
 
                 return frame;
+            }
+            void Export(char* filePath) {
+                stbi_write_png(filePath, Width(), Height(), 3, Data().data(), Width() * 3);
+            }
+            const std::vector<Col>& Data() const {
+                return m_Pixels->Data();
             }
     private:
         ImageArray* m_Pixels;

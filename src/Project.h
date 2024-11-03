@@ -30,6 +30,7 @@ namespace FuncDoodle {
             LongIndexArray<Frame>* AnimFrames();
             void Write(char* filePath);
             void ReadAndPopulate(char* filePath);
+            void Export(char* filePath);
             constexpr inline GLFWwindow* Window() const { return m_Window; }
             void DisplayFPS();
         private:

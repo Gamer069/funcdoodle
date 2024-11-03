@@ -12,6 +12,7 @@ namespace FuncDoodle {
             void RenderImGui();
             void OpenFileDialog();
             void SaveFileDialog();
+            void ExportFileDialog();
             void ReadProjectFile();
             void SaveProjectFile();
             void CheckKeybinds(char* newProj, char* open, char* save);
