@@ -45,16 +45,22 @@ namespace FuncDoodle {
         strcpy(m_Name, name);
     }
 
-    void ProjectFile::Export(char* filePath) {
-        std::cout << "Exporting to " << filePath << std::endl;
+    void ProjectFile::Export(char* filePath, int format) {
+        if (format == 0) {
+            std::cout << "Exporting to " << filePath << std::endl;
 
-        LongIndexArray<Frame>* frames = AnimFrames();
+            LongIndexArray<Frame>* frames = AnimFrames();
 
-        char curFilePath[512];
+            char curFilePath[512];
 
-        for (long i = 0; i < AnimFrameCount(); i++) {
-            sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
-            frames->get(i).Export(curFilePath);
+            for (long i = 0; i < AnimFrameCount(); i++) {
+                sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
+                frames->get(i).Export(curFilePath);
+            }
+        }
+        else {
+            std::cerr << "Failed to export animation: forrmat not yet supported" << std::endl;
+            std::exit(-1);
         }
     }
 

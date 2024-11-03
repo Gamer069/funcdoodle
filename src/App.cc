@@ -52,7 +52,7 @@ namespace FuncDoodle
         return shortcut;
     }
 
-    void Application::CheckKeybinds(char* newProj, char* open, char* save) {
+    void Application::CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut) {
         ImGuiIO& io = ImGui::GetIO();
 
         // Inline struct to store each shortcut's parsed values
@@ -117,6 +117,9 @@ namespace FuncDoodle
         if (isShortcutPressed(saveShortcut)) {
             SaveFileDialog();
         }
+        if (isShortcutPressed(exportShortcut)) {
+            m_ExportOpen = true;
+        }
     }
 
     void Application::RenderImGui()
@@ -124,7 +127,8 @@ namespace FuncDoodle
         char* newProjShortcut = GlobalGetShortcut("N", false, false);
         char* openShortcut = GlobalGetShortcut("O", false, false);
         char* saveShortcut = GlobalGetShortcut("S", false, false);
-        CheckKeybinds(newProjShortcut, openShortcut, saveShortcut);
+        char* exportShortcut = GlobalGetShortcut("E", false, false);
+        CheckKeybinds(newProjShortcut, openShortcut, saveShortcut, exportShortcut);
 
         if (!m_CurrentProj) RenderOptions();
 
@@ -153,8 +157,8 @@ namespace FuncDoodle
                     if (ImGui::MenuItem("Edit project")) {
                         m_EditProjOpen = true;
                     }
-                    if (ImGui::MenuItem("Export")) {
-                        ExportFileDialog();
+                    if (ImGui::MenuItem("Export", exportShortcut)) {
+                        m_ExportOpen = true;
                     }
                 }
                 if (ImGui::MenuItem("Exit", GlobalGetShortcut("Q", false, false)))
@@ -164,6 +168,43 @@ namespace FuncDoodle
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
+        }
+
+        if (m_ExportOpen) {
+            ImGui::OpenPopup("Export##modal");
+        }
+
+        if (ImGui::IsPopupOpen("Export##modal")) {
+            ImGui::SetNextWindowFocus();
+        }
+
+        if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+            const char* formats[] = { "PNGs", "MP4" };
+            ImGui::Combo("Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats));
+            if (ImGui::IsItemClicked()) {
+                m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
+                std::cout << "Format: " << m_ExportFormat << std::endl;
+            }
+            if (ImGui::Button("Export")) {
+                nfdchar_t* outPath = 0;
+                nfdresult_t result = NFD_PickFolder(0, &outPath);
+
+                if (result == NFD_OKAY) {
+                    std::cout << "Exporting to " << outPath << std::endl;
+                    m_CurrentProj->Export(outPath, m_ExportFormat);
+                    free(outPath);
+                } else if (result == NFD_CANCEL) {
+                    std::cout << "Cancelled" << std::endl;
+                } else {
+                    std::cout << "Failed to export: " << NFD_GetError() << std::endl;
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+                m_ExportOpen = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
         }
 
         if (m_EditProjOpen) {
@@ -301,21 +342,7 @@ namespace FuncDoodle
         } else {
             glfwSetWindowTitle(m_Window, "FuncDoodle"); 
         }
-    }
-    void Application::ExportFileDialog() {
-        nfdchar_t* outPath = 0;
-        nfdresult_t result = NFD_PickFolder(0, &outPath);
-
-        if (result == NFD_OKAY) {
-            std::cout << "Exporting to " << outPath << std::endl;
-            m_CurrentProj->Export(outPath);
-            free(outPath);
-        } else if (result == NFD_CANCEL) {
-            std::cout << "Cancelled" << std::endl;
-        } else {
-            std::cout << "Failed to export: " << NFD_GetError() << std::endl;
-        }
-    }
+    }   
     void Application::OpenFileDialog()
     {
         nfdchar_t* outPath = 0;

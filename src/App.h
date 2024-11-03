@@ -12,10 +12,9 @@ namespace FuncDoodle {
             void RenderImGui();
             void OpenFileDialog();
             void SaveFileDialog();
-            void ExportFileDialog();
             void ReadProjectFile();
             void SaveProjectFile();
-            void CheckKeybinds(char* newProj, char* open, char* save);
+            void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut);
             void RenderOptions();
         private:
             char* m_FilePath;
@@ -26,5 +25,7 @@ namespace FuncDoodle {
             bool m_EditProjOpen;
             GLFWwindow* m_Window;
             AssetLoader* m_AssetLoader;
+            int m_ExportFormat = 0;
+            bool m_ExportOpen = false;
     };
 }
