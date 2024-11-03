@@ -64,6 +64,7 @@ namespace FuncDoodle {
         if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
             Frame frame = Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
             m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, frame);
+            m_SelectedFrame++;
         }
         if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
             m_Proj->AnimFrames()->moveForward(m_SelectedFrame);
@@ -73,6 +74,27 @@ namespace FuncDoodle {
         }
         if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
             if (m_Proj->AnimFrameCount() != 1) m_Proj->AnimFrames()->remove(m_SelectedFrame);
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_Comma, true)) {
+            m_Proj->AnimFrames()->get(m_SelectedFrame).CopyToClipboard();
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_Period, true)) {
+            // paste before
+            Frame* frame = Frame::PastedFrame();
+            m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, *frame);
+            m_SelectedFrame++;
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_Slash, true)) {
+            // paste after
+            Frame* frame = Frame::PastedFrame();
+            m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, *frame);
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
+            m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, m_Proj->AnimFrames()->get(m_SelectedFrame));
+        }
+        if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
+            m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, m_Proj->AnimFrames()->get(m_SelectedFrame));
+            m_SelectedFrame++;
         }
         if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
             m_SelectedFrame = m_Proj->AnimFrameCount() - 1;

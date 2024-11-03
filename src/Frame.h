@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include "Gui.h"
+
 namespace FuncDoodle {
     struct Col {
         unsigned char r = 255, g = 255, b = 255;
@@ -115,7 +117,92 @@ namespace FuncDoodle {
                 }
                 m_Pixels->RedoColorAdjustment();
             }
-        private:
-            ImageArray* m_Pixels;
+
+            void CopyToClipboard() {
+                size_t bufferSize = 32; // Start with space for dimensions
+                for (int y = 0; y < Height(); y++) {
+                    for (int x = 0; x < Width(); x++) {
+                        bufferSize += 32; // Space for r g b values and spaces/newline
+                    }
+                }
+                
+                char* fdata = (char*)malloc(bufferSize);
+                if (!fdata) return;
+                
+                int written = snprintf(fdata, bufferSize, "%dx%d\n", Width(), Height());
+                char* curr = fdata + written;
+                
+                // horizontal
+                for (int y = 0; y < Height(); y++) {
+                    for (int x = 0; x < Width(); x++) {
+                        Col pixel = Pixels()->get(x, y);
+                        written = snprintf(curr, bufferSize - (curr - fdata), 
+                            "%d %d %d\n", pixel.r, pixel.g, pixel.b);
+                        curr += written;
+                    }
+                }
+                
+                ImGui::SetClipboardText(fdata);
+                free(fdata);
+            }
+            static Frame* PastedFrame() {
+                char* pasted = const_cast<char*>(ImGui::GetClipboardText());
+                if (!pasted) return nullptr;
+
+                // Buffer for dimensions line (e.g. "1920x1080\0")
+                char first[32];
+                int i = 0;
+                
+                // Copy first line into buffer
+                while (pasted[i] && pasted[i] != '\n' && pasted[i] != '\r' && i < 31) {
+                    first[i] = pasted[i];
+                    i++;
+                }
+                first[i] = '\0';
+
+                // Parse dimensions
+                int width = 0;
+                int height = 0;
+                char* ptr = first;
+                width = atoi(ptr);
+                while (*ptr && *ptr != 'x') ptr++;
+                if (*ptr == 'x') {
+                    ptr++;
+                    height = atoi(ptr);
+                }
+
+                if (width <= 0 || height <= 0) return nullptr;
+
+                Frame* frame = new Frame(width, height);
+
+                ptr = pasted;
+                // Skip first line
+                while (*ptr && *ptr != '\n') ptr++;
+                if (*ptr) ptr++;  // Skip the \n
+
+                // Parse pixel data
+                for (int y = 0; y < height; y++) {
+                    for (int x = 0; x < width; x++) {
+                        Col pixel;
+                        pixel.r = atoi(ptr);
+                        while (*ptr && *ptr != ' ') ptr++;  // Skip to next number
+                        if (*ptr) ptr++;
+
+                        pixel.g = atoi(ptr);
+                        while (*ptr && *ptr != ' ') ptr++;
+                        if (*ptr) ptr++;
+
+                        pixel.b = atoi(ptr);
+                        while (*ptr && *ptr != '\n') ptr++;
+                        if (*ptr) ptr++;
+
+                        frame->SetPixel(x, y, pixel);
+                    }
+                }
+
+                return frame;
+            }
+    private:
+        ImageArray* m_Pixels;
     };
 }
