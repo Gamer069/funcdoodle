@@ -171,7 +171,39 @@ namespace FuncDoodle
                 }
                 ImGui::EndMenu();
             }
+            if (ImGui::BeginMenu("Edit")) {
+                if (ImGui::MenuItem("Preferences")) {
+                    m_EditPrefsOpen = true;
+                }
+                ImGui::EndMenu();
+            }
             ImGui::EndMainMenuBar();
+        }
+
+        if (m_EditPrefsOpen) {
+            ImGui::OpenPopup("EditPrefs");
+        }
+
+        if (ImGui::IsPopupOpen("EditPrefs")) {
+            ImGui::SetNextWindowFocus();
+        }
+
+        if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+            const char* themes[] = { "Dark", "Light", "Classic" };
+            if (ImGui::ListBox("Theme", &m_Theme, themes, IM_ARRAYSIZE(themes))) {
+                switch (m_Theme) {
+                    case 0:
+                        ImGui::StyleColorsDark();
+                        break;
+                    case 1: 
+                        ImGui::StyleColorsLight();
+                        break;
+                    case 2:
+                        ImGui::StyleColorsClassic();
+                        break;
+                }
+            }
+            ImGui::EndPopup();
         }
 
         if (m_ExportOpen) {
@@ -184,7 +216,16 @@ namespace FuncDoodle
 
         if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
             const char* formats[] = { "PNGs", "MP4" };
-            ImGui::Combo("Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats));
+            if (ImGui::ListBox("Export Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats))) {
+                switch (m_ExportFormat) {
+                    case 0:
+                        std::cout << "PNGs" << std::endl;
+                        break;
+                    case 1:
+                        std::cout << "MP4" << std::endl;
+                        break;
+                }
+            }
             if (ImGui::IsItemClicked()) {
                 m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
                 std::cout << "Format: " << m_ExportFormat << std::endl;

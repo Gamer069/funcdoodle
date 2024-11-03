@@ -132,6 +132,7 @@ int main(int argc, char** argv) {
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.Fonts->AddFontFromFileTTF((assetsPath / "Roboto" / "Roboto-Medium.ttf").c_str(), 16.0f);
     (void)io;
 
     // Setup Dear ImGui style

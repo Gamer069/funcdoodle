@@ -8,3 +8,6 @@
 [submodule "lib/nfd"]
 	path = lib/nfd
 	url = git@github.com:mlabbe/nativefiledialog
+[submodule "lib/libav"]
+	path = lib/libav
+	url = https://github.com/libav/libav

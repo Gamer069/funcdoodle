@@ -27,5 +27,7 @@ namespace FuncDoodle {
             AssetLoader* m_AssetLoader;
             int m_ExportFormat = 0;
             bool m_ExportOpen = false;
+            bool m_EditPrefsOpen = false;
+            int m_Theme = 0;
     };
 }
