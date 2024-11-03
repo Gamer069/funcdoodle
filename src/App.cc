@@ -89,15 +89,17 @@ namespace FuncDoodle
             if (std::strcmp(key, "N") == 0) result.key = ImGuiKey_N;
             else if (std::strcmp(key, "O") == 0) result.key = ImGuiKey_O;
             else if (std::strcmp(key, "S") == 0) result.key = ImGuiKey_S;
+            else if (std::strcmp(key, "E") == 0) result.key = ImGuiKey_E;
             // Add more key mappings as needed
 
             return result;
-            };
+        };
 
         // Parse each provided shortcut once
         Shortcut newProjShortcut = parseShortcut(newProj);
         Shortcut openShortcut = parseShortcut(open);
         Shortcut saveShortcut = parseShortcut(save);
+        Shortcut exportShortcutShortcut = parseShortcut(exportShortcut);
 
         // Inline lambda to check if a given shortcut is pressed
         auto isShortcutPressed = [&](const Shortcut& shortcut) {
@@ -117,8 +119,10 @@ namespace FuncDoodle
         if (isShortcutPressed(saveShortcut)) {
             SaveFileDialog();
         }
-        if (isShortcutPressed(exportShortcut)) {
-            m_ExportOpen = true;
+        if (m_CurrentProj) {
+            if (isShortcutPressed(exportShortcutShortcut)) {
+                m_ExportOpen = true;
+            }
         }
     }
 
@@ -185,7 +189,7 @@ namespace FuncDoodle
                 m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
                 std::cout << "Format: " << m_ExportFormat << std::endl;
             }
-            if (ImGui::Button("Export")) {
+            if (ImGui::Button("Export") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
                 nfdchar_t* outPath = 0;
                 nfdresult_t result = NFD_PickFolder(0, &outPath);
 
@@ -198,6 +202,7 @@ namespace FuncDoodle
                 } else {
                     std::cout << "Failed to export: " << NFD_GetError() << std::endl;
                 }
+                m_ExportOpen = false;
             }
             ImGui::SameLine();
             if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
