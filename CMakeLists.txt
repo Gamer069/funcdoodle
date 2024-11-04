@@ -18,10 +18,6 @@ set(GLAD_SOURCES
     lib/glad/src/glad.c
 )
 
-file(GLOB OPENAL_SOURCES "lib/openal-soft/**.cpp" "lib/openal-soft/core/**.cpp" "lib/openal-soft/alc/**.cpp" "lib/openal-soft/al/**.cpp")
-
-message(STATUS ${OPENAL_SOURCES})
-
 # ImGui sources
 set(IMGUI_SOURCES
     lib/imgui/imgui.cpp
@@ -33,7 +29,13 @@ set(IMGUI_SOURCES
     lib/imgui/backends/imgui_impl_opengl3.cpp
 )
 
+if(APPLE)
 set(NFD_SOURCES lib/nfd/src/nfd_cocoa.m lib/nfd/src/nfd_common.c)
+elseif(WIN32)
+set(NFD_SOURCES lib/nfd/src/nfd_win.cpp lib/nfd/src/nfd_common.c)
+elseif(UNIX AND NOT APPLE)
+set(NFD_SOURCES lib/nfd/src/nfd_zenity.cpp lib/nfd/src/nfd_common.c)
+endif()
 
 set(PORTAUDIO_DIR "" CACHE STRING "required")
 
@@ -71,8 +73,6 @@ target_include_directories(FuncDoodle PRIVATE
     lib/stb/
     /usr/local/opt/portaudio/include
 )
-
-# include_directories(lib/libav/ lib/libav/libavcodec lib/libav/libavformat lib/libav/libavutil)
 
 target_link_libraries(FuncDoodle
     glfw

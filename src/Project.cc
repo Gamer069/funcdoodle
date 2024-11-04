@@ -22,6 +22,12 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#include <sys/time.h>
+#include <time.h>
+#include <ctime>
+
+#include <stdlib.h>
+
 #define WRITEB(b) do { outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); } while (0)
 
 namespace FuncDoodle {
@@ -46,20 +52,36 @@ namespace FuncDoodle {
     }
 
     void ProjectFile::Export(char* filePath, int format) {
-        if (format == 0) {
-            std::cout << "Exporting to " << filePath << std::endl;
+        std::cout << "Exporting to " << filePath << std::endl;
 
-            LongIndexArray<Frame>* frames = AnimFrames();
+        LongIndexArray<Frame>* frames = AnimFrames();
 
-            char curFilePath[512];
+        char curFilePath[512];
 
-            for (long i = 0; i < AnimFrameCount(); i++) {
-                sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
-                frames->get(i).Export(curFilePath);
-            }
+        for (long i = 0; i < AnimFrameCount(); i++) {
+            #ifndef _WIN32
+            sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
+            #else
+            sprintf(curFilePath, "%s\\frame_%d.png", filePath, i);
+            #endif
+            frames->get(i).Export(curFilePath);
         }
-        else {
-            std::cerr << "Failed to export animation: forrmat not yet supported" << std::endl;
+
+        if (format == 1) {
+            std::cout << "EXPORTING TO MP4" << std::endl;
+            // TODO: properly implement video exporting...
+            char cmd[1024];
+            #ifndef _WIN32
+            sprintf(cmd, "ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" -c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y", m_FPS, filePath, filePath, filePath);
+            #else
+            sprintf(cmd, "ffmpeg.exe -framerate %d -pattern-type glob -i \"%s/frame_*.png\" -c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y", m_FPS, filePath, filePath, filePath);
+            #endif
+
+            system(cmd);
+        }
+
+        if (format > 1) {
+            std::cerr << "Failed to export animation: format not yet supported" << std::endl;
             std::exit(-1);
         }
     }
