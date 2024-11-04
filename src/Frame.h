@@ -211,7 +211,7 @@ namespace FuncDoodle {
             void Export(char* filePath) {
                 stbi_write_png(filePath, Width(), Height(), 3, Data().data(), Width() * 3);
             }
-            const std::vector<Col>& Data() const {
+            std::vector<Col> Data() const {
                 return m_Pixels->Data();
             }
     private:

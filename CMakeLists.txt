@@ -72,7 +72,7 @@ target_include_directories(FuncDoodle PRIVATE
     /usr/local/opt/portaudio/include
 )
 
-include_directories(lib/openal-soft/common lib/openal-soft/alc lib/openal-soft/al lib/openal-soft)
+# include_directories(lib/libav/ lib/libav/libavcodec lib/libav/libavformat lib/libav/libavutil)
 
 target_link_libraries(FuncDoodle
     glfw
@@ -81,7 +81,7 @@ target_link_libraries(FuncDoodle
     pthread
     dl
 )
- 
+
 
 # Link libraries based on platform
 if(APPLE)
