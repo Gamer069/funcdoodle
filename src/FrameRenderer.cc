@@ -10,12 +10,16 @@ namespace FuncDoodle
 {
     void FrameRenderer::RenderFrame()
     {
-        ImGui::SetNextWindowPos(ImVec2(0, 32));
-        ImGui::SetNextWindowSize(ImVec2(1073, 886));
+        ImGui::SetNextWindowPos(ImVec2(0, 32), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
         ImGui::Begin("Frame");
 
         if (!m_Frame || !m_ToolManager)
             return;
+
+        if (!m_Grid) {
+            m_Grid = new Grid(m_Frame->Pixels()->getWidth(), m_Frame->Pixels()->getHeight());
+        }
 
         if (ImGui::BeginPopupContextWindow()) {
             if (ImGui::MenuItem("Zoom out", "-")) {
@@ -26,6 +30,23 @@ namespace FuncDoodle
             }
             if (ImGui::MenuItem("Zoom in", "=")) {
                 m_PixelScale++;
+            }
+            if (ImGui::MenuItem("Toggle Grid", "G")) {
+                // grid
+                if (m_Grid->GridVisibility()) m_Grid->HideGrid();
+                else m_Grid->ShowGrid();
+            }
+            if (ImGui::MenuItem("Make grid width bigger", "Y")) {
+                // grid
+                m_Grid->SetGridWidth(m_Grid->GridWidth() + 1);
+                m_Grid->SetGridHeight(m_Grid->GridHeight() + 1);
+            }
+            if (ImGui::MenuItem("Make grid width smaller", "T")) {
+                // grid
+                if (m_Grid->GridWidth() > 1)
+                    m_Grid->SetGridWidth(m_Grid->GridWidth() - 1);
+                if (m_Grid->GridHeight() > 1)
+                    m_Grid->SetGridHeight(m_Grid->GridHeight() - 1);
             }
             ImGui::EndPopup();
         }
@@ -57,6 +78,20 @@ namespace FuncDoodle
 
             if (ImGui::IsKeyPressed(ImGuiKey_0)) {
                 m_PixelScale = 1;
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_T)) {
+                if (m_Grid->GridWidth() > 1)
+                    m_Grid->SetGridWidth(m_Grid->GridWidth() - 1);
+                if (m_Grid->GridHeight() > 1)
+                    m_Grid->SetGridHeight(m_Grid->GridHeight() - 1);
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_Y)) {
+                m_Grid->SetGridWidth(m_Grid->GridWidth() + 1);
+                m_Grid->SetGridHeight(m_Grid->GridHeight() + 1);
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_G)) {
+                if (m_Grid->GridVisibility()) m_Grid->HideGrid();
+                else m_Grid->ShowGrid();
             }
         }
 
@@ -168,14 +203,6 @@ namespace FuncDoodle
                         int interpX = static_cast<int>(m_LastMousePos.x + dx * t);
                         int interpY = static_cast<int>(m_LastMousePos.y + dy * t);
 
-                        if (interpX == 0 && interpY == 0)
-                        {
-                            std::cout << "STEPS -- " << steps << '\n';
-                            std::cout << "Last mouse pos (0) -> " << m_LastMousePos.x << "," << m_LastMousePos.y << "." << '\n';
-                            std::cout << "D -- " << dx << "," << dy << '\n';
-                            std::cout << "T -- " << t << '\n';
-                        }
-
                         if (interpX >= 0 && interpX < pixels->getWidth() &&
                             interpY >= 0 && interpY < pixels->getHeight())
                         {
@@ -271,14 +298,16 @@ namespace FuncDoodle
             for (int y = 0; y < prevPixels->getHeight(); y++) {
                 for (int x = 0; x < prevPixels->getWidth(); x++) {
                     Col col = prevPixels->get(x, y);
-                    std::cout << (int)col.r << ", " << (int)col.g << ", " << (int)col.b << std::endl;
                     ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
                     ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
-                    drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255/2));
+                    Col curCol = pixels->get(x, y);
+                    if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255)
+                        drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 128));
                 }
             }
-            // std::exit(-1);
         }
+
+        m_Grid->RenderWithDrawList(drawList, ImVec2(startX, startY), ImVec2(startX + frameWidth, startY + frameHeight));
     }
 
     void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol) {

@@ -3,11 +3,12 @@
 #include "Frame.h"
 
 #include "ToolManager.h"
+#include "Grid.h"
 
 namespace FuncDoodle {
     class FrameRenderer {
         public:
-            FrameRenderer(Frame* frame, ToolManager* manager) : m_Frame(frame), m_ToolManager(manager) {}
+            FrameRenderer(Frame* frame, ToolManager* manager) : m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr) {}
             ~FrameRenderer() { CleanupFrame(); }
             void RenderFrame();
             void InitPixels();
@@ -36,5 +37,6 @@ namespace FuncDoodle {
             ToolManager* m_ToolManager;
             int m_PixelScale = 8;
             ImVec2 m_LastMousePos = ImVec2(-1, -1);
+            Grid* m_Grid;
     };
 }
