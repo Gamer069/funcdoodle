@@ -152,11 +152,11 @@ namespace FuncDoodle
                     }
                     else if (selectedTool == 3) {
                         m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
-			Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
-			colNew[0] = curPxCol.r;
-			colNew[1] = curPxCol.g;
-			colNew[2] = curPxCol.b;
-			std::cout << "CURRENT PIXEL: " << currentPixel.x << ", " << currentPixel.y << std::endl;
+                        Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+                        colNew[0] = curPxCol.r;
+                        colNew[1] = curPxCol.g;
+                        colNew[2] = curPxCol.b;
+                        std::cout << "CURRENT PIXEL: " << currentPixel.x << ", " << currentPixel.y << std::endl;
                         steps = 0;
                     }
 
@@ -166,19 +166,17 @@ namespace FuncDoodle
                         int interpX = static_cast<int>(m_LastMousePos.x + dx * t);
                         int interpY = static_cast<int>(m_LastMousePos.y + dy * t);
 
-			if (interpX == 0 && interpY == 0) {
-			    std::cout << "STEPS -- " << steps << '\n';
-			    std::cout << "Last mouse pos (0) -> " << m_LastMousePos.x << "," << m_LastMousePos.y << "." << '\n';
-			    std::cout << "D -- " << dx << "," << dy << '\n';
-			    std::cout << "T -- " << t << '\n';
-			}
+                        if (interpX == 0 && interpY == 0)
+                        {
+                            std::cout << "STEPS -- " << steps << '\n';
+                            std::cout << "Last mouse pos (0) -> " << m_LastMousePos.x << "," << m_LastMousePos.y << "." << '\n';
+                            std::cout << "D -- " << dx << "," << dy << '\n';
+                            std::cout << "T -- " << t << '\n';
+                        }
 
                         if (interpX >= 0 && interpX < pixels->getWidth() &&
                             interpY >= 0 && interpY < pixels->getHeight())
                         {
-			    //std::cout << "SETTING " << interpX << "," << interpY << " to " << colNew[0] << "," << colNew[1] << "," << colNew[2] << '\n';
-			    //std::cout << "CURRENT PIXEL " << currentPixel.x << "," << currentPixel.y << '\n';
-			    //std::cout << "LAST MOUSE POS: " << m_LastMousePos.x << "," << m_LastMousePos.y << '\n';
                             m_Frame->SetPixel(interpX, interpY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                         }
                     }
@@ -254,44 +252,30 @@ namespace FuncDoodle
             m_LastMousePos = ImVec2(-1, -1);
         }
 
-        // Batch render pixels using a single rectangle for consecutive same-colored pixels
-        for (int y = 0; y < pixels->getHeight(); y++)
-        {
-            int startX_run = 0;
-            Col currentCol = pixels->get(0, y);
+        for (int y = 0; y < pixels->getHeight(); y++) {
+            for (int x = 0; x < pixels->getWidth(); x++) {
+                Col col = pixels->get(x, y);
+                ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
+                ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
+                drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255));
+            }
+        }
 
-            for (int x = 1; x <= pixels->getWidth(); x++)
-            {
-                bool shouldDraw = false;
-                if (x < pixels->getWidth())
-                {
-                    Col nextCol = pixels->get(x, y);
-                    shouldDraw = nextCol.r != currentCol.r ||
-                        nextCol.g != currentCol.g ||
-                        nextCol.b != currentCol.b;
-                }
-                else
-                {
-                    shouldDraw = true;
-                }
-
-                if (shouldDraw)
-                {
-                    // Draw the accumulated run of same-colored pixels
-                    ImVec2 topLeft(startX + startX_run * m_PixelScale,
-                        startY + y * m_PixelScale);
-                    ImVec2 bottomRight(startX + x * m_PixelScale,
-                        startY + (y + 1) * m_PixelScale);
-                    drawList->AddRectFilled(topLeft, bottomRight,
-                        IM_COL32(currentCol.r, currentCol.g, currentCol.b, 255));
-
-                    if (x < pixels->getWidth())
-                    {
-                        startX_run = x;
-                        currentCol = pixels->get(x, y);
-                    }
+        // Draw the previous frame with transparency if we're not on the first frame
+        if (m_Index > 0 && m_PreviousFrame != nullptr) {
+            const ImageArray* prevPixels = m_PreviousFrame->Pixels();
+            
+            // Draw each pixel of the previous frame with 50% transparency
+            for (int y = 0; y < prevPixels->getHeight(); y++) {
+                for (int x = 0; x < prevPixels->getWidth(); x++) {
+                    Col col = prevPixels->get(x, y);
+                    std::cout << (int)col.r << ", " << (int)col.g << ", " << (int)col.b << std::endl;
+                    ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
+                    ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
+                    drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255/2));
                 }
             }
+            // std::exit(-1);
         }
     }
 

@@ -110,6 +110,10 @@ namespace FuncDoodle {
                 Frame frame = frames->get(i);
                 m_FrameRenderer->CleanupFrame();  // Clean up old frame
                 m_FrameRenderer->SetFrame(new Frame(frame));
+                m_FrameRenderer->SetIndex(i);
+                if (i > 0) {
+                    Frame prevFrame = frames->get(i-1); m_FrameRenderer->SetPreviousFrame(new Frame(prevFrame));
+                }
                 m_FrameRenderer->RenderFrame();
                 drawList->AddRect(
                     topLeft, 
