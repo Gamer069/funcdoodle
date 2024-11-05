@@ -220,19 +220,9 @@ namespace FuncDoodle
 
         if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
             const char* formats[] = { "PNGs", "MP4" };
-            if (ImGui::ListBox("Export Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats))) {
-                switch (m_ExportFormat) {
-                    case 0:
-                        std::cout << "PNGs" << std::endl;
-                        break;
-                    case 1:
-                        std::cout << "MP4" << std::endl;
-                        break;
-                }
-            }
+            ImGui::ListBox("Export Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats));
             if (ImGui::IsItemClicked()) {
                 m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
-                std::cout << "Format: " << m_ExportFormat << std::endl;
             }
             if (ImGui::Button("Export") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
                 nfdchar_t* outPath = 0;
@@ -380,7 +370,6 @@ namespace FuncDoodle
             if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false))
             {
                 m_CurrentProj = m_CacheProj;
-                std::cout << "CREATE NEW PROJ" << std::endl;
                 m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
                 m_NewProjOpen = false;
             }

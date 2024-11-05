@@ -137,9 +137,7 @@ namespace FuncDoodle {
             // Create unique ID for this popup
             if (isHovered && ImGui::IsMouseClicked(1)) {
                 ImGui::OpenPopup(menuNamePtr);
-            }
-
-            if (isHovered && ImGui::IsMouseClicked(0)) {
+            } else if (isHovered && ImGui::IsMouseClicked(0)) {
                 m_SelectedFrame = i;
             }
 
