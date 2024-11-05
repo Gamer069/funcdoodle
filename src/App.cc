@@ -186,6 +186,8 @@ namespace FuncDoodle
 
         if (ImGui::IsPopupOpen("EditPrefs")) {
             ImGui::SetNextWindowFocus();
+            ImGui::SetNextWindowPos(ImVec2(655, 478), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
         }
 
         if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -212,6 +214,8 @@ namespace FuncDoodle
 
         if (ImGui::IsPopupOpen("Export##modal")) {
             ImGui::SetNextWindowFocus();
+            ImGui::SetNextWindowPos(ImVec2(503, 467), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(367, 168), ImGuiCond_FirstUseEver);
         }
 
         if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -259,6 +263,8 @@ namespace FuncDoodle
 
         if (ImGui::IsPopupOpen("EditProj")) {
             ImGui::SetNextWindowFocus();
+            ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
         }
 
         if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -319,6 +325,8 @@ namespace FuncDoodle
         if (ImGui::IsPopupOpen("NewProj"))
         {
             ImGui::SetNextWindowFocus();
+            ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
+            ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
         }
 
         if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize))

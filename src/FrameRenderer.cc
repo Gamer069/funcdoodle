@@ -10,6 +10,8 @@ namespace FuncDoodle
 {
     void FrameRenderer::RenderFrame()
     {
+        ImGui::SetNextWindowPos(ImVec2(0, 32));
+        ImGui::SetNextWindowSize(ImVec2(1073, 886));
         ImGui::Begin("Frame");
 
         if (!m_Frame || !m_ToolManager)

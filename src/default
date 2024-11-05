@@ -1,0 +1,11 @@
+[Window][Timeline]
+Pos=0,920
+Size=1074,160
+Collapsed=0
+DockId=0x00000005,0
+
+[Window][Frame]
+Pos=0,32
+Size=1073,886
+Collapsed=0
+DockId=0x00000001,0
