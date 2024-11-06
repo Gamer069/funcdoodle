@@ -15,7 +15,7 @@ namespace FuncDoodle {
         char* typeName[] = { "Pencil", "Eraser", "Bucket", "Picker" };
         ImGui::Begin("Tools");
         // remove later
-        GlobalLoadImages(m_AssetLoader);
+        // GlobalLoadImages(m_AssetLoader);
 
         if (!ImGui::IsAnyItemActive()) {
             if (ImGui::IsKeyPressed(ImGuiKey_6)) {

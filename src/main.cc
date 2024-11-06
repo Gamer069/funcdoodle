@@ -119,6 +119,8 @@ int main(int argc, char** argv) {
 
     glfwMakeContextCurrent(win);
 
+    glfwSwapInterval(0);
+
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         fprintf(stderr, "Failed to initialize GLAD\n");
         return -1;
