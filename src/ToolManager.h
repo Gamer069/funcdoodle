@@ -6,10 +6,12 @@
 
 #include "Frame.h"
 
+#include "AssetLoader.h"
+
 namespace FuncDoodle {
     class ToolManager {
         public:
-            ToolManager();
+            ToolManager(AssetLoader* assetLoader);
             ~ToolManager();
             void RenderTools();
             const int SelectedTool() { return m_SelectedTool; }
@@ -28,5 +30,6 @@ namespace FuncDoodle {
             int m_SelectedTool = 0;
             float m_Col[3] = {0.0f, 0.0f, 0.0f};
             int m_Size = 1;
+            AssetLoader* m_AssetLoader;
     };
 }

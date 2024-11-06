@@ -17,7 +17,7 @@
 
 namespace FuncDoodle {
     AnimationManager::AnimationManager(ProjectFile* proj, AssetLoader* assetLoader) : m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)), m_AssetLoader(assetLoader) {
-        m_ToolManager = new ToolManager();
+        m_ToolManager = new ToolManager(assetLoader);
         m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager);
     }
     AnimationManager::~AnimationManager() {}
