@@ -286,11 +286,6 @@ namespace FuncDoodle {
         std::cout << "PLTE LEN: " << plteLen << std::endl;
 
         for (std::size_t i = 0; i < plteLen; i++) {
-            // long value = 0;
-            // file.read(reinterpret_cast<char*>(&value), sizeof(long));
-            // std::cout << value << std::endl;
-            // ASSERT_EQ(value, i);
-
             // read the rgb
             unsigned char r = 0;
             unsigned char g = 0;

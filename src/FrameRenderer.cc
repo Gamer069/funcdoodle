@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "Player.h"
+
 namespace FuncDoodle
 {
     void FrameRenderer::RenderFrame()
@@ -193,7 +195,6 @@ namespace FuncDoodle
                         colNew[0] = curPxCol.r;
                         colNew[1] = curPxCol.g;
                         colNew[2] = curPxCol.b;
-                        std::cout << "CURRENT PIXEL: " << currentPixel.x << ", " << currentPixel.y << std::endl;
                         steps = 0;
                     }
 
@@ -291,7 +292,7 @@ namespace FuncDoodle
         }
 
         // Draw the previous frame with transparency if we're not on the first frame
-        if (m_Index > 0 && m_PreviousFrame != nullptr) {
+        if (m_Index > 0 && m_PreviousFrame != nullptr && !m_Player->Playing()) {
             const ImageArray* prevPixels = m_PreviousFrame->Pixels();
             
             // Draw each pixel of the previous frame with 50% transparency
@@ -311,7 +312,6 @@ namespace FuncDoodle
     }
 
     void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol) {
-        std::cout << "FLOODFILL TIME YE BABY" << std::endl;
         if (x < 0 || x >= m_Frame->Pixels()->getWidth() || y < 0 || y >= m_Frame->Pixels()->getHeight())
             return;
 

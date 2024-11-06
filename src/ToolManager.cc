@@ -48,6 +48,14 @@ namespace FuncDoodle {
             if (ImGui::ImageButton(typeName[i], (void*)(intptr_t)btnTexId, ImVec2(32,32), ImVec2(0,0), ImVec2(1,1), ImVec4(0,0,0,0), m_SelectedTool == i ? ImVec4(1,1,1,1) : ImVec4(0,0,0,1))) {
                 m_SelectedTool = i;
             }
+            if (ImGui::IsItemHovered()) {
+                ImGui::BeginTooltip();
+                ImGui::Text("Pencil (6)");
+                ImGui::Text("Eraser (7)");
+                ImGui::Text("Bucket (8)");
+                ImGui::Text("Picker (9)");
+                ImGui::EndTooltip();
+            }
         }
         if (m_SelectedTool < 2) {
             ImGui::SliderInt("##Size", &m_Size, 1, 100, "%dpx");
