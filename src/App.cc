@@ -342,7 +342,9 @@ namespace FuncDoodle
             }
             if (ImGui::InputInt("Width", &width))
             {
-                m_CacheProj->SetAnimWidth(width);
+                if (m_CurrentProj)
+                    m_CacheProj->SetAnimWidth(width, true);
+                else m_CacheProj->SetAnimWidth(width, false);
             }
             if (ImGui::InputInt("Height", &height))
             {

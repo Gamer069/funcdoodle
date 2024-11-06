@@ -37,13 +37,16 @@ namespace FuncDoodle {
                 }
 
             void RedoColorAdjustment() {
-                data.resize(width * height);
+                Resize();
 
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
                         set(x,y,Col());
                     }
                 }
+            }
+            void Resize() {
+                data.resize(width * height);
             }
 
             // Set the color at the specified (x, y) position
@@ -87,7 +90,7 @@ namespace FuncDoodle {
         private:
             int width;
             int height;
-            std::vector<Col> data; // Internal storage for pixel data
+            std::vector<Col> data;
     };
     class Frame {
         public:
@@ -104,24 +107,29 @@ namespace FuncDoodle {
             __inline__ const int Width() {
                 return m_Pixels->getWidth();
             }
-            void SetWidth(int width) {
+            void SetWidth(int width, bool clear = false) {
                 if (m_Pixels == nullptr) {
                     m_Pixels = new ImageArray(width, 1);
+                    std::cout << "NULLPTR SETWIDTH CALL!!!" << std::endl;
                 } else {
                     m_Pixels->setWidth(width);
                 }
-                m_Pixels->RedoColorAdjustment();
+                m_Pixels->Resize();
+                if (clear)
+                    m_Pixels->RedoColorAdjustment();
             }
             __inline__ const int Height() {
                 return m_Pixels->getHeight();
             }
-            void SetHeight(int height) {
+            void SetHeight(int height, bool clear = false) {
                 if (m_Pixels == nullptr) {
                     m_Pixels = new ImageArray(1, height);
                 } else {
                     m_Pixels->setHeight(height);
                 }
-                m_Pixels->RedoColorAdjustment();
+                m_Pixels->Resize();
+                if (clear)
+                    m_Pixels->RedoColorAdjustment();
             }
 
             void CopyToClipboard() {

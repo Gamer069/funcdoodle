@@ -66,7 +66,7 @@ namespace FuncDoodle
         ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 
         // Handle zoom input with window size constraints
-        if (ImGui::IsWindowFocused())
+        if (!ImGui::IsAnyItemActive())
         {
             if (ImGui::IsKeyPressed(ImGuiKey_Equal))
             { // = key for zoom in
@@ -264,7 +264,7 @@ namespace FuncDoodle
                     }
                     else if (selectedTool == 3) {
                         // For color picker, we just pick the color - no drawing
-                        m_ToolManager->SetCol(pixels->get(currentPixel.x, currentPixel.y));
+                        m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
                         colNew[0] = pixels->get(currentPixel.x, currentPixel.y).r;
                         colNew[1] = pixels->get(currentPixel.x, currentPixel.y).g;
                         colNew[2] = pixels->get(currentPixel.x, currentPixel.y).b;
@@ -284,6 +284,9 @@ namespace FuncDoodle
 
         for (int y = 0; y < pixels->getHeight(); y++) {
             for (int x = 0; x < pixels->getWidth(); x++) {
+                if (pixels == nullptr) {
+                    std::cout << "PX NULLPTR" << std::endl;
+                }
                 Col col = pixels->get(x, y);
                 ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
                 ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
@@ -324,5 +327,7 @@ namespace FuncDoodle
         FloodFill(x - 1, y, targetCol, fillCol);
         FloodFill(x, y + 1, targetCol, fillCol);
         FloodFill(x, y - 1, targetCol, fillCol);
+        FloodFill(x + 1, y + 1, targetCol, fillCol);
+        FloodFill(x - 1, y - 1, targetCol, fillCol);
     }
 }

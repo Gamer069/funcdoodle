@@ -17,17 +17,19 @@ namespace FuncDoodle {
         // remove later
         GlobalLoadImages(m_AssetLoader);
 
-        if (ImGui::IsKeyPressed(ImGuiKey_6)) {
-            m_SelectedTool = 0;
-        }
-        if (ImGui::IsKeyPressed(ImGuiKey_7)) {
-            m_SelectedTool = 1;
-        }
-        if (ImGui::IsKeyPressed(ImGuiKey_8)) {
-            m_SelectedTool = 2;
-        }
-        if (ImGui::IsKeyPressed(ImGuiKey_9)) {
-            m_SelectedTool = 3;
+        if (!ImGui::IsAnyItemActive()) {
+            if (ImGui::IsKeyPressed(ImGuiKey_6)) {
+                m_SelectedTool = 0;
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_7)) {
+                m_SelectedTool = 1;
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_8)) {
+                m_SelectedTool = 2;
+            }
+            if (ImGui::IsKeyPressed(ImGuiKey_9)) {
+                m_SelectedTool = 3;
+            }
         }
         for (int i = 0; i < (sizeof(types) / sizeof(ToolType)); i++) {
             uint btnTexId = 0;

@@ -89,10 +89,10 @@ namespace FuncDoodle {
     const int ProjectFile::AnimWidth() const {
         return m_Width;
     }
-    void ProjectFile::SetAnimWidth(int width) {
+    void ProjectFile::SetAnimWidth(int width, bool clear) {
         // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
-            m_Frames.get(i).SetWidth(width);
+            m_Frames.get(i).SetWidth(width, clear);
         }
         m_Width = width;
     }
@@ -100,10 +100,10 @@ namespace FuncDoodle {
     const int ProjectFile::AnimHeight() const {
         return m_Height;
     }
-    void ProjectFile::SetAnimHeight(int height) {
+    void ProjectFile::SetAnimHeight(int height, bool clear) {
         // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
-            m_Frames.get(i).SetHeight(height);
+            m_Frames.get(i).SetHeight(height, clear);
         }
         m_Height = height;
     }

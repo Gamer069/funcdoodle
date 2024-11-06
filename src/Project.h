@@ -16,9 +16,9 @@ namespace FuncDoodle {
             const char* AnimName() const;
             void SetAnimName(char name[256]);
             const int AnimWidth() const;
-            void SetAnimWidth(int width);
+            void SetAnimWidth(int width, bool clear = false);
             const int AnimHeight() const;
-            void SetAnimHeight(int height);
+            void SetAnimHeight(int height, bool clear = false);
             const char* AnimAuthor() const;
             void SetAnimAuthor(char* author);
             const int AnimFPS() const;
