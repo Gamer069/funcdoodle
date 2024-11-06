@@ -250,8 +250,6 @@ namespace FuncDoodle {
         int animFPS = 0;
         file.read(reinterpret_cast<char*>(&animFPS), sizeof(animFPS));
 
-        std::cout << "SHOULD BE" << animWidth*animHeight << "px" << std::endl;
-
         file.getline(m_Name, sizeof(m_Name), '\0');
 
         if (file.fail()) {
@@ -262,10 +260,6 @@ namespace FuncDoodle {
         file.getline(m_Desc, sizeof(m_Desc), '\0');
 
         file.getline(m_Author, sizeof(m_Author), '\0');
-
-        std::cout << m_Name << " -- NAME" << std::endl;
-        std::cout << m_Desc << " -- DESC" << std::endl;
-        std::cout << m_Author << " -- AUTH" << std::endl;
 
         std::vector<Col> plte;
 
@@ -283,8 +277,6 @@ namespace FuncDoodle {
             std::cerr << "IM DISSAPOINTED THAT THE DAMN FILE HAS JUST FAILED" << std::endl;
         }
 
-        std::cout << "PLTE LEN: " << plteLen << std::endl;
-
         for (std::size_t i = 0; i < plteLen; i++) {
             // read the rgb
             unsigned char r = 0;
@@ -295,11 +287,6 @@ namespace FuncDoodle {
             file.read(reinterpret_cast<char*>(&b), sizeof(b));
 
             plte.push_back(Col{.r = r, .g = g, .b = b});
-        }
-
-        for (int i = 0; i < plte.size(); i++) {
-            std::cout << i << std::endl;
-            std::cout << (unsigned int)(plte[i].r) << ";" << (unsigned int)(plte[i].g) << ";" << (unsigned int)(plte[i].b) << ";" << std::endl;
         }
 
         m_Frames = LongIndexArray<Frame>();
@@ -325,10 +312,6 @@ namespace FuncDoodle {
                         std::exit(-1);
                     }
                     
-                    for (size_t b = 0; b < sizeof(int); b++) {
-                        std::cout << std::hex << (int)bytes[b] << " ";
-                    }
-
                     img->set(x, y, plte[index]);
                 }
             }

@@ -45,7 +45,6 @@ namespace FuncDoodle {
             // Set the color at the specified (x, y) position
             void set(int x, int y, const Col& color) {
                 if (x < 0 || x >= width || y < 0 || y >= height) {
-                    std::cout << "Set" << std::endl;
                     throw std::out_of_range("Index out of range");
                 }
                 data[y * width + x] = color;
@@ -54,7 +53,6 @@ namespace FuncDoodle {
             // Get the color at the specified (x, y) position
             Col get(int x, int y) const {
                 if (x < 0 || x >= width || y < 0 || y >= height) {
-                    std::cout << "Get" << std::endl;
                     throw std::out_of_range("Index out of range");
                 }
                 return data[y * width + x];

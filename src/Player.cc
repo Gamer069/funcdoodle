@@ -20,7 +20,6 @@ namespace FuncDoodle {
         static float timeElapsed = 0.0f;
         timeElapsed += dt;
         m_CurFrame = static_cast<long>(timeElapsed * fps) % m_Proj->AnimFrameCount();
-        std::cout << "current frame: " << m_CurFrame << std::endl;
     }
     void AnimationPlayer::Rewind() {
         m_CurFrame = 0;
