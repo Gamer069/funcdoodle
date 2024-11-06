@@ -12,8 +12,11 @@
 #include <cstring>
 #include <unordered_map>
 #include <stdint.h>
+#include <sstream>
 
 #include "LoadedImages.h"
+
+#include "MacroUtils.h"
 
 namespace FuncDoodle
 {
@@ -385,7 +388,9 @@ namespace FuncDoodle
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
         } else {
-            glfwSetWindowTitle(m_Window, "FuncDoodle"); 
+            char* title;
+            sprintf(title, "FuncDoodle -- %s -- %d FPS", FUNCVER, (int)ImGui::GetIO().Framerate);
+            glfwSetWindowTitle(m_Window, title); 
         }
     }   
     void Application::OpenFileDialog()

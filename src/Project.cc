@@ -341,20 +341,9 @@ namespace FuncDoodle {
     }
 
     void ProjectFile::DisplayFPS() {
-        static double lastTime = glfwGetTime();
-        static int frameCount = 0;
-        
-        double currentTime = glfwGetTime();
-        frameCount++;
-
-        // Update FPS counter every second
-        if (currentTime - lastTime >= 1.0) {
-            std::stringstream title;
-            title << "FuncDoodle -- " << FUNCVER << " -- " << AnimName() << " (" << frameCount << " FPS)";
-            glfwSetWindowTitle(m_Window, title.str().c_str());
-            
-            frameCount = 0;
-            lastTime = currentTime;
-        }
+        char* title = (char*)malloc(1024);
+        sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)", FUNCVER, AnimName(), (int)ImGui::GetIO().Framerate);
+        glfwSetWindowTitle(m_Window, title);
+        free(title);
     }
 }

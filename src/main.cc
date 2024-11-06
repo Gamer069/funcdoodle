@@ -9,6 +9,7 @@
 #include <filesystem>
 
 #include <cmath>
+#include <chrono>
 
 #include "AssetLoader.h"
 #include "App.h"
@@ -237,35 +238,44 @@ int main(int argc, char** argv) {
 
     FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
+    constexpr double FRAME_TIME = 1.0 / 1000.0;
+    auto lastFrameTime = std::chrono::high_resolution_clock::now();
+
     while (!glfwWindowShouldClose(win)) {
-        glfwPollEvents();
+        auto currentFrameTime = std::chrono::high_resolution_clock::now();
+        auto deltaTime = std::chrono::duration<double>(currentFrameTime - lastFrameTime).count();
 
-        // Start the ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
+        if (deltaTime >= FRAME_TIME) {
+            lastFrameTime = currentFrameTime;
+            glfwPollEvents();
 
-        ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+            // Start the ImGui frame
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui::NewFrame();
 
-        application->RenderImGui();
+            ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
-        // Rendering
-        int display_w, display_h;
-        glfwGetFramebufferSize(win, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+            application->RenderImGui();
 
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-            GLFWwindow* backup = glfwGetCurrentContext();
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup);
+            // Rendering
+            int display_w, display_h;
+            glfwGetFramebufferSize(win, &display_w, &display_h);
+            glViewport(0, 0, display_w, display_h);
+            glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+            if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+                GLFWwindow* backup = glfwGetCurrentContext();
+                ImGui::UpdatePlatformWindows();
+                ImGui::RenderPlatformWindowsDefault();
+                glfwMakeContextCurrent(backup);
+            }
+
+            glfwSwapBuffers(win);
         }
-
-        glfwSwapBuffers(win);
     }
 
     Pa_StopStream(stream);
