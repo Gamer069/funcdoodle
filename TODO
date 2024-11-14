@@ -2,10 +2,9 @@ Sounds for animations
 Test cmakelists on multiple platforms with vms.
 Setup github releases with ./release.sh
 In Manager.cc, RenderControls renders the images every frame. This is bad. Fix it.
-MOST IMPORTANTLY: Make it so you can properly resize and move the window when a frame is being displayed -- Fix drawing
-TODO: make it so you can properly edit the width and height of the animation with edit project.
 Make it so the export mp4 feature isn't hacked together.
 More shortcuts, more util stuff, helper for moving objects.
 Make it so you can select stuff.
 Make it so the picker properly works.
-TODO: remove redo color adjustrements call
+TODO: remove redo color adjustments call
+fix the decreasing opf the size segfaulting (very obvious error)

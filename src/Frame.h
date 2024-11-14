@@ -83,6 +83,10 @@ namespace FuncDoodle {
                 this->height = height;
             }
 
+            void SetData(const std::vector<Col>& data) {
+                this->data = data;
+            }
+
             const std::vector<Col>& Data() const {
                 return data;
             }
@@ -112,11 +116,30 @@ namespace FuncDoodle {
                     m_Pixels = new ImageArray(width, 1);
                     std::cout << "NULLPTR SETWIDTH CALL!!!" << std::endl;
                 } else {
-                    m_Pixels->setWidth(width);
+                    if (!clear) {
+                        const std::vector<Col>& oldData = m_Pixels->Data();
+                        int oldWidth = m_Pixels->getWidth();
+                        int oldHeight = m_Pixels->getHeight();
+                        m_Pixels->setWidth(width);
+                        m_Pixels->Resize();
+                        std::vector<Col> newData(width * oldHeight);
+                        int xOffset = (width - oldWidth) / 2;
+                        for (int y = 0; y < oldHeight; y++) {
+                            for (int x = 0; x < oldWidth; x++) {
+                                if (newData.size() >= oldData.size()) {
+                                    newData[y * width + (x + xOffset)] = oldData[y * oldWidth + x];
+                                } else {
+                                    newData[y * oldWidth + x] = oldData[y * oldWidth + x];
+                                }
+                            }
+                        }
+                        m_Pixels->SetData(newData);
+                    } else {
+                        m_Pixels->setWidth(width);
+                        m_Pixels->Resize();
+                        m_Pixels->RedoColorAdjustment();
+                    }
                 }
-                m_Pixels->Resize();
-                if (clear)
-                    m_Pixels->RedoColorAdjustment();
             }
             __inline__ const int Height() {
                 return m_Pixels->getHeight();
@@ -125,11 +148,30 @@ namespace FuncDoodle {
                 if (m_Pixels == nullptr) {
                     m_Pixels = new ImageArray(1, height);
                 } else {
-                    m_Pixels->setHeight(height);
+                    if (!clear) {
+                        std::vector<Col> oldData = m_Pixels->Data();
+                        int oldWidth = m_Pixels->getWidth();
+                        int oldHeight = m_Pixels->getHeight();
+                        m_Pixels->setHeight(height);
+                        m_Pixels->Resize();
+                        std::vector<Col> newData(oldWidth * height);
+                        int yOffset = (height - oldHeight) / 2;
+                        for (int y = 0; y < oldHeight; y++) {
+                            for (int x = 0; x < oldWidth; x++) {
+                                if (newData.size() >= oldData.size()) {
+                                    newData[(y + yOffset) * oldWidth + x] = oldData[y * oldWidth + x];
+                                } else {
+                                    newData[y * oldWidth + x] = oldData[y * oldWidth + x];
+                                }
+                            }
+                        }
+                        m_Pixels->SetData(newData);
+                    } else {
+                        m_Pixels->setHeight(height);
+                        m_Pixels->Resize();
+                        m_Pixels->RedoColorAdjustment();
+                    }
                 }
-                m_Pixels->Resize();
-                if (clear)
-                    m_Pixels->RedoColorAdjustment();
             }
 
             void CopyToClipboard() {

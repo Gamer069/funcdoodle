@@ -5,12 +5,14 @@ mkdir -p FuncDoodle.app/Contents/MacOS
 mkdir -p FuncDoodle.app/Contents/Resources
 
 # Copy executable so the app would function
-cp FuncDoodle FuncDoodle.app/Contents/MacOS/FuncDoodle
+cp build/FuncDoodle FuncDoodle.app/Contents/MacOS/FuncDoodle
 
 # Convert icon to .icns and copy to the required path
 cp icon.png icon2.png
-convert icon2.png FuncDoodle.app/Contents/Resources/AppIcon.icns
+magick icon2.png FuncDoodle.app/Contents/Resources/AppIcon.icns
 cp FuncDoodle.app/Contents/Resources/AppIcon.icns icon.icns
+
+cp -r assets FuncDoodle.app/Contents/MacOS/
 
 # Register all in .plist
 echo "
@@ -56,4 +58,8 @@ echo "
 
 osascript script.scpt icon.icns FuncDoodle.app
 
-open FuncDoodle.app
+mkdir -p appbuild
+cp -r FuncDoodle.app appbuild/
+rm -rf FuncDoodle.app
+
+open appbuild/FuncDoodle.app
