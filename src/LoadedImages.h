@@ -15,5 +15,6 @@ namespace FuncDoodle {
     extern uint s_PencilTexId;
     extern uint s_PickerTexId;
     extern uint s_EraserTexId;
+    extern uint s_TextTexId;
     void GlobalLoadImages(AssetLoader* assetLoader);
 }

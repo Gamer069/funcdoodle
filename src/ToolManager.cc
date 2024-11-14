@@ -11,23 +11,21 @@ namespace FuncDoodle {
     ToolManager::~ToolManager() {
     }
     void ToolManager::RenderTools() {
-        ToolType types[] = { ToolType::Pencil, ToolType::Eraser, ToolType::Bucket, ToolType::Picker };
-        char* typeName[] = { "Pencil", "Eraser", "Bucket", "Picker" };
+        ToolType types[] = { ToolType::Pencil, ToolType::Eraser, ToolType::Bucket, ToolType::Picker, ToolType::Text };
+        char* typeName[] = { "Pencil", "Eraser", "Bucket", "Picker", "Text" };
         ImGui::Begin("Tools");
-        // remove later
-        // GlobalLoadImages(m_AssetLoader);
 
         if (!ImGui::IsAnyItemActive()) {
-            if (ImGui::IsKeyPressed(ImGuiKey_6)) {
+            if (ImGui::IsKeyPressed(ImGuiKey_1)) {
                 m_SelectedTool = 0;
             }
-            if (ImGui::IsKeyPressed(ImGuiKey_7)) {
+            if (ImGui::IsKeyPressed(ImGuiKey_2)) {
                 m_SelectedTool = 1;
             }
-            if (ImGui::IsKeyPressed(ImGuiKey_8)) {
+            if (ImGui::IsKeyPressed(ImGuiKey_3)) {
                 m_SelectedTool = 2;
             }
-            if (ImGui::IsKeyPressed(ImGuiKey_9)) {
+            if (ImGui::IsKeyPressed(ImGuiKey_4)) {
                 m_SelectedTool = 3;
             }
         }
@@ -46,19 +44,46 @@ namespace FuncDoodle {
                 case 3:
                     btnTexId = s_PickerTexId;
                     break;
+                case 4:
+                    btnTexId = s_TextTexId;
+                    break;
             }
             if (ImGui::ImageButton(typeName[i], (void*)(intptr_t)btnTexId, ImVec2(32,32), ImVec2(0,0), ImVec2(1,1), ImVec4(0,0,0,0), m_SelectedTool == i ? ImVec4(1,1,1,1) : ImVec4(0,0,0,1))) {
                 m_SelectedTool = i;
             }
-            if (ImGui::IsItemHovered()) {
-                ImGui::BeginTooltip();
-                ImGui::Text("Pencil (6)");
-                ImGui::Text("Eraser (7)");
-                ImGui::Text("Bucket (8)");
-                ImGui::Text("Picker (9)");
-                ImGui::EndTooltip();
+            if (i == 0) {
+                if (ImGui::IsItemHovered()) {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Pencil (1)");
+                    ImGui::EndTooltip();
+                }
+            } else if (i == 1) {
+                if (ImGui::IsItemHovered()) {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Eraser (2)");
+                    ImGui::EndTooltip();
+                }
+            } else if (i == 2) {
+                if (ImGui::IsItemHovered()) {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Bucket (3)");
+                    ImGui::EndTooltip();
+                }
+            } else if (i == 3) {
+                if (ImGui::IsItemHovered()) {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Picker (4)");
+                    ImGui::EndTooltip();
+                }
+            } else if (i == 4) {
+                if (ImGui::IsItemHovered()) {
+                    ImGui::BeginTooltip();
+                    ImGui::Text("Text (5)");
+                    ImGui::EndTooltip();
+                }
             }
         }
+
         if (m_SelectedTool < 2) {
             ImGui::SliderInt("##Size", &m_Size, 1, 100, "%dpx");
             ImGui::SameLine();
@@ -68,7 +93,7 @@ namespace FuncDoodle {
         if (m_SelectedTool != 1) {
             ImGui::ColorPicker3("Col", m_Col);
         }
-        
+
         if (m_Size < 1) m_Size = 1;
 
         if (ImGui::IsKeyPressed(ImGuiKey_Semicolon, true)) {

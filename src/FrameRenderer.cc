@@ -111,6 +111,71 @@ namespace FuncDoodle
         ImVec2 mousePos = ImGui::GetMousePos();
         ImVec2 frameMin(startX, startY);
         ImVec2 frameMax(startX + frameWidth, startY + frameHeight);
+        unsigned char colNew[3] = {255, 255, 255};
+
+        auto pencil = [&](ImVec2 currentPixel) {
+            const float* colOld = m_ToolManager->Col();
+            for (int j = 0; j < 3; j++) {
+                colNew[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
+            }
+
+            int size = m_ToolManager->Size();
+
+            for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
+                for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
+                    int newX = currentPixel.x + offsetX;
+                    int newY = currentPixel.y + offsetY;
+                    if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
+                            newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
+                        m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
+                    }
+                }
+            }
+        };
+        auto eraser = [&](ImVec2 currentPixel) {
+            int size = m_ToolManager->Size();
+
+            for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
+                for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
+                    int newX = currentPixel.x + offsetX;
+                    int newY = currentPixel.y + offsetY;
+                    if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
+                            newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
+                        m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
+                    }
+                }
+            }
+        };
+
+        auto bucket = [&](ImVec2 currentPixel) {
+            const float* colOld = m_ToolManager->Col();
+            unsigned char colResult[3];
+            for (int j = 0; j < 3; j++) {
+                colResult[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
+            }
+            // FLOODFILL
+            Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
+            FloodFill(currentPixel.x, currentPixel.y, curPixelCol, Col{ .r = colResult[0], .g = colResult[1], .b = colResult[2] });
+            colNew[0] = colResult[0];
+            colNew[1] = colResult[1];
+            colNew[2] = colResult[2];
+        };
+        auto picker = [&](ImVec2 currentPixel) {
+            m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
+            Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+            colNew[0] = curPxCol.r;
+            colNew[1] = curPxCol.g;
+            colNew[2] = curPxCol.b;
+        };
+
+        auto text = [&](ImVec2 currentPixel) {
+            // TODO: implement this
+            Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+            colNew[0] = curPxCol.r;
+            colNew[1] = curPxCol.g;
+            colNew[2] = curPxCol.b;
+        };
+
 
         // Check if mouse is within frame bounds and mouse button is down
         if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && ImGui::IsMouseDown(0))
@@ -140,61 +205,17 @@ namespace FuncDoodle
                     int steps = std::max(1, std::max(abs(static_cast<int>(dx)), abs(static_cast<int>(dy))));
 
                     // Pre-calculate color values outside the loop
-                    unsigned char colNew[3] = { 255, 255, 255 }; // Default white for eraser
-                    if (selectedTool == 0)
-                    {
-                        const float* colOld = m_ToolManager->Col();
-                        for (int j = 0; j < 3; j++)
-                        {
-                            colNew[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
-                        }
-
-                        int size = m_ToolManager->Size();
-
-                        for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-                            for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-                                int newX = currentPixel.x + offsetX;
-                                int newY = currentPixel.y + offsetY;
-                                if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-                                    newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-                                    m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
-                                }
-                            }
-                        }
-                    }
-                    else if (selectedTool == 1) {
-                        int size = m_ToolManager->Size();
-
-                        for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-                            for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-                                int newX = currentPixel.x + offsetX;
-                                int newY = currentPixel.y + offsetY;
-                                if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-                                    newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-                                    m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
-                                }
-                            }
-                        }
-                    }
-                    else if (selectedTool == 2) {
-                        const float* colOld = m_ToolManager->Col();
-                        unsigned char colResult[3];
-                        for (int j = 0; j < 3; j++) {
-                            colResult[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
-                        }
-                        // FLOODFILL
-                        Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
-                        FloodFill(currentPixel.x, currentPixel.y, curPixelCol, Col{ .r = colResult[0], .g = colResult[1], .b = colResult[2] });
-                        colNew[0] = colResult[0];
-                        colNew[1] = colResult[1];
-                        colNew[2] = colResult[2];
-                    }
-                    else if (selectedTool == 3) {
-                        m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
-                        Col curPxCol = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
-                        colNew[0] = curPxCol.r;
-                        colNew[1] = curPxCol.g;
-                        colNew[2] = curPxCol.b;
+                    if (selectedTool == 0) {
+                        pencil(currentPixel);
+                    } else if (selectedTool == 1) {
+                        eraser(currentPixel);
+                    } else if (selectedTool == 2) {
+                        bucket(currentPixel);
+                    } else if (selectedTool == 3) {
+                        picker(currentPixel);
+                        steps = 0;
+                    } else if (selectedTool == 4) {
+                        text(currentPixel);
                         steps = 0;
                     }
 
@@ -217,59 +238,20 @@ namespace FuncDoodle
                     unsigned char colNew[3] = { 255, 255, 255 }; // Default white for eraser
                     if (selectedTool == 0)
                     {
-                        const float* colOld = m_ToolManager->Col();
-                        for (int j = 0; j < 3; j++)
-                        {
-                            colNew[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
-                        }
-                        int size = m_ToolManager->Size();
-
-                        for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-                            for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-                                int newX = currentPixel.x + offsetX;
-                                int newY = currentPixel.y + offsetY;
-                                if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-                                    newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-                                    m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
-                                }
-                            }
-                        }
+                        pencil(currentPixel);
                     }
                     else if (selectedTool == 1) {
-                        int size = m_ToolManager->Size();
-
-                        for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-                            for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-                                int newX = currentPixel.x + offsetX;
-                                int newY = currentPixel.y + offsetY;
-                                if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-                                    newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-                                    m_Frame->SetPixel(newX, newY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
-                                }
-                            }
-                        }
+                        eraser(currentPixel);
                     }
                     else if (selectedTool == 2) {
-                        const float* colOld = m_ToolManager->Col();
-                        unsigned char colResult[3];
-                        for (int j = 0; j < 3; j++) {
-                            colResult[j] = static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
-                        }
-                        // FLOODFILL
-                        Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
-                        FloodFill(currentPixel.x, currentPixel.y, curPixelCol, Col{ .r = colResult[0], .g = colResult[1], .b = colResult[2] });
-                        colNew[0] = colResult[0];
-                        colNew[1] = colResult[1];
-                        colNew[2] = colResult[2];
+                        bucket(currentPixel);
                     }
                     else if (selectedTool == 3) {
-                        // For color picker, we just pick the color - no drawing
-                        m_ToolManager->SetCol(m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
-                        colNew[0] = pixels->get(currentPixel.x, currentPixel.y).r;
-                        colNew[1] = pixels->get(currentPixel.x, currentPixel.y).g;
-                        colNew[2] = pixels->get(currentPixel.x, currentPixel.y).b;
+                        picker(currentPixel);
+                    } else if (selectedTool == 4) {
+                        text(currentPixel);
                     }
-
+ 
                     if (selectedTool != 3) { // Only draw if not using color picker
                         m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                     }

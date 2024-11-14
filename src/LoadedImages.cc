@@ -9,6 +9,7 @@ namespace FuncDoodle {
     uint s_PickerTexId = 255;
     uint s_EraserTexId = 255;
     uint s_BucketTexId = 255;
+    uint s_TextTexId = 255;
     void GlobalLoadImages(AssetLoader* assetLoader) {
         s_PlayTexId = assetLoader->LoadImage("play.png");
         s_PauseTexId = assetLoader->LoadImage("pause.png");
@@ -18,5 +19,6 @@ namespace FuncDoodle {
         s_PickerTexId = assetLoader->LoadImage("picker.png");
         s_EraserTexId = assetLoader->LoadImage("eraser.png");
         s_BucketTexId = assetLoader->LoadImage("bucket.png");
+        s_TextTexId = assetLoader->LoadImage("text.png");
     }
 }

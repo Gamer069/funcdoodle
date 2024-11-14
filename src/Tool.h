@@ -9,6 +9,7 @@ namespace FuncDoodle {
         Pencil,
         Eraser,
         Bucket,
-        Picker
+        Picker,
+        Text,
     };
 }
