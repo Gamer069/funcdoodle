@@ -1,0 +1,15 @@
+# .clang-format
+
+Language: Cpp
+BasedOnStyle: LLVM
+PointerAlignment: Left
+AlignConsecutiveDeclarations: false
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: true
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
+SpaceBeforeParens: ControlStatements
+SpacesBeforeTrailingComments: 2
+ColumnLimit: 80
+
