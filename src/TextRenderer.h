@@ -7,10 +7,10 @@
 namespace FuncDoodle {
     class TextRenderer {
         public:
-            TextRenderer(ImFont* fnt);
+            TextRenderer();
             ~TextRenderer();
-            const std::vector<Col>& RenderText(const char* text, const Col& txtColor);
+            void RenderText(const char* text, const Col& txtColor);
         private:
-            ImFont* m_Font;
+            ImFont* m_Font = nullptr;
     };
 }

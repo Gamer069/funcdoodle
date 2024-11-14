@@ -71,6 +71,7 @@ target_include_directories(FuncDoodle PRIVATE
     lib/glad/include
     lib/nfd/src/include
     lib/stb/
+    lib/glm/
     /usr/local/opt/portaudio/include
 )
 

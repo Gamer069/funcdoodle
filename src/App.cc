@@ -18,6 +18,8 @@
 
 #include "MacroUtils.h"
 
+#include "TextRenderer.h"
+
 namespace FuncDoodle
 {
     Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
@@ -138,6 +140,8 @@ namespace FuncDoodle
         CheckKeybinds(newProjShortcut, openShortcut, saveShortcut, exportShortcut);
 
         if (!m_CurrentProj) RenderOptions();
+        if (!m_TextRenderer) m_TextRenderer = new TextRenderer();
+        m_TextRenderer->RenderText("Heaergouygyuoooiuerhgerthiuoherituewrthuoioertiouherigotugh", Col{.r = 128, .g = 128, .b = 128});
 
         if (ImGui::BeginMainMenuBar())
         {

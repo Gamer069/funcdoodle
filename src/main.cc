@@ -137,6 +137,7 @@ int main(int argc, char** argv) {
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     io.Fonts->AddFontFromFileTTF((assetsPath / "Roboto" / "Roboto-Medium.ttf").c_str(), 16.0f);
+    io.Fonts->Build();
     (void)io;
 
     // Setup Dear ImGui style
