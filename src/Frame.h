@@ -102,13 +102,13 @@ namespace FuncDoodle {
             Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
             Frame(ImageArray* arr) : m_Pixels(arr) {};
             ~Frame() {};
-            __inline__ const ImageArray* Pixels() const {
+            inline const ImageArray* Pixels() const {
                 return m_Pixels;
             }
             void SetPixel(int x, int y, Col px) {
                 m_Pixels->set(x, y, px);
             }
-            __inline__ const int Width() {
+            inline const int Width() {
                 return m_Pixels->getWidth();
             }
             void SetWidth(int width, bool clear = false) {
@@ -141,7 +141,7 @@ namespace FuncDoodle {
                     }
                 }
             }
-            __inline__ const int Height() {
+            inline const int Height() {
                 return m_Pixels->getHeight();
             }
             void SetHeight(int height, bool clear = false) {

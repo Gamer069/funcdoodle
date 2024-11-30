@@ -15,9 +15,9 @@ namespace FuncDoodle {
             void RenderFrame();
             void InitPixels();
 
-            __inline__ const Frame* AnimFrame() const { return m_Frame; }
+            inline const Frame* AnimFrame() const { return m_Frame; }
             void SetFrame(Frame* frame) { m_Frame = frame; }
-            __inline__ const ToolManager* GetToolManager() const { return m_ToolManager; }
+            inline const ToolManager* GetToolManager() const { return m_ToolManager; }
             void SetToolManager(ToolManager* toolManager) { m_ToolManager = toolManager; }
             const int Index() const { return m_Index; }
             void SetIndex(int index) { m_Index = index; }

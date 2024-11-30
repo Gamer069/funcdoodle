@@ -10,6 +10,5 @@ namespace FuncDoodle {
         Eraser,
         Bucket,
         Picker,
-        Text,
     };
 }

@@ -44,7 +44,7 @@ namespace FuncDoodle {
             std::exit(-1);
         }
 
-        uint textureID;
+        uint32_t textureID;
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -56,7 +56,7 @@ namespace FuncDoodle {
 
         drawList->AddImage((void*)(intptr_t)textureID, pos, ImVec2(pos.x + size.x, pos.y + size.y), ImVec2(0, 0), ImVec2(1, 1), ImGui::ColorConvertFloat4ToU32(tint));
     }
-    uint AssetLoader::LoadImage(const char* name) {
+    uint32_t AssetLoader::LoadImage(const char* name) {
         int width, height, channels;
         unsigned char* data = stbi_load((m_AssetsPath / name).c_str(), &width, &height, &channels, 0);
         if (!data) {
@@ -67,7 +67,7 @@ namespace FuncDoodle {
             std::exit(-1);
         }
 
-        uint textureID;
+        uint32_t textureID;
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_2D, textureID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);

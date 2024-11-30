@@ -1,0 +1,34 @@
+ImGui::IsKeyPressed(shortcut.key);
+if (ImGui::Button("Export") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false))
+if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false))
+if (ImGui::IsKeyPressed(ImGuiKey_Equal))
+if (ImGui::IsKeyPressed(ImGuiKey_Minus))
+if (ImGui::IsKeyPressed(ImGuiKey_0)) {
+if (ImGui::IsKeyPressed(ImGuiKey_T)) {
+if (ImGui::IsKeyPressed(ImGuiKey_Y)) {
+if (ImGui::IsKeyPressed(ImGuiKey_G)) {
+if (ImGui::IsKeyPressed(ImGuiKey_LeftBracket, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_RightBracket, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_Comma, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_Period, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_Slash, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
+if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
+ImGui::IsKeyPressed(ImGuiKey_J, true)
+ImGui::IsKeyPressed(ImGuiKey_K, true)
+ImGui::IsKeyPressed(ImGuiKey_L, true)
+if (ImGui::IsKeyPressed(ImGuiKey_1)) {
+if (ImGui::IsKeyPressed(ImGuiKey_2)) {
+if (ImGui::IsKeyPressed(ImGuiKey_3)) {
+if (ImGui::IsKeyPressed(ImGuiKey_4)) {
+ImGui::IsKeyPressed(ImGuiKey_Semicolon, true)) {
+se if (ImGui::IsKeyPressed(ImGuiKey_Apostrophe, true)) {

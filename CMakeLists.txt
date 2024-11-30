@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
+if(NOT WIN32)
 project(FuncDoodle C CXX OBJC)
+else()
+project(FuncDoodle C CXX)
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -37,15 +41,26 @@ elseif(UNIX AND NOT APPLE)
 set(NFD_SOURCES lib/nfd/src/nfd_zenity.cpp lib/nfd/src/nfd_common.c)
 endif()
 
-set(PORTAUDIO_DIR "" CACHE STRING "required")
+set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
+set(PORTAUDIO_INCLDIR "" CACHE STRING "required")
 
-if(NOT PORTAUDIO_DIR)
+if(NOT PORTAUDIO_LIBDIR)
     if(APPLE)
-        set(PORTAUDIO_DIR "/usr/local/opt/portaudio/lib/")
+        set(PORTAUDIO_LIBDIR "/usr/local/opt/portaudio/lib/")
     elseif(UNIX AND NOT APPLE)
-        set(PORTAUDIO_DIR "/usr/local/lib/")
+        set(PORTAUDIO_LIBDIR "/usr/local/lib/")
     elseif(WIN32)
-        set(PORTAUDIO_DIR "C:\\Program Files\\PortAudio\\lib\\")
+        set(PORTAUDIO_LIBDIR "C:\\Program Files\\PortAudio\\lib\\")
+    endif()
+endif()
+
+if(NOT PORTAUDIO_INCLDIR)
+    if(APPLE)
+        set(PORTAUDIO_INCLDIR "/usr/local/opt/portaudio/include")
+    elseif(UNIX AND NOT APPLE)
+        set(PORTAUDIO_INCLDIR "/usr/local/include")
+    elseif(WIN32)
+        set(PORTAUDIO_INCLDIR "C:\\portaudio\\include")
     endif()
 endif()
 
@@ -72,7 +87,7 @@ target_include_directories(FuncDoodle PRIVATE
     lib/nfd/src/include
     lib/stb/
     lib/glm/
-    /usr/local/opt/portaudio/include
+    ${PORTAUDIO_INCLDIR}
 )
 
 target_link_libraries(FuncDoodle
@@ -87,7 +102,7 @@ target_link_libraries(FuncDoodle
 # Link libraries based on platform
 if(APPLE)
     target_link_libraries(FuncDoodle
-        ${PORTAUDIO_DIR}libportaudio.dylib
+        ${PORTAUDIO_LIBDIR}libportaudio.dylib
         "-framework OpenGL"
         "-framework Cocoa"
         "-framework IOKit"
@@ -96,11 +111,11 @@ if(APPLE)
    )
 elseif(UNIX AND NOT APPLE)
     target_link_libraries(FuncDoodle
-        ${PORTAUDIO_DIR}libportaudio.so
+        ${PORTAUDIO_LIBDIR}libportaudio.so
     )
 elseif(WIN32)
     target_link_libraries(FuncDoodle
-        ${PORTAUDIO_DIR}portaudio.dll
+        ${PORTAUDIO_LIBDIR}portaudio.lib
     )
 endif()
 

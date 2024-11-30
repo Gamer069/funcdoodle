@@ -4,8 +4,6 @@
 #include "Manager.h"
 #include "AssetLoader.h"
 
-#include "TextRenderer.h"
-
 namespace FuncDoodle {
     class Application {
         public:
@@ -31,6 +29,5 @@ namespace FuncDoodle {
             bool m_ExportOpen = false;
             bool m_EditPrefsOpen = false;
             int m_Theme = 0;
-            TextRenderer* m_TextRenderer;
     };
 }

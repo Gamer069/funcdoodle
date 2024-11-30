@@ -18,11 +18,9 @@
 
 #include "MacroUtils.h"
 
-#include "TextRenderer.h"
-
 namespace FuncDoodle
 {
-    Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath("???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile("asdf", 1, 1, "asdf", 5, "asdf", win)), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
+    Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath((char*)"???"), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(new ProjectFile((char*)"asdf", 1, 1, (char*)"asdf", 5, (char*)"asdf", win)), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
     Application::~Application() {}
     char* GlobalGetShortcut(const char* key, bool shift, bool super)
     {
@@ -140,8 +138,6 @@ namespace FuncDoodle
         CheckKeybinds(newProjShortcut, openShortcut, saveShortcut, exportShortcut);
 
         if (!m_CurrentProj) RenderOptions();
-        if (!m_TextRenderer) m_TextRenderer = new TextRenderer();
-        m_TextRenderer->RenderText("Heaergouygyuoooiuerhgerthiuoherituewrthuoioertiouherigotugh", Col{.r = 128, .g = 128, .b = 128});
 
         if (ImGui::BeginMainMenuBar())
         {
@@ -328,12 +324,12 @@ namespace FuncDoodle
 
         if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            char name[256] = "";
+            char name[256] = (char*)"";
             int width = 32;
             int height = 32;
-            char author[100] = "";
+            char author[100] = (char*)"";
             int fps = 0;
-            char desc[512] = "";
+            char desc[512] = (char*)"";
             if (m_CacheProj)
             {
                 strcpy(name, m_CacheProj->AnimName());
@@ -453,7 +449,7 @@ namespace FuncDoodle
 
         if (m_CurrentProj == nullptr)
         {
-            m_CurrentProj = new ProjectFile("", 1, 1, "", 0, "", m_Window);
+            m_CurrentProj = new ProjectFile((char*)"", 1, 1, (char*)"", 0, (char*)"", m_Window);
         }
 
         m_CurrentProj->ReadAndPopulate(m_FilePath);

@@ -7,14 +7,14 @@
 #include "AssetLoader.h"
 
 namespace FuncDoodle {
-    extern uint s_PlayTexId;
-    extern uint s_PauseTexId;
-    extern uint s_RewindTexId;
-    extern uint s_EndTexId;
-    extern uint s_BucketTexId;
-    extern uint s_PencilTexId;
-    extern uint s_PickerTexId;
-    extern uint s_EraserTexId;
-    extern uint s_TextTexId;
+    extern uint32_t s_PlayTexId;
+    extern uint32_t s_PauseTexId;
+    extern uint32_t s_RewindTexId;
+    extern uint32_t s_EndTexId;
+    extern uint32_t s_BucketTexId;
+    extern uint32_t s_PencilTexId;
+    extern uint32_t s_PickerTexId;
+    extern uint32_t s_EraserTexId;
+    extern uint32_t s_TextTexId;
     void GlobalLoadImages(AssetLoader* assetLoader);
 }

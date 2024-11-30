@@ -11,8 +11,8 @@ namespace FuncDoodle {
     ToolManager::~ToolManager() {
     }
     void ToolManager::RenderTools() {
-        ToolType types[] = { ToolType::Pencil, ToolType::Eraser, ToolType::Bucket, ToolType::Picker, ToolType::Text };
-        char* typeName[] = { "Pencil", "Eraser", "Bucket", "Picker", "Text" };
+        ToolType types[] = { ToolType::Pencil, ToolType::Eraser, ToolType::Bucket, ToolType::Picker };
+        char* typeName[] = { "Pencil", "Eraser", "Bucket", "Picker" };
         ImGui::Begin("Tools");
 
         if (!ImGui::IsAnyItemActive()) {
@@ -30,7 +30,7 @@ namespace FuncDoodle {
             }
         }
         for (int i = 0; i < (sizeof(types) / sizeof(ToolType)); i++) {
-            uint btnTexId = 0;
+            uint32_t btnTexId = 0;
             switch (i) {
                 case 0:
                     btnTexId = s_PencilTexId;
@@ -73,12 +73,6 @@ namespace FuncDoodle {
                 if (ImGui::IsItemHovered()) {
                     ImGui::BeginTooltip();
                     ImGui::Text("Picker (4)");
-                    ImGui::EndTooltip();
-                }
-            } else if (i == 4) {
-                if (ImGui::IsItemHovered()) {
-                    ImGui::BeginTooltip();
-                    ImGui::Text("Text (5)");
                     ImGui::EndTooltip();
                 }
             }
