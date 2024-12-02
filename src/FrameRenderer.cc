@@ -309,7 +309,5 @@ namespace FuncDoodle
         FloodFill(x - 1, y, targetCol, fillCol);
         FloodFill(x, y + 1, targetCol, fillCol);
         FloodFill(x, y - 1, targetCol, fillCol);
-        FloodFill(x + 1, y + 1, targetCol, fillCol);
-        FloodFill(x - 1, y - 1, targetCol, fillCol);
     }
 }

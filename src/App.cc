@@ -324,12 +324,12 @@ namespace FuncDoodle
 
         if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize))
         {
-            char name[256] = (char*)"";
+            char name[256] = "";
             int width = 32;
             int height = 32;
-            char author[100] = (char*)"";
+            char author[100] = "";
             int fps = 0;
-            char desc[512] = (char*)"";
+            char desc[512] = "";
             if (m_CacheProj)
             {
                 strcpy(name, m_CacheProj->AnimName());
@@ -388,7 +388,7 @@ namespace FuncDoodle
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
         } else {
-            char* title;
+            char* title = malloc(35);
             sprintf(title, "FuncDoodle -- %s -- %d FPS", FUNCVER, (int)ImGui::GetIO().Framerate);
             glfwSetWindowTitle(m_Window, title); 
         }
