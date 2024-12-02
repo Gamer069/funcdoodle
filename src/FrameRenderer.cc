@@ -16,8 +16,10 @@ namespace FuncDoodle
         ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
         ImGui::Begin("Frame");
 
-        if (!m_Frame || !m_ToolManager)
+        if (!m_Frame || !m_ToolManager) {
+            ImGui::End();
             return;
+        }
 
         if (!m_Grid) {
             m_Grid = new Grid(m_Frame->Pixels()->getWidth(), m_Frame->Pixels()->getHeight());
@@ -177,7 +179,6 @@ namespace FuncDoodle
         };
 
 
-        // Check if mouse is within frame bounds and mouse button is down
         if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && ImGui::IsMouseDown(0))
         {
             if (m_ToolManager == nullptr)
@@ -188,12 +189,12 @@ namespace FuncDoodle
 
             // Calculate current pixel coordinates
             ImVec2 currentPixel(
-                (mousePos.x - startX) / m_PixelScale,
-                (mousePos.y - startY) / m_PixelScale);
+                    (mousePos.x - startX) / m_PixelScale,
+                    (mousePos.y - startY) / m_PixelScale);
 
             // Draw at current position
             if (currentPixel.x >= 0 && currentPixel.x < pixels->getWidth() &&
-                currentPixel.y >= 0 && currentPixel.y < pixels->getHeight())
+                    currentPixel.y >= 0 && currentPixel.y < pixels->getHeight())
             {
                 int selectedTool = m_ToolManager->SelectedTool();
 
@@ -226,7 +227,7 @@ namespace FuncDoodle
                         int interpY = static_cast<int>(m_LastMousePos.y + dy * t);
 
                         if (interpX >= 0 && interpX < pixels->getWidth() &&
-                            interpY >= 0 && interpY < pixels->getHeight())
+                                interpY >= 0 && interpY < pixels->getHeight())
                         {
                             m_Frame->SetPixel(interpX, interpY, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                         }
@@ -251,19 +252,16 @@ namespace FuncDoodle
                     } else if (selectedTool == 4) {
                         text(currentPixel);
                     }
- 
+
                     if (selectedTool != 3) { // Only draw if not using color picker
                         m_Frame->SetPixel(currentPixel.x, currentPixel.y, Col{ .r = colNew[0], .g = colNew[1], .b = colNew[2] });
                     }
                 }
                 m_LastMousePos = currentPixel;
             }
+        } else if (!ImGui::IsMouseDown(0)) {
+            m_LastMousePos = ImVec2(-1,-1);
         }
-        else if (!ImGui::IsMouseDown(0))
-        {
-            m_LastMousePos = ImVec2(-1, -1);
-        }
-
         for (int y = 0; y < pixels->getHeight(); y++) {
             for (int x = 0; x < pixels->getWidth(); x++) {
                 if (pixels == nullptr) {
@@ -272,14 +270,32 @@ namespace FuncDoodle
                 Col col = pixels->get(x, y);
                 ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
                 ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
-                drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255));
+                if (m_ToolManager->SelectedTool() < 2 && !m_Player->Playing() && ImGui::IsMouseHoveringRect(topLeft, bottomRight) && !ImGui::IsMouseDown(0)) {
+                    const float toolSize = m_ToolManager->Size();
+                    const float halfSize = toolSize / 2.0f;
+                    const float toolScale = m_PixelScale * toolSize;
+
+                    for (int dy = 0; dy < toolSize; dy++) {
+                        for (int dx = 0; dx < toolSize; dx++) {
+                            float offsetX = (dx - halfSize) * m_PixelScale;
+                            float offsetY = (dy - halfSize) * m_PixelScale;
+                            ImVec2 toolTopLeft(startX + (x + offsetX), startY + (y + offsetY));
+                            ImVec2 toolBottomRight(startX + (x + offsetX + toolScale), startY + (y + offsetY + toolScale));
+                            const float* toolCol = m_ToolManager->Col();
+                            ImVec4 toolColVec = ImVec4(toolCol[0], toolCol[1], toolCol[2], 1.0f);
+                            drawList->AddRectFilled(toolTopLeft, toolBottomRight, ImGui::ColorConvertFloat4ToU32(toolColVec));
+                        }
+                    }
+                } else {
+                    drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255));
+                }
             }
         }
 
         // Draw the previous frame with transparency if we're not on the first frame
         if (m_Index > 0 && m_PreviousFrame != nullptr && !m_Player->Playing()) {
             const ImageArray* prevPixels = m_PreviousFrame->Pixels();
-            
+
             // Draw each pixel of the previous frame with 50% transparency
             for (int y = 0; y < prevPixels->getHeight(); y++) {
                 for (int x = 0; x < prevPixels->getWidth(); x++) {
@@ -291,6 +307,14 @@ namespace FuncDoodle
                         drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 128));
                 }
             }
+        }
+
+        if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && !ImGui::IsMouseDown(0)) {
+            ImVec2 currentPixel(
+                    (mousePos.x - startX) / m_PixelScale,
+                    (mousePos.y - startY) / m_PixelScale);
+
+            drawList->AddRect(currentPixel, ImVec2(currentPixel.x+m_PixelScale, currentPixel.y+m_PixelScale), IM_COL32(255, 0, 0, 255));
         }
 
         m_Grid->RenderWithDrawList(drawList, ImVec2(startX, startY), ImVec2(startX + frameWidth, startY + frameHeight));

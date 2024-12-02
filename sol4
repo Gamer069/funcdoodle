@@ -1,0 +1,29 @@
+for (int y = 0; y < pixels->getHeight(); y++) {
+    for (int x = 0; x < pixels->getWidth(); x++) {
+        if (pixels == nullptr) {
+            std::cout << "PX NULLPTR" << std::endl;
+        }
+        Col col = pixels->get(x, y);
+        ImVec2 topLeft(startX + x * m_PixelScale, startY + y * m_PixelScale);
+        ImVec2 bottomRight(startX + (x + 1) * m_PixelScale, startY + (y + 1) * m_PixelScale);
+        if (m_ToolManager->SelectedTool() < 2 && !m_Player->Playing() && ImGui::IsMouseHoveringRect(topLeft, bottomRight) && !ImGui::IsMouseDown(0)) {
+            const float toolSize = m_ToolManager->Size();
+            const float halfSize = toolSize / 2.0f;
+            const float toolScale = m_PixelScale * toolSize;
+
+            for (int dy = 0; dy < toolSize; dy++) {
+                for (int dx = 0; dx < toolSize; dx++) {
+                    float offsetX = (dx - halfSize) * m_PixelScale;
+                    float offsetY = (dy - halfSize) * m_PixelScale;
+                    ImVec2 toolTopLeft(startX + (x + offsetX), startY + (y + offsetY));
+                    ImVec2 toolBottomRight(startX + (x + offsetX + toolScale), startY + (y + offsetY + toolScale));
+                    const float* toolCol = m_ToolManager->Col();
+                    ImVec4 toolColVec = ImVec4(toolCol[0], toolCol[1], toolCol[2], 1.0f);
+                    drawList->AddRectFilled(toolTopLeft, toolBottomRight, ImGui::ColorConvertFloat4ToU32(toolColVec));
+                }
+            }
+        } else {
+            drawList->AddRectFilled(topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255));
+        }
+    }
+}
