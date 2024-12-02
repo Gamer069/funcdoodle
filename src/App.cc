@@ -388,7 +388,7 @@ namespace FuncDoodle
             m_Manager->Player()->Play();
             m_CurrentProj->DisplayFPS();
         } else {
-            char* title = malloc(35);
+            char* title = (char*)malloc(35);
             sprintf(title, "FuncDoodle -- %s -- %d FPS", FUNCVER, (int)ImGui::GetIO().Framerate);
             glfwSetWindowTitle(m_Window, title); 
         }
