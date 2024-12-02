@@ -346,12 +346,14 @@ namespace FuncDoodle
             if (ImGui::InputInt("Width", &width))
             {
                 if (m_CurrentProj)
-                    m_CacheProj->SetAnimWidth(width, true);
-                else m_CacheProj->SetAnimWidth(width, false);
+                    m_CacheProj->SetAnimWidth(width, false);
+                else m_CacheProj->SetAnimWidth(width, true);
             }
             if (ImGui::InputInt("Height", &height))
             {
-                m_CacheProj->SetAnimHeight(height);
+                if (m_CurrentProj)
+                    m_CacheProj->SetAnimHeight(height, false);
+                else m_CacheProj->SetAnimHeight(height, true);
             }
             if (ImGui::InputText("Author", author, sizeof(name)))
             {
