@@ -25,10 +25,12 @@ namespace FuncDoodle {
             const Frame* PreviousFrame() const { return m_PreviousFrame; }
 
             void CleanupFrame() {
-                if (m_Frame != nullptr) {
-                    delete m_Frame;
-                    m_Frame = nullptr;
-                }
+		if (m_Frame != nullptr) {
+            	    delete m_Frame;
+		}
+		if (m_Grid != nullptr) {
+	            delete m_Grid;
+		}
             }
 
             void FloodFill(int x, int y, Col targetCol, Col fillCol);

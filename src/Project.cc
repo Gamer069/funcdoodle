@@ -39,10 +39,11 @@ namespace FuncDoodle {
         m_FPS = fps;
         strcpy(m_Desc, desc);
         m_Frames = LongIndexArray<Frame>();
-        m_Frames.push_back(Frame(m_Width, m_Height));
+		std::cout << "DEBUG INFO -- " << m_Width << "x" << m_Height << std::endl;
         m_Frames.push_back(Frame(m_Width, m_Height));
     }
-    ProjectFile::~ProjectFile() {}
+    ProjectFile::~ProjectFile() {
+    }
 
     const char* ProjectFile::AnimName() const {
         return m_Name;

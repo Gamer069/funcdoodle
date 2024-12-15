@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include <cmath>
+
 namespace FuncDoodle
 {
     void Grid::RenderWithDrawList(ImDrawList* drawList, ImVec2 startPos, ImVec2 endPos) {

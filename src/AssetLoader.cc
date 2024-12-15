@@ -54,7 +54,7 @@ namespace FuncDoodle {
 
         stbi_image_free(data);
 
-        drawList->AddImage((void*)(intptr_t)textureID, pos, ImVec2(pos.x + size.x, pos.y + size.y), ImVec2(0, 0), ImVec2(1, 1), ImGui::ColorConvertFloat4ToU32(tint));
+        drawList->AddImage((ImTextureID)(intptr_t)textureID, pos, ImVec2(pos.x + size.x, pos.y + size.y), ImVec2(0, 0), ImVec2(1, 1), ImGui::ColorConvertFloat4ToU32(tint));
     }
     uint32_t AssetLoader::LoadImage(const char* name) {
         int width, height, channels;

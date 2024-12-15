@@ -14,7 +14,7 @@ namespace FuncDoodle {
             void SaveFileDialog();
             void ReadProjectFile();
             void SaveProjectFile();
-            void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut);
+            void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut, char* quit);
             void RenderOptions();
         private:
             char* m_FilePath;

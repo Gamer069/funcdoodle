@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-if(NOT WIN32)
+if(APPLE)
 project(FuncDoodle C CXX OBJC)
+elseif(UNIX AND NOT APPLE)
+project(FuncDoodle C CXX)
 else()
 project(FuncDoodle C CXX)
 endif()
@@ -12,7 +14,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Set build configurations
 set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
@@ -38,7 +39,7 @@ set(NFD_SOURCES lib/nfd/src/nfd_cocoa.m lib/nfd/src/nfd_common.c)
 elseif(WIN32)
 set(NFD_SOURCES lib/nfd/src/nfd_win.cpp lib/nfd/src/nfd_common.c)
 elseif(UNIX AND NOT APPLE)
-set(NFD_SOURCES lib/nfd/src/nfd_zenity.cpp lib/nfd/src/nfd_common.c)
+set(NFD_SOURCES lib/nfd/src/nfd_gtk.c lib/nfd/src/nfd_common.c)
 endif()
 
 set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
@@ -48,7 +49,7 @@ if(NOT PORTAUDIO_LIBDIR)
     if(APPLE)
         set(PORTAUDIO_LIBDIR "/usr/local/opt/portaudio/lib/")
     elseif(UNIX AND NOT APPLE)
-        set(PORTAUDIO_LIBDIR "/usr/local/lib/")
+        set(PORTAUDIO_LIBDIR "/usr/lib/")
     elseif(WIN32)
         set(PORTAUDIO_LIBDIR "C:\\Program Files\\PortAudio\\lib\\")
     endif()
@@ -90,6 +91,9 @@ target_include_directories(FuncDoodle PRIVATE
     ${PORTAUDIO_INCLDIR}
 )
 
+if(UNIX AND NOT APPLE)
+	#include_directories(/usr/include/gtk-3.0)
+endif()
 target_link_libraries(FuncDoodle
     glfw
     ${CMAKE_DL_LIBS}
@@ -97,7 +101,12 @@ target_link_libraries(FuncDoodle
     pthread
     dl
 )
-
+if(UNIX AND NOT APPLE)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+    target_link_libraries(FuncDoodle ${GTK3_LIBRARIES})
+    target_include_directories(FuncDoodle PRIVATE ${GTK3_INCLUDE_DIRS})
+endif()
 
 # Link libraries based on platform
 if(APPLE)
@@ -121,12 +130,12 @@ endif()
 
 # Build options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(FuncDoodle PRIVATE DEBUG ALSOFT_EAX)
+    target_compile_definitions(FuncDoodle PRIVATE DEBUG)
     target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
     target_link_options(FuncDoodle PRIVATE -fsanitize=address)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(FuncDoodle PRIVATE NDEBUG ALSOFT_EAX)
-    target_compile_options(FuncDoodle PRIVATE -O3)
+    target_compile_definitions(FuncDoodle PRIVATE NDEBUG)
+    target_compile_options(FuncDoodle PRIVATE -O2)
 endif()
 
 # Extra flags

@@ -20,7 +20,11 @@ namespace FuncDoodle {
         m_ToolManager = new ToolManager(assetLoader);
         m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
     }
-    AnimationManager::~AnimationManager() {}
+    AnimationManager::~AnimationManager() {
+		delete m_ToolManager;
+		delete m_FrameRenderer;
+		delete m_Player;
+	}
     void AnimationManager::RenderTimeline() {
         // Set scrollbar size (thickness)
         ImGui::GetStyle().ScrollbarSize = 20.0f;  // Increase the thickness of the scrollbars
@@ -191,20 +195,20 @@ namespace FuncDoodle {
     void AnimationManager::RenderControls() {
         ImGui::Begin("Controls");
 
-        if (ImGui::ImageButton("rewind", (void*)(intptr_t)s_RewindTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_J, true) && !ImGui::IsAnyItemActive())) {
+        if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_J, true) && !ImGui::IsAnyItemActive())) {
             m_SelectedFrame = 0;
             m_Player->Rewind();
         }
 
         ImGui::SameLine();
 
-        if (ImGui::ImageButton("togglePlay", m_Player->Playing() ? (void*)(intptr_t)s_PauseTexId : (void*)(intptr_t)s_PlayTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_K, true) && !ImGui::IsAnyItemActive())) {
+        if (ImGui::ImageButton("togglePlay", m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId : (ImTextureID)(intptr_t)s_PlayTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_K, true) && !ImGui::IsAnyItemActive())) {
             m_Player->SetPlaying(!m_Player->Playing());
         }
 
         ImGui::SameLine();
 
-        if (ImGui::ImageButton("end", (void*)(intptr_t)s_EndTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_L, true) && !ImGui::IsAnyItemActive())) {
+        if (ImGui::ImageButton("end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) || (ImGui::IsKeyPressed(ImGuiKey_L, true) && !ImGui::IsAnyItemActive())) {
             m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
             m_Player->End();
         }

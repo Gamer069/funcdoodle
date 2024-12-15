@@ -101,7 +101,9 @@ namespace FuncDoodle {
             Frame() : m_Pixels(nullptr) { };
             Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
             Frame(ImageArray* arr) : m_Pixels(arr) {};
-            ~Frame() {};
+            ~Frame() {
+				delete m_Pixels;
+	    	};
             inline const ImageArray* Pixels() const {
                 return m_Pixels;
             }

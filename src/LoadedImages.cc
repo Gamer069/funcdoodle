@@ -10,6 +10,8 @@ namespace FuncDoodle {
     uint32_t s_EraserTexId = 255;
     uint32_t s_BucketTexId = 255;
     uint32_t s_TextTexId = 255;
+	uint32_t s_AddTexId = 255;
+	uint32_t s_OpenTexId = 255;
     void GlobalLoadImages(AssetLoader* assetLoader) {
         s_PlayTexId = assetLoader->LoadImage("play.png");
         s_PauseTexId = assetLoader->LoadImage("pause.png");
@@ -20,5 +22,7 @@ namespace FuncDoodle {
         s_EraserTexId = assetLoader->LoadImage("eraser.png");
         s_BucketTexId = assetLoader->LoadImage("bucket.png");
         s_TextTexId = assetLoader->LoadImage("text.png");
+		s_AddTexId = assetLoader->LoadImage("add.png");
+		s_OpenTexId = assetLoader->LoadImage("folder.png");
     }
 }

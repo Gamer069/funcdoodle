@@ -106,12 +106,12 @@ int main(int argc, char** argv) {
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
 
-    GLFWwindow* win = glfwCreateWindow(1280, 1080, "FuncDoodle", NULL, NULL);
+    GLFWwindow* win = glfwCreateWindow(900, 900, "FuncDoodle", NULL, NULL);
     if (!win) {
         fprintf(stderr, "Failed to initialize GLFW window\n");
         glfwTerminate();
@@ -221,16 +221,19 @@ int main(int argc, char** argv) {
     PaError err = Pa_Initialize();
     if (err != paNoError) {
         std::cerr << "Failed to initialize port audio: " << Pa_GetErrorText(err) << std::endl;
+	free(stream);
         exit(-1);
     }
     err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB, nullptr);
     if (err != paNoError) {
         std::cerr << "Failed to open default stream: " << Pa_GetErrorText(err) << std::endl;
+	free(stream);
         exit(-1);
     }
     err = Pa_StartStream(stream);
     if (err != paNoError) {
         std::cerr << "Failed to start stream: " << Pa_GetErrorText(err) << std::endl;
+	free(stream);
         exit(-1);
     }
 
@@ -280,9 +283,12 @@ int main(int argc, char** argv) {
         }
     }
 
+    delete application;
+    
     Pa_StopStream(stream);
     Pa_CloseStream(stream);
     Pa_Terminate();
+
 
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
