@@ -4,7 +4,7 @@ Language: Cpp
 BasedOnStyle: LLVM
 PointerAlignment: Left
 AlignConsecutiveDeclarations: false
-BreakBeforeBraces: Allman
+BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: true
 IndentWidth: 4
 UseTab: Never
@@ -12,4 +12,13 @@ TabWidth: 4
 SpaceBeforeParens: ControlStatements
 SpacesBeforeTrailingComments: 2
 ColumnLimit: 80
-
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterObjCDeclaration: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false

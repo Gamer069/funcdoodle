@@ -16,11 +16,13 @@ namespace FuncDoodle
         ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
         ImGui::Begin("Frame");
 
-        if (!m_Frame || !m_ToolManager)
+        if (!m_Frame || !m_ToolManager || !m_Frame->Pixels())
             return;
 
         if (!m_Grid) {
-            m_Grid = new Grid(m_Frame->Pixels()->getWidth(), m_Frame->Pixels()->getHeight());
+			std::cout << m_Frame->Width() << " WIDTH" << std::endl;
+			std::cout << m_Frame->Height() << " HEIGHT" << std::endl;
+            m_Grid = new Grid(m_Frame->Width(), m_Frame->Height());
         }
 
         if (ImGui::BeginPopupContextWindow()) {

@@ -38,11 +38,11 @@ namespace FuncDoodle {
         strcpy(m_Author, author);
         m_FPS = fps;
         strcpy(m_Desc, desc);
-        m_Frames = LongIndexArray<Frame>();
-		std::cout << "DEBUG INFO -- " << m_Width << "x" << m_Height << std::endl;
-        m_Frames.push_back(Frame(m_Width, m_Height));
+        m_Frames = new LongIndexArray(width, height);
+		m_Frames->push_back_empty();
     }
     ProjectFile::~ProjectFile() {
+		delete m_Frames;
     }
 
     const char* ProjectFile::AnimName() const {
@@ -55,7 +55,7 @@ namespace FuncDoodle {
     void ProjectFile::Export(char* filePath, int format) {
         std::cout << "Exporting to " << filePath << std::endl;
 
-        LongIndexArray<Frame>* frames = AnimFrames();
+        LongIndexArray* frames = AnimFrames();
 
         char curFilePath[512];
 
@@ -65,7 +65,7 @@ namespace FuncDoodle {
             #else
             sprintf(curFilePath, "%s\\frame_%d.png", filePath, i);
             #endif
-            frames->get(i).Export(curFilePath);
+            frames->get(i)->Export(curFilePath);
         }
 
         if (format == 1) {
@@ -90,10 +90,19 @@ namespace FuncDoodle {
     const int ProjectFile::AnimWidth() const {
         return m_Width;
     }
+
     void ProjectFile::SetAnimWidth(int width, bool clear) {
         // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
-            m_Frames.get(i).SetWidth(width, clear);
+			std::cout << "AnimFrameCount()" << AnimFrameCount() << std::endl;
+			std::cout << width << std::endl;
+			// WHAT IS WRONG WITH THIS STUPID CODE
+			std::cout << "Clear: " << clear << std::endl;
+			std::cout << "NULLPTR?! " << (m_Frames == nullptr) << std::endl;
+			std::cout << "FRAME SIZE: " << m_Frames->getSize() << std::endl;
+			std::cout << "(i = " << i << ")" << std::endl;
+			std::cout << "ANIMFRAMECOUNT == GET SIZE?! " << (m_Frames->getSize() == AnimFrameCount()) << std::endl;
+            m_Frames->get(i)->SetWidth(width, clear);
         }
         m_Width = width;
     }
@@ -104,7 +113,7 @@ namespace FuncDoodle {
     void ProjectFile::SetAnimHeight(int height, bool clear) {
         // no
         for (long i = 0; i < AnimFrameCount(); ++i) {
-            m_Frames.get(i).SetHeight(height, clear);
+            m_Frames->get(i)->SetHeight(height, clear);
         }
         m_Height = height;
     }
@@ -135,10 +144,10 @@ namespace FuncDoodle {
     }
 
     const long ProjectFile::AnimFrameCount() const {
-        return m_Frames.getSize();
+        return m_Frames->getSize();
     }
-    LongIndexArray<Frame>* ProjectFile::AnimFrames() {
-        return &m_Frames;
+    LongIndexArray* ProjectFile::AnimFrames() {
+        return m_Frames;
     }
 
 
@@ -152,7 +161,7 @@ namespace FuncDoodle {
         outFile << "FDProj";
         int major = 0;
         int minor = 1;
-        long frames = m_Frames.getSize();
+        long frames = m_Frames->getSize();
         WRITEB(major); // version major
         WRITEB(minor); // version minor
         WRITEB(frames); // frame count (default)
@@ -167,7 +176,7 @@ namespace FuncDoodle {
         outFile << m_Author; // animation author
         WRITEB(null);
 
-        LongIndexArray<Frame>* frameData = AnimFrames();
+        LongIndexArray* frameData = AnimFrames();
 
         // Use a vector and maintain stable indices
         std::vector<Col> uniqueColors;
@@ -175,7 +184,7 @@ namespace FuncDoodle {
 
         // First pass: collect unique colors with stable ordering
         for (long i = 0; i < AnimFrameCount(); i++) {
-            auto pixels = frameData->get(i).Pixels();
+            auto pixels = frameData->get(i)->Pixels();
             for (int x = 0; x < pixels->getWidth(); x++) {
                 for (int y = 0; y < pixels->getHeight(); y++) {
                     Col px = pixels->get(x,y);
@@ -200,7 +209,7 @@ namespace FuncDoodle {
 
         // Write frame data using stable indices
         for (long i = 0; i < AnimFrameCount(); i++) {
-            auto pixels = frameData->get(i).Pixels();
+            auto pixels = frameData->get(i)->Pixels();
             for (int y = 0; y < pixels->getHeight(); y++) {
                 for (int x = 0; x < pixels->getWidth(); x++) {
                     Col px = pixels->get(x,y);
@@ -290,7 +299,7 @@ namespace FuncDoodle {
             plte.push_back(Col{.r = r, .g = g, .b = b});
         }
 
-        m_Frames = LongIndexArray<Frame>();
+        m_Frames = new LongIndexArray(m_Width, m_Height);
 
         long brokenIndexC = 0;
         long lastBrokenFrame = 0;
@@ -316,7 +325,8 @@ namespace FuncDoodle {
                     img->set(x, y, plte[index]);
                 }
             }
-            m_Frames.push_back(Frame(img));
+			Frame imgFrame = Frame(img);
+            m_Frames->push_back(&imgFrame);
 
             unsigned char null;
             file.read(reinterpret_cast<char*>(&null), 1);

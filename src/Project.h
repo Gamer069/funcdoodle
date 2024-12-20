@@ -27,7 +27,7 @@ namespace FuncDoodle {
             void SetAnimDesc(char* desc);
             const long AnimFrameCount() const;
             void SetAnimFrameCount(long count);
-            LongIndexArray<Frame>* AnimFrames();
+            LongIndexArray* AnimFrames();
             void Write(char* filePath);
             void ReadAndPopulate(char* filePath);
             void Export(char* filePath, int format);
@@ -40,7 +40,7 @@ namespace FuncDoodle {
             char m_Author[100]; // 100
             int m_FPS = 0;
             char m_Desc[512]; // 512
-            LongIndexArray<Frame> m_Frames;
+            LongIndexArray* m_Frames;
             GLFWwindow* m_Window;
     };
 }

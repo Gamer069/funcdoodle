@@ -130,10 +130,12 @@ endif()
 
 # Build options
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+	message("DEBUG")
     target_compile_definitions(FuncDoodle PRIVATE DEBUG)
     target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
     target_link_options(FuncDoodle PRIVATE -fsanitize=address)
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+	message("RELEASE")
     target_compile_definitions(FuncDoodle PRIVATE NDEBUG)
     target_compile_options(FuncDoodle PRIVATE -O2)
 endif()

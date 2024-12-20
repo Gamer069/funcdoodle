@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <iostream>
 
+#include <execinfo.h>
+
 #include "Gui.h"
 
 #include "stb_image_write.h"
@@ -24,99 +26,117 @@ namespace FuncDoodle {
     class ImageArray {
         public:
             ImageArray(int width, int height)
-                : width(width), height(height), data(width * height) {
-                    if (width < 1 || height < 1) {
-                        throw std::invalid_argument("Width and height must be greater than 0");
+                : m_Width(width), m_Height(height), m_Data(width * height) {
+                    if (m_Width < 1 || m_Height < 1) {
+                        throw std::invalid_argument("Width and m_Height must be greater than 0");
                     }
 
-                    for (int x = 0; x < width; x++) {
-                        for (int y = 0; y < height; y++) {
-                            set(x,y,Col());
-                        }
-                    }
+					RedoColorAdjustment();
                 }
+			~ImageArray() {
+				m_Data.clear();
+			}
 
             void RedoColorAdjustment() {
                 Resize();
 
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
+                for (int x = 0; x < m_Width; x++) {
+                    for (int y = 0; y < m_Height; y++) {
                         set(x,y,Col());
                     }
                 }
             }
             void Resize() {
-                data.resize(width * height);
+                m_Data.resize(m_Width * m_Height);
             }
 
             // Set the color at the specified (x, y) position
             void set(int x, int y, const Col& color) {
-                if (x < 0 || x >= width || y < 0 || y >= height) {
+                if (x < 0 || x >= m_Width || y < 0 || y >= m_Height) {
                     // no
                     throw std::out_of_range("Index out of range");
                 }
-                data[y * width + x] = color;
+                m_Data[y * m_Width + x] = color;
             }
 
             // Get the color at the specified (x, y) position
             Col get(int x, int y) const {
-                if (x < 0 || x >= width || y < 0 || y >= height) {
+                if (x < 0 || x >= m_Width || y < 0 || y >= m_Height) {
                     // no
                     throw std::out_of_range("Index out of range");
                 }
-                return data[y * width + x];
+                return m_Data[y * m_Width + x];
             }
 
             int getWidth() const {
-                return width;
+				if (this == nullptr) {
+					std::cout << "NULLPTR?!?!?!?!?!" << std::endl;
+				}
+				// unitialized??
+                return m_Width;
             }
 
             void setWidth(int width) {
-                this->width = width;
+                m_Width = width;
             }
 
             int getHeight() const {
-                return height;
+				if (this == nullptr) {
+					std::cerr << "This is nullptr!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+				}
+                return m_Height;
             }
 
             void setHeight(int height) {
-                this->height = height;
+                m_Height = height;
             }
 
             void SetData(const std::vector<Col>& data) {
-                this->data = data;
+                this->m_Data = data;
             }
 
             const std::vector<Col>& Data() const {
-                return data;
+                return m_Data;
             }
 
         private:
-            int width;
-            int height;
-            std::vector<Col> data;
+            int m_Width = 32;
+            int m_Height = 32;
+            std::vector<Col> m_Data;
     };
     class Frame {
         public:
-            Frame() : m_Pixels(nullptr) { };
-            Frame(int width, int height) : m_Pixels(new ImageArray(width, height)) {};
+			Frame(const Frame& other) {
+				m_Pixels = const_cast<ImageArray*>(other.Pixels());
+			}
+            Frame(int width, int height) {
+				m_Pixels = new ImageArray(width, height);
+			};
             Frame(ImageArray* arr) : m_Pixels(arr) {};
             ~Frame() {
 				delete m_Pixels;
 	    	};
+			void ReInit(int width, int height) { m_Pixels = new ImageArray(width, height); }
             inline const ImageArray* Pixels() const {
+				if (this == nullptr) {
+					std::cout << "PIXEL: This is definitely NULLPTR that's bad we wanna fix that" << std::endl;
+				}
                 return m_Pixels;
             }
             void SetPixel(int x, int y, Col px) {
                 m_Pixels->set(x, y, px);
             }
             inline const int Width() {
+				if (this == nullptr || m_Pixels == nullptr) {
+					std::cout << "PIXEL: This is definitely NULLPTR that's bad we wanna fix that" << std::endl;
+				}
+
                 return m_Pixels->getWidth();
             }
             void SetWidth(int width, bool clear = false) {
+				std::cout << "SET" << clear << width << std::endl;
                 if (m_Pixels == nullptr) {
-                    m_Pixels = new ImageArray(width, 1);
-                    std::cout << "NULLPTR SETWIDTH CALL!!!" << std::endl;
+                    m_Pixels = new ImageArray(width, 1); //default height of 1 bc we dont know required height yet
                 } else {
                     if (!clear) {
                         const std::vector<Col>& oldData = m_Pixels->Data();
@@ -137,13 +157,14 @@ namespace FuncDoodle {
                         }
                         m_Pixels->SetData(newData);
                     } else {
-                        m_Pixels->setWidth(width);
-                        m_Pixels->Resize();
-                        m_Pixels->RedoColorAdjustment();
-                    }
+						ReInit(width, m_Pixels->getHeight());
+					}
                 }
             }
             inline const int Height() {
+				if (this == nullptr) {
+					std::cout << "PIXEL: This is definitely NULLPTR that's bad we wanna fix that" << std::endl;
+				}
                 return m_Pixels->getHeight();
             }
             void SetHeight(int height, bool clear = false) {
@@ -238,7 +259,7 @@ namespace FuncDoodle {
                 while (*ptr && *ptr != '\n') ptr++;
                 if (*ptr) ptr++;  // Skip the \n
 
-                // Parse pixel data
+                // Parse pixel m_Data
                 for (int y = 0; y < height; y++) {
                     for (int x = 0; x < width; x++) {
                         Col pixel;

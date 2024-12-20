@@ -5,14 +5,11 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <fstream>
 #include <string.h>
 #include <cmath>
 #include <imgui.h>
 #include <cstring>
-#include <unordered_map>
 #include <stdint.h>
-#include <sstream>
 
 #include "LoadedImages.h"
 
@@ -22,9 +19,11 @@ namespace FuncDoodle
 {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader) : m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr), m_CacheProj(nullptr), m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win), m_AssetLoader(assetLoader) {}
 	Application::~Application() {
+		std::cout << "DESTRUCTOR APPLICATION" << std::endl;
 		delete m_CacheProj;
-		delete m_CurrentProj;
 		delete m_Manager;
+		delete m_FilePath;
+		delete m_CurrentProj;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super)
 	{
@@ -170,7 +169,6 @@ namespace FuncDoodle
 				}
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
-						m_CurrentProj = nullptr;
 						m_Manager = new AnimationManager(nullptr, m_AssetLoader);
 					}
 					if (ImGui::MenuItem("Edit project")) {
@@ -201,6 +199,12 @@ namespace FuncDoodle
 		if (m_EditPrefsOpen) {
 			ImGui::OpenPopup("EditPrefs");
 		}
+
+		if (m_NewProjOpen)
+		{
+			ImGui::OpenPopup("NewProj");
+		}
+
 
 		if (ImGui::IsPopupOpen("EditPrefs")) {
 			ImGui::SetNextWindowFocus();
@@ -287,6 +291,21 @@ namespace FuncDoodle
 				strcpy(author, m_CacheProj->AnimAuthor());
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
+			} else {
+				strcpy(name, (char*)"testproj");
+				width = 32;
+				height = 32;
+				char* username = std::getenv("USER");  // Common on Linux and macOS
+				if (!username) {
+					username = std::getenv("LOGNAME");  // Fallback for Linux and macOS
+				}
+				if (!username) {
+					username = std::getenv("USERNAME");  // Common on Windows
+				}
+				strcpy(author, username);
+				free(username);
+				fps = 10;
+				strcpy(desc, "Simple test project");
 			}
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
@@ -346,6 +365,23 @@ namespace FuncDoodle
 				strcpy(author, m_CacheProj->AnimAuthor());
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
+			} else {
+				strcpy(name, (char*)"testproj");
+				width = 32;
+				height = 32;
+				char* username = std::getenv("USER");  // Common on Linux and macOS
+				if (!username) {
+					username = std::getenv("LOGNAME");  // Fallback for Linux and macOS
+				}
+				if (!username) {
+					username = std::getenv("USERNAME");  // Common on Windows
+				}
+				strcpy(author, username);
+				fps = 10;
+				strcpy(desc, "Simple test project");
+				
+				delete m_CacheProj;
+				m_CacheProj = new ProjectFile((char*)"testproj", width, height, username, fps, (char*)"Simple test project", m_Window);
 			}
 			if (ImGui::InputText("Name", name, sizeof(name)))
 			{
@@ -355,7 +391,13 @@ namespace FuncDoodle
 			{
 				if (m_CurrentProj)
 					m_CacheProj->SetAnimWidth(width, false);
-				else m_CacheProj->SetAnimWidth(width, true);
+				else { 
+					if (m_CacheProj) {
+						m_CacheProj->SetAnimWidth(width, true);
+					} else {
+						std::cout << "What the hell happened?!" << std::endl;
+					}
+				}
 			}
 			if (ImGui::InputInt("Height", &height))
 			{
@@ -392,13 +434,9 @@ namespace FuncDoodle
 		}
 
 
-		if (m_NewProjOpen)
-		{
-			ImGui::OpenPopup("NewProj");
-		}
-
 		if (m_CurrentProj)
 		{
+			// render timeline line is broken
 			m_Manager->RenderTimeline();
 			m_Manager->RenderControls();
 			m_Manager->Player()->Play();
@@ -500,7 +538,7 @@ namespace FuncDoodle
 		ImVec2 center(
 				viewportPos.x + (viewportSize.x * 0.5f),
 				viewportPos.y + (viewportSize.y * 0.5f)
-		);
+				);
 
 		ImVec4 btnNewCol = ImVec4(1, 1, 1, 1);
 		ImVec4 btnOpenCol = ImVec4(1, 1, 1, 1);
