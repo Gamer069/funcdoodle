@@ -5,10 +5,10 @@
 #include <functional>
 
 namespace FuncDoodle {
-    enum class ToolType {
-        Pencil,
-        Eraser,
-        Bucket,
-        Picker,
-    };
+	enum class ToolType {
+		Pencil,
+		Eraser,
+		Bucket,
+		Picker,
+	};
 }

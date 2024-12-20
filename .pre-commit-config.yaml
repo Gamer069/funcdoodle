@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v14.0.0  # Use the latest version of clang-format
+    hooks:
+      - id: clang-format
+        name: Run clang-format
+        files: ^src/.*\.(cpp|h|cc|c|hpp)$  # Only apply to specific files (adjust to your needs)
+        args: ["-i", "-style=file"]  # Add your specific options here
+        stages: [pre-commit]

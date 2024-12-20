@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Project.h"
-#include "Manager.h"
 #include "AssetLoader.h"
+#include "Manager.h"
+#include "Project.h"
 
 namespace FuncDoodle {
 	class Application {
@@ -14,8 +14,10 @@ namespace FuncDoodle {
 			void SaveFileDialog();
 			void ReadProjectFile();
 			void SaveProjectFile();
-			void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut, char* quit);
+			void CheckKeybinds(char* newProj, char* open, char* save,
+							   char* exportShortcut, char* quit);
 			void RenderOptions();
+
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;
@@ -30,4 +32,4 @@ namespace FuncDoodle {
 			bool m_EditPrefsOpen = false;
 			int m_Theme = 0;
 	};
-}
+}  // namespace FuncDoodle
