@@ -27,6 +27,7 @@ namespace FuncDoodle {
 
             ~LongIndexArray() {
 				free(data);  // Always delete data pointer
+				data = nullptr;
 			}
 
 			void push_back(const Frame* value) {

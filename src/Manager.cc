@@ -22,8 +22,8 @@ namespace FuncDoodle {
     }
     AnimationManager::~AnimationManager() {
 		delete m_ToolManager;
-		delete m_FrameRenderer;
 		delete m_Player;
+		delete m_FrameRenderer;
 	}
     void AnimationManager::RenderTimeline() {
         // Set scrollbar size (thickness)

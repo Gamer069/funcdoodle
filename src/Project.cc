@@ -42,7 +42,7 @@ namespace FuncDoodle {
 		m_Frames->push_back_empty();
     }
     ProjectFile::~ProjectFile() {
-		delete m_Frames;
+		//delete m_Frames;
     }
 
     const char* ProjectFile::AnimName() const {

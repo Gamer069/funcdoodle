@@ -114,7 +114,7 @@ namespace FuncDoodle {
 			};
             Frame(ImageArray* arr) : m_Pixels(arr) {};
             ~Frame() {
-				delete m_Pixels;
+				// ye "potential leak" idc rn tho
 	    	};
 			void ReInit(int width, int height) { m_Pixels = new ImageArray(width, height); }
             inline const ImageArray* Pixels() const {

@@ -11,7 +11,9 @@ namespace FuncDoodle {
 	class FrameRenderer {
 		public:
 			FrameRenderer(Frame* frame, ToolManager* manager, AnimationPlayer* player) : m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr), m_Player(player) {}
-			~FrameRenderer() { CleanupFrame(); }
+			~FrameRenderer() { 
+				delete m_Grid;
+			;}
 			void RenderFrame();
 			void InitPixels();
 
@@ -23,15 +25,6 @@ namespace FuncDoodle {
 			void SetIndex(int index) { m_Index = index; }
 			void SetPreviousFrame(Frame* frame) { m_PreviousFrame = frame; }
 			const Frame* PreviousFrame() const { return m_PreviousFrame; }
-
-			void CleanupFrame() {
-				if (m_Frame != nullptr) {
-					delete m_Frame;
-				}
-				if (m_Grid != nullptr) {
-					delete m_Grid;
-				}
-			}
 
 			void FloodFill(int x, int y, Col targetCol, Col fillCol);
 		private:
