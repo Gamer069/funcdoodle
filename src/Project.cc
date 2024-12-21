@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Project.h"
 
 #include "Frame.h"
@@ -46,9 +44,7 @@ namespace FuncDoodle {
 		m_Frames = new LongIndexArray(width, height);
 		m_Frames->push_back_empty();
 	}
-	ProjectFile::~ProjectFile() {
-		// delete m_Frames;
-	}
+	ProjectFile::~ProjectFile() { delete m_Frames; }
 
 	const char* ProjectFile::AnimName() const { return m_Name; }
 	void ProjectFile::SetAnimName(char name[]) { strcpy(m_Name, name); }

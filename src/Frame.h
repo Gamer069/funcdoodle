@@ -36,7 +36,10 @@ namespace FuncDoodle {
 
 				RedoColorAdjustment();
 			}
-			~ImageArray() { m_Data.clear(); }
+			~ImageArray() {
+				m_Data.clear();
+				m_Data.shrink_to_fit();
+			}
 
 			void RedoColorAdjustment() {
 				Resize();
@@ -108,8 +111,11 @@ namespace FuncDoodle {
 				m_Pixels = new ImageArray(width, height);
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr){};
-			~Frame(){
+			~Frame() {
 				// ye "potential leak" idc rn tho
+				if (this != nullptr) {
+					delete m_Pixels;
+				}
 			};
 			void ReInit(int width, int height) {
 				m_Pixels = new ImageArray(width, height);

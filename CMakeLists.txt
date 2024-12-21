@@ -141,4 +141,4 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 # Extra flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")

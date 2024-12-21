@@ -12,7 +12,8 @@ namespace FuncDoodle {
 	void ToolManager::RenderTools() {
 		ToolType types[] = {ToolType::Pencil, ToolType::Eraser,
 							ToolType::Bucket, ToolType::Picker};
-		char* typeName[] = {"Pencil", "Eraser", "Bucket", "Picker"};
+		char* typeName[] = {(char*)"Pencil", (char*)"Eraser", (char*)"Bucket",
+							(char*)"Picker"};
 		ImGui::Begin("Tools");
 
 		if (!ImGui::IsAnyItemActive()) {

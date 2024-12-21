@@ -32,7 +32,6 @@ namespace FuncDoodle {
 
 			~LongIndexArray() {
 				free(data);	 // Always delete data pointer
-				data = nullptr;
 			}
 
 			void push_back(const Frame* value) {
@@ -135,6 +134,19 @@ namespace FuncDoodle {
 					return;	 // Don't proceed if data is nullptr
 				}
 
+				if (!value) {
+					std::cerr << "Trying to insert nullptr frame" << std::endl;
+					return;
+				}
+
+				if (value->Pixels()->getWidth() != m_Width ||
+					value->Pixels()->getHeight() != m_Height) {
+					std::cerr << "Trying to insert a frame with a different "
+								 "width and height than other frames"
+							  << std::endl;
+					return;
+				}
+
 				if (index < 0 || index >= size) {
 					std::cerr << "Error in " << __func__ << " in file "
 							  << __FILE__ << " at line " << __LINE__
@@ -162,6 +174,20 @@ namespace FuncDoodle {
 							  << __FILE__ << " at line " << __LINE__
 							  << ": Attempted insertBefore on nullptr data.\n";
 					return;	 // Don't proceed if data is nullptr
+				}
+
+				if (!value) {
+					std::cerr << "Trying to insert a nullptr frame."
+							  << std::endl;
+					return;
+				}
+
+				if (value->Pixels()->getWidth() != m_Width ||
+					value->Pixels()->getHeight() != m_Height) {
+					std::cerr << "Trying to insert a frame with a different "
+								 "width and height than other frames"
+							  << std::endl;
+					return;
 				}
 
 				if (index < 0 || index >= size) {

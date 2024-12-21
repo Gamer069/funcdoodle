@@ -299,6 +299,8 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	std::cout << "Um the window closing" << std::endl;
+
 	delete application;
 
 	Pa_StopStream(stream);
