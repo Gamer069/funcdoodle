@@ -36,7 +36,7 @@
 // (m)ajor/&debug
 
 #ifdef NDEBUG
-#define FUNCVER "v0.0.3a"
+#define FUNCVER "v0.0.4m"
 #else
-#define FUNCVER "v0.0.3ad"
+#define FUNCVER "v0.0.4md"
 #endif
