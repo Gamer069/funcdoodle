@@ -171,13 +171,11 @@ namespace FuncDoodle {
 			colNew[2] = colResult[2];
 		};
 		auto picker = [&](ImVec2 currentPixel) {
-			m_ToolManager->SetCol(
-				m_Frame->Pixels()->get(currentPixel.x, currentPixel.y));
-			Col curPxCol =
-				m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
-			colNew[0] = curPxCol.r;
-			colNew[1] = curPxCol.g;
-			colNew[2] = curPxCol.b;
+			const Col& col = m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+			m_ToolManager->SetCol(col);
+			colNew[0] = (float)col.r / 255.0f;
+			colNew[1] = (float)col.g / 255.0f;
+			colNew[2] = (float)col.b / 255.0f;
 		};
 
 		auto text = [&](ImVec2 currentPixel) {

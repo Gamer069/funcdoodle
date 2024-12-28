@@ -2,15 +2,11 @@
 
 #include "Frame.h"
 
-#include "Macro.h"
-
 #include <string.h>
 
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <set>
-#include <sstream>
 #include <vector>
 
 #include <GLFW/glfw3.h>
@@ -21,8 +17,6 @@
 #include "stb_image_write.h"
 
 #include <ctime>
-#include <sys/time.h>
-#include <time.h>
 
 #include <stdlib.h>
 
@@ -296,9 +290,9 @@ namespace FuncDoodle {
 		long brokenIndexC = 0;
 		long lastBrokenFrame = 0;
 
-		for (long i = 0; i < frameCount; i++) {
-			ImageArray* img = new ImageArray(animWidth, animHeight);
+		ImageArray* img = new ImageArray(animWidth, animHeight);
 
+		for (long i = 0; i < frameCount; i++) {
 			// read colorarr: OOPS
 			for (int y = 0; y < animHeight; y++) {
 				for (int x = 0; x < animWidth; x++) {
@@ -317,8 +311,8 @@ namespace FuncDoodle {
 					img->set(x, y, plte[index]);
 				}
 			}
-			Frame imgFrame = Frame(img);
-			m_Frames->push_back(&imgFrame);
+			static Frame newFrame = Frame(img);
+			m_Frames->push_back(&newFrame);
 
 			unsigned char null;
 			file.read(reinterpret_cast<char*>(&null), 1);

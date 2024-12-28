@@ -33,6 +33,10 @@ enum Note { C4, D4, E4, F4, G4, A4, B4, C5 };
 
 std::vector<std::pair<Note, double>> melody = {};
 
+void GLFWErrorCallback(int error, const char* desc) {
+	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
+}
+
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
 				   unsigned long framesPerBuffer,
 				   const PaStreamCallbackTimeInfo* timeInfo,
@@ -96,6 +100,8 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
+	glfwSetErrorCallback(GLFWErrorCallback);
+
 	if (!glfwInit()) {
 		const char* description;
 		int error = glfwGetError(&description);
@@ -137,7 +143,7 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	io.Fonts->AddFontFromFileTTF(
-		(assetsPath / "Roboto" / "Roboto-Medium.ttf").c_str(), 16.0f);
+		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
 	io.Fonts->Build();
 	(void)io;
 

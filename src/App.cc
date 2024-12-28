@@ -19,12 +19,14 @@ namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader)
 		: m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
-		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
+		  m_Manager(new AnimationManager(nullptr, assetLoader)),
+		  m_Window(win),
 		  m_AssetLoader(assetLoader) {}
 	Application::~Application() {
-		delete m_CacheProj;
 		delete m_Manager;
 		delete m_FilePath;
+		delete m_CurrentProj;
+		//delete m_CacheProj;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		// Calculate the maximum possible length of the shortcut string
@@ -171,8 +173,8 @@ namespace FuncDoodle {
 				}
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
-						m_Manager =
-							new AnimationManager(nullptr, m_AssetLoader);
+						m_CurrentProj = nullptr;
+						//m_Manager = new AnimationManager(nullptr, m_AssetLoader);
 					}
 					if (ImGui::MenuItem("Edit project")) {
 						m_EditProjOpen = true;
@@ -394,7 +396,6 @@ namespace FuncDoodle {
 				fps = 10;
 				strcpy(desc, "Simple test project");
 
-				delete m_CacheProj;
 				m_CacheProj = new ProjectFile(
 					(char*)"testproj", width, height, username, fps,
 					(char*)"Simple test project", m_Window);
@@ -429,8 +430,7 @@ namespace FuncDoodle {
 				m_CacheProj->SetAnimDesc(desc);
 			}
 
-			if (ImGui::Button("Close") ||
-				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				m_NewProjOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
@@ -445,7 +445,7 @@ namespace FuncDoodle {
 			ImGui::EndPopup();
 		}
 
-		if (m_CurrentProj) {
+		if (m_CurrentProj != nullptr) {
 			// render timeline line is broken
 			m_Manager->RenderTimeline();
 			m_Manager->RenderControls();

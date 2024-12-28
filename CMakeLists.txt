@@ -91,9 +91,7 @@ target_include_directories(FuncDoodle PRIVATE
     ${PORTAUDIO_INCLDIR}
 )
 
-if(UNIX AND NOT APPLE)
-	#include_directories(/usr/include/gtk-3.0)
-endif()
+if(UNIX)
 target_link_libraries(FuncDoodle
     glfw
     ${CMAKE_DL_LIBS}
@@ -101,6 +99,13 @@ target_link_libraries(FuncDoodle
     pthread
     dl
 )
+elseif(WIN32)
+target_link_libraries(FuncDoodle
+    glfw
+    ${CMAKE_DL_LIBS}
+)
+endif()
+
 if(UNIX AND NOT APPLE)
     find_package(PkgConfig REQUIRED)
     pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
@@ -124,7 +129,7 @@ elseif(UNIX AND NOT APPLE)
     )
 elseif(WIN32)
     target_link_libraries(FuncDoodle
-        ${PORTAUDIO_LIBDIR}portaudio.lib
+        ${PORTAUDIO_LIBDIR}portaudio_x64.lib
     )
 endif()
 
@@ -132,8 +137,10 @@ endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	message("DEBUG")
     target_compile_definitions(FuncDoodle PRIVATE DEBUG)
+if(!WIN32)
     target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
     target_link_options(FuncDoodle PRIVATE -fsanitize=address)
+endif()
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 	message("RELEASE")
     target_compile_definitions(FuncDoodle PRIVATE NDEBUG)
@@ -141,4 +148,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 # Extra flags
+if(UNIX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+endif()

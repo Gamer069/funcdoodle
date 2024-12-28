@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-#include <execinfo.h>
-#include <unistd.h>
-
 #include "Frame.h"
 
 namespace FuncDoodle {
@@ -31,6 +28,7 @@ namespace FuncDoodle {
 			}
 
 			~LongIndexArray() {
+				//was already freed??
 				free(data);	 // Always delete data pointer
 			}
 

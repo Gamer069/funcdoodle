@@ -39,11 +39,11 @@ namespace FuncDoodle {
 								  const ImVec2& pos, const ImVec2& size,
 								  const ImVec4& tint) {
 		int width, height, channels;
-		unsigned char* data = stbi_load((m_AssetsPath / name).c_str(), &width,
+		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(), &width,
 										&height, &channels, 0);
 		if (!data) {
 			std::cerr << "Failed to load image "
-					  << (m_AssetsPath / name).c_str() << std::endl;
+					  << (m_AssetsPath / name).string().c_str() << std::endl;
 			std::cerr << "Error: " << stbi_failure_reason() << std::endl;
 			std::cerr << "Image dimensions: " << width << "x" << height
 					  << ", channels: " << channels << std::endl;
@@ -69,11 +69,11 @@ namespace FuncDoodle {
 	}
 	uint32_t AssetLoader::LoadImage(const char* name) {
 		int width, height, channels;
-		unsigned char* data = stbi_load((m_AssetsPath / name).c_str(), &width,
+		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(), &width,
 										&height, &channels, 0);
 		if (!data) {
 			std::cerr << "Failed to load image "
-					  << (m_AssetsPath / name).c_str() << std::endl;
+					  << (m_AssetsPath / name).string().c_str() << std::endl;
 			std::cerr << "Error: " << stbi_failure_reason() << std::endl;
 			std::cerr << "Image dimensions: " << width << "x" << height
 					  << ", channels: " << channels << std::endl;

@@ -16,8 +16,7 @@ namespace FuncDoodle {
 				  m_Player(player) {}
 			~FrameRenderer() {
 				delete m_Grid;
-				delete m_Frame;
-				delete m_Player;
+				//free(m_Frame);
 			}
 			void RenderFrame();
 			void InitPixels();

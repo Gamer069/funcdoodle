@@ -4,8 +4,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <execinfo.h>
-
 #include "Gui.h"
 
 #include "stb_image_write.h"
