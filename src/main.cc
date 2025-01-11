@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
-	glfwSetErrorCallback(GLFWErrorCallback);
+	//glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -138,7 +138,9 @@ int main(int argc, char** argv) {
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#ifndef TILING
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
@@ -154,7 +156,7 @@ int main(int argc, char** argv) {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
 	// Keep your existing style parameters but modify these specific ones:
-	style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 0);	// Set alpha to 0
+	//style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1);	// Set alpha to 0
 	style->Colors[ImGuiCol_ChildBg] =
 		ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	// Set alpha to 0
 	style->Colors[ImGuiCol_DockingEmptyBg] =

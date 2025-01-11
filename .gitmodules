@@ -7,4 +7,4 @@
 	url = https://github.com/glfw/glfw
 [submodule "lib/nfd"]
 	path = lib/nfd
-	url = git@github.com:mlabbe/nativefiledialog
+	url = https://github.com/mlabbe/nativefiledialog

@@ -69,23 +69,12 @@ namespace FuncDoodle {
 			}
 
 			int getWidth() const {
-				if (this == nullptr) {
-					std::cout << "NULLPTR?!?!?!?!?!" << std::endl;
-				}
-				// unitialized??
 				return m_Width;
 			}
 
 			void setWidth(int width) { m_Width = width; }
 
 			int getHeight() const {
-				if (this == nullptr) {
-					std::cerr << "This is "
-								 "nullptr!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-								 "!!!!!!!!"
-								 "!!!!!!!!"
-							  << std::endl;
-				}
 				return m_Height;
 			}
 
@@ -110,32 +99,15 @@ namespace FuncDoodle {
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr){};
 			~Frame() {
-				// ye "potential leak" idc rn tho
-				if (this != nullptr) {
-					delete m_Pixels;
-				}
 			};
 			void ReInit(int width, int height) {
 				m_Pixels = new ImageArray(width, height);
 			}
 			inline const ImageArray* Pixels() const {
-				if (this == nullptr) {
-					std::cout
-						<< "PIXEL: This is definitely NULLPTR that's bad we "
-						   "wanna fix that"
-						<< std::endl;
-				}
 				return m_Pixels;
 			}
 			void SetPixel(int x, int y, Col px) { m_Pixels->set(x, y, px); }
 			inline const int Width() {
-				if (this == nullptr || m_Pixels == nullptr) {
-					std::cout
-						<< "PIXEL: This is definitely NULLPTR that's bad we "
-						   "wanna fix that"
-						<< std::endl;
-				}
-
 				return m_Pixels->getWidth();
 			}
 			void SetWidth(int width, bool clear = false) {
@@ -172,12 +144,6 @@ namespace FuncDoodle {
 				}
 			}
 			inline const int Height() {
-				if (this == nullptr) {
-					std::cout
-						<< "PIXEL: This is definitely NULLPTR that's bad we "
-						   "wanna fix that"
-						<< std::endl;
-				}
 				return m_Pixels->getHeight();
 			}
 			void SetHeight(int height, bool clear = false) {

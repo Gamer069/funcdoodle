@@ -8,6 +8,9 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <stack>
+
+#include <type_traits>
 
 #include <GLFW/glfw3.h>
 
@@ -37,6 +40,9 @@ namespace FuncDoodle {
 		strcpy(m_Desc, desc);
 		m_Frames = new LongIndexArray(width, height);
 		m_Frames->push_back_empty();
+
+		m_UndoStack = std::stack<std::unique_ptr<Action>>();
+		m_RedoStack = std::stack<std::unique_ptr<Action>>();
 	}
 	ProjectFile::~ProjectFile() { delete m_Frames; }
 
@@ -52,9 +58,9 @@ namespace FuncDoodle {
 
 		for (long i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
-			sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
+			sprintf(curFilePath, "%s/frame_%ld.png", filePath, i);
 #else
-			sprintf(curFilePath, "%s\\frame_%d.png", filePath, i);
+			sprintf(curFilePath, "%s\\frame_%ld.png", filePath, i);
 #endif
 			frames->get(i)->Export(curFilePath);
 		}
@@ -68,7 +74,7 @@ namespace FuncDoodle {
 				cmd,
 				"ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" "
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
-				m_FPS, filePath, filePath, filePath);
+				m_FPS, filePath, filePath);
 #else
 			sprintf(cmd,
 					"ffmpeg.exe -framerate %d -pattern-type glob -i "
@@ -119,10 +125,6 @@ namespace FuncDoodle {
 	void ProjectFile::SetAnimAuthor(char* author) { strcpy(m_Author, author); }
 
 	const int ProjectFile::AnimFPS() const {
-		if (this == nullptr) {
-			std::cerr << "ProjectFile is nullptr" << std::endl;
-			std::exit(-1);
-		}
 		return m_FPS;
 	}
 	void ProjectFile::SetAnimFPS(int FPS) { m_FPS = FPS; }
@@ -134,6 +136,25 @@ namespace FuncDoodle {
 		return m_Frames->getSize();
 	}
 	LongIndexArray* ProjectFile::AnimFrames() { return m_Frames; }
+
+	void ProjectFile::PushUndoableDrawAction(DrawAction action) {
+		m_UndoStack.push(std::make_unique<DrawAction>(std::move(action)));
+	}
+	void ProjectFile::Undo() {
+		if (m_UndoStack.empty()) return;
+		std::unique_ptr<Action> action = std::move(m_UndoStack.top());
+		action->Undo();
+		m_UndoStack.pop();
+		m_RedoStack.push(std::move(action));
+	}
+
+	void ProjectFile::Redo() {
+		if (m_UndoStack.empty()) return;
+		std::unique_ptr<Action> action = std::move(m_RedoStack.top());
+		action->Redo();
+		m_RedoStack.pop();
+		m_RedoStack.push(std::move(action));
+	}
 
 	void ProjectFile::Write(char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
@@ -209,10 +230,6 @@ namespace FuncDoodle {
 		outFile.close();
 	}
 	void ProjectFile::ReadAndPopulate(char* filePath) {
-		if (this == nullptr) {
-			std::exit(-1);
-		}
-
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {

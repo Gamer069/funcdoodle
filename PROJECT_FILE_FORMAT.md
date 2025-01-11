@@ -1,4 +1,3 @@
-
 # .fdp file format specification
 
   
@@ -68,3 +67,4 @@ Also the origin for colors in frames is the top-left corner.
 | Type | Description |
 | ---- | ----------- |
 | str  | A constant of EOP (end of project)
+

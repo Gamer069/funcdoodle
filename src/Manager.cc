@@ -77,6 +77,12 @@ namespace FuncDoodle {
 				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1)
 					++m_SelectedFrame;
 			}
+			if (ImGui::IsKeyPressed(ImGuiKey_E, false)) {
+				m_Proj->Undo();
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_R, false)) {
+				m_Proj->Redo();
+			}
 			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
 				m_Proj->AnimFrames()->insertAfterEmpty(m_SelectedFrame);
 			}
@@ -161,7 +167,7 @@ namespace FuncDoodle {
 
 			char menuName[32];	// Make buffer big enough for "frame" + numbers
 								// + "menu" + null terminator
-			sprintf(menuName, "##frame%dmenu", i);
+			sprintf(menuName, "##frame%ldmenu", i);
 			char* menuNamePtr = menuName;
 
 			// Create unique ID for this popup

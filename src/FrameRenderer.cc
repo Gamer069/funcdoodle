@@ -2,6 +2,8 @@
 
 #include "Gui.h"
 
+#include "imgui_internal.h"
+
 #include "Frame.h"
 
 #include <iostream>
@@ -128,10 +130,14 @@ namespace FuncDoodle {
 					int newY = currentPixel.y + offsetY;
 					if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
 						newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
+						Col prevColor = m_Frame->Pixels()->get(newX, newY);
 						m_Frame->SetPixel(newX, newY,
 										  Col{.r = colNew[0],
 											  .g = colNew[1],
 											  .b = colNew[2]});
+						Col nextColor = m_Frame->Pixels()->get(newX, newY);
+						DrawAction action = DrawAction(newX, newY, prevColor, nextColor);
+						m_Player->Proj()->PushUndoableDrawAction(action);
 					}
 				}
 			}
@@ -189,7 +195,7 @@ namespace FuncDoodle {
 
 		// Check if mouse is within frame bounds and mouse button is down
 		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) &&
-			ImGui::IsMouseDown(0)) {
+				ImGui::IsMouseDown(0)) {
 			if (m_ToolManager == nullptr) {
 				std::cerr << "???????" << std::endl;
 				std::exit(-1);
@@ -197,12 +203,18 @@ namespace FuncDoodle {
 
 			// Calculate current pixel coordinates
 			ImVec2 currentPixel((mousePos.x - startX) / m_PixelScale,
-								(mousePos.y - startY) / m_PixelScale);
+					(mousePos.y - startY) / m_PixelScale);
 
 			// Draw at current position
 			if (currentPixel.x >= 0 && currentPixel.x < pixels->getWidth() &&
-				currentPixel.y >= 0 && currentPixel.y < pixels->getHeight()) {
+					currentPixel.y >= 0 && currentPixel.y < pixels->getHeight()) {
 				int selectedTool = m_ToolManager->SelectedTool();
+
+				// check if other window is focused or not
+				ImGuiContext* ctx = ImGui::GetCurrentContext();
+				ImGuiWindow* focusedWindow = ctx->NavWindow;
+
+				char* curName = (char*)"Frame";
 
 				// If we have a valid last position, interpolate
 				if (m_LastMousePos.x >= 0 && m_LastMousePos.y >= 0) {
@@ -210,21 +222,23 @@ namespace FuncDoodle {
 					float dy = currentPixel.y - m_LastMousePos.y;
 					int steps =
 						std::max(1, std::max(abs(static_cast<int>(dx)),
-											 abs(static_cast<int>(dy))));
+									abs(static_cast<int>(dy))));
 
 					// Pre-calculate color values outside the loop
-					if (selectedTool == 0) {
-						pencil(currentPixel);
-					} else if (selectedTool == 1) {
-						eraser(currentPixel);
-					} else if (selectedTool == 2) {
-						bucket(currentPixel);
-					} else if (selectedTool == 3) {
-						picker(currentPixel);
-						steps = 0;
-					} else if (selectedTool == 4) {
-						text(currentPixel);
-						steps = 0;
+					if (focusedWindow && strcmp(focusedWindow->Name, curName) == 0) {
+						if (selectedTool == 0) {
+							pencil(currentPixel);
+						} else if (selectedTool == 1) {
+							eraser(currentPixel);
+						} else if (selectedTool == 2) {
+							bucket(currentPixel);
+						} else if (selectedTool == 3) {
+							picker(currentPixel);
+							steps = 0;
+						} else if (selectedTool == 4) {
+							text(currentPixel);
+							steps = 0;
+						}
 					}
 
 					for (int i = 0; i <= steps; i++) {
@@ -235,35 +249,37 @@ namespace FuncDoodle {
 							static_cast<int>(m_LastMousePos.y + dy * t);
 
 						if (interpX >= 0 && interpX < pixels->getWidth() &&
-							interpY >= 0 && interpY < pixels->getHeight()) {
+								interpY >= 0 && interpY < pixels->getHeight()) {
 							m_Frame->SetPixel(interpX, interpY,
-											  Col{.r = colNew[0],
-												  .g = colNew[1],
-												  .b = colNew[2]});
+									Col{.r = colNew[0],
+									.g = colNew[1],
+									.b = colNew[2]});
 						}
 					}
 				} else {
 					// Draw single pixel if no last position
 					unsigned char colNew[3] = {
 						255, 255, 255};	 // Default white for eraser
-					if (selectedTool == 0) {
-						pencil(currentPixel);
-					} else if (selectedTool == 1) {
-						eraser(currentPixel);
-					} else if (selectedTool == 2) {
-						bucket(currentPixel);
-					} else if (selectedTool == 3) {
-						picker(currentPixel);
-					} else if (selectedTool == 4) {
-						text(currentPixel);
+					if (focusedWindow && strcmp(focusedWindow->Name, curName) == 0) {
+						if (selectedTool == 0) {
+							pencil(currentPixel);
+						} else if (selectedTool == 1) {
+							eraser(currentPixel);
+						} else if (selectedTool == 2) {
+							bucket(currentPixel);
+						} else if (selectedTool == 3) {
+							picker(currentPixel);
+						} else if (selectedTool == 4) {
+							text(currentPixel);
+						}
 					}
 
 					if (selectedTool !=
-						3) {  // Only draw if not using color picker
+							3) {  // Only draw if not using color picker
 						m_Frame->SetPixel(currentPixel.x, currentPixel.y,
-										  Col{.r = colNew[0],
-											  .g = colNew[1],
-											  .b = colNew[2]});
+								Col{.r = colNew[0],
+								.g = colNew[1],
+								.b = colNew[2]});
 					}
 				}
 				m_LastMousePos = currentPixel;
@@ -279,11 +295,11 @@ namespace FuncDoodle {
 				}
 				Col col = pixels->get(x, y);
 				ImVec2 topLeft(startX + x * m_PixelScale,
-							   startY + y * m_PixelScale);
+						startY + y * m_PixelScale);
 				ImVec2 bottomRight(startX + (x + 1) * m_PixelScale,
-								   startY + (y + 1) * m_PixelScale);
+						startY + (y + 1) * m_PixelScale);
 				drawList->AddRectFilled(topLeft, bottomRight,
-										IM_COL32(col.r, col.g, col.b, 255));
+						IM_COL32(col.r, col.g, col.b, 255));
 			}
 		}
 
@@ -297,14 +313,14 @@ namespace FuncDoodle {
 				for (int x = 0; x < prevPixels->getWidth(); x++) {
 					Col col = prevPixels->get(x, y);
 					ImVec2 topLeft(startX + x * m_PixelScale,
-								   startY + y * m_PixelScale);
+							startY + y * m_PixelScale);
 					ImVec2 bottomRight(startX + (x + 1) * m_PixelScale,
-									   startY + (y + 1) * m_PixelScale);
+							startY + (y + 1) * m_PixelScale);
 					Col curCol = pixels->get(x, y);
 					if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255)
 						drawList->AddRectFilled(
-							topLeft, bottomRight,
-							IM_COL32(col.r, col.g, col.b, 128));
+								topLeft, bottomRight,
+								IM_COL32(col.r, col.g, col.b, 128));
 				}
 			}
 		}
