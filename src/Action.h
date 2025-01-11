@@ -10,15 +10,12 @@ namespace FuncDoodle {
 			virtual ~Action() = default;
 
 			friend class DrawAction;
-		private:
-			void* mf_Proj;
-			long mf_FrameIndex;
 	};
 
 	class DrawAction : public Action {
 		public:
-			DrawAction(int x, int y, Col prev, Col next) : m_X(x), m_Y(y), m_Prev(prev), m_Next(next) {};
-			DrawAction(const DrawAction& other) : Action(other), m_X(other.m_X), m_Y(other.m_Y), m_Prev(other.m_Prev), m_Next(other.m_Next) {};
+			DrawAction(int x, int y, Col prev, Col next, long frameI, void* proj) : m_X(x), m_Y(y), m_Prev(prev), m_Next(next), m_FrameIndex(frameI), m_Proj(proj) {};
+			DrawAction(const DrawAction& other) : Action(other), m_X(other.m_X), m_Y(other.m_Y), m_Prev(other.m_Prev), m_Next(other.m_Next), m_FrameIndex(other.m_FrameIndex) {};
 			~DrawAction() { }
 			void Undo() override;
 			void Redo() override;
@@ -26,5 +23,7 @@ namespace FuncDoodle {
 			int m_X, m_Y;
 			Col m_Prev;
 			Col m_Next;
+			long m_FrameIndex;
+			void* m_Proj;
 	};
 }

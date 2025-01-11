@@ -4,11 +4,15 @@
 
 namespace FuncDoodle {
 	void DrawAction::Undo() {
-		if (mf_Proj)
-			static_cast<ProjectFile*>(mf_Proj)->AnimFrames()->get(mf_FrameIndex)->SetPixel(m_X, m_Y, m_Prev);
+		// doesnt get called
+		std::cout << "UNDO DOES GET CALLED" << std::endl;
+		std::cout << m_FrameIndex << " -- frame index" << std::endl;
+		if (m_Proj) {
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Prev);
+		}
 	}
 	void DrawAction::Redo() {
-		if (mf_Proj)
-			static_cast<ProjectFile*>(mf_Proj)->AnimFrames()->get(mf_FrameIndex)->SetPixel(m_X, m_Y, m_Next);
+		if (m_Proj)
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Next);
 	}
 }

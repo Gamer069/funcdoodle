@@ -18,8 +18,8 @@ namespace FuncDoodle {
 				delete m_Grid;
 				//free(m_Frame);
 			}
-			void RenderFrame();
-			void InitPixels();
+			void RenderFrame(long frameI);
+			void InitPixels(long frameI);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
 			void SetFrame(Frame* frame) { m_Frame = frame; }

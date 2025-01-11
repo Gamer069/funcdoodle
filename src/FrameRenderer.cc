@@ -11,7 +11,7 @@
 #include "Player.h"
 
 namespace FuncDoodle {
-	void FrameRenderer::RenderFrame() {
+	void FrameRenderer::RenderFrame(long frameI) {
 		ImGui::SetNextWindowPos(ImVec2(0, 32), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Frame");
@@ -56,11 +56,11 @@ namespace FuncDoodle {
 			}
 			ImGui::EndPopup();
 		}
-		InitPixels();
+		InitPixels(frameI);
 
 		ImGui::End();
 	}
-	void FrameRenderer::InitPixels() {
+	void FrameRenderer::InitPixels(long frameI) {
 		const ImageArray* pixels = m_Frame->Pixels();
 
 		// Get window dimensions before handling zoom
@@ -136,8 +136,12 @@ namespace FuncDoodle {
 											  .g = colNew[1],
 											  .b = colNew[2]});
 						Col nextColor = m_Frame->Pixels()->get(newX, newY);
-						DrawAction action = DrawAction(newX, newY, prevColor, nextColor);
-						m_Player->Proj()->PushUndoableDrawAction(action);
+						DrawAction action = DrawAction(newX, newY, prevColor, nextColor, frameI, m_Player->Proj());
+						if (prevColor != nextColor) {
+							std::cout << "prevcolor: " << (int)prevColor.r << std::endl;
+							std::cout << "nextcolor: " << (int)nextColor.r << std::endl;
+							m_Player->Proj()->PushUndoableDrawAction(action);
+						}
 					}
 				}
 			}

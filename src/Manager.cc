@@ -151,7 +151,7 @@ namespace FuncDoodle {
 					Frame* prevFrame = frames->get(i - 1);
 					m_FrameRenderer->SetPreviousFrame(prevFrame);
 				}
-				m_FrameRenderer->RenderFrame();
+				m_FrameRenderer->RenderFrame(i);
 				drawList->AddRect(
 					topLeft, bottomRight,
 					IM_COL32(255, 0, 0, 255),  // Red color
