@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <fstream>
+
 #include "LoadedImages.h"
 
 #include "MacroUtils.h"
@@ -21,8 +23,7 @@ namespace FuncDoodle {
 		m_CacheProj(nullptr),
 		m_Manager(new AnimationManager(nullptr, assetLoader)),
 		m_Window(win),
-		m_AssetLoader(assetLoader) {
-		}
+		m_AssetLoader(assetLoader) {}
 	Application::~Application() {
 		delete m_Manager;
 		delete m_FilePath;
@@ -175,7 +176,6 @@ namespace FuncDoodle {
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
 						m_CurrentProj = nullptr;
-						//m_Manager = new AnimationManager(nullptr, m_AssetLoader);
 					}
 					if (ImGui::MenuItem("Edit project")) {
 						m_EditProjOpen = true;
@@ -198,6 +198,12 @@ namespace FuncDoodle {
 				}
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Help", true)) {
+				if (ImGui::MenuItem("Show keybinds")) {
+					m_ShowKeybindsOpen = true;
+				}
+				ImGui::EndMenu();
+			}
 			ImGui::EndMainMenuBar();
 		}
 
@@ -209,11 +215,18 @@ namespace FuncDoodle {
 			ImGui::OpenPopup("NewProj");
 		}
 
+		// wasnt here before
+		if (m_ShowKeybindsOpen) {
+			ImGui::OpenPopup("Keybinds");
+		}
+
 		if (ImGui::IsPopupOpen("EditPrefs")) {
 			ImGui::SetNextWindowFocus();
 			ImGui::SetNextWindowPos(ImVec2(655, 478), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
 		}
+
+		// TODO: add default pos for keybinds 
 
 		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
@@ -284,6 +297,32 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowFocus();
 			ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
+		}
+		// wasnt here before
+		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+			std::filesystem::path keysPath = m_AssetLoader->GetPath().parent_path() / "keys.txt";
+			std::ifstream keysIn(keysPath);
+			if (!keysIn) {
+				std::cerr << "Failed to open file keys.txt" << std::endl;
+				ImGui::EndPopup();
+			}
+
+			keysIn.seekg(0, std::ios::end);
+			std::streamsize fileSize = keysIn.tellg();
+			keysIn.seekg(0, std::ios::beg);
+
+			char* buf = new char[fileSize + 1];
+
+			if (keysIn.read(buf, fileSize)) {
+				buf[fileSize] = '\0';
+				ImGui::Text("%s", buf);
+			} else {
+				std::cerr << "Failed to read file keys.txt" << std::endl;
+				delete[] buf;
+				ImGui::EndPopup();
+			}
+
+			ImGui::EndPopup();
 		}
 		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
