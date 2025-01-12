@@ -10,6 +10,7 @@ namespace FuncDoodle {
 			virtual ~Action() = default;
 
 			friend class DrawAction;
+			friend class FillAction;
 	};
 
 	class DrawAction : public Action {
@@ -25,5 +26,19 @@ namespace FuncDoodle {
 			Col m_Next;
 			long m_FrameIndex;
 			void* m_Proj;
+	};
+	class FillAction : public Action {
+		public:
+			FillAction(Col prev, Col next, long frameI, void* proj, std::vector<int> affected) : m_Prev(prev), m_Next(next), m_FrameIndex(frameI), m_Proj(proj), m_Pixels(affected) {};
+			FillAction(const FillAction& other) : Action(other), m_Prev(other.m_Prev), m_Next(other.m_Next), m_FrameIndex(other.m_FrameIndex), m_Proj(other.m_Proj), m_Pixels(other.m_Pixels) {};
+			~FillAction() {}
+			void Undo() override;
+			void Redo() override;
+		private:
+			Col m_Prev;
+			Col m_Next;
+			long m_FrameIndex;
+			void* m_Proj;
+			std::vector<int> m_Pixels;
 	};
 }

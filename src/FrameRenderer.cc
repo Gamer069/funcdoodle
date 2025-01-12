@@ -151,10 +151,16 @@ namespace FuncDoodle {
 					int newY = currentPixel.y + offsetY;
 					if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
 						newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
+						Col prevColor = m_Frame->Pixels()->get(newX, newY);
 						m_Frame->SetPixel(newX, newY,
 										  Col{.r = colNew[0],
 											  .g = colNew[1],
 											  .b = colNew[2]});
+						Col nextColor = m_Frame->Pixels()->get(newX, newY);
+						DrawAction action = DrawAction(newX, newY, prevColor, nextColor, frameI, m_Player->Proj());
+						if (prevColor != nextColor) {
+							m_Player->Proj()->PushUndoableDrawAction(action);
+						}
 					}
 				}
 			}
@@ -258,8 +264,7 @@ namespace FuncDoodle {
 					}
 				} else {
 					// Draw single pixel if no last position
-					unsigned char colNew[3] = {
-						255, 255, 255};	 // Default white for eraser
+					unsigned char colNew[3] = {255, 255, 255};	 // Default white for eraser
 					if (focusedWindow && strcmp(focusedWindow->Name, curName) == 0) {
 						if (selectedTool == 0) {
 							pencil(currentPixel);
