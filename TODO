@@ -7,4 +7,4 @@ Make it so the picker properly works.
 TODO: remove redo color adjustments call
 fix the decreasing of the size segfaulting (very obvious error)
 complete the textrenderer code and refactor it to make it so it draws everything properly.
-add more undo actions
+add more actions
