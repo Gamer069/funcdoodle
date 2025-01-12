@@ -16,6 +16,8 @@
 
 #include "LoadedImages.h"
 
+#include <stb_image.h>
+
 float SAMPLE_RATE = 44100.0;
 
 std::vector<double> notes = {
@@ -35,6 +37,23 @@ std::vector<std::pair<Note, double>> melody = {};
 
 void GLFWErrorCallback(int error, const char* desc) {
 	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
+}
+
+GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
+	std::filesystem::path icon = assetsPath / "icon.png";
+	std::cout << icon.string().c_str() << std::endl;
+	int width, height, chan;
+	unsigned char* data = stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
+	if (data) {
+		GLFWimage* icon;
+        icon->width = width;
+        icon->height = height;
+        icon->pixels = data;
+		return icon;
+	} else {
+		std::cerr << "Failed to read image data from assets/icon.png" << std::endl;
+		return nullptr;
+	}
 }
 
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
@@ -265,6 +284,12 @@ int main(int argc, char** argv) {
 
 	constexpr double FRAME_TIME = 1.0 / 1000.0;
 	auto lastFrameTime = std::chrono::high_resolution_clock::now();
+
+	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
+
+	glfwSetWindowIcon(win, 1, icon);
+
+	stbi_image_free(icon->pixels);
 
 	while (!glfwWindowShouldClose(win)) {
 		auto currentFrameTime = std::chrono::high_resolution_clock::now();

@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 if(APPLE)
-project(FuncDoodle C CXX OBJC)
+	project(FuncDoodle C CXX OBJC)
 elseif(UNIX AND NOT APPLE)
-project(FuncDoodle C CXX)
+	project(FuncDoodle C CXX)
 else()
-project(FuncDoodle C CXX)
+	project(FuncDoodle C CXX)
 endif()
 
 if(UNIX AND NOT APPLE)
@@ -14,8 +14,10 @@ endif()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(NOT APPLE)
 set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-set(CMAKE_C_COMPILER /usr/bin/cc)
+set(CMAKE_C_COMPILER /usr/bin/clang)
+endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -123,7 +125,7 @@ endif()
 # Link libraries based on platform
 if(APPLE)
 	target_link_libraries(FuncDoodle
-		${PORTAUDIO_LIBDIR}libportaudio.a
+		${PORTAUDIO_LIBDIR}libportaudio.dylib
 		"-framework OpenGL"
 		"-framework Cocoa"
 		"-framework IOKit"
@@ -145,8 +147,10 @@ message(STATUS "CMAKE BUILD TYPE ${CMAKE_BUILD_TYPE}")
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 	message(STATUS "DEBUG")
 	target_compile_definitions(FuncDoodle PRIVATE DEBUG)
-	if(ISTILING)
-		target_compile_definitions(FuncDoodle PRIVATE TILING)
+	if(UNIX AND NOT APPLE)
+		if(ISTILING)
+			target_compile_definitions(FuncDoodle PRIVATE TILING)
+		endif()
 	endif()
 	if(!WIN32)
 		target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
@@ -160,5 +164,5 @@ endif()
 
 # Extra flags
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
 endif()

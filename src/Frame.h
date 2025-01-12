@@ -10,34 +10,37 @@
 
 namespace FuncDoodle {
 	struct Col {
-		unsigned char r = 255, g = 255, b = 255;
+			unsigned char r = 255, g = 255, b = 255;
 
-		bool operator==(const Col& other) const {
-			return r == other.r && g == other.g && b == other.b;
-		}
-		bool operator<(const Col& other) const {
-			if (r != other.r)
-				return r < other.r;
-			if (g != other.g)
-				return g < other.g;
-			return b < other.b;
-		}
-		friend std::ostream& operator<<(std::ostream& stream, const Col& col) {
-			stream << "Col{" << (unsigned int)col.r << ", " << (unsigned int)col.g << ", " << (unsigned int)col.b << "}";
-			return stream;
-		}
+			bool operator==(const Col& other) const {
+				return r == other.r && g == other.g && b == other.b;
+			}
+			bool operator<(const Col& other) const {
+				if (r != other.r)
+					return r < other.r;
+				if (g != other.g)
+					return g < other.g;
+				return b < other.b;
+			}
+			friend std::ostream& operator<<(std::ostream& stream,
+											const Col& col) {
+				stream << "Col{" << (unsigned int)col.r << ", "
+					   << (unsigned int)col.g << ", " << (unsigned int)col.b
+					   << "}";
+				return stream;
+			}
 	};
 	class ImageArray {
 		public:
 			ImageArray(int width, int height)
 				: m_Width(width), m_Height(height), m_Data(width * height) {
-					if (m_Width < 1 || m_Height < 1) {
-						throw std::invalid_argument(
-								"Width and m_Height must be greater than 0");
-					}
-
-					RedoColorAdjustment();
+				if (m_Width < 1 || m_Height < 1) {
+					throw std::invalid_argument(
+						"Width and m_Height must be greater than 0");
 				}
+
+				RedoColorAdjustment();
+			}
 			~ImageArray() {
 				m_Data.clear();
 				m_Data.shrink_to_fit();
@@ -72,15 +75,11 @@ namespace FuncDoodle {
 				return m_Data[y * m_Width + x];
 			}
 
-			int getWidth() const {
-				return m_Width;
-			}
+			int getWidth() const { return m_Width; }
 
 			void setWidth(int width) { m_Width = width; }
 
-			int getHeight() const {
-				return m_Height;
-			}
+			int getHeight() const { return m_Height; }
 
 			void setHeight(int height) { m_Height = height; }
 
@@ -101,25 +100,20 @@ namespace FuncDoodle {
 			Frame(int width, int height) {
 				m_Pixels = new ImageArray(width, height);
 			};
-			Frame(ImageArray* arr) : m_Pixels(arr){};
-			~Frame() {
-			};
+			Frame(ImageArray* arr) : m_Pixels(arr) {};
+			~Frame() {};
 			void ReInit(int width, int height) {
 				m_Pixels = new ImageArray(width, height);
 			}
-			inline const ImageArray* Pixels() const {
-				return m_Pixels;
-			}
+			inline const ImageArray* Pixels() const { return m_Pixels; }
 			void SetPixel(int x, int y, Col px) { m_Pixels->set(x, y, px); }
-			inline const int Width() {
-				return m_Pixels->getWidth();
-			}
+			inline const int Width() { return m_Pixels->getWidth(); }
 			void SetWidth(int width, bool clear = false) {
 				if (m_Pixels == nullptr) {
 					m_Pixels =
 						new ImageArray(width,
-								1);	// default height of 1 bc we dont
-									// know required height yet
+									   1);	// default height of 1 bc we dont
+											// know required height yet
 				} else {
 					if (!clear) {
 						const std::vector<Col>& oldData = m_Pixels->Data();
@@ -146,9 +140,7 @@ namespace FuncDoodle {
 					}
 				}
 			}
-			inline const int Height() {
-				return m_Pixels->getHeight();
-			}
+			inline const int Height() { return m_Pixels->getHeight(); }
 			void SetHeight(int height, bool clear = false) {
 				if (m_Pixels == nullptr) {
 					m_Pixels = new ImageArray(1, height);
@@ -204,7 +196,7 @@ namespace FuncDoodle {
 						Col pixel = Pixels()->get(x, y);
 						written =
 							snprintf(curr, bufferSize - (curr - fdata),
-									"%d %d %d\n", pixel.r, pixel.g, pixel.b);
+									 "%d %d %d\n", pixel.r, pixel.g, pixel.b);
 						curr += written;
 					}
 				}
@@ -223,7 +215,7 @@ namespace FuncDoodle {
 
 				// Copy first line into buffer
 				while (pasted[i] && pasted[i] != '\n' && pasted[i] != '\r' &&
-						i < 31) {
+					   i < 31) {
 					first[i] = pasted[i];
 					i++;
 				}
@@ -283,7 +275,7 @@ namespace FuncDoodle {
 			}
 			void Export(char* filePath) {
 				stbi_write_png(filePath, Width(), Height(), 3, Data().data(),
-						Width() * 3);
+							   Width() * 3);
 			}
 			std::vector<Col> Data() const { return m_Pixels->Data(); }
 

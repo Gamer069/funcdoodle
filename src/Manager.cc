@@ -167,7 +167,7 @@ namespace FuncDoodle {
 
 			char menuName[32];	// Make buffer big enough for "frame" + numbers
 								// + "menu" + null terminator
-			sprintf(menuName, "##frame%ldmenu", i);
+			snprintf(menuName, 31, "##frame%ldmenu", i);
 			char* menuNamePtr = menuName;
 
 			// Create unique ID for this popup

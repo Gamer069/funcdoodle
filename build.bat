@@ -16,3 +16,6 @@ if errorlevel 1 exit /b -1
 
 copy ..\keys.txt .\keys.txt
 if errorlevel 1 exit /b -1
+
+copy ..\icon.png .\assets\icon.png
+if errorlevel 1 exit /b -1

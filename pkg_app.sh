@@ -13,6 +13,8 @@ magick icon2.png FuncDoodle.app/Contents/Resources/AppIcon.icns
 cp FuncDoodle.app/Contents/Resources/AppIcon.icns icon.icns
 
 cp -r assets FuncDoodle.app/Contents/MacOS/
+cp icon.png FuncDoodle.app/Contents/MacOS/assets/
+cp keys.txt FuncDoodle.app/Contents/MacOS/
 
 # Register all in .plist
 echo "

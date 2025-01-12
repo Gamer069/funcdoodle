@@ -10,7 +10,8 @@
 #include <vector>
 
 namespace FuncDoodle {
-	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool = std::vector<std::pair<int, int>>();
+	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool =
+		std::vector<std::pair<int, int>>();
 	class FrameRenderer {
 		public:
 			FrameRenderer(Frame* frame, ToolManager* manager,
@@ -19,7 +20,7 @@ namespace FuncDoodle {
 				  m_Player(player) {}
 			~FrameRenderer() {
 				delete m_Grid;
-				//free(m_Frame);
+				// free(m_Frame);
 			}
 			void RenderFrame(long frameI);
 			void InitPixels(long frameI);

@@ -1,3 +1,5 @@
+appbuild/
+dmg/*.dmg
 release.sh
 CMakeCache.txt
 CMakeFiles/
@@ -5,10 +7,7 @@ Makefile
 FuncDoodle
 FuncDoodle.app
 pkg_app.sh
-build_*/
-builds/
 build/
 .git
-script.scpt
 .editorconfig
 .vscode/

@@ -28,7 +28,6 @@ namespace FuncDoodle {
 		delete m_Manager;
 		delete m_FilePath;
 		delete m_CurrentProj;
-		//delete m_CacheProj;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		// Calculate the maximum possible length of the shortcut string
@@ -491,10 +490,14 @@ namespace FuncDoodle {
 			m_CurrentProj->DisplayFPS();
 		} else {
 			char* title = (char*)malloc(35);
-			sprintf(title, "FuncDoodle -- %s -- %d FPS", FUNCVER,
-					(int)ImGui::GetIO().Framerate);
-			glfwSetWindowTitle(m_Window, title);
-			free(title);
+			if (title != 0) {
+				snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER,
+						(int)ImGui::GetIO().Framerate);
+				glfwSetWindowTitle(m_Window, title);
+				free(title);
+			} else {
+				std::cerr << "Failed to malloc title..? idek if that's possible" << std::endl;
+			}
 		}
 
 		free(newProjShortcut);

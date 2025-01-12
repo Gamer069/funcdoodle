@@ -28,7 +28,7 @@ namespace FuncDoodle {
 			}
 
 			~LongIndexArray() {
-				//was already freed??
+				// was already freed??
 				free(data);	 // Always delete data pointer
 			}
 
