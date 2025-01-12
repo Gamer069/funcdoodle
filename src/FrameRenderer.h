@@ -7,7 +7,10 @@
 
 #include "Player.h"
 
+#include <vector>
+
 namespace FuncDoodle {
+	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool = std::vector<std::pair<int, int>>();
 	class FrameRenderer {
 		public:
 			FrameRenderer(Frame* frame, ToolManager* manager,

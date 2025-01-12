@@ -8,6 +8,8 @@
 
 #include <iostream>
 
+#include <utility>
+
 #include "Player.h"
 
 namespace FuncDoodle {
@@ -178,6 +180,12 @@ namespace FuncDoodle {
 			FloodFill(
 				currentPixel.x, currentPixel.y, curPixelCol,
 				Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
+
+			FillAction action = FillAction(curPixelCol, Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]}, frameI, m_Player->Proj(), i_PixelsChangedByBucketTool);
+			if (curPixelCol != Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]}) {
+				m_Player->Proj()->PushUndoableFillAction(action);
+			}
+
 			colNew[0] = colResult[0];
 			colNew[1] = colResult[1];
 			colNew[2] = colResult[2];
@@ -343,6 +351,8 @@ namespace FuncDoodle {
 		if (m_Frame->Pixels()->get(x, y) != targetCol ||
 			m_Frame->Pixels()->get(x, y) == fillCol)
 			return;
+
+		i_PixelsChangedByBucketTool.emplace_back(x, y);
 
 		m_Frame->SetPixel(x, y, fillCol);
 

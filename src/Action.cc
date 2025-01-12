@@ -4,13 +4,6 @@
 
 namespace FuncDoodle {
 	void DrawAction::Undo() {
-		// doesnt get called
-		std::cout << "UNDO DOES GET CALLED" << std::endl;
-		std::cout << m_FrameIndex << " -- frame index" << std::endl;
-		std::cout << m_X << " -- x" << std::endl;
-		std::cout << m_Y << " -- y" << std::endl;
-		std::cout << m_Prev << " -- prev" << std::endl;
-		std::cout << m_Next << " -- next" << std::endl;
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Prev);
 		} else {
@@ -18,16 +11,29 @@ namespace FuncDoodle {
 		}
 	}
 	void DrawAction::Redo() {
-		std::cout << "REDO" << std::endl;
-		std::cout << m_FrameIndex << " -- frame index" << std::endl;
-		std::cout << m_X << " -- x" << std::endl;
-		std::cout << m_Y << " -- y" << std::endl;
-		std::cout << m_Prev << " -- prev" << std::endl;
-		std::cout << m_Next << " -- next" << std::endl;
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Next);
 		} else {
 			std::cout << "PROJECT IS NULL?!?!?!?!?!(redo)" << std::endl;
+		}
+	}
+
+	void FillAction::Undo() {
+		if (m_Proj) {
+			for (const std::pair<int, int>& xy : m_Pixels) {
+				static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(xy.first, xy.second, m_Prev);
+			}
+		} else {
+			std::cout << "PROJECT IS NULL?!?!?!?!?!(undo fill)" << std::endl;
+		}
+	}
+	void FillAction::Redo() {
+		if (m_Proj) {
+			for (const std::pair<int, int>& xy : m_Pixels) {
+				static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(xy.first, xy.second, m_Next);
+			}
+		} else {
+			std::cout << "PROJECT IS NULL?!?!?!?!?!(redo fill)" << std::endl;
 		}
 	}
 }

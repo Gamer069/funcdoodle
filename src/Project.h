@@ -39,6 +39,7 @@ namespace FuncDoodle {
 
 			// Undo management
 			void PushUndoableDrawAction(DrawAction action);
+			void PushUndoableFillAction(FillAction action);
 
 			void Undo();
 			void Redo();

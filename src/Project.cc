@@ -140,6 +140,9 @@ namespace FuncDoodle {
 	void ProjectFile::PushUndoableDrawAction(DrawAction action) {
 		m_UndoStack.push(std::make_unique<DrawAction>(std::move(action)));
 	}
+	void ProjectFile::PushUndoableFillAction(FillAction action) {
+		m_UndoStack.push(std::make_unique<FillAction>(std::move(action)));
+	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
 			return;
