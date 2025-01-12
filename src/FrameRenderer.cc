@@ -297,7 +297,7 @@ namespace FuncDoodle {
 				}
 				m_LastMousePos = currentPixel;
 			}
-		} else if (!ImGui::IsMouseDown(0)) {
+		} else if (!ImGui::IsMouseDown(0) || !ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
 			m_LastMousePos = ImVec2(-1, -1);
 		}
 
