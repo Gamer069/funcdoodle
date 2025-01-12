@@ -14,10 +14,10 @@ endif()
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if(NOT APPLE)
-set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-set(CMAKE_C_COMPILER /usr/bin/clang)
-endif()
+#if(NOT APPLE)
+#set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+#set(CMAKE_C_COMPILER /usr/bin/clang)
+#endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
