@@ -410,8 +410,6 @@ namespace FuncDoodle {
 				else {
 					if (m_CacheProj) {
 						m_CacheProj->SetAnimWidth(width, true);
-					} else {
-						std::cout << "What the hell happened?!" << std::endl;
 					}
 				}
 			}
@@ -499,10 +497,9 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::ReadProjectFile() {
-		// m_FilePath is the auctual file that we're going to read
+		// m_FilePath is the actual file that we're going to read
 		if (m_FilePath == nullptr) {
-			std::cout
-				<< "Congratulations! You've found a weird bug that i've "
+			std::cout << "Congratulations! You've found a weird bug that i've "
 				"never seen before! Please screen record urself and make "
 				"a github issue on this project. I rlly wanna fix this."
 				<< std::endl;
@@ -586,27 +583,26 @@ namespace FuncDoodle {
 				invertColor(btnOpenCol);
 				invertColor(tintOpen);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-					std::cout << "Button open file dialog pressed" << '\n';
 					OpenFileDialog();
 				}
 			}
 		}
 
 		drawList->AddRectFilled(safePosAdd, safePosAddMax,
-								ImGui::ColorConvertFloat4ToU32(btnNewCol),
-								10.0f);
+				ImGui::ColorConvertFloat4ToU32(btnNewCol),
+				10.0f);
 		drawList->AddImage(
-			(ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
-			ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight),
-			ImVec2(0, 0), ImVec2(1, 1),
-			ImGui::ColorConvertFloat4ToU32(tintNew));
+				(ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
+				ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight),
+				ImVec2(0, 0), ImVec2(1, 1),
+				ImGui::ColorConvertFloat4ToU32(tintNew));
 		drawList->AddRectFilled(safePosOpen, safePosOpenMax,
-								ImGui::ColorConvertFloat4ToU32(btnOpenCol),
-								10.0f);
+				ImGui::ColorConvertFloat4ToU32(btnOpenCol),
+				10.0f);
 		drawList->AddImage(
-			(ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
-			ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight),
-			ImVec2(0, 0), ImVec2(1, 1),
-			ImGui::ColorConvertFloat4ToU32(tintOpen));
+				(ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
+				ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight),
+				ImVec2(0, 0), ImVec2(1, 1),
+				ImGui::ColorConvertFloat4ToU32(tintOpen));
 	}
 }  // namespace FuncDoodle

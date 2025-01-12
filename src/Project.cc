@@ -144,21 +144,26 @@ namespace FuncDoodle {
 		if (m_UndoStack.empty()) {
 			return;
 		}
-		std::cout << "BEFORE MOVE" << std::endl;
+
 		std::unique_ptr<Action> action = std::move(m_UndoStack.top());
-		std::cout << "AFTER MOVE" << std::endl;
-		action->Undo();
-		std::cout << "UNDID" << std::endl;
-		m_RedoStack.push(std::move(action));
 		m_UndoStack.pop();
+
+		action->Undo();
+
+		m_RedoStack.push(std::move(action));
 	}
 
 	void ProjectFile::Redo() {
-		if (m_UndoStack.empty()) return;
+		if (m_RedoStack.empty()) {
+			std::cout << "Nothing to redo" << std::endl;
+			return;
+		}
 		std::unique_ptr<Action> action = std::move(m_RedoStack.top());
-		action->Redo();
-		m_RedoStack.push(std::move(action));
 		m_RedoStack.pop();
+
+		action->Redo();
+
+		m_UndoStack.push(std::move(action));
 	}
 
 	void ProjectFile::Write(char* fileName) {

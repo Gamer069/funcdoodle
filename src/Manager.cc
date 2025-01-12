@@ -77,10 +77,10 @@ namespace FuncDoodle {
 				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1)
 					++m_SelectedFrame;
 			}
-			if (ImGui::IsKeyPressed(ImGuiKey_E, false)) {
+			if (ImGui::IsKeyPressed(ImGuiKey_E, true)) {
 				m_Proj->Undo();
 			}
-			if (ImGui::IsKeyPressed(ImGuiKey_R, false)) {
+			if (ImGui::IsKeyPressed(ImGuiKey_R, true)) {
 				m_Proj->Redo();
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {

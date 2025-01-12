@@ -20,8 +20,6 @@ namespace FuncDoodle {
 			return;
 
 		if (!m_Grid) {
-			std::cout << m_Frame->Width() << " WIDTH" << std::endl;
-			std::cout << m_Frame->Height() << " HEIGHT" << std::endl;
 			m_Grid = new Grid(m_Frame->Width(), m_Frame->Height());
 		}
 
@@ -138,8 +136,6 @@ namespace FuncDoodle {
 						Col nextColor = m_Frame->Pixels()->get(newX, newY);
 						DrawAction action = DrawAction(newX, newY, prevColor, nextColor, frameI, m_Player->Proj());
 						if (prevColor != nextColor) {
-							std::cout << "prevcolor: " << (int)prevColor.r << std::endl;
-							std::cout << "nextcolor: " << (int)nextColor.r << std::endl;
 							m_Player->Proj()->PushUndoableDrawAction(action);
 						}
 					}
