@@ -85,20 +85,30 @@ namespace FuncDoodle {
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
 				m_Proj->AnimFrames()->insertAfterEmpty(m_SelectedFrame);
+				InsertFrameAction action = InsertFrameAction(m_SelectedFrame+1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
 				m_Proj->AnimFrames()->insertBeforeEmpty(m_SelectedFrame);
 				m_SelectedFrame++;
+				InsertFrameAction action = InsertFrameAction(m_SelectedFrame-1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
 				m_Proj->AnimFrames()->moveForward(m_SelectedFrame);
+				m_SelectedFrame++;
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
 				m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
+				m_SelectedFrame--;
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
-				if (m_Proj->AnimFrameCount() != 1)
+				if (m_Proj->AnimFrameCount() != 1) {
+					Frame deletedFrame = *m_Proj->AnimFrames()->get(m_SelectedFrame);
 					m_Proj->AnimFrames()->remove(m_SelectedFrame);
+					DeleteFrameAction action = DeleteFrameAction(m_SelectedFrame, &deletedFrame, m_Proj);
+					m_Proj->PushUndoableDeleteFrameAction(action);
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Comma, true)) {
 				m_Proj->AnimFrames()->get(m_SelectedFrame)->CopyToClipboard();
@@ -116,14 +126,18 @@ namespace FuncDoodle {
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
 				m_Proj->AnimFrames()->insertAfter(
-					m_SelectedFrame,
-					m_Proj->AnimFrames()->get(m_SelectedFrame));
+						m_SelectedFrame,
+						m_Proj->AnimFrames()->get(m_SelectedFrame));
+				InsertFrameAction action = InsertFrameAction(m_SelectedFrame+1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
 				m_Proj->AnimFrames()->insertBefore(
-					m_SelectedFrame,
-					m_Proj->AnimFrames()->get(m_SelectedFrame));
+						m_SelectedFrame,
+						m_Proj->AnimFrames()->get(m_SelectedFrame));
 				m_SelectedFrame++;
+				InsertFrameAction action = InsertFrameAction(m_SelectedFrame-1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 		}
 		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
@@ -133,16 +147,16 @@ namespace FuncDoodle {
 		// Render frames
 		for (long i = 0; i < m_Proj->AnimFrameCount(); i++) {
 			drawList->AddText(
-				font, fontSize,
-				m_SelectedFrame == i
+					font, fontSize,
+					m_SelectedFrame == i
 					? ImVec2(topLeft.x + frameWidth / 2, bottomRight.y + 10)
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
-				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
+					IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
 			drawList->AddRectFilled(topLeft, bottomRight,
-									IM_COL32(255, 255, 255, 255));
+					IM_COL32(255, 255, 255, 255));
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
-				(!m_Player->Playing() && m_SelectedFrame == i)) {
+					(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
 				Frame* frame = frames->get(i);
 				m_FrameRenderer->SetFrame(frame);
@@ -153,12 +167,12 @@ namespace FuncDoodle {
 				}
 				m_FrameRenderer->RenderFrame(i);
 				drawList->AddRect(
-					topLeft, bottomRight,
-					IM_COL32(255, 0, 0, 255),  // Red color
-					0.0f,					   // rounding
-					0,						   // flags
-					8.0f  // thickness - increased to make it much thicker
-				);
+						topLeft, bottomRight,
+						IM_COL32(255, 0, 0, 255),  // Red color
+						0.0f,					   // rounding
+						0,						   // flags
+						8.0f  // thickness - increased to make it much thicker
+						);
 			}
 			ImVec2 mousePos = ImGui::GetMousePos();
 			bool isHovered =
@@ -179,18 +193,24 @@ namespace FuncDoodle {
 
 			if (ImGui::BeginPopup(menuNamePtr)) {
 				if (ImGui::MenuItem("Delete", "\\")) {
-					if (m_Proj->AnimFrameCount() != 1)
+					if (m_Proj->AnimFrameCount() != 1) {
+						Frame deletedFrame = *m_Proj->AnimFrames()->get(m_SelectedFrame);
+						m_Proj->AnimFrames()->remove(m_SelectedFrame);
+						DeleteFrameAction action = DeleteFrameAction(m_SelectedFrame, &deletedFrame, m_Proj);
+						m_Proj->PushUndoableDeleteFrameAction(action);
 						m_Proj->AnimFrames()->remove(i);
+					}
 				}
 				if (ImGui::MenuItem("Insert before", "O")) {
-					Frame frame =
-						Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-					m_Proj->AnimFrames()->insertBefore(i, &frame);
+					m_Proj->AnimFrames()->insertBeforeEmpty(m_SelectedFrame);
+					m_SelectedFrame++;
+					InsertFrameAction action = InsertFrameAction(m_SelectedFrame-1, m_Proj);
+					m_Proj->PushUndoableInsertFrameAction(action);
 				}
 				if (ImGui::MenuItem("Insert after", "P")) {
-					Frame frame =
-						Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-					m_Proj->AnimFrames()->insertAfter(i, &frame);
+					m_Proj->AnimFrames()->insertAfterEmpty(m_SelectedFrame);
+					InsertFrameAction action = InsertFrameAction(m_SelectedFrame+1, m_Proj);
+					m_Proj->PushUndoableInsertFrameAction(action);
 				}
 				if (ImGui::MenuItem("Move forward", "I")) {
 					m_Proj->AnimFrames()->moveForward(i);
@@ -229,9 +249,9 @@ namespace FuncDoodle {
 		ImGui::Begin("Controls");
 
 		if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
-							   ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_J, true) &&
-			 !ImGui::IsAnyItemActive())) {
+					ImVec2(20, 20)) ||
+				(ImGui::IsKeyPressed(ImGuiKey_J, true) &&
+				 !ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = 0;
 			m_Player->Rewind();
 		}
@@ -239,21 +259,21 @@ namespace FuncDoodle {
 		ImGui::SameLine();
 
 		if (ImGui::ImageButton("togglePlay",
-							   m_Player->Playing()
-								   ? (ImTextureID)(intptr_t)s_PauseTexId
-								   : (ImTextureID)(intptr_t)s_PlayTexId,
-							   ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_K, true) &&
-			 !ImGui::IsAnyItemActive())) {
+					m_Player->Playing()
+					? (ImTextureID)(intptr_t)s_PauseTexId
+					: (ImTextureID)(intptr_t)s_PlayTexId,
+					ImVec2(20, 20)) ||
+				(ImGui::IsKeyPressed(ImGuiKey_K, true) &&
+				 !ImGui::IsAnyItemActive())) {
 			m_Player->SetPlaying(!m_Player->Playing());
 		}
 
 		ImGui::SameLine();
 
 		if (ImGui::ImageButton("end", (ImTextureID)(intptr_t)s_EndTexId,
-							   ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_L, true) &&
-			 !ImGui::IsAnyItemActive())) {
+					ImVec2(20, 20)) ||
+				(ImGui::IsKeyPressed(ImGuiKey_L, true) &&
+				 !ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 			m_Player->End();
 		}

@@ -328,7 +328,7 @@ namespace FuncDoodle {
 					new_data[i] = data[i];
 				}
 
-				delete[] data;	  // Properly delete the old array
+				//delete[] data;	  // Properly delete the old array
 				data = new_data;  // Point to the newly allocated memory
 				capacity = new_capacity;
 			}

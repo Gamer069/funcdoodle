@@ -6,15 +6,11 @@ namespace FuncDoodle {
 	void DrawAction::Undo() {
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Prev);
-		} else {
-			std::cout << "PROJECT IS NULL?!?!?!?!?!" << std::endl;
 		}
 	}
 	void DrawAction::Redo() {
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(m_X, m_Y, m_Next);
-		} else {
-			std::cout << "PROJECT IS NULL?!?!?!?!?!(redo)" << std::endl;
 		}
 	}
 
@@ -23,8 +19,6 @@ namespace FuncDoodle {
 			for (const std::pair<int, int>& xy : m_Pixels) {
 				static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(xy.first, xy.second, m_Prev);
 			}
-		} else {
-			std::cout << "PROJECT IS NULL?!?!?!?!?!(undo fill)" << std::endl;
 		}
 	}
 	void FillAction::Redo() {
@@ -32,8 +26,38 @@ namespace FuncDoodle {
 			for (const std::pair<int, int>& xy : m_Pixels) {
 				static_cast<ProjectFile*>(m_Proj)->AnimFrames()->get(m_FrameIndex)->SetPixel(xy.first, xy.second, m_Next);
 			}
-		} else {
-			std::cout << "PROJECT IS NULL?!?!?!?!?!(redo fill)" << std::endl;
+		}
+	}
+
+	void DeleteFrameAction::Undo() {
+		if (m_Proj) {
+			if (m_Empty) {
+				if (m_FrameIndex > 1) static_cast<ProjectFile*>(m_Proj)->AnimFrames()->insertBeforeEmpty(m_FrameIndex);
+				else static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back_empty();
+			} else {
+				if (m_FrameIndex > 1) static_cast<ProjectFile*>(m_Proj)->AnimFrames()->insertBefore(m_FrameIndex, m_Frame);
+				else static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back(m_Frame);
+			}
+		}
+	}
+	void DeleteFrameAction::Redo() {
+		if (m_Proj)
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->remove(m_FrameIndex);
+	}
+
+	void InsertFrameAction::Undo() {
+		if (m_Proj)
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->remove(m_FrameIndex);
+	}
+	void InsertFrameAction::Redo() {
+		if (m_Proj) {
+			if (m_Empty) {
+				if (m_FrameIndex > 1) static_cast<ProjectFile*>(m_Proj)->AnimFrames()->insertBeforeEmpty(m_FrameIndex);
+				else static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back_empty();
+			} else {
+				if (m_FrameIndex > 1) static_cast<ProjectFile*>(m_Proj)->AnimFrames()->insertBefore(m_FrameIndex, m_Frame);
+				else static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back(m_Frame);
+			}
 		}
 	}
 }

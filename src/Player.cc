@@ -27,6 +27,6 @@ namespace FuncDoodle {
 		m_CurFrame =
 			m_Proj->AnimFrameCount() -
 			1;	// -1 cos cpp ain't stupid and uses chad 0 based indexing unlike
-				// puny python, stupid lua, and other stupid languages
+				// python, stupid lua, and other stupid languages
 	}
 }  // namespace FuncDoodle

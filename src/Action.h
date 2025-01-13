@@ -13,6 +13,7 @@ namespace FuncDoodle {
 
 			friend class DrawAction;
 			friend class FillAction;
+			friend class DeleteFrameAction;
 	};
 
 	class DrawAction : public Action {
@@ -56,5 +57,35 @@ namespace FuncDoodle {
 			long m_FrameIndex;
 			void* m_Proj;
 			std::vector<std::pair<int, int>> m_Pixels;
+	};
+	class DeleteFrameAction : public Action {
+		public:
+			// empty constructor
+			DeleteFrameAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Empty(true), m_Frame(nullptr) {}
+			// good constructor
+			DeleteFrameAction(long frameI, Frame* frame, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Frame(frame), m_Empty(false) {}
+
+			void Undo() override;
+			void Redo() override;
+		private:
+			long m_FrameIndex;
+			bool m_Empty;
+			Frame* m_Frame;
+			void* m_Proj;
+	};
+	class InsertFrameAction : public Action {
+		public:
+			// empty constructor
+			InsertFrameAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Empty(true), m_Frame(nullptr) {}
+			// good constructor
+			InsertFrameAction(long frameI, Frame* frame, void* proj) : m_Proj(proj), m_Empty(false), m_Frame(frame) {}
+
+			void Undo() override;
+			void Redo() override;
+		private:
+			long m_FrameIndex;
+			bool m_Empty;
+			Frame* m_Frame;
+			void* m_Proj;
 	};
 }  // namespace FuncDoodle
