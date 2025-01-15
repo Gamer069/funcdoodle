@@ -60,7 +60,7 @@ if(NOT PORTAUDIO_LIBDIR)
 	elseif(UNIX AND NOT APPLE)
 		set(PORTAUDIO_LIBDIR "/usr/lib/")
 	elseif(WIN32)
-		set(PORTAUDIO_LIBDIR "C:\\Program Files\\PortAudio\\lib\\")
+		set(PORTAUDIO_LIBDIR "C:\\portaudio\\lib")
 	endif()
 endif()
 
@@ -70,7 +70,7 @@ if(NOT PORTAUDIO_INCLDIR)
 	elseif(UNIX AND NOT APPLE)
 		set(PORTAUDIO_INCLDIR "/usr/local/include")
 	elseif(WIN32)
-		set(PORTAUDIO_INCLDIR "C:\\portaudio\\include")
+		set(PORTAUDIO_INCLDIR "C:\\portaudio\\incl")
 	endif()
 endif()
 
@@ -90,7 +90,7 @@ add_executable(FuncDoodle
 # Include directories
 target_include_directories(FuncDoodle PRIVATE
 	lib/glfw/include/
-	lib/portaudio/include
+	${PORTAUDIO_INCLDIR}
 	lib/imgui
 	lib/imgui/backends
 	lib/glad/include
