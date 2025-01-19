@@ -11,7 +11,6 @@
 ## <span style="color: blue;">The header:</span>
 
   
-
 | Type | Description |
 | ---- | ----------- |
 | str  | Must be "FDProj". If it's not this, isn't an .fdp file |
@@ -21,11 +20,11 @@
 | int  | Animation width |
 | int  | Animation height |
 | int  | Animation FPS |
-| str  | Color space eg. sRGB, terminating with '.' |
+//| str  | Color space eg. sRGB, terminating with '.' |
+// will later add support for multiple color spaces, for now its only sRGB
 | str  | Animation display name, terminating with byte 0 |
 | str  | Animation description, terminating with byte 0 |
 | str  | Animation author, terminating with byte 0 |
-
   
 
 ## <span style="color: cyan;">Palette</span>

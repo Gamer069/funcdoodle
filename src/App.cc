@@ -297,32 +297,6 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
 		}
-		// wasnt here before
-		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
-			std::filesystem::path keysPath = m_AssetLoader->GetPath().parent_path() / "keys.txt";
-			std::ifstream keysIn(keysPath);
-			if (!keysIn) {
-				std::cerr << "Failed to open file keys.txt" << std::endl;
-				ImGui::EndPopup();
-			}
-
-			keysIn.seekg(0, std::ios::end);
-			std::streamsize fileSize = keysIn.tellg();
-			keysIn.seekg(0, std::ios::beg);
-
-			char* buf = new char[fileSize + 1];
-
-			if (keysIn.read(buf, fileSize)) {
-				buf[fileSize] = '\0';
-				ImGui::Text("%s", buf);
-			} else {
-				std::cerr << "Failed to read file keys.txt" << std::endl;
-				delete[] buf;
-				ImGui::EndPopup();
-			}
-
-			ImGui::EndPopup();
-		}
 		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256];
@@ -391,6 +365,32 @@ namespace FuncDoodle {
 				m_EditProjOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
+			ImGui::EndPopup();
+		}
+		// wasnt here before
+		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+			std::filesystem::path keysPath = m_AssetLoader->GetPath().parent_path() / "keys.txt";
+			std::ifstream keysIn(keysPath);
+			if (!keysIn) {
+				std::cerr << "Failed to open file keys.txt" << std::endl;
+				ImGui::EndPopup();
+			}
+
+			keysIn.seekg(0, std::ios::end);
+			std::streamsize fileSize = keysIn.tellg();
+			keysIn.seekg(0, std::ios::beg);
+
+			char* buf = new char[fileSize + 1];
+
+			if (keysIn.read(buf, fileSize)) {
+				buf[fileSize] = '\0';
+				ImGui::Text("%s", buf);
+			} else {
+				std::cerr << "Failed to read file keys.txt" << std::endl;
+				delete[] buf;
+				ImGui::EndPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 		if (m_EditProjOpen) {

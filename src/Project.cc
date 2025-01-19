@@ -330,9 +330,8 @@ namespace FuncDoodle {
 		long brokenIndexC = 0;
 		long lastBrokenFrame = 0;
 
-		ImageArray* img = new ImageArray(animWidth, animHeight);
-
 		for (long i = 0; i < frameCount; i++) {
+			ImageArray* img = new ImageArray(animWidth, animHeight);
 			// read colorarr: OOPS
 			for (int y = 0; y < animHeight; y++) {
 				for (int x = 0; x < animWidth; x++) {
@@ -351,7 +350,7 @@ namespace FuncDoodle {
 					img->set(x, y, plte[index]);
 				}
 			}
-			static Frame newFrame = Frame(img);
+			Frame newFrame = Frame(img);
 			m_Frames->push_back(&newFrame);
 
 			unsigned char null;
