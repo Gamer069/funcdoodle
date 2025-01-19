@@ -104,8 +104,8 @@ namespace FuncDoodle {
 		float frameHeight = pixels->getHeight() * m_PixelScale;
 
 		// Calculate starting position to center the frame
-		float startX = windowPos.x + (contentRegion.x - frameWidth) * 0.5f + 15;
-		float startY = windowPos.y + (contentRegion.y - frameHeight) * 0.5f + 40;
+		float startX = windowPos.x + (contentRegion.x - frameWidth) * 0.5f + 9;
+		float startY = windowPos.y + (contentRegion.y - frameHeight) * 0.5f + 41;
 
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
