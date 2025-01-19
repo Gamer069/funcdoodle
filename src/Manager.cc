@@ -99,8 +99,10 @@ namespace FuncDoodle {
 				m_SelectedFrame++;
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
-				m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
-				m_SelectedFrame--;
+				if (m_SelectedFrame != 0) {
+					m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
+					m_SelectedFrame--;
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
 				if (m_Proj->AnimFrameCount() != 1) {
