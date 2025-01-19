@@ -89,8 +89,8 @@ namespace FuncDoodle {
 				}
 
 				// Insert the new value after the specified index
-				static Frame empty = Frame(m_Width, m_Height);
-				data[index + 1] = empty;
+				static Frame* empty = new Frame(m_Width, m_Height);
+				data[index + 1] = *empty;
 				++size;
 			}
 
@@ -119,8 +119,8 @@ namespace FuncDoodle {
 				}
 
 				// Insert the new element at the selected index
-				static Frame empty = Frame(m_Width, m_Height);
-				data[index] = empty;
+				static Frame* empty = new Frame(m_Width, m_Height);
+				data[index] = *empty;
 				++size;
 			}
 

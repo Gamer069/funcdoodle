@@ -291,6 +291,9 @@ namespace FuncDoodle {
 			}
 			ImGui::EndPopup();
 		}
+		if (m_EditProjOpen) {
+			ImGui::OpenPopup("EditProj");
+		}
 
 		if (ImGui::IsPopupOpen("EditProj")) {
 			ImGui::SetNextWindowFocus();
@@ -392,9 +395,6 @@ namespace FuncDoodle {
 			}
 
 			ImGui::EndPopup();
-		}
-		if (m_EditProjOpen) {
-			ImGui::OpenPopup("EditProj");
 		}
 
 		if (ImGui::IsPopupOpen("NewProj")) {

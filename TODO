@@ -3,8 +3,5 @@ Setup github releases with ./release.sh
 Make it so the export mp4 feature isn't hacked together.
 More shortcuts, more util stuff, helper for moving objects.
 Make it so you can select stuff.
-Make it so the picker properly works.
-TODO: remove redo color adjustments call
-fix the decreasing of the size segfaulting (very obvious error)
 complete the textrenderer code and refactor it to make it so it draws everything properly.
 add more actions
