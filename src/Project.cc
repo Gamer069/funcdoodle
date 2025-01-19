@@ -279,6 +279,10 @@ namespace FuncDoodle {
 		int animFPS = 0;
 		file.read(reinterpret_cast<char*>(&animFPS), sizeof(animFPS));
 
+		// BRUH
+		m_Width = animWidth;
+		m_Height = animHeight;
+
 		file.getline(m_Name, sizeof(m_Name), '\0');
 
 		if (file.fail()) {

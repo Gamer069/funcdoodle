@@ -39,6 +39,48 @@ void GLFWErrorCallback(int error, const char* desc) {
 	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
 }
 
+void GlobalAppTick(GLFWwindow* win, auto lastFrameTime, FuncDoodle::Application* application, ImGuiIO& io) {
+	auto currentFrameTime = std::chrono::high_resolution_clock::now();
+	auto deltaTime =
+		std::chrono::duration<double>(currentFrameTime - lastFrameTime)
+		.count();
+	constexpr double FRAME_TIME = 1.0 / 1000.0;
+
+	if (deltaTime >= FRAME_TIME) {
+		lastFrameTime = currentFrameTime;
+		glfwPollEvents();
+
+		// Start the ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::DockSpaceOverViewport(
+				0U, ImGui::GetMainViewport(),
+				ImGuiDockNodeFlags_PassthruCentralNode);
+
+		application->RenderImGui();
+
+		// Rendering
+		int display_w, display_h;
+		glfwGetFramebufferSize(win, &display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			GLFWwindow* backup = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup);
+		}
+
+		glfwSwapBuffers(win);
+	}
+}
+
 GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 	std::filesystem::path icon = assetsPath / "icon.png";
 	std::cout << icon.string().c_str() << std::endl;
@@ -46,9 +88,9 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 	unsigned char* data = stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
 	if (data) {
 		GLFWimage* icon;
-        icon->width = width;
-        icon->height = height;
-        icon->pixels = data;
+		icon->width = width;
+		icon->height = height;
+		icon->pixels = data;
 		return icon;
 	} else {
 		std::cerr << "Failed to read image data from assets/icon.png" << std::endl;
@@ -57,9 +99,9 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 }
 
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
-				   unsigned long framesPerBuffer,
-				   const PaStreamCallbackTimeInfo* timeInfo,
-				   PaStreamCallbackFlags statusFlags, void* userData) {
+		unsigned long framesPerBuffer,
+		const PaStreamCallbackTimeInfo* timeInfo,
+		PaStreamCallbackFlags statusFlags, void* userData) {
 	float* out = static_cast<float*>(outputBuffer);
 	static double phase = 0.0;
 	static size_t noteIndex = 0;
@@ -74,7 +116,7 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 
 	double frequency = notes[melody[noteIndex].first];
 	phaseIncrement = 2.0 * 3.141592653589793238462643383279502884719 *
-					 frequency / SAMPLE_RATE;
+		frequency / SAMPLE_RATE;
 	noteDuration = melody[noteIndex].second * SAMPLE_RATE;
 	noteTimer += framesPerBuffer;
 
@@ -85,8 +127,8 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 			if (noteIndex < melody.size()) {
 				frequency = notes[melody[noteIndex].first];
 				phaseIncrement = 2.0 *
-								 3.141592653589793238462643383279502884719 *
-								 frequency / SAMPLE_RATE;
+					3.141592653589793238462643383279502884719 *
+					frequency / SAMPLE_RATE;
 				noteDuration = melody[noteIndex].second * SAMPLE_RATE;
 			}
 		}
@@ -164,7 +206,7 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	io.Fonts->AddFontFromFileTTF(
-		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
+			(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
 	io.Fonts->Build();
 	(void)io;
 
@@ -255,22 +297,22 @@ int main(int argc, char** argv) {
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
 		std::cerr << "Failed to initialize port audio: " << Pa_GetErrorText(err)
-				  << std::endl;
+			<< std::endl;
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB,
-							   nullptr);
+			nullptr);
 	if (err != paNoError) {
 		std::cerr << "Failed to open default stream: " << Pa_GetErrorText(err)
-				  << std::endl;
+			<< std::endl;
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_StartStream(stream);
 	if (err != paNoError) {
 		std::cerr << "Failed to start stream: " << Pa_GetErrorText(err)
-				  << std::endl;
+			<< std::endl;
 		free(stream);
 		exit(-1);
 	}
@@ -282,7 +324,6 @@ int main(int argc, char** argv) {
 	FuncDoodle::Application* application =
 		new FuncDoodle::Application(win, &assetLoader);
 
-	constexpr double FRAME_TIME = 1.0 / 1000.0;
 	auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
 	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
@@ -292,46 +333,8 @@ int main(int argc, char** argv) {
 	stbi_image_free(icon->pixels);
 
 	while (!glfwWindowShouldClose(win)) {
-		auto currentFrameTime = std::chrono::high_resolution_clock::now();
-		auto deltaTime =
-			std::chrono::duration<double>(currentFrameTime - lastFrameTime)
-				.count();
-
-		if (deltaTime >= FRAME_TIME) {
-			lastFrameTime = currentFrameTime;
-			glfwPollEvents();
-
-			// Start the ImGui frame
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::DockSpaceOverViewport(
-				0U, ImGui::GetMainViewport(),
-				ImGuiDockNodeFlags_PassthruCentralNode);
-
-			application->RenderImGui();
-
-			// Rendering
-			int display_w, display_h;
-			glfwGetFramebufferSize(win, &display_w, &display_h);
-			glViewport(0, 0, display_w, display_h);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-				GLFWwindow* backup = glfwGetCurrentContext();
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-				glfwMakeContextCurrent(backup);
-			}
-
-			glfwSwapBuffers(win);
-		}
+		GlobalAppTick(win, lastFrameTime, application, io);
 	}
-
 	delete application;
 
 	Pa_StopStream(stream);
@@ -345,5 +348,6 @@ int main(int argc, char** argv) {
 
 	glfwDestroyWindow(win);
 	glfwTerminate();
+
 	return 0;
 }

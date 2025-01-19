@@ -70,6 +70,10 @@ namespace FuncDoodle {
 			Col get(int x, int y) const {
 				if (x < 0 || x >= m_Width || y < 0 || y >= m_Height) {
 					// no
+					std::cout << x << std::endl;
+					std::cout << y << std::endl;
+					std::cout << "Width: " << m_Width << std::endl;
+					std::cout << "Height: " << m_Height << std::endl;
 					throw std::out_of_range("Index out of range");
 				}
 				return m_Data[y * m_Width + x];
