@@ -158,24 +158,53 @@ namespace FuncDoodle {
 				++size;
 			}
 
+			void insertAfter(long index, const Frame val) {
+				if (!data) {
+					std::cerr << "Error in " << __func__ << " in file "
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Attempted insertAfter on nullptr data.\n";
+					return;	 // Don't proceed if data is nullptr
+				}
+
+				if (index < 0 || index >= size) {
+					std::cerr << "Error in " << __func__ << " in file "
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Index " << index << " is out of range.\n";
+					return;
+				}
+
+				if (size == capacity) {
+					resize(capacity * 2);
+				}
+
+				// Shift elements to the right, starting from the end
+				for (long i = size; i > index + 1; --i) {
+					data[i] = data[i - 1];
+				}
+
+				// Insert the new value after the specified index
+				data[index + 1] = val;
+				++size;
+			}
+
 			void insertBefore(long index, const Frame* value) {
 				if (!data) {
 					std::cerr << "Error in " << __func__ << " in file "
-							  << __FILE__ << " at line " << __LINE__
-							  << ": Attempted insertBefore on nullptr data.\n";
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Attempted insertBefore on nullptr data.\n";
 					return;	 // Don't proceed if data is nullptr
 				}
 
 				if (!value) {
 					std::cerr << "Trying to insert a nullptr frame."
-							  << std::endl;
+						<< std::endl;
 					return;
 				}
 
 				if (index < 0 || index >= size) {
 					std::cerr << "Error in " << __func__ << " in file "
-							  << __FILE__ << " at line " << __LINE__
-							  << ": Index " << index << " is out of range.\n";
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Index " << index << " is out of range.\n";
 					return;
 				}
 
@@ -192,12 +221,39 @@ namespace FuncDoodle {
 				data[index] = *value;
 				++size;
 			}
+			void insertBefore(long index, const Frame val) {
+				if (!data) {
+					std::cerr << "Error in " << __func__ << " in file "
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Attempted insertBefore on nullptr data.\n";
+					return;	 // Don't proceed if data is nullptr
+				}
+				if (index < 0 || index >= size) {
+					std::cerr << "Error in " << __func__ << " in file "
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Index " << index << " is out of range.\n";
+					return;
+				}
+
+				if (size == capacity) {
+					resize(capacity * 2);
+				}
+
+				// Shift elements to the right from the selected index
+				for (long i = size; i > index; --i) {
+					data[i] = data[i - 1];
+				}
+
+				// Insert the new element at the selected index
+				data[index] = val;
+				++size;
+			}
 
 			void moveBackward(long i) {
 				if (!data) {
 					std::cerr << "Error in " << __func__ << " in file "
-							  << __FILE__ << " at line " << __LINE__
-							  << ": Attempted moveBackward on nullptr data.\n";
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Attempted moveBackward on nullptr data.\n";
 					return;	 // Don't proceed if data is nullptr
 				}
 
@@ -211,8 +267,8 @@ namespace FuncDoodle {
 			void moveForward(long i) {
 				if (!data) {
 					std::cerr << "Error in " << __func__ << " in file "
-							  << __FILE__ << " at line " << __LINE__
-							  << ": Attempted moveForward on nullptr data.\n";
+						<< __FILE__ << " at line " << __LINE__
+						<< ": Attempted moveForward on nullptr data.\n";
 					return;	 // Don't proceed if data is nullptr
 				}
 

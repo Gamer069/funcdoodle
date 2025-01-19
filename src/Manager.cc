@@ -125,16 +125,18 @@ namespace FuncDoodle {
 				m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, frame);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
+				Frame* frame = new Frame(*m_Proj->AnimFrames()->get(m_SelectedFrame));
 				m_Proj->AnimFrames()->insertAfter(
 						m_SelectedFrame,
-						m_Proj->AnimFrames()->get(m_SelectedFrame));
+						frame);
 				InsertFrameAction action = InsertFrameAction(m_SelectedFrame+1, m_Proj);
 				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
+				Frame* frame = new Frame(*m_Proj->AnimFrames()->get(m_SelectedFrame));
 				m_Proj->AnimFrames()->insertBefore(
 						m_SelectedFrame,
-						m_Proj->AnimFrames()->get(m_SelectedFrame));
+						frame);
 				m_SelectedFrame++;
 				InsertFrameAction action = InsertFrameAction(m_SelectedFrame-1, m_Proj);
 				m_Proj->PushUndoableInsertFrameAction(action);

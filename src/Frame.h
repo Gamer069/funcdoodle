@@ -99,7 +99,7 @@ namespace FuncDoodle {
 	class Frame {
 		public:
 			Frame(const Frame& other) {
-				m_Pixels = const_cast<ImageArray*>(other.Pixels());
+				m_Pixels = new ImageArray(*other.Pixels());
 			}
 			Frame(int width, int height) {
 				m_Pixels = new ImageArray(width, height);
