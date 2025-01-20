@@ -61,12 +61,17 @@ namespace FuncDoodle {
 	class DeleteFrameAction : public Action {
 		public:
 			// empty constructor
-			DeleteFrameAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Empty(true), m_Frame(nullptr) {}
+			DeleteFrameAction(long frameI, void* proj)
+				: m_Proj(proj), m_FrameIndex(frameI), m_Empty(true),
+				  m_Frame(nullptr) {}
 			// good constructor
-			DeleteFrameAction(long frameI, Frame* frame, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Frame(frame), m_Empty(false) {}
+			DeleteFrameAction(long frameI, Frame* frame, void* proj)
+				: m_Proj(proj), m_FrameIndex(frameI), m_Frame(frame),
+				  m_Empty(false) {}
 
 			void Undo() override;
 			void Redo() override;
+
 		private:
 			long m_FrameIndex;
 			bool m_Empty;
@@ -76,12 +81,17 @@ namespace FuncDoodle {
 	class InsertFrameAction : public Action {
 		public:
 			// empty constructor
-			InsertFrameAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Empty(true), m_Frame(nullptr) {}
+			InsertFrameAction(long frameI, void* proj)
+				: m_Proj(proj), m_FrameIndex(frameI), m_Empty(true),
+				  m_Frame(nullptr) {}
 			// good constructor
-			InsertFrameAction(long frameI, Frame* frame, void* proj) : m_FrameIndex(frameI), m_Proj(proj), m_Empty(false), m_Frame(frame) {}
+			InsertFrameAction(long frameI, Frame* frame, void* proj)
+				: m_FrameIndex(frameI), m_Proj(proj), m_Empty(false),
+				  m_Frame(frame) {}
 
 			void Undo() override;
 			void Redo() override;
+
 		private:
 			long m_FrameIndex;
 			bool m_Empty;
@@ -90,18 +100,22 @@ namespace FuncDoodle {
 	};
 	class MoveFrameLeftAction : public Action {
 		public:
-			MoveFrameLeftAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI) {}
+			MoveFrameLeftAction(long frameI, void* proj)
+				: m_Proj(proj), m_FrameIndex(frameI) {}
 			void Undo() override;
 			void Redo() override;
+
 		private:
 			long m_FrameIndex;
 			void* m_Proj;
 	};
 	class MoveFrameRightAction : public Action {
 		public:
-			MoveFrameRightAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI) {}
+			MoveFrameRightAction(long frameI, void* proj)
+				: m_Proj(proj), m_FrameIndex(frameI) {}
 			void Undo() override;
 			void Redo() override;
+
 		private:
 			long m_FrameIndex;
 			void* m_Proj;

@@ -7,8 +7,8 @@
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <vector>
 #include <stack>
+#include <vector>
 
 #include <type_traits>
 
@@ -124,9 +124,7 @@ namespace FuncDoodle {
 	const char* ProjectFile::AnimAuthor() const { return m_Author; }
 	void ProjectFile::SetAnimAuthor(char* author) { strcpy(m_Author, author); }
 
-	const int ProjectFile::AnimFPS() const {
-		return m_FPS;
-	}
+	const int ProjectFile::AnimFPS() const { return m_FPS; }
 	void ProjectFile::SetAnimFPS(int FPS) { m_FPS = FPS; }
 
 	const char* ProjectFile::AnimDesc() const { return m_Desc; }
@@ -144,16 +142,22 @@ namespace FuncDoodle {
 		m_UndoStack.push(std::make_unique<FillAction>(std::move(action)));
 	}
 	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
-		m_UndoStack.push(std::make_unique<DeleteFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<DeleteFrameAction>(std::move(action)));
 	}
 	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
-		m_UndoStack.push(std::make_unique<InsertFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<InsertFrameAction>(std::move(action)));
 	}
-	void ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameLeftAction>(std::move(action)));
 	}
-	void ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameRightAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameRightAction>(std::move(action)));
 	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {

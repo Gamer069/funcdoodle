@@ -39,11 +39,11 @@ void GLFWErrorCallback(int error, const char* desc) {
 	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
 }
 
-void GlobalAppTick(GLFWwindow* win, auto lastFrameTime, FuncDoodle::Application* application, ImGuiIO& io) {
+void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
+				   FuncDoodle::Application* application, ImGuiIO& io) {
 	auto currentFrameTime = std::chrono::high_resolution_clock::now();
 	auto deltaTime =
-		std::chrono::duration<double>(currentFrameTime - lastFrameTime)
-		.count();
+		std::chrono::duration<double>(currentFrameTime - lastFrameTime).count();
 	constexpr double FRAME_TIME = 1.0 / 1000.0;
 
 	if (deltaTime >= FRAME_TIME) {
@@ -55,9 +55,8 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime, FuncDoodle::Application*
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::DockSpaceOverViewport(
-				0U, ImGui::GetMainViewport(),
-				ImGuiDockNodeFlags_PassthruCentralNode);
+		ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
+									 ImGuiDockNodeFlags_PassthruCentralNode);
 
 		application->RenderImGui();
 
@@ -85,7 +84,8 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 	std::filesystem::path icon = assetsPath / "icon.png";
 	std::cout << icon.string().c_str() << std::endl;
 	int width, height, chan;
-	unsigned char* data = stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
+	unsigned char* data =
+		stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
 	if (data) {
 		GLFWimage* icon;
 		icon->width = width;
@@ -93,15 +93,16 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 		icon->pixels = data;
 		return icon;
 	} else {
-		std::cerr << "Failed to read image data from assets/icon.png" << std::endl;
+		std::cerr << "Failed to read image data from assets/icon.png"
+				  << std::endl;
 		return nullptr;
 	}
 }
 
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
-		unsigned long framesPerBuffer,
-		const PaStreamCallbackTimeInfo* timeInfo,
-		PaStreamCallbackFlags statusFlags, void* userData) {
+				   unsigned long framesPerBuffer,
+				   const PaStreamCallbackTimeInfo* timeInfo,
+				   PaStreamCallbackFlags statusFlags, void* userData) {
 	float* out = static_cast<float*>(outputBuffer);
 	static double phase = 0.0;
 	static size_t noteIndex = 0;
@@ -116,7 +117,7 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 
 	double frequency = notes[melody[noteIndex].first];
 	phaseIncrement = 2.0 * 3.141592653589793238462643383279502884719 *
-		frequency / SAMPLE_RATE;
+					 frequency / SAMPLE_RATE;
 	noteDuration = melody[noteIndex].second * SAMPLE_RATE;
 	noteTimer += framesPerBuffer;
 
@@ -127,8 +128,8 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 			if (noteIndex < melody.size()) {
 				frequency = notes[melody[noteIndex].first];
 				phaseIncrement = 2.0 *
-					3.141592653589793238462643383279502884719 *
-					frequency / SAMPLE_RATE;
+								 3.141592653589793238462643383279502884719 *
+								 frequency / SAMPLE_RATE;
 				noteDuration = melody[noteIndex].second * SAMPLE_RATE;
 			}
 		}
@@ -161,7 +162,7 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
-	//glfwSetErrorCallback(GLFWErrorCallback);
+	// glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -206,7 +207,7 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	io.Fonts->AddFontFromFileTTF(
-			(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
+		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
 	io.Fonts->Build();
 	(void)io;
 
@@ -217,7 +218,8 @@ int main(int argc, char** argv) {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
 	// Keep your existing style parameters but modify these specific ones:
-	//style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1);	// Set alpha to 0
+	// style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1);	// Set alpha to
+	// 0
 	style->Colors[ImGuiCol_ChildBg] =
 		ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	// Set alpha to 0
 	style->Colors[ImGuiCol_DockingEmptyBg] =
@@ -297,22 +299,22 @@ int main(int argc, char** argv) {
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
 		std::cerr << "Failed to initialize port audio: " << Pa_GetErrorText(err)
-			<< std::endl;
+				  << std::endl;
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB,
-			nullptr);
+							   nullptr);
 	if (err != paNoError) {
 		std::cerr << "Failed to open default stream: " << Pa_GetErrorText(err)
-			<< std::endl;
+				  << std::endl;
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_StartStream(stream);
 	if (err != paNoError) {
 		std::cerr << "Failed to start stream: " << Pa_GetErrorText(err)
-			<< std::endl;
+				  << std::endl;
 		free(stream);
 		exit(-1);
 	}

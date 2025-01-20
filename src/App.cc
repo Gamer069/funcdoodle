@@ -20,10 +20,9 @@
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader)
 		: m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr),
-		m_CacheProj(nullptr),
-		m_Manager(new AnimationManager(nullptr, assetLoader)),
-		m_Window(win),
-		m_AssetLoader(assetLoader) {}
+		  m_CacheProj(nullptr),
+		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
+		  m_AssetLoader(assetLoader) {}
 	Application::~Application() {
 		delete m_Manager;
 		delete m_FilePath;
@@ -34,7 +33,7 @@ namespace FuncDoodle {
 		int maxLen =
 			11 +
 			strlen(
-					key);  // Assuming "Ctrl+" or "Cmd+" and "+Shift" and "+Super"
+				key);  // Assuming "Ctrl+" or "Cmd+" and "+Shift" and "+Super"
 
 		// Allocate memory for the shortcut string
 		char* shortcut = (char*)malloc(maxLen);
@@ -65,15 +64,15 @@ namespace FuncDoodle {
 	}
 
 	void Application::CheckKeybinds(char* newProj, char* open, char* save,
-			char* exportShortcut, char* quit) {
+									char* exportShortcut, char* quit) {
 		ImGuiIO& io = ImGui::GetIO();
 
 		// Inline struct to store each shortcut's parsed values
 		struct Shortcut {
-			bool requiresCtrl;
-			bool requiresShift;
-			bool requiresSuper;
-			ImGuiKey key;
+				bool requiresCtrl;
+				bool requiresShift;
+				bool requiresSuper;
+				ImGuiKey key;
 		};
 
 		// Parse a shortcut string into a Shortcut struct
@@ -123,9 +122,9 @@ namespace FuncDoodle {
 		// Inline lambda to check if a given shortcut is pressed
 		auto isShortcutPressed = [&](const Shortcut& shortcut) {
 			return (shortcut.requiresCtrl == io.KeyCtrl) &&
-				(shortcut.requiresShift == io.KeyShift) &&
-				(shortcut.requiresSuper == io.KeySuper) &&
-				ImGui::IsKeyPressed(shortcut.key);
+				   (shortcut.requiresShift == io.KeyShift) &&
+				   (shortcut.requiresSuper == io.KeySuper) &&
+				   ImGui::IsKeyPressed(shortcut.key);
 		};
 
 		// Check if each shortcut is pressed and perform the appropriate action
@@ -158,7 +157,7 @@ namespace FuncDoodle {
 		char* exportShortcut = GlobalGetShortcut("E", false, false);
 		char* quitShortcut = GlobalGetShortcut("Q", false, false);
 		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut,
-				exportShortcut, quitShortcut);
+					  exportShortcut, quitShortcut);
 
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
@@ -225,13 +224,13 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
 		}
 
-		// TODO: add default pos for keybinds 
+		// TODO: add default pos for keybinds
 
 		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+								   ImGuiWindowFlags_AlwaysAutoResize)) {
 			const char* themes[] = {"Dark", "Light", "Classic"};
 			if (ImGui::ListBox("Theme", &m_Theme, themes,
-						IM_ARRAYSIZE(themes))) {
+							   IM_ARRAYSIZE(themes))) {
 				switch (m_Theme) {
 					case 0:
 						ImGui::StyleColorsDark();
@@ -258,16 +257,16 @@ namespace FuncDoodle {
 		}
 
 		if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+								   ImGuiWindowFlags_AlwaysAutoResize)) {
 			const char* formats[] = {"PNGs", "MP4"};
 			ImGui::ListBox("Export Format", &m_ExportFormat, formats,
-					IM_ARRAYSIZE(formats));
+						   IM_ARRAYSIZE(formats));
 			if (ImGui::IsItemClicked()) {
 				m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
 			}
 			if (ImGui::Button("Export") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				nfdchar_t* outPath = 0;
 				nfdresult_t result = NFD_PickFolder(0, &outPath);
 
@@ -279,13 +278,13 @@ namespace FuncDoodle {
 					std::cout << "Cancelled" << std::endl;
 				} else {
 					std::cout << "Failed to export: " << NFD_GetError()
-						<< std::endl;
+							  << std::endl;
 				}
 				m_ExportOpen = false;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				m_ExportOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
@@ -301,7 +300,7 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
 		}
 		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+								   ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256];
 			strcpy(name, m_CurrentProj->AnimName());
 			int width = m_CurrentProj->AnimWidth();
@@ -356,14 +355,14 @@ namespace FuncDoodle {
 			}
 
 			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				m_EditProjOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("OK") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
 				m_EditProjOpen = false;
 				ImGui::CloseCurrentPopup();
@@ -371,8 +370,10 @@ namespace FuncDoodle {
 			ImGui::EndPopup();
 		}
 		// wasnt here before
-		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
-			std::filesystem::path keysPath = m_AssetLoader->GetPath().parent_path() / "keys.txt";
+		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
+								   ImGuiWindowFlags_AlwaysAutoResize)) {
+			std::filesystem::path keysPath =
+				m_AssetLoader->GetPath().parent_path() / "keys.txt";
 			std::ifstream keysIn(keysPath);
 			if (!keysIn) {
 				std::cerr << "Failed to open file keys.txt" << std::endl;
@@ -404,7 +405,7 @@ namespace FuncDoodle {
 		}
 
 		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+								   ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256] = "";
 			int width = 32;
 			int height = 32;
@@ -436,8 +437,8 @@ namespace FuncDoodle {
 				strcpy(desc, "Simple test project");
 
 				m_CacheProj = new ProjectFile(
-						(char*)"testproj", width, height, username, fps,
-						(char*)"Simple test project", m_Window);
+					(char*)"testproj", width, height, username, fps,
+					(char*)"Simple test project", m_Window);
 			}
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
@@ -467,14 +468,15 @@ namespace FuncDoodle {
 				m_CacheProj->SetAnimDesc(desc);
 			}
 
-			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+			if (ImGui::Button("Close") ||
+				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				m_NewProjOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("OK") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
 				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
 				m_NewProjOpen = false;
@@ -492,11 +494,12 @@ namespace FuncDoodle {
 			char* title = (char*)malloc(35);
 			if (title != 0) {
 				snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER,
-						(int)ImGui::GetIO().Framerate);
+						 (int)ImGui::GetIO().Framerate);
 				glfwSetWindowTitle(m_Window, title);
 				free(title);
 			} else {
-				std::cerr << "Failed to malloc title..? idek if that's possible" << std::endl;
+				std::cerr << "Failed to malloc title..? idek if that's possible"
+						  << std::endl;
 			}
 		}
 
@@ -541,16 +544,17 @@ namespace FuncDoodle {
 	void Application::ReadProjectFile() {
 		// m_FilePath is the actual file that we're going to read
 		if (m_FilePath == nullptr) {
-			std::cout << "Congratulations! You've found a weird bug that i've "
-				"never seen before! Please screen record urself and make "
-				"a github issue on this project. I rlly wanna fix this."
+			std::cout
+				<< "Congratulations! You've found a weird bug that i've "
+				   "never seen before! Please screen record urself and make "
+				   "a github issue on this project. I rlly wanna fix this."
 				<< std::endl;
 			return;
 		}
 
 		if (m_CurrentProj == nullptr) {
 			m_CurrentProj = new ProjectFile((char*)"", 1, 1, (char*)"", 0,
-					(char*)"", m_Window);
+											(char*)"", m_Window);
 		}
 
 		m_CurrentProj->ReadAndPopulate(m_FilePath);
@@ -561,8 +565,8 @@ namespace FuncDoodle {
 		if (m_FilePath == nullptr) {
 			std::cout
 				<< "Congratulations! You've found a weird bug that i've "
-				"never seen before! Please screen record urself and make "
-				"a github issue on this project. I rlly wanna fix this."
+				   "never seen before! Please screen record urself and make "
+				   "a github issue on this project. I rlly wanna fix this."
 				<< std::endl;
 			return;
 		}
@@ -577,7 +581,7 @@ namespace FuncDoodle {
 
 		// Calculate center of viewport
 		ImVec2 center(viewportPos.x + (viewportSize.x * 0.5f),
-				viewportPos.y + (viewportSize.y * 0.5f));
+					  viewportPos.y + (viewportSize.y * 0.5f));
 
 		ImVec4 btnNewCol = ImVec4(1, 1, 1, 1);
 		ImVec4 btnOpenCol = ImVec4(1, 1, 1, 1);
@@ -598,21 +602,22 @@ namespace FuncDoodle {
 		int btnHeight = 50;
 
 		ImVec2 safePosAdd = ImVec2(viewportPos.x, viewportPos.y);
-		ImVec2 safePosAddMax = ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight);
+		ImVec2 safePosAddMax =
+			ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight);
 
 		ImVec2 safePosOpen = ImVec2(viewportPos.x, viewportPos.y + 55);
 		ImVec2 safePosOpenMax =
 			ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight);
 
 		drawList->AddRectFilled(viewportPos,
-				ImVec2(viewportPos.x + viewportSize.x,
-					viewportPos.y + viewportSize.y),
-				IM_COL32(50, 50, 50, 255));
+								ImVec2(viewportPos.x + viewportSize.x,
+									   viewportPos.y + viewportSize.y),
+								IM_COL32(50, 50, 50, 255));
 
 		ImVec2 mousePos = ImGui::GetMousePos();
 		if (!ImGui::IsAnyItemHovered()) {
 			if (mousePos.x >= safePosAdd.x && mousePos.x <= safePosAddMax.x &&
-					mousePos.y >= safePosAdd.y && mousePos.y <= safePosAddMax.y) {
+				mousePos.y >= safePosAdd.y && mousePos.y <= safePosAddMax.y) {
 				invertColor(btnNewCol);
 				invertColor(tintNew);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
@@ -621,7 +626,7 @@ namespace FuncDoodle {
 			}
 
 			if (mousePos.x >= safePosOpen.x && mousePos.x <= safePosOpenMax.x &&
-					mousePos.y >= safePosOpen.y && mousePos.y <= safePosOpenMax.y) {
+				mousePos.y >= safePosOpen.y && mousePos.y <= safePosOpenMax.y) {
 				invertColor(btnOpenCol);
 				invertColor(tintOpen);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
@@ -631,20 +636,20 @@ namespace FuncDoodle {
 		}
 
 		drawList->AddRectFilled(safePosAdd, safePosAddMax,
-				ImGui::ColorConvertFloat4ToU32(btnNewCol),
-				10.0f);
+								ImGui::ColorConvertFloat4ToU32(btnNewCol),
+								10.0f);
 		drawList->AddImage(
-				(ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
-				ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight),
-				ImVec2(0, 0), ImVec2(1, 1),
-				ImGui::ColorConvertFloat4ToU32(tintNew));
+			(ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
+			ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight),
+			ImVec2(0, 0), ImVec2(1, 1),
+			ImGui::ColorConvertFloat4ToU32(tintNew));
 		drawList->AddRectFilled(safePosOpen, safePosOpenMax,
-				ImGui::ColorConvertFloat4ToU32(btnOpenCol),
-				10.0f);
+								ImGui::ColorConvertFloat4ToU32(btnOpenCol),
+								10.0f);
 		drawList->AddImage(
-				(ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
-				ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight),
-				ImVec2(0, 0), ImVec2(1, 1),
-				ImGui::ColorConvertFloat4ToU32(tintOpen));
+			(ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
+			ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight),
+			ImVec2(0, 0), ImVec2(1, 1),
+			ImGui::ColorConvertFloat4ToU32(tintOpen));
 	}
 }  // namespace FuncDoodle
