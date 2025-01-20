@@ -15,7 +15,9 @@ namespace FuncDoodle {
 		: m_AssetsPath(assetsPath) {
 		LoadAssets();
 	}
-	AssetLoader::~AssetLoader() { UnloadAssets(); }
+	AssetLoader::~AssetLoader() {
+		UnloadAssets();
+	}
 
 	void AssetLoader::LoadAssets() {
 		std::cout << "Finding assets path..." << std::endl;

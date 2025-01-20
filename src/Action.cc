@@ -7,7 +7,7 @@ namespace FuncDoodle {
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)
 				->AnimFrames()
-				->get(m_FrameIndex)
+				->Get(m_FrameIndex)
 				->SetPixel(m_X, m_Y, m_Prev);
 		}
 	}
@@ -15,7 +15,7 @@ namespace FuncDoodle {
 		if (m_Proj) {
 			static_cast<ProjectFile*>(m_Proj)
 				->AnimFrames()
-				->get(m_FrameIndex)
+				->Get(m_FrameIndex)
 				->SetPixel(m_X, m_Y, m_Next);
 		}
 	}
@@ -25,7 +25,7 @@ namespace FuncDoodle {
 			for (const std::pair<int, int>& xy : m_Pixels) {
 				static_cast<ProjectFile*>(m_Proj)
 					->AnimFrames()
-					->get(m_FrameIndex)
+					->Get(m_FrameIndex)
 					->SetPixel(xy.first, xy.second, m_Prev);
 			}
 		}
@@ -35,7 +35,7 @@ namespace FuncDoodle {
 			for (const std::pair<int, int>& xy : m_Pixels) {
 				static_cast<ProjectFile*>(m_Proj)
 					->AnimFrames()
-					->get(m_FrameIndex)
+					->Get(m_FrameIndex)
 					->SetPixel(xy.first, xy.second, m_Next);
 			}
 		}
@@ -47,31 +47,31 @@ namespace FuncDoodle {
 				if (m_FrameIndex > 1)
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->insertBeforeEmpty(m_FrameIndex);
+						->InsertBeforeEmpty(m_FrameIndex);
 				else
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->push_back_empty();
+						->PushBackEmpty();
 			} else {
 				if (m_FrameIndex > 1)
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->insertBefore(m_FrameIndex, m_Frame);
+						->InsertBefore(m_FrameIndex, m_Frame);
 				else
-					static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back(
+					static_cast<ProjectFile*>(m_Proj)->AnimFrames()->PushBack(
 						m_Frame);
 			}
 		}
 	}
 	void DeleteFrameAction::Redo() {
 		if (m_Proj)
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->remove(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->Remove(
 				m_FrameIndex);
 	}
 
 	void InsertFrameAction::Undo() {
 		if (m_Proj)
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->remove(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->Remove(
 				m_FrameIndex);
 	}
 	void InsertFrameAction::Redo() {
@@ -80,43 +80,43 @@ namespace FuncDoodle {
 				if (m_FrameIndex > 1)
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->insertBeforeEmpty(m_FrameIndex);
+						->InsertBeforeEmpty(m_FrameIndex);
 				else
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->push_back_empty();
+						->PushBackEmpty();
 			} else {
 				if (m_FrameIndex > 1)
 					static_cast<ProjectFile*>(m_Proj)
 						->AnimFrames()
-						->insertBefore(m_FrameIndex, m_Frame);
+						->InsertBefore(m_FrameIndex, m_Frame);
 				else
-					static_cast<ProjectFile*>(m_Proj)->AnimFrames()->push_back(
+					static_cast<ProjectFile*>(m_Proj)->AnimFrames()->PushBack(
 						m_Frame);
 			}
 		}
 	}
 	void MoveFrameLeftAction::Undo() {
 		if (m_Proj) {
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveForward(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->MoveForward(
 				m_FrameIndex - 1);
 		}
 	}
 	void MoveFrameLeftAction::Redo() {
 		if (m_Proj) {
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveBackward(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->MoveBackward(
 				m_FrameIndex);
 		}
 	}
 	void MoveFrameRightAction::Undo() {
 		if (m_Proj) {
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveBackward(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->MoveBackward(
 				m_FrameIndex);
 		}
 	}
 	void MoveFrameRightAction::Redo() {
 		if (m_Proj) {
-			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveForward(
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->MoveForward(
 				m_FrameIndex);
 		}
 	}

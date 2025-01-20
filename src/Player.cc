@@ -22,7 +22,9 @@ namespace FuncDoodle {
 		m_CurFrame =
 			static_cast<long>(timeElapsed * fps) % m_Proj->AnimFrameCount();
 	}
-	void AnimationPlayer::Rewind() { m_CurFrame = 0; }
+	void AnimationPlayer::Rewind() {
+		m_CurFrame = 0;
+	}
 	void AnimationPlayer::End() {
 		m_CurFrame =
 			m_Proj->AnimFrameCount() -

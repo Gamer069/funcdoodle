@@ -100,8 +100,8 @@ namespace FuncDoodle {
 		}
 
 		// Calculate total frame dimensions
-		float frameWidth = pixels->getWidth() * m_PixelScale;
-		float frameHeight = pixels->getHeight() * m_PixelScale;
+		float frameWidth = pixels->Width() * m_PixelScale;
+		float frameHeight = pixels->Height() * m_PixelScale;
 
 		// Calculate starting position to center the frame
 		float startX = windowPos.x + (contentRegion.x - frameWidth) * 0.5f + 9;
@@ -129,14 +129,14 @@ namespace FuncDoodle {
 				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
 					int newX = currentPixel.x + offsetX;
 					int newY = currentPixel.y + offsetY;
-					if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-						newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-						Col prevColor = m_Frame->Pixels()->get(newX, newY);
+					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
+						newY >= 0 && newY < m_Frame->Pixels()->Height()) {
+						Col prevColor = m_Frame->Pixels()->Get(newX, newY);
 						m_Frame->SetPixel(newX, newY,
 										  Col{.r = colNew[0],
 											  .g = colNew[1],
 											  .b = colNew[2]});
-						Col nextColor = m_Frame->Pixels()->get(newX, newY);
+						Col nextColor = m_Frame->Pixels()->Get(newX, newY);
 						DrawAction action =
 							DrawAction(newX, newY, prevColor, nextColor, frameI,
 									   m_Player->Proj());
@@ -154,14 +154,14 @@ namespace FuncDoodle {
 				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
 					int newX = currentPixel.x + offsetX;
 					int newY = currentPixel.y + offsetY;
-					if (newX >= 0 && newX < m_Frame->Pixels()->getWidth() &&
-						newY >= 0 && newY < m_Frame->Pixels()->getHeight()) {
-						Col prevColor = m_Frame->Pixels()->get(newX, newY);
+					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
+						newY >= 0 && newY < m_Frame->Pixels()->Height()) {
+						Col prevColor = m_Frame->Pixels()->Get(newX, newY);
 						m_Frame->SetPixel(newX, newY,
 										  Col{.r = colNew[0],
 											  .g = colNew[1],
 											  .b = colNew[2]});
-						Col nextColor = m_Frame->Pixels()->get(newX, newY);
+						Col nextColor = m_Frame->Pixels()->Get(newX, newY);
 						DrawAction action =
 							DrawAction(newX, newY, prevColor, nextColor, frameI,
 									   m_Player->Proj());
@@ -181,7 +181,7 @@ namespace FuncDoodle {
 					static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
 			}
 			// FLOODFILL
-			Col curPixelCol = pixels->get(currentPixel.x, currentPixel.y);
+			Col curPixelCol = pixels->Get(currentPixel.x, currentPixel.y);
 			FloodFill(
 				currentPixel.x, currentPixel.y, curPixelCol,
 				Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
@@ -201,7 +201,7 @@ namespace FuncDoodle {
 		};
 		auto picker = [&](ImVec2 currentPixel) {
 			const Col& col =
-				m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
 			m_ToolManager->SetCol(col);
 			colNew[0] = (float)col.r / 255.0f;
 			colNew[1] = (float)col.g / 255.0f;
@@ -211,7 +211,7 @@ namespace FuncDoodle {
 		auto text = [&](ImVec2 currentPixel) {
 			// TODO: implement this
 			Col curPxCol =
-				m_Frame->Pixels()->get(currentPixel.x, currentPixel.y);
+				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
 			colNew[0] = curPxCol.r;
 			colNew[1] = curPxCol.g;
 			colNew[2] = curPxCol.b;
@@ -230,8 +230,8 @@ namespace FuncDoodle {
 								(mousePos.y - startY) / m_PixelScale);
 
 			// Draw at current position
-			if (currentPixel.x >= 0 && currentPixel.x < pixels->getWidth() &&
-				currentPixel.y >= 0 && currentPixel.y < pixels->getHeight()) {
+			if (currentPixel.x >= 0 && currentPixel.x < pixels->Width() &&
+				currentPixel.y >= 0 && currentPixel.y < pixels->Height()) {
 				int selectedTool = m_ToolManager->SelectedTool();
 
 				// check if other window is focused or not
@@ -273,8 +273,8 @@ namespace FuncDoodle {
 						int interpY =
 							static_cast<int>(m_LastMousePos.y + dy * t);
 
-						if (interpX >= 0 && interpX < pixels->getWidth() &&
-							interpY >= 0 && interpY < pixels->getHeight()) {
+						if (interpX >= 0 && interpX < pixels->Width() &&
+							interpY >= 0 && interpY < pixels->Height()) {
 							m_Frame->SetPixel(interpX, interpY,
 											  Col{.r = colNew[0],
 												  .g = colNew[1],
@@ -323,18 +323,18 @@ namespace FuncDoodle {
 			const ImageArray* prevPixels = m_PreviousFrame->Pixels();
 
 			// Draw each pixel of the previous frame with 50% transparency
-			for (int y = 0; y < prevPixels->getHeight(); y++) {
-				for (int x = 0; x < prevPixels->getWidth(); x++) {
-					Col col = prevPixels->get(x, y);
+			for (int y = 0; y < prevPixels->Height(); y++) {
+				for (int x = 0; x < prevPixels->Width(); x++) {
+					Col col = prevPixels->Get(x, y);
 					ImVec2 topLeft(startX + x * m_PixelScale,
 								   startY + y * m_PixelScale);
 					ImVec2 bottomRight(startX + (x + 1) * m_PixelScale,
 									   startY + (y + 1) * m_PixelScale);
-					Col curCol = pixels->get(x, y);
+					Col curCol = pixels->Get(x, y);
 					if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255) {
 						drawList->AddRectFilled(
 							topLeft, bottomRight,
-						    IM_COL32(col.r, col.g, col.b, 128));
+							IM_COL32(col.r, col.g, col.b, 128));
 					}
 				}
 			}
@@ -346,12 +346,12 @@ namespace FuncDoodle {
 	}
 
 	void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol) {
-		if (x < 0 || x >= m_Frame->Pixels()->getWidth() || y < 0 ||
-			y >= m_Frame->Pixels()->getHeight())
+		if (x < 0 || x >= m_Frame->Pixels()->Width() || y < 0 ||
+			y >= m_Frame->Pixels()->Height())
 			return;
 
-		if (m_Frame->Pixels()->get(x, y) != targetCol ||
-			m_Frame->Pixels()->get(x, y) == fillCol)
+		if (m_Frame->Pixels()->Get(x, y) != targetCol ||
+			m_Frame->Pixels()->Get(x, y) == fillCol)
 			return;
 
 		i_PixelsChangedByBucketTool.emplace_back(x, y);
@@ -363,27 +363,29 @@ namespace FuncDoodle {
 		FloodFill(x, y + 1, targetCol, fillCol);
 		FloodFill(x, y - 1, targetCol, fillCol);
 	}
-	void FrameRenderer::RenderFramePixels(int startX, int startY, ImDrawList* drawList, bool usePrevPxScale) {
+	void FrameRenderer::RenderFramePixels(int startX, int startY,
+										  ImDrawList* drawList,
+										  bool usePrevPxScale) {
 		const ImageArray* pixels = m_Frame->Pixels();
-		for (int y = 0; y < pixels->getHeight(); y++) {
-			for (int x = 0; x < pixels->getWidth(); x++) {
+		for (int y = 0; y < pixels->Height(); y++) {
+			for (int x = 0; x < pixels->Width(); x++) {
 				if (pixels == nullptr) {
 					std::cout << "PX NULLPTR" << std::endl;
 				}
-				Col col = pixels->get(x, y);
+				Col col = pixels->Get(x, y);
 				ImVec2 topLeft;
 				ImVec2 bottomRight;
 				if (usePrevPxScale) {
 					topLeft = ImVec2(startX + x * m_PixelScale,
-							startY + y * m_PixelScale);
+									 startY + y * m_PixelScale);
 					bottomRight = ImVec2(startX + (x + 1) * m_PixelScale,
-							startY + (y + 1) * m_PixelScale);
+										 startY + (y + 1) * m_PixelScale);
 				} else {
 					topLeft = ImVec2(startX + x, startY + y);
 					bottomRight = ImVec2(startX + x + 1, startY + y + 1);
 				}
 				drawList->AddRectFilled(topLeft, bottomRight,
-						IM_COL32(col.r, col.g, col.b, 255));
+										IM_COL32(col.r, col.g, col.b, 255));
 			}
 		}
 	}

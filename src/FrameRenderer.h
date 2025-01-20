@@ -37,10 +37,13 @@ namespace FuncDoodle {
 			void SetIndex(int index) { m_Index = index; }
 			void SetPreviousFrame(Frame* frame) { m_PreviousFrame = frame; }
 			const Frame* PreviousFrame() const { return m_PreviousFrame; }
-			inline void SetPixelScale(int pixelScale) { m_PixelScale = pixelScale; }
+			inline void SetPixelScale(int pixelScale) {
+				m_PixelScale = pixelScale;
+			}
 
 			void FloodFill(int x, int y, Col targetCol, Col fillCol);
-			void RenderFramePixels(int startX, int startY, ImDrawList* drawList, bool usePrevPxScale = true);
+			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
+								   bool usePrevPxScale = true);
 
 		private:
 			Frame* m_Frame;
