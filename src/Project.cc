@@ -149,6 +149,12 @@ namespace FuncDoodle {
 	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
 		m_UndoStack.push(std::make_unique<InsertFrameAction>(std::move(action)));
 	}
+	void ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	}
+	void ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(std::make_unique<MoveFrameRightAction>(std::move(action)));
+	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
 			return;

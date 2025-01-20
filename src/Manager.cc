@@ -97,11 +97,15 @@ namespace FuncDoodle {
 			if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
 				m_Proj->AnimFrames()->moveForward(m_SelectedFrame);
 				m_SelectedFrame++;
+				MoveFrameRightAction action = MoveFrameRightAction(m_SelectedFrame, m_Proj);
+				m_Proj->PushUndoableMoveFrameRightAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
 				if (m_SelectedFrame != 0) {
 					m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
+					MoveFrameLeftAction action = MoveFrameLeftAction(m_SelectedFrame, m_Proj);
 					m_SelectedFrame--;
+					m_Proj->PushUndoableMoveFrameLeftAction(action);
 				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {

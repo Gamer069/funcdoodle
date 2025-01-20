@@ -60,4 +60,24 @@ namespace FuncDoodle {
 			}
 		}
 	}
+	void MoveFrameLeftAction::Undo() {
+		if (m_Proj) {
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveForward(m_FrameIndex-1);
+		}
+	}
+	void MoveFrameLeftAction::Redo() {
+		if (m_Proj) {
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveBackward(m_FrameIndex);
+		}
+	}
+	void MoveFrameRightAction::Undo() {
+		if (m_Proj) {
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveBackward(m_FrameIndex);
+		}
+	}
+	void MoveFrameRightAction::Redo() {
+		if (m_Proj) {
+			static_cast<ProjectFile*>(m_Proj)->AnimFrames()->moveForward(m_FrameIndex);
+		}
+	}
 }

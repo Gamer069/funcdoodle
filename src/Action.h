@@ -78,7 +78,7 @@ namespace FuncDoodle {
 			// empty constructor
 			InsertFrameAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI), m_Empty(true), m_Frame(nullptr) {}
 			// good constructor
-			InsertFrameAction(long frameI, Frame* frame, void* proj) : m_Proj(proj), m_Empty(false), m_Frame(frame) {}
+			InsertFrameAction(long frameI, Frame* frame, void* proj) : m_FrameIndex(frameI), m_Proj(proj), m_Empty(false), m_Frame(frame) {}
 
 			void Undo() override;
 			void Redo() override;
@@ -86,6 +86,24 @@ namespace FuncDoodle {
 			long m_FrameIndex;
 			bool m_Empty;
 			Frame* m_Frame;
+			void* m_Proj;
+	};
+	class MoveFrameLeftAction : public Action {
+		public:
+			MoveFrameLeftAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI) {}
+			void Undo() override;
+			void Redo() override;
+		private:
+			long m_FrameIndex;
+			void* m_Proj;
+	};
+	class MoveFrameRightAction : public Action {
+		public:
+			MoveFrameRightAction(long frameI, void* proj) : m_Proj(proj), m_FrameIndex(frameI) {}
+			void Undo() override;
+			void Redo() override;
+		private:
+			long m_FrameIndex;
 			void* m_Proj;
 	};
 }  // namespace FuncDoodle
