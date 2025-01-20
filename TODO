@@ -1,7 +1,7 @@
 Sounds for animations
 Setup github releases with ./release.sh
-Make it so the export mp4 feature isn't hacked together.
 More shortcuts, more util stuff, helper for moving objects.
 Make it so you can select stuff.
-complete the textrenderer code and refactor it to make it so it draws everything properly.
-add more actions
+Add text functionality
+Implement a preview showing thing
+SFX
