@@ -16,6 +16,8 @@
 
 #include "LoadedImages.h"
 
+#include <stb_image.h>
+
 float SAMPLE_RATE = 44100.0;
 
 std::vector<double> notes = {
@@ -35,6 +37,66 @@ std::vector<std::pair<Note, double>> melody = {};
 
 void GLFWErrorCallback(int error, const char* desc) {
 	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
+}
+
+void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
+				   FuncDoodle::Application* application, ImGuiIO& io) {
+	auto currentFrameTime = std::chrono::high_resolution_clock::now();
+	auto deltaTime =
+		std::chrono::duration<double>(currentFrameTime - lastFrameTime).count();
+	constexpr double FRAME_TIME = 1.0 / 1000.0;
+
+	if (deltaTime >= FRAME_TIME) {
+		lastFrameTime = currentFrameTime;
+		glfwPollEvents();
+
+		// Start the ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
+									 ImGuiDockNodeFlags_PassthruCentralNode);
+
+		application->RenderImGui();
+
+		// Rendering
+		int display_w, display_h;
+		glfwGetFramebufferSize(win, &display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			GLFWwindow* backup = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup);
+		}
+
+		glfwSwapBuffers(win);
+	}
+}
+
+GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
+	std::filesystem::path icon = assetsPath / "icon.png";
+	std::cout << icon.string().c_str() << std::endl;
+	int width, height, chan;
+	unsigned char* data =
+		stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
+	if (data) {
+		GLFWimage* icon;
+		icon->width = width;
+		icon->height = height;
+		icon->pixels = data;
+		return icon;
+	} else {
+		std::cerr << "Failed to read image data from assets/icon.png"
+				  << std::endl;
+		return nullptr;
+	}
 }
 
 static int AudioCB(const void* inputBuffer, void* outputBuffer,
@@ -100,7 +162,7 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
-	glfwSetErrorCallback(GLFWErrorCallback);
+	// glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -138,7 +200,9 @@ int main(int argc, char** argv) {
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+#ifndef TILING
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+#endif
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
@@ -154,7 +218,8 @@ int main(int argc, char** argv) {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
 	// Keep your existing style parameters but modify these specific ones:
-	style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 0);	// Set alpha to 0
+	// style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1);	// Set alpha to
+	// 0
 	style->Colors[ImGuiCol_ChildBg] =
 		ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	// Set alpha to 0
 	style->Colors[ImGuiCol_DockingEmptyBg] =
@@ -261,52 +326,17 @@ int main(int argc, char** argv) {
 	FuncDoodle::Application* application =
 		new FuncDoodle::Application(win, &assetLoader);
 
-	constexpr double FRAME_TIME = 1.0 / 1000.0;
 	auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
+	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
+
+	glfwSetWindowIcon(win, 1, icon);
+
+	stbi_image_free(icon->pixels);
+
 	while (!glfwWindowShouldClose(win)) {
-		auto currentFrameTime = std::chrono::high_resolution_clock::now();
-		auto deltaTime =
-			std::chrono::duration<double>(currentFrameTime - lastFrameTime)
-				.count();
-
-		if (deltaTime >= FRAME_TIME) {
-			lastFrameTime = currentFrameTime;
-			glfwPollEvents();
-
-			// Start the ImGui frame
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-
-			ImGui::DockSpaceOverViewport(
-				0U, ImGui::GetMainViewport(),
-				ImGuiDockNodeFlags_PassthruCentralNode);
-
-			application->RenderImGui();
-
-			// Rendering
-			int display_w, display_h;
-			glfwGetFramebufferSize(win, &display_w, &display_h);
-			glViewport(0, 0, display_w, display_h);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
-			glClear(GL_COLOR_BUFFER_BIT);
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-				GLFWwindow* backup = glfwGetCurrentContext();
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-				glfwMakeContextCurrent(backup);
-			}
-
-			glfwSwapBuffers(win);
-		}
+		GlobalAppTick(win, lastFrameTime, application, io);
 	}
-
-	std::cout << "Um the window closing" << std::endl;
-
 	delete application;
 
 	Pa_StopStream(stream);
@@ -320,5 +350,6 @@ int main(int argc, char** argv) {
 
 	glfwDestroyWindow(win);
 	glfwTerminate();
+
 	return 0;
 }

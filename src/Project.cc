@@ -7,7 +7,10 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <stack>
 #include <vector>
+
+#include <type_traits>
 
 #include <GLFW/glfw3.h>
 
@@ -36,12 +39,21 @@ namespace FuncDoodle {
 		m_FPS = fps;
 		strcpy(m_Desc, desc);
 		m_Frames = new LongIndexArray(width, height);
-		m_Frames->push_back_empty();
-	}
-	ProjectFile::~ProjectFile() { delete m_Frames; }
+		m_Frames->PushBackEmpty();
 
-	const char* ProjectFile::AnimName() const { return m_Name; }
-	void ProjectFile::SetAnimName(char name[]) { strcpy(m_Name, name); }
+		m_UndoStack = std::stack<std::unique_ptr<Action>>();
+		m_RedoStack = std::stack<std::unique_ptr<Action>>();
+	}
+	ProjectFile::~ProjectFile() {
+		delete m_Frames;
+	}
+
+	const char* ProjectFile::AnimName() const {
+		return m_Name;
+	}
+	void ProjectFile::SetAnimName(char name[]) {
+		strcpy(m_Name, name);
+	}
 
 	void ProjectFile::Export(char* filePath, int format) {
 		std::cout << "Exporting to " << filePath << std::endl;
@@ -52,11 +64,11 @@ namespace FuncDoodle {
 
 		for (long i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
-			sprintf(curFilePath, "%s/frame_%d.png", filePath, i);
+			sprintf(curFilePath, "%s/frame_%ld.png", filePath, i);
 #else
-			sprintf(curFilePath, "%s\\frame_%d.png", filePath, i);
+			sprintf(curFilePath, "%s\\frame_%ld.png", filePath, i);
 #endif
-			frames->get(i)->Export(curFilePath);
+			frames->Get(i)->Export(curFilePath);
 		}
 
 		if (format == 1) {
@@ -68,7 +80,7 @@ namespace FuncDoodle {
 				cmd,
 				"ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" "
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
-				m_FPS, filePath, filePath, filePath);
+				m_FPS, filePath, filePath);
 #else
 			sprintf(cmd,
 					"ffmpeg.exe -framerate %d -pattern-type glob -i "
@@ -87,7 +99,9 @@ namespace FuncDoodle {
 		}
 	}
 
-	const int ProjectFile::AnimWidth() const { return m_Width; }
+	const int ProjectFile::AnimWidth() const {
+		return m_Width;
+	}
 
 	void ProjectFile::SetAnimWidth(int width, bool clear) {
 		// no
@@ -97,43 +111,103 @@ namespace FuncDoodle {
 			// WHAT IS WRONG WITH THIS STUPID CODE
 			std::cout << "Clear: " << clear << std::endl;
 			std::cout << "NULLPTR?! " << (m_Frames == nullptr) << std::endl;
-			std::cout << "FRAME SIZE: " << m_Frames->getSize() << std::endl;
+			std::cout << "FRAME SIZE: " << m_Frames->Size() << std::endl;
 			std::cout << "(i = " << i << ")" << std::endl;
 			std::cout << "ANIMFRAMECOUNT == GET SIZE?! "
-					  << (m_Frames->getSize() == AnimFrameCount()) << std::endl;
-			m_Frames->get(i)->SetWidth(width, clear);
+					  << (m_Frames->Size() == AnimFrameCount()) << std::endl;
+			m_Frames->Get(i)->SetWidth(width, clear);
 		}
 		m_Width = width;
 	}
 
-	const int ProjectFile::AnimHeight() const { return m_Height; }
+	const int ProjectFile::AnimHeight() const {
+		return m_Height;
+	}
 	void ProjectFile::SetAnimHeight(int height, bool clear) {
 		// no
 		for (long i = 0; i < AnimFrameCount(); ++i) {
-			m_Frames->get(i)->SetHeight(height, clear);
+			m_Frames->Get(i)->SetHeight(height, clear);
 		}
 		m_Height = height;
 	}
 
-	const char* ProjectFile::AnimAuthor() const { return m_Author; }
-	void ProjectFile::SetAnimAuthor(char* author) { strcpy(m_Author, author); }
+	const char* ProjectFile::AnimAuthor() const {
+		return m_Author;
+	}
+	void ProjectFile::SetAnimAuthor(char* author) {
+		strcpy(m_Author, author);
+	}
 
 	const int ProjectFile::AnimFPS() const {
-		if (this == nullptr) {
-			std::cerr << "ProjectFile is nullptr" << std::endl;
-			std::exit(-1);
-		}
 		return m_FPS;
 	}
-	void ProjectFile::SetAnimFPS(int FPS) { m_FPS = FPS; }
+	void ProjectFile::SetAnimFPS(int FPS) {
+		m_FPS = FPS;
+	}
 
-	const char* ProjectFile::AnimDesc() const { return m_Desc; }
-	void ProjectFile::SetAnimDesc(char* desc) { strcpy(m_Desc, desc); }
+	const char* ProjectFile::AnimDesc() const {
+		return m_Desc;
+	}
+	void ProjectFile::SetAnimDesc(char* desc) {
+		strcpy(m_Desc, desc);
+	}
 
 	const long ProjectFile::AnimFrameCount() const {
-		return m_Frames->getSize();
+		return m_Frames->Size();
 	}
-	LongIndexArray* ProjectFile::AnimFrames() { return m_Frames; }
+	LongIndexArray* ProjectFile::AnimFrames() {
+		return m_Frames;
+	}
+
+	void ProjectFile::PushUndoableDrawAction(DrawAction action) {
+		m_UndoStack.push(std::make_unique<DrawAction>(std::move(action)));
+	}
+	void ProjectFile::PushUndoableFillAction(FillAction action) {
+		m_UndoStack.push(std::make_unique<FillAction>(std::move(action)));
+	}
+	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
+		m_UndoStack.push(
+			std::make_unique<DeleteFrameAction>(std::move(action)));
+	}
+	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
+		m_UndoStack.push(
+			std::make_unique<InsertFrameAction>(std::move(action)));
+	}
+	void
+	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	}
+	void
+	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameRightAction>(std::move(action)));
+	}
+	void ProjectFile::Undo() {
+		if (m_UndoStack.empty()) {
+			return;
+		}
+
+		std::unique_ptr<Action> action = std::move(m_UndoStack.top());
+		m_UndoStack.pop();
+
+		action->Undo();
+
+		m_RedoStack.push(std::move(action));
+	}
+
+	void ProjectFile::Redo() {
+		if (m_RedoStack.empty()) {
+			std::cout << "Nothing to redo" << std::endl;
+			return;
+		}
+		std::unique_ptr<Action> action = std::move(m_RedoStack.top());
+		m_RedoStack.pop();
+
+		action->Redo();
+
+		m_UndoStack.push(std::move(action));
+	}
 
 	void ProjectFile::Write(char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
@@ -145,7 +219,7 @@ namespace FuncDoodle {
 		outFile << "FDProj";
 		int major = 0;
 		int minor = 1;
-		long frames = m_Frames->getSize();
+		long frames = m_Frames->Size();
 		WRITEB(major);	   // version major
 		WRITEB(minor);	   // version minor
 		WRITEB(frames);	   // frame count (default)
@@ -168,10 +242,10 @@ namespace FuncDoodle {
 
 		// First pass: collect unique colors with stable ordering
 		for (long i = 0; i < AnimFrameCount(); i++) {
-			auto pixels = frameData->get(i)->Pixels();
-			for (int x = 0; x < pixels->getWidth(); x++) {
-				for (int y = 0; y < pixels->getHeight(); y++) {
-					Col px = pixels->get(x, y);
+			auto pixels = frameData->Get(i)->Pixels();
+			for (int x = 0; x < pixels->Width(); x++) {
+				for (int y = 0; y < pixels->Height(); y++) {
+					Col px = pixels->Get(x, y);
 					if (colorToIndex.find(px) == colorToIndex.end()) {
 						colorToIndex[px] = uniqueColors.size();
 						uniqueColors.push_back(px);
@@ -193,10 +267,10 @@ namespace FuncDoodle {
 
 		// Write frame data using stable indices
 		for (long i = 0; i < AnimFrameCount(); i++) {
-			auto pixels = frameData->get(i)->Pixels();
-			for (int y = 0; y < pixels->getHeight(); y++) {
-				for (int x = 0; x < pixels->getWidth(); x++) {
-					Col px = pixels->get(x, y);
+			auto pixels = frameData->Get(i)->Pixels();
+			for (int y = 0; y < pixels->Height(); y++) {
+				for (int x = 0; x < pixels->Width(); x++) {
+					Col px = pixels->Get(x, y);
 					int index = colorToIndex[px];  // Get stable index
 					WRITEB(index);
 				}
@@ -209,10 +283,6 @@ namespace FuncDoodle {
 		outFile.close();
 	}
 	void ProjectFile::ReadAndPopulate(char* filePath) {
-		if (this == nullptr) {
-			std::exit(-1);
-		}
-
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {
@@ -242,6 +312,10 @@ namespace FuncDoodle {
 		file.read(reinterpret_cast<char*>(&animHeight), sizeof(animHeight));
 		int animFPS = 0;
 		file.read(reinterpret_cast<char*>(&animFPS), sizeof(animFPS));
+
+		// BRUH
+		m_Width = animWidth;
+		m_Height = animHeight;
 
 		file.getline(m_Name, sizeof(m_Name), '\0');
 
@@ -290,9 +364,8 @@ namespace FuncDoodle {
 		long brokenIndexC = 0;
 		long lastBrokenFrame = 0;
 
-		ImageArray* img = new ImageArray(animWidth, animHeight);
-
 		for (long i = 0; i < frameCount; i++) {
+			ImageArray* img = new ImageArray(animWidth, animHeight);
 			// read colorarr: OOPS
 			for (int y = 0; y < animHeight; y++) {
 				for (int x = 0; x < animWidth; x++) {
@@ -308,11 +381,11 @@ namespace FuncDoodle {
 						std::exit(-1);
 					}
 
-					img->set(x, y, plte[index]);
+					img->Set(x, y, plte[index]);
 				}
 			}
-			static Frame newFrame = Frame(img);
-			m_Frames->push_back(&newFrame);
+			Frame newFrame = Frame(img);
+			m_Frames->PushBack(&newFrame);
 
 			unsigned char null;
 			file.read(reinterpret_cast<char*>(&null), 1);

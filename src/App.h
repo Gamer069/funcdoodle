@@ -30,6 +30,7 @@ namespace FuncDoodle {
 			int m_ExportFormat = 0;
 			bool m_ExportOpen = false;
 			bool m_EditPrefsOpen = false;
+			bool m_ShowKeybindsOpen = false;
 			int m_Theme = 0;
 	};
 }  // namespace FuncDoodle

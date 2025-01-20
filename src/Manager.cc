@@ -47,8 +47,10 @@ namespace FuncDoodle {
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
 		// Define frame size and padding
-		float frameWidth = 200.0f;
-		float frameHeight = 100.0f;
+		// float frameWidth = 200.0f;
+		// float frameHeight = 100.0f;
+		float frameWidth = (float)m_Proj->AnimWidth();
+		float frameHeight = (float)m_Proj->AnimHeight();
 		float padding = 25.0f;
 
 		// Calculate total width required for all frames
@@ -77,47 +79,85 @@ namespace FuncDoodle {
 				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1)
 					++m_SelectedFrame;
 			}
+			const int X1 = 3;
+			const int X2 = 4;
+			if (ImGui::IsKeyPressed(ImGuiKey_E, true) ||
+				ImGui::IsMouseClicked(X1)) {
+				m_Proj->Undo();
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_R, true) ||
+				ImGui::IsMouseClicked(X2)) {
+				m_Proj->Redo();
+			}
 			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
-				m_Proj->AnimFrames()->insertAfterEmpty(m_SelectedFrame);
+				m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
+				InsertFrameAction action =
+					InsertFrameAction(m_SelectedFrame + 1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
-				m_Proj->AnimFrames()->insertBeforeEmpty(m_SelectedFrame);
+				m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
 				m_SelectedFrame++;
+				InsertFrameAction action =
+					InsertFrameAction(m_SelectedFrame - 1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
-				m_Proj->AnimFrames()->moveForward(m_SelectedFrame);
+				m_Proj->AnimFrames()->MoveForward(m_SelectedFrame);
+				m_SelectedFrame++;
+				MoveFrameRightAction action =
+					MoveFrameRightAction(m_SelectedFrame, m_Proj);
+				m_Proj->PushUndoableMoveFrameRightAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
-				m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
+				if (m_SelectedFrame != 0) {
+					m_Proj->AnimFrames()->MoveBackward(m_SelectedFrame);
+					MoveFrameLeftAction action =
+						MoveFrameLeftAction(m_SelectedFrame, m_Proj);
+					m_SelectedFrame--;
+					m_Proj->PushUndoableMoveFrameLeftAction(action);
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
-				if (m_Proj->AnimFrameCount() != 1)
-					m_Proj->AnimFrames()->remove(m_SelectedFrame);
+				if (m_Proj->AnimFrameCount() != 1) {
+					Frame deletedFrame =
+						*m_Proj->AnimFrames()->Get(m_SelectedFrame);
+					m_Proj->AnimFrames()->Remove(m_SelectedFrame);
+					DeleteFrameAction action = DeleteFrameAction(
+						m_SelectedFrame, &deletedFrame, m_Proj);
+					m_Proj->PushUndoableDeleteFrameAction(action);
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Comma, true)) {
-				m_Proj->AnimFrames()->get(m_SelectedFrame)->CopyToClipboard();
+				m_Proj->AnimFrames()->Get(m_SelectedFrame)->CopyToClipboard();
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Period, true)) {
 				// paste before
 				Frame* frame = Frame::PastedFrame();
-				m_Proj->AnimFrames()->insertBefore(m_SelectedFrame, frame);
+				m_Proj->AnimFrames()->InsertBefore(m_SelectedFrame, frame);
 				m_SelectedFrame++;
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Slash, true)) {
 				// paste after
 				Frame* frame = Frame::PastedFrame();
-				m_Proj->AnimFrames()->insertAfter(m_SelectedFrame, frame);
+				m_Proj->AnimFrames()->InsertAfter(m_SelectedFrame, frame);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
-				m_Proj->AnimFrames()->insertAfter(
-					m_SelectedFrame,
-					m_Proj->AnimFrames()->get(m_SelectedFrame));
+				Frame* frame =
+					new Frame(*m_Proj->AnimFrames()->Get(m_SelectedFrame));
+				m_Proj->AnimFrames()->InsertAfter(m_SelectedFrame, frame);
+				InsertFrameAction action =
+					InsertFrameAction(m_SelectedFrame + 1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
-				m_Proj->AnimFrames()->insertBefore(
-					m_SelectedFrame,
-					m_Proj->AnimFrames()->get(m_SelectedFrame));
+				Frame* frame =
+					new Frame(*m_Proj->AnimFrames()->Get(m_SelectedFrame));
+				m_Proj->AnimFrames()->InsertBefore(m_SelectedFrame, frame);
 				m_SelectedFrame++;
+				InsertFrameAction action =
+					InsertFrameAction(m_SelectedFrame - 1, m_Proj);
+				m_Proj->PushUndoableInsertFrameAction(action);
 			}
 		}
 		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
@@ -133,21 +173,30 @@ namespace FuncDoodle {
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
 				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
-			drawList->AddRectFilled(topLeft, bottomRight,
-									IM_COL32(255, 255, 255, 255));
+			FrameRenderer* curFrameRenderer = new FrameRenderer(
+				m_Proj->AnimFrames()->Get(i), m_ToolManager, m_Player);
+
+			float width = bottomRight.x - topLeft.x;
+			float height = bottomRight.y - topLeft.y;
+			float scaleX = width / frameWidth;
+			float scaleY = width / frameHeight;
+			curFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
+			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y,
+												ImGui::GetWindowDrawList());
+
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
-				Frame* frame = frames->get(i);
+				Frame* frame = frames->Get(i);
 				m_FrameRenderer->SetFrame(frame);
 				m_FrameRenderer->SetIndex(i);
 				if (i > 0) {
-					Frame* prevFrame = frames->get(i - 1);
+					Frame* prevFrame = frames->Get(i - 1);
 					m_FrameRenderer->SetPreviousFrame(prevFrame);
 				}
-				m_FrameRenderer->RenderFrame();
+				m_FrameRenderer->RenderFrame(i);
 				drawList->AddRect(
-					topLeft, bottomRight,
+					topLeft, ImVec2(bottomRight.x, bottomRight.y),
 					IM_COL32(255, 0, 0, 255),  // Red color
 					0.0f,					   // rounding
 					0,						   // flags
@@ -161,7 +210,7 @@ namespace FuncDoodle {
 
 			char menuName[32];	// Make buffer big enough for "frame" + numbers
 								// + "menu" + null terminator
-			sprintf(menuName, "##frame%dmenu", i);
+			snprintf(menuName, 31, "##frame%ldmenu", i);
 			char* menuNamePtr = menuName;
 
 			// Create unique ID for this popup
@@ -173,35 +222,45 @@ namespace FuncDoodle {
 
 			if (ImGui::BeginPopup(menuNamePtr)) {
 				if (ImGui::MenuItem("Delete", "\\")) {
-					if (m_Proj->AnimFrameCount() != 1)
-						m_Proj->AnimFrames()->remove(i);
+					if (m_Proj->AnimFrameCount() != 1) {
+						Frame deletedFrame =
+							*m_Proj->AnimFrames()->Get(m_SelectedFrame);
+						m_Proj->AnimFrames()->Remove(m_SelectedFrame);
+						DeleteFrameAction action = DeleteFrameAction(
+							m_SelectedFrame, &deletedFrame, m_Proj);
+						m_Proj->PushUndoableDeleteFrameAction(action);
+						m_Proj->AnimFrames()->Remove(i);
+					}
 				}
 				if (ImGui::MenuItem("Insert before", "O")) {
-					Frame frame =
-						Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-					m_Proj->AnimFrames()->insertBefore(i, &frame);
+					m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
+					m_SelectedFrame++;
+					InsertFrameAction action =
+						InsertFrameAction(m_SelectedFrame - 1, m_Proj);
+					m_Proj->PushUndoableInsertFrameAction(action);
 				}
 				if (ImGui::MenuItem("Insert after", "P")) {
-					Frame frame =
-						Frame(m_Proj->AnimWidth(), m_Proj->AnimHeight());
-					m_Proj->AnimFrames()->insertAfter(i, &frame);
+					m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
+					InsertFrameAction action =
+						InsertFrameAction(m_SelectedFrame + 1, m_Proj);
+					m_Proj->PushUndoableInsertFrameAction(action);
 				}
 				if (ImGui::MenuItem("Move forward", "I")) {
-					m_Proj->AnimFrames()->moveForward(i);
+					m_Proj->AnimFrames()->MoveForward(i);
 				}
 				if (ImGui::MenuItem("Move backward", "U")) {
-					m_Proj->AnimFrames()->moveBackward(i);
+					m_Proj->AnimFrames()->MoveBackward(i);
 				}
 				if (ImGui::MenuItem("Copy", ",")) {
-					m_Proj->AnimFrames()->get(i)->CopyToClipboard();
+					m_Proj->AnimFrames()->Get(i)->CopyToClipboard();
 				}
 				if (ImGui::MenuItem("Paste before", ".")) {
 					Frame* frame = Frame::PastedFrame();
-					m_Proj->AnimFrames()->insertBefore(i, frame);
+					m_Proj->AnimFrames()->InsertBefore(i, frame);
 				}
 				if (ImGui::MenuItem("Paste after", "/")) {
 					Frame* frame = Frame::PastedFrame();
-					m_Proj->AnimFrames()->insertAfter(i, frame);
+					m_Proj->AnimFrames()->InsertAfter(i, frame);
 				}
 				ImGui::EndPopup();
 			}

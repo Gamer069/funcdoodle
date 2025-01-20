@@ -3,7 +3,7 @@ BasedOnStyle: LLVM
 PointerAlignment: Left
 AlignConsecutiveDeclarations: false
 BreakBeforeBraces: Attach
-AllowShortFunctionsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline  # Use Inline to keep short functions on the same line
 IndentWidth: 4
 UseTab: Always
 TabWidth: 4

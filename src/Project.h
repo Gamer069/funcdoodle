@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Frame.h"
-
 #include "DynArr.h"
 
-#include <iostream>
+#include <stack>
+
+#include "Action.h"
+
+#include <memory>
 
 #include <GLFW/glfw3.h>
 
@@ -35,6 +37,17 @@ namespace FuncDoodle {
 			constexpr inline GLFWwindow* Window() const { return m_Window; }
 			void DisplayFPS();
 
+			// Undo management
+			void PushUndoableDrawAction(DrawAction action);
+			void PushUndoableFillAction(FillAction action);
+			void PushUndoableDeleteFrameAction(DeleteFrameAction action);
+			void PushUndoableInsertFrameAction(InsertFrameAction action);
+			void PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action);
+			void PushUndoableMoveFrameRightAction(MoveFrameRightAction action);
+
+			void Undo();
+			void Redo();
+
 		private:
 			char m_Name[256];  // 256
 			int m_Width = 0;
@@ -44,5 +57,7 @@ namespace FuncDoodle {
 			char m_Desc[512];  // 512
 			LongIndexArray* m_Frames;
 			GLFWwindow* m_Window;
+			std::stack<std::unique_ptr<Action>> m_UndoStack;
+			std::stack<std::unique_ptr<Action>> m_RedoStack;
 	};
 }  // namespace FuncDoodle

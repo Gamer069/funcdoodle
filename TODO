@@ -1,10 +1,7 @@
 Sounds for animations
 Setup github releases with ./release.sh
-In Manager.cc, RenderControls renders the images every frame. This is bad. Fix it.
-Make it so the export mp4 feature isn't hacked together.
 More shortcuts, more util stuff, helper for moving objects.
 Make it so you can select stuff.
-Make it so the picker properly works.
-TODO: remove redo color adjustments call
-fix the decreasing of the size segfaulting (very obvious error)
-complete the textrenderer code and refactor it to make it so it draws everything properly.
+Add text functionality
+Implement a preview showing thing
+SFX

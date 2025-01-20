@@ -7,7 +7,11 @@
 
 #include "Player.h"
 
+#include <vector>
+
 namespace FuncDoodle {
+	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool =
+		std::vector<std::pair<int, int>>();
 	class FrameRenderer {
 		public:
 			FrameRenderer(Frame* frame, ToolManager* manager,
@@ -16,10 +20,10 @@ namespace FuncDoodle {
 				  m_Player(player) {}
 			~FrameRenderer() {
 				delete m_Grid;
-				//free(m_Frame);
+				// free(m_Frame);
 			}
-			void RenderFrame();
-			void InitPixels();
+			void RenderFrame(long frameI);
+			void InitPixels(long frameI);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
 			void SetFrame(Frame* frame) { m_Frame = frame; }
@@ -33,8 +37,13 @@ namespace FuncDoodle {
 			void SetIndex(int index) { m_Index = index; }
 			void SetPreviousFrame(Frame* frame) { m_PreviousFrame = frame; }
 			const Frame* PreviousFrame() const { return m_PreviousFrame; }
+			inline void SetPixelScale(int pixelScale) {
+				m_PixelScale = pixelScale;
+			}
 
 			void FloodFill(int x, int y, Col targetCol, Col fillCol);
+			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
+								   bool usePrevPxScale = true);
 
 		private:
 			Frame* m_Frame;
