@@ -97,6 +97,9 @@ namespace FuncDoodle {
 				else
 					m_Grid->ShowGrid();
 			}
+			if (ImGui::IsKeyPressed(ImGuiKey_F)) {
+				// fullscreen
+			}
 		}
 
 		// Calculate total frame dimensions
