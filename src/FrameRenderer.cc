@@ -315,20 +315,7 @@ namespace FuncDoodle {
 			m_LastMousePos = ImVec2(-1, -1);
 		}
 
-		for (int y = 0; y < pixels->getHeight(); y++) {
-			for (int x = 0; x < pixels->getWidth(); x++) {
-				if (pixels == nullptr) {
-					std::cout << "PX NULLPTR" << std::endl;
-				}
-				Col col = pixels->get(x, y);
-				ImVec2 topLeft(startX + x * m_PixelScale,
-							   startY + y * m_PixelScale);
-				ImVec2 bottomRight(startX + (x + 1) * m_PixelScale,
-								   startY + (y + 1) * m_PixelScale);
-				drawList->AddRectFilled(topLeft, bottomRight,
-										IM_COL32(col.r, col.g, col.b, 255));
-			}
-		}
+		RenderFramePixels(startX, startY, drawList);
 
 		// Draw the previous frame with transparency if we're not on the first
 		// frame
@@ -344,10 +331,11 @@ namespace FuncDoodle {
 					ImVec2 bottomRight(startX + (x + 1) * m_PixelScale,
 									   startY + (y + 1) * m_PixelScale);
 					Col curCol = pixels->get(x, y);
-					if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255)
+					if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255) {
 						drawList->AddRectFilled(
 							topLeft, bottomRight,
-							IM_COL32(col.r, col.g, col.b, 128));
+						    IM_COL32(col.r, col.g, col.b, 128));
+					}
 				}
 			}
 		}
@@ -374,5 +362,29 @@ namespace FuncDoodle {
 		FloodFill(x - 1, y, targetCol, fillCol);
 		FloodFill(x, y + 1, targetCol, fillCol);
 		FloodFill(x, y - 1, targetCol, fillCol);
+	}
+	void FrameRenderer::RenderFramePixels(int startX, int startY, ImDrawList* drawList, bool usePrevPxScale) {
+		const ImageArray* pixels = m_Frame->Pixels();
+		for (int y = 0; y < pixels->getHeight(); y++) {
+			for (int x = 0; x < pixels->getWidth(); x++) {
+				if (pixels == nullptr) {
+					std::cout << "PX NULLPTR" << std::endl;
+				}
+				Col col = pixels->get(x, y);
+				ImVec2 topLeft;
+				ImVec2 bottomRight;
+				if (usePrevPxScale) {
+					topLeft = ImVec2(startX + x * m_PixelScale,
+							startY + y * m_PixelScale);
+					bottomRight = ImVec2(startX + (x + 1) * m_PixelScale,
+							startY + (y + 1) * m_PixelScale);
+				} else {
+					topLeft = ImVec2(startX + x, startY + y);
+					bottomRight = ImVec2(startX + x + 1, startY + y + 1);
+				}
+				drawList->AddRectFilled(topLeft, bottomRight,
+						IM_COL32(col.r, col.g, col.b, 255));
+			}
+		}
 	}
 }  // namespace FuncDoodle

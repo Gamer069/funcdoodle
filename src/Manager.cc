@@ -47,8 +47,10 @@ namespace FuncDoodle {
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
 		// Define frame size and padding
-		float frameWidth = 200.0f;
-		float frameHeight = 100.0f;
+		// float frameWidth = 200.0f;
+		// float frameHeight = 100.0f;
+		float frameWidth = (float)m_Proj->AnimWidth();
+		float frameHeight = (float)m_Proj->AnimHeight();
 		float padding = 25.0f;
 
 		// Calculate total width required for all frames
@@ -110,8 +112,7 @@ namespace FuncDoodle {
 			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
 				if (m_SelectedFrame != 0) {
 					m_Proj->AnimFrames()->moveBackward(m_SelectedFrame);
-					MoveFrameLeftAction action =
-						MoveFrameLeftAction(m_SelectedFrame, m_Proj);
+					MoveFrameLeftAction action = MoveFrameLeftAction(m_SelectedFrame, m_Proj);
 					m_SelectedFrame--;
 					m_Proj->PushUndoableMoveFrameLeftAction(action);
 				}
@@ -171,8 +172,15 @@ namespace FuncDoodle {
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
 				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
-			drawList->AddRectFilled(topLeft, bottomRight,
-									IM_COL32(255, 255, 255, 255));
+			FrameRenderer* curFrameRenderer = new FrameRenderer(m_Proj->AnimFrames()->get(i), m_ToolManager, m_Player);
+
+			float width = bottomRight.x - topLeft.x;
+			float height = bottomRight.y - topLeft.y;
+			float scaleX = width / frameWidth;
+			float scaleY = width / frameHeight;
+			curFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
+			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList());
+
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
@@ -185,7 +193,7 @@ namespace FuncDoodle {
 				}
 				m_FrameRenderer->RenderFrame(i);
 				drawList->AddRect(
-					topLeft, bottomRight,
+					topLeft, ImVec2(bottomRight.x, bottomRight.y),
 					IM_COL32(255, 0, 0, 255),  // Red color
 					0.0f,					   // rounding
 					0,						   // flags
