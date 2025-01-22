@@ -17,7 +17,10 @@ namespace FuncDoodle {
 			void CheckKeybinds(char* newProj, char* open, char* save,
 							   char* exportShortcut, char* quit);
 			void RenderOptions();
-
+			void SaveChangesDialog();
+			static void CustomStyle();
+			inline ProjectFile* CurProj() { return m_CurrentProj; }
+			inline ProjectFile* CacheProj() { return m_CacheProj; }
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;

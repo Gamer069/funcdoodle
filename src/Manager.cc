@@ -181,8 +181,7 @@ namespace FuncDoodle {
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
 			curFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
-			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y,
-												ImGui::GetWindowDrawList());
+			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {

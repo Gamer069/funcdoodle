@@ -104,17 +104,7 @@ namespace FuncDoodle {
 	}
 
 	void ProjectFile::SetAnimWidth(int width, bool clear) {
-		// no
 		for (long i = 0; i < AnimFrameCount(); ++i) {
-			std::cout << "AnimFrameCount()" << AnimFrameCount() << std::endl;
-			std::cout << width << std::endl;
-			// WHAT IS WRONG WITH THIS STUPID CODE
-			std::cout << "Clear: " << clear << std::endl;
-			std::cout << "NULLPTR?! " << (m_Frames == nullptr) << std::endl;
-			std::cout << "FRAME SIZE: " << m_Frames->Size() << std::endl;
-			std::cout << "(i = " << i << ")" << std::endl;
-			std::cout << "ANIMFRAMECOUNT == GET SIZE?! "
-					  << (m_Frames->Size() == AnimFrameCount()) << std::endl;
 			m_Frames->Get(i)->SetWidth(width, clear);
 		}
 		m_Width = width;
@@ -124,7 +114,6 @@ namespace FuncDoodle {
 		return m_Height;
 	}
 	void ProjectFile::SetAnimHeight(int height, bool clear) {
-		// no
 		for (long i = 0; i < AnimFrameCount(); ++i) {
 			m_Frames->Get(i)->SetHeight(height, clear);
 		}
@@ -161,32 +150,35 @@ namespace FuncDoodle {
 
 	void ProjectFile::PushUndoableDrawAction(DrawAction action) {
 		m_UndoStack.push(std::make_unique<DrawAction>(std::move(action)));
+		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableFillAction(FillAction action) {
 		m_UndoStack.push(std::make_unique<FillAction>(std::move(action)));
+		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
-		m_UndoStack.push(
-			std::make_unique<DeleteFrameAction>(std::move(action)));
+		m_UndoStack.push(std::make_unique<DeleteFrameAction>(std::move(action)));
+		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
-		m_UndoStack.push(
-			std::make_unique<InsertFrameAction>(std::move(action)));
+		m_UndoStack.push(std::make_unique<InsertFrameAction>(std::move(action)));
+		m_Saved = false;
 	}
-	void
-	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
-		m_UndoStack.push(
-			std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	void ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(std::make_unique<MoveFrameLeftAction>(std::move(action)));
+		m_Saved = false;
 	}
-	void
-	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
-		m_UndoStack.push(
-			std::make_unique<MoveFrameRightAction>(std::move(action)));
+	void ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(std::make_unique<MoveFrameRightAction>(std::move(action)));
+		m_Saved = false;
 	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
+			std::cout << "INFO: Nothing to undo" << std::endl;
 			return;
 		}
+
+		m_Saved = false;
 
 		std::unique_ptr<Action> action = std::move(m_UndoStack.top());
 		m_UndoStack.pop();
@@ -198,9 +190,10 @@ namespace FuncDoodle {
 
 	void ProjectFile::Redo() {
 		if (m_RedoStack.empty()) {
-			std::cout << "Nothing to redo" << std::endl;
+			std::cout << "INFO: Nothing to redo" << std::endl;
 			return;
 		}
+		m_Saved = false;
 		std::unique_ptr<Action> action = std::move(m_RedoStack.top());
 		m_RedoStack.pop();
 
@@ -361,9 +354,6 @@ namespace FuncDoodle {
 
 		m_Frames = new LongIndexArray(m_Width, m_Height);
 
-		long brokenIndexC = 0;
-		long lastBrokenFrame = 0;
-
 		for (long i = 0; i < frameCount; i++) {
 			ImageArray* img = new ImageArray(animWidth, animHeight);
 			// read colorarr: OOPS
@@ -409,12 +399,13 @@ namespace FuncDoodle {
 		}
 
 		file.close();
+		m_Saved = true;
 	}
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
-		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)", FUNCVER, AnimName(),
-				(int)ImGui::GetIO().Framerate);
+		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)%s", FUNCVER, AnimName(),
+				(int)ImGui::GetIO().Framerate, !m_Saved ? "*" : "");
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

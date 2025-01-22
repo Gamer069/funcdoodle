@@ -208,18 +208,9 @@ namespace FuncDoodle {
 			colNew[2] = (float)col.b / 255.0f;
 		};
 
-		auto text = [&](ImVec2 currentPixel) {
-			// TODO: implement this
-			Col curPxCol =
-				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
-			colNew[0] = curPxCol.r;
-			colNew[1] = curPxCol.g;
-			colNew[2] = curPxCol.b;
-		};
-
 		// Check if mouse is within frame bounds and mouse button is down
 		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) &&
-			ImGui::IsMouseDown(0)) {
+				ImGui::IsMouseDown(0)) {
 			if (m_ToolManager == nullptr) {
 				std::cerr << "???????" << std::endl;
 				std::exit(-1);
@@ -227,11 +218,11 @@ namespace FuncDoodle {
 
 			// Calculate current pixel coordinates
 			ImVec2 currentPixel((mousePos.x - startX) / m_PixelScale,
-								(mousePos.y - startY) / m_PixelScale);
+					(mousePos.y - startY) / m_PixelScale);
 
 			// Draw at current position
 			if (currentPixel.x >= 0 && currentPixel.x < pixels->Width() &&
-				currentPixel.y >= 0 && currentPixel.y < pixels->Height()) {
+					currentPixel.y >= 0 && currentPixel.y < pixels->Height()) {
 				int selectedTool = m_ToolManager->SelectedTool();
 
 				// check if other window is focused or not
@@ -246,11 +237,11 @@ namespace FuncDoodle {
 					float dy = currentPixel.y - m_LastMousePos.y;
 					int steps =
 						std::max(1, std::max(abs(static_cast<int>(dx)),
-											 abs(static_cast<int>(dy))));
+									abs(static_cast<int>(dy))));
 
 					// Pre-calculate color values outside the loop
 					if (focusedWindow &&
-						strcmp(focusedWindow->Name, curName) == 0) {
+							strcmp(focusedWindow->Name, curName) == 0) {
 						if (selectedTool == 0) {
 							pencil(currentPixel);
 						} else if (selectedTool == 1) {
@@ -259,9 +250,6 @@ namespace FuncDoodle {
 							bucket(currentPixel);
 						} else if (selectedTool == 3) {
 							picker(currentPixel);
-							steps = 0;
-						} else if (selectedTool == 4) {
-							text(currentPixel);
 							steps = 0;
 						}
 					}
@@ -274,11 +262,11 @@ namespace FuncDoodle {
 							static_cast<int>(m_LastMousePos.y + dy * t);
 
 						if (interpX >= 0 && interpX < pixels->Width() &&
-							interpY >= 0 && interpY < pixels->Height()) {
+								interpY >= 0 && interpY < pixels->Height()) {
 							m_Frame->SetPixel(interpX, interpY,
-											  Col{.r = colNew[0],
-												  .g = colNew[1],
-												  .b = colNew[2]});
+									Col{.r = colNew[0],
+									.g = colNew[1],
+									.b = colNew[2]});
 						}
 					}
 				} else {
@@ -286,7 +274,7 @@ namespace FuncDoodle {
 					unsigned char colNew[3] = {
 						255, 255, 255};	 // Default white for eraser
 					if (focusedWindow &&
-						strcmp(focusedWindow->Name, curName) == 0) {
+							strcmp(focusedWindow->Name, curName) == 0) {
 						if (selectedTool == 0) {
 							pencil(currentPixel);
 						} else if (selectedTool == 1) {
@@ -295,25 +283,23 @@ namespace FuncDoodle {
 							bucket(currentPixel);
 						} else if (selectedTool == 3) {
 							picker(currentPixel);
-						} else if (selectedTool == 4) {
-							text(currentPixel);
 						}
 					}
 
 					if (selectedTool !=
-						3) {  // Only draw if not using color picker
+							3) {  // Only draw if not using color picker
 						m_Frame->SetPixel(currentPixel.x, currentPixel.y,
-										  Col{.r = colNew[0],
-											  .g = colNew[1],
-											  .b = colNew[2]});
+								Col{.r = colNew[0],
+								.g = colNew[1],
+								.b = colNew[2]});
 					}
 				}
 				m_LastMousePos = currentPixel;
 			}
 		} else if (!ImGui::IsMouseDown(0) ||
-				   !ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
+				!ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
 			m_LastMousePos = ImVec2(-1, -1);
-		}
+		} 
 
 		RenderFramePixels(startX, startY, drawList);
 
@@ -365,7 +351,7 @@ namespace FuncDoodle {
 	}
 	void FrameRenderer::RenderFramePixels(int startX, int startY,
 										  ImDrawList* drawList,
-										  bool usePrevPxScale) {
+										  bool usePrevPxScale, bool renderPreview) {
 		const ImageArray* pixels = m_Frame->Pixels();
 		for (int y = 0; y < pixels->Height(); y++) {
 			for (int x = 0; x < pixels->Width(); x++) {

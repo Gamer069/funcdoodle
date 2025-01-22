@@ -19,8 +19,8 @@ namespace FuncDoodle {
 		RedoColorAdjustment();
 	}
 	ImageArray::~ImageArray() {
-		m_Data.clear();
-		m_Data.shrink_to_fit();
+		//m_Data.clear();
+		//m_Data.shrink_to_fit();
 	}
 
 	void ImageArray::RedoColorAdjustment() {
@@ -220,5 +220,12 @@ namespace FuncDoodle {
 	void Frame::Export(char* filePath) {
 		stbi_write_png(filePath, Width(), Height(), 3, Data().data(),
 					   Width() * 3);
+	}
+	Frame& Frame::operator=(const Frame& other) {
+		if (this != &other) {
+			//delete m_Pixels;
+			m_Pixels = new ImageArray(*other.Pixels());
+		}
+		return *this;
 	}
 }  // namespace FuncDoodle

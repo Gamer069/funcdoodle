@@ -35,6 +35,7 @@ namespace FuncDoodle {
 			void ReadAndPopulate(char* filePath);
 			void Export(char* filePath, int format);
 			constexpr inline GLFWwindow* Window() const { return m_Window; }
+			inline bool Saved() { return m_Saved; }
 			void DisplayFPS();
 
 			// Undo management
@@ -59,5 +60,6 @@ namespace FuncDoodle {
 			GLFWwindow* m_Window;
 			std::stack<std::unique_ptr<Action>> m_UndoStack;
 			std::stack<std::unique_ptr<Action>> m_RedoStack;
+			bool m_Saved = false;
 	};
 }  // namespace FuncDoodle

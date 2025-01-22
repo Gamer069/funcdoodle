@@ -163,6 +163,7 @@ int main(int argc, char** argv) {
 	assetsPath /= "assets";
 
 	// glfwSetErrorCallback(GLFWErrorCallback);
+	
 
 	if (!glfwInit()) {
 		const char* description;
@@ -215,80 +216,7 @@ int main(int argc, char** argv) {
 	ImGui::StyleColorsDark();
 
 	// In your style setup
-	ImGuiStyle* style = &ImGui::GetStyle();
-
-	// Keep your existing style parameters but modify these specific ones:
-	// style->Colors[ImGuiCol_WindowBg] = ImVec4(0, 0, 0, 1);	// Set alpha to
-	// 0
-	style->Colors[ImGuiCol_ChildBg] =
-		ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	// Set alpha to 0
-	style->Colors[ImGuiCol_DockingEmptyBg] =
-		ImVec4(0.15f, 0.15f, 0.15f, 1.0f);	// Set alpha to 0
-
-	// For docked windows specifically
-	style->Colors[ImGuiCol_DockingPreview] = ImVec4(0.2f, 0.2f, 0.2f, 0.5f);
-	style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
-
-	// Set overall style parameters
-	style->WindowRounding = 10.0f;
-	style->FrameRounding = 5.0f;
-	style->PopupRounding = 12.0f;
-	style->ScrollbarRounding = 10.0f;
-	style->GrabRounding = 6.0f;
-	style->TabRounding = 12.0f;
-	style->ChildRounding = 12.0f;
-
-	// Set padding
-	style->WindowPadding = ImVec2(10, 10);
-	style->FramePadding = ImVec2(8, 8);
-	style->ItemSpacing = ImVec2(10, 10);
-	style->IndentSpacing = 20.0f;
-	style->ScrollbarSize = 16.0f;
-
-	// Set colors
-	ImVec4* colors = style->Colors;
-	colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	colors[ImGuiCol_TextDisabled] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-	colors[ImGuiCol_Border] = ImVec4(0.4f, 0.4f, 0.4f, 0.5f);
-	colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
-	colors[ImGuiCol_FrameBg] = ImVec4(0.25f, 0.25f, 0.25f, 1.0f);
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.15f, 0.15f, 0.15f, 0.8f);
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-	colors[ImGuiCol_CheckMark] =
-		ImVec4(0.0f, 1.0f, 0.0f, 1.0f);	 // Bright green
-	colors[ImGuiCol_SliderGrab] =
-		ImVec4(0.1f, 0.5f, 0.8f, 1.0f);	 // Bright blue
-	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.1f, 0.6f, 0.9f, 1.0f);
-	colors[ImGuiCol_Button] = ImVec4(0.1f, 0.5f, 0.8f, 1.0f);
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.2f, 0.6f, 0.9f, 1.0f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.0f, 0.7f, 1.0f, 1.0f);
-	colors[ImGuiCol_Header] = ImVec4(0.2f, 0.2f, 0.2f, 0.5f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
-	colors[ImGuiCol_Separator] = ImVec4(0.5f, 0.5f, 0.5f, 0.5f);
-	colors[ImGuiCol_SeparatorHovered] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-	colors[ImGuiCol_SeparatorActive] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f);
-	colors[ImGuiCol_Tab] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-	colors[ImGuiCol_TabHovered] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
-	colors[ImGuiCol_TabActive] = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
-	colors[ImGuiCol_TabUnfocused] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-	colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.0f);
-	colors[ImGuiCol_DockingPreview] = ImVec4(0.2f, 0.3f, 0.5f, 0.7f);
-	colors[ImGuiCol_TextDisabled] = ImVec4(0.6f, 0.6f, 0.6f, 1.0f);
-	colors[ImGuiCol_ChildBg] =
-		ImVec4(0.2f, 0.2f, 0.2f, 0.0f);	 // Make child background transparent
-	colors[ImGuiCol_Border] = ImVec4(0.5f, 0.5f, 0.5f, 0.5f);
-
-	// Optional: You can adjust global scaling or other parameters here if
-	// needed
-	style->Alpha = 1.0f;  // Fully opaque
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-		style->WindowRounding = 1.0f;
-	}
+	FuncDoodle::Application::CustomStyle();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
