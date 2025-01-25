@@ -16,6 +16,9 @@ namespace FuncDoodle {
 			bool operator==(const Col& other) const {
 				return r == other.r && g == other.g && b == other.b;
 			}
+			bool operator!=(const Col& other) const {
+				return !(r == other.r && g == other.g && b == other.b);
+			}
 			bool operator<(const Col& other) const {
 				if (r != other.r)
 					return r < other.r;

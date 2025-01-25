@@ -1,4 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_C_COMPILER /usr/bin/clang-18)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++-18)
 if(APPLE)
 	project(FuncDoodle C CXX OBJC)
 elseif(UNIX AND NOT APPLE)
@@ -11,13 +13,8 @@ if(UNIX AND NOT APPLE)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-#if(NOT APPLE)
-#set(CMAKE_CXX_COMPILER /usr/bin/clang++)
-#set(CMAKE_C_COMPILER /usr/bin/clang)
-#endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -164,5 +161,5 @@ endif()
 
 # Extra flags
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror -fconcepts")
 endif()

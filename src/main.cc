@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // try to use older OpenGL version, because some laptops dont support 4.1, i don't want users to have to patch something out
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
@@ -182,7 +182,9 @@ int main(int argc, char** argv) {
 
 	GLFWwindow* win = glfwCreateWindow(900, 900, "FuncDoodle", NULL, NULL);
 	if (!win) {
-		fprintf(stderr, "Failed to initialize GLFW window\n");
+		const char* desc;
+		int error = glfwGetError(&desc);
+		fprintf(stderr, "Failed to initialize GLFW window -- %s\n", desc);
 		glfwTerminate();
 		return -1;
 	}
@@ -220,7 +222,7 @@ int main(int argc, char** argv) {
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
-	ImGui_ImplOpenGL3_Init("#version 410");
+	ImGui_ImplOpenGL3_Init("#version 140");
 
 	PaStream* stream;
 
