@@ -21,7 +21,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set build configurations
 set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -gdwarf-4")
 set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
 
 # Glad sources
@@ -150,7 +150,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		endif()
 	endif()
 	if(!WIN32)
-		target_compile_options(FuncDoodle PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
+		target_compile_options(FuncDoodle PRIVATE -g -gdwarf-4 -fsanitize=address -fno-omit-frame-pointer)
 		target_link_options(FuncDoodle PRIVATE -fsanitize=address)
 	endif()
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -161,5 +161,5 @@ endif()
 
 # Extra flags
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror -fconcepts")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
 endif()

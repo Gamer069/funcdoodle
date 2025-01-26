@@ -82,12 +82,12 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
 
 GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 	std::filesystem::path icon = assetsPath / "icon.png";
-	std::cout << icon.string().c_str() << std::endl;
+	//std::cout << icon.string().c_str() << std::endl;
 	int width, height, chan;
 	unsigned char* data =
 		stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
 	if (data) {
-		GLFWimage* icon;
+		GLFWimage* icon = (GLFWimage*)malloc(sizeof(GLFWimage*));
 		icon->width = width;
 		icon->height = height;
 		icon->pixels = data;
