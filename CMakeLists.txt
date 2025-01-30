@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
-set(CMAKE_C_COMPILER /usr/bin/clang-18)
-set(CMAKE_CXX_COMPILER /usr/bin/clang++-18)
+
+set(CMAKE_C_COMPILER /usr/bin/clang)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+
 if(APPLE)
 	project(FuncDoodle C CXX OBJC)
 elseif(UNIX AND NOT APPLE)

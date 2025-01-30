@@ -10,6 +10,8 @@
 
 #include <utility>
 
+#include "MacroUtils.h"
+
 #include "Player.h"
 
 namespace FuncDoodle {
@@ -212,7 +214,7 @@ namespace FuncDoodle {
 		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) &&
 				ImGui::IsMouseDown(0)) {
 			if (m_ToolManager == nullptr) {
-				std::cerr << "???????" << std::endl;
+				FUNC_WARN("tool manager is nullptr");
 				std::exit(-1);
 			}
 
@@ -356,7 +358,7 @@ namespace FuncDoodle {
 		for (int y = 0; y < pixels->Height(); y++) {
 			for (int x = 0; x < pixels->Width(); x++) {
 				if (pixels == nullptr) {
-					std::cout << "PX NULLPTR" << std::endl;
+					FUNC_DBG("PX NULLPTR");
 				}
 				Col col = pixels->Get(x, y);
 				ImVec2 topLeft;

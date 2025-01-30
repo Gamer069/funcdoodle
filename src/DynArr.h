@@ -7,7 +7,7 @@
 namespace FuncDoodle {
 	class LongIndexArray {
 		public:
-			LongIndexArray(int width, int height, long initial_capacity = 10);
+			LongIndexArray(int width, int height, Col bgCol, long initial_capacity = 10);
 			~LongIndexArray();
 
 			void PushBack(const Frame* value);
@@ -35,6 +35,7 @@ namespace FuncDoodle {
 			long size = 0;
 			int m_Width;
 			int m_Height;
+			Col m_BG;
 
 			void Resize(long new_capacity);
 	};

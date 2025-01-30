@@ -10,7 +10,6 @@
 
 ## <span style="color: blue;">The header:</span>
 
-  
 | Type | Description |
 | ---- | ----------- |
 | str  | Must be "FDProj". If it's not this, isn't an .fdp file |
@@ -20,11 +19,10 @@
 | int  | Animation width |
 | int  | Animation height |
 | int  | Animation FPS |
-//| str  | Color space eg. sRGB, terminating with '.' |
-// will later add support for multiple color spaces, for now its only sRGB
 | str  | Animation display name, terminating with byte 0 |
 | str  | Animation description, terminating with byte 0 |
 | str  | Animation author, terminating with byte 0 |
+| [col](#Color) | BG color |
   
 
 ## <span style="color: cyan;">Palette</span>
@@ -34,11 +32,7 @@ For each color in the palette, this is the structure:
 | Type | Description |
 | ---- | ----------- |
 | long | color index |
-| int  | r |
-| int  | g |
-| int  | b |
-
-  
+| [col](#Color) | color |
   
 
 ## The actual format
@@ -58,6 +52,14 @@ An array variant which is used to describe palette colors:
 It's just continuous longs which are palette color indices.
 
 Also the origin for colors in frames is the top-left corner.
+
+## Color
+
+| Type | Description |
+| ---- | ----------- |
+| unsigned char | r |
+| unsigned char | g |
+| unsigned char | b |
 
   
 

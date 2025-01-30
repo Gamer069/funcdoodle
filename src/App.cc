@@ -174,6 +174,7 @@ namespace FuncDoodle {
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
 						m_CurrentProj = nullptr;
+						delete m_CurrentProj;
 					}
 					if (ImGui::MenuItem("Edit project")) {
 						m_EditProjOpen = true;
@@ -274,14 +275,13 @@ namespace FuncDoodle {
 				nfdresult_t result = NFD_PickFolder(0, &outPath);
 
 				if (result == NFD_OKAY) {
-					std::cout << "Exporting to " << outPath << std::endl;
+					FUNC_INF("Exporting to " + (std::string)outPath);
 					m_CurrentProj->Export(outPath, m_ExportFormat);
 					free(outPath);
 				} else if (result == NFD_CANCEL) {
-					std::cout << "Cancelled" << std::endl;
+					FUNC_DBG("Cancelled");
 				} else {
-					std::cout << "Failed to export: " << NFD_GetError()
-						<< std::endl;
+					FUNC_DBG("Failed to open file dialog" + (std::string)NFD_GetError());
 				}
 				m_ExportOpen = false;
 			}
@@ -372,14 +372,13 @@ namespace FuncDoodle {
 			}
 			ImGui::EndPopup();
 		}
-		// wasnt here before
 		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =
 				m_AssetLoader->GetPath().parent_path() / "keys.txt";
 			std::ifstream keysIn(keysPath);
 			if (!keysIn) {
-				std::cerr << "Failed to open file keys.txt" << std::endl;
+				FUNC_WARN("Failed to open file keys.txt");
 				ImGui::EndPopup();
 			}
 
@@ -393,7 +392,7 @@ namespace FuncDoodle {
 				buf[fileSize] = '\0';
 				ImGui::Text("%s", buf);
 			} else {
-				std::cerr << "Failed to read file keys.txt" << std::endl;
+				FUNC_WARN("Failed to read file keys.txt");
 				delete[] buf;
 				ImGui::EndPopup();
 			}
@@ -415,22 +414,14 @@ namespace FuncDoodle {
 			char author[100] = "";
 			int fps = 0;
 			char desc[512] = "";
-			if (m_CacheProj) {
-				strcpy(name, m_CacheProj->AnimName());
-				width = m_CacheProj->AnimWidth();
-				height = m_CacheProj->AnimHeight();
-				strcpy(author, m_CacheProj->AnimAuthor());
-				fps = m_CacheProj->AnimFPS();
-				strcpy(desc, m_CacheProj->AnimDesc());
-			} else {
+			float* bgCol = (float*)std::malloc(sizeof(float)*3);
+			if (!m_CacheProj) {
 				strcpy(name, (char*)"testproj");
 				width = 32;
 				height = 32;
-				char* username =
-					std::getenv("USER");  // Common on Linux and macOS
+				char* username = std::getenv("USER");  // Common on Linux and macOS
 				if (!username) {
-					username =
-						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+					username = std::getenv("LOGNAME");	 // Fallback for Linux and macOS
 				}
 				if (!username) {
 					username = std::getenv("USERNAME");	 // Common on Windows
@@ -438,10 +429,25 @@ namespace FuncDoodle {
 				strcpy(author, username);
 				fps = 10;
 				strcpy(desc, "Simple test project");
-
 				m_CacheProj = new ProjectFile(
 						(char*)"testproj", width, height, username, fps,
-						(char*)"Simple test project", m_Window);
+						(char*)"Simple test project", m_Window, Col{.r = 255, .g = 255, .b = 255});
+			} else {
+				strcpy(name, m_CacheProj->AnimName());
+				width = m_CacheProj->AnimWidth();
+				height = m_CacheProj->AnimHeight();
+				strcpy(author, m_CacheProj->AnimAuthor());
+				fps = m_CacheProj->AnimFPS();
+				strcpy(desc, m_CacheProj->AnimDesc());
+				if (bgCol) {
+					float r = (float)(m_CacheProj->BgCol().r) / 255;
+					float g = (float)(m_CacheProj->BgCol().g) / 255;
+					float b = (float)(m_CacheProj->BgCol().b) / 255;
+					bgCol = new float[3];
+					bgCol[0] = r;
+					bgCol[1] = g;
+					bgCol[2] = b;
+				}
 			}
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
@@ -469,6 +475,10 @@ namespace FuncDoodle {
 			}
 			if (ImGui::InputText("Description", desc, sizeof(name))) {
 				m_CacheProj->SetAnimDesc(desc);
+			}
+			if (ImGui::ColorPicker3("BG", bgCol)) {
+				if (m_CacheProj)
+					m_CacheProj->SetBgCol(bgCol);
 			}
 
 			if (ImGui::Button("Close") ||
@@ -501,8 +511,7 @@ namespace FuncDoodle {
 				glfwSetWindowTitle(m_Window, title);
 				free(title);
 			} else {
-				std::cerr << "Failed to malloc title..? idek if that's possible"
-					<< std::endl;
+				FUNC_WARN("Failed to allocate title -- perhaps you ran out of RAM?");
 			}
 		}
 
@@ -520,15 +529,15 @@ namespace FuncDoodle {
 			m_FilePath = outPath;
 			ReadProjectFile();
 		} else if (result == NFD_CANCEL) {
-			std::cout << "Cancelled" << std::endl;
+			FUNC_DBG("Cancelled");
 		} else {
-			std::cout << "Error: " << NFD_GetError() << std::endl;
+			FUNC_WARN("Failed to open file dialog -- " + (std::string)NFD_GetError());
 		}
 		free(outPath);
 	}
 	void Application::SaveFileDialog() {
 		if (m_CurrentProj == nullptr) {
-			std::cout << "No project to save!" << std::endl;
+			FUNC_INF("No project to save");
 			return;
 		}
 		nfdchar_t* outPath = 0;
@@ -539,25 +548,21 @@ namespace FuncDoodle {
 			SaveProjectFile();
 			free(outPath);
 		} else if (result == NFD_CANCEL) {
-			std::cout << "Cancelled" << std::endl;
+			FUNC_DBG("Cancelled");
 		} else {
-			std::cout << "Error: " << NFD_GetError() << std::endl;
+			FUNC_WARN("Failed to open save file dialog -- " + (std::string)NFD_GetError());
 		}
 	}
 	void Application::ReadProjectFile() {
 		// m_FilePath is the actual file that we're going to read
 		if (m_FilePath == nullptr) {
-			std::cout
-				<< "Congratulations! You've found a weird bug that i've "
-				"never seen before! Please screen record urself and make "
-				"a github issue on this project. I rlly wanna fix this."
-				<< std::endl;
+			FUNC_DBG("@Application::ReadProjectFile -- m_FilePath is nullptr");
 			return;
 		}
 
 		if (m_CurrentProj == nullptr) {
 			m_CurrentProj = new ProjectFile((char*)"", 1, 1, (char*)"", 0,
-					(char*)"", m_Window);
+					(char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0});
 		}
 
 		m_CurrentProj->ReadAndPopulate(m_FilePath);
@@ -566,11 +571,7 @@ namespace FuncDoodle {
 	}
 	void Application::SaveProjectFile() {
 		if (m_FilePath == nullptr) {
-			std::cout
-				<< "Congratulations! You've found a weird bug that i've "
-				"never seen before! Please screen record urself and make "
-				"a github issue on this project. I rlly wanna fix this."
-				<< std::endl;
+			FUNC_DBG("@Application::SaveProjectFile -- m_FilePath is nullptr");
 			return;
 		}
 		m_CurrentProj->Write(m_FilePath);

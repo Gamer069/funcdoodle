@@ -36,10 +36,10 @@ namespace FuncDoodle {
 	};
 	class ImageArray {
 		public:
-			ImageArray(int width, int height);
+			ImageArray(int width, int height, Col bgCol);
 			~ImageArray();
 
-			void RedoColorAdjustment();
+			void RedoColorAdjustment(Col bgCol);
 			void Resize();
 			void Set(int x, int y, const Col& color);
 			Col Get(int x, int y) const;
@@ -56,24 +56,27 @@ namespace FuncDoodle {
 				this->m_Data = data;
 			}
 			inline const std::vector<Col>& Data() const { return m_Data; }
+			inline const Col BgCol() const { return m_BG; }
+			inline void SetBG(const Col bgCol) { m_BG = bgCol; }
 
 		private:
 			int m_Width = 32;
 			int m_Height = 32;
 			std::vector<Col> m_Data;
+			Col m_BG;
 	};
 	class Frame {
 		public:
 			Frame(const Frame& other) {
 				m_Pixels = new ImageArray(*other.Pixels());
 			}
-			Frame(int width, int height) {
-				m_Pixels = new ImageArray(width, height);
+			Frame(int width, int height, Col bgCol) {
+				m_Pixels = new ImageArray(width, height, bgCol);
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr) {};
 			~Frame() {};
-			void ReInit(int width, int height) {
-				m_Pixels = new ImageArray(width, height);
+			void ReInit(int width, int height, Col bgCol) {
+				m_Pixels = new ImageArray(width, height, bgCol);
 			}
 			Frame& operator=(const Frame& other);
 			void SetWidth(int width, bool clear = false);
@@ -84,6 +87,7 @@ namespace FuncDoodle {
 			void Export(char* filePath);
 
 			inline const ImageArray* Pixels() const { return m_Pixels; }
+			inline ImageArray* PixelsMut() { return m_Pixels; }
 			inline void SetPixel(int x, int y, Col px) {
 				m_Pixels->Set(x, y, px);
 			}

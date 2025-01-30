@@ -16,6 +16,8 @@
 
 #include "LoadedImages.h"
 
+#include "MacroUtils.h"
+
 #include <stb_image.h>
 
 float SAMPLE_RATE = 44100.0;
@@ -36,7 +38,7 @@ enum Note { C4, D4, E4, F4, G4, A4, B4, C5 };
 std::vector<std::pair<Note, double>> melody = {};
 
 void GLFWErrorCallback(int error, const char* desc) {
-	std::cerr << "GLFW ERROR (" << error << "): " << desc << std::endl;
+	FUNC_WARN("GLFW ERROR (" + std::to_string(error) + "): " + (std::string)desc);
 }
 
 void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
@@ -82,7 +84,6 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
 
 GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 	std::filesystem::path icon = assetsPath / "icon.png";
-	//std::cout << icon.string().c_str() << std::endl;
 	int width, height, chan;
 	unsigned char* data =
 		stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
@@ -93,8 +94,7 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 		icon->pixels = data;
 		return icon;
 	} else {
-		std::cerr << "Failed to read image data from assets/icon.png"
-				  << std::endl;
+		FUNC_WARN("Failed to read image data from window icon");
 		return nullptr;
 	}
 }
@@ -144,6 +144,10 @@ static int AudioCB(const void* inputBuffer, void* outputBuffer,
 }
 
 int main(int argc, char** argv) {
+	FUNC_WARN("Warning");
+	FUNC_INF("Info");
+	FUNC_DBG("DEBUG");
+	FUNC_GRAY("Gray");
 	const char* path = argv[0];
 	const char* lastSlash = strrchr(path, '/');
 	if (!lastSlash) {
@@ -228,23 +232,21 @@ int main(int argc, char** argv) {
 
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
-		std::cerr << "Failed to initialize port audio: " << Pa_GetErrorText(err)
-				  << std::endl;
+		FUNC_WARN("Failed to initialize port audio: " + (std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB,
 							   nullptr);
 	if (err != paNoError) {
-		std::cerr << "Failed to open default stream: " << Pa_GetErrorText(err)
-				  << std::endl;
+		FUNC_WARN("Failed to open default stream: " + (std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_StartStream(stream);
+
 	if (err != paNoError) {
-		std::cerr << "Failed to start stream: " << Pa_GetErrorText(err)
-				  << std::endl;
+		FUNC_WARN("Failed to start audio stream:" + (std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}

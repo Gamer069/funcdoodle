@@ -6,7 +6,10 @@
 
 #include "Action.h"
 
+#include "MacroUtils.h"
+
 #include <memory>
+#include <algorithm>
 
 #include <GLFW/glfw3.h>
 
@@ -14,7 +17,7 @@ namespace FuncDoodle {
 	class ProjectFile {
 		public:
 			ProjectFile(char name[256], int width, int height, char author[100],
-						int fps, char desc[512], GLFWwindow* win);
+						int fps, char desc[512], GLFWwindow* win, Col bgCol);
 			~ProjectFile();
 			const char* AnimName() const;
 			void SetAnimName(char name[256]);
@@ -30,6 +33,19 @@ namespace FuncDoodle {
 			void SetAnimDesc(char* desc);
 			const long AnimFrameCount() const;
 			void SetAnimFrameCount(long count);
+			inline void SetBgCol(const float* bgCol) {
+				// Ensure bgCol is valid and has at least 3 elements
+				if (bgCol) {
+					m_BG = Col{
+						.r = static_cast<unsigned char>(std::clamp(bgCol[0] * 255, 0.0f, 255.0f)),
+						.g = static_cast<unsigned char>(std::clamp(bgCol[1] * 255, 0.0f, 255.0f)),
+						.b = static_cast<unsigned char>(std::clamp(bgCol[2] * 255, 0.0f, 255.0f))
+					};
+				}
+				m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
+				m_Frames->PushBackEmpty();
+   			}
+			inline const Col BgCol() { return m_BG; }
 			LongIndexArray* AnimFrames();
 			void Write(char* filePath);
 			void ReadAndPopulate(char* filePath);
@@ -61,5 +77,6 @@ namespace FuncDoodle {
 			std::stack<std::unique_ptr<Action>> m_UndoStack;
 			std::stack<std::unique_ptr<Action>> m_RedoStack;
 			bool m_Saved = false;
+			Col m_BG;
 	};
 }  // namespace FuncDoodle

@@ -10,8 +10,6 @@
 #include <stack>
 #include <vector>
 
-#include <type_traits>
-
 #include <GLFW/glfw3.h>
 
 #include "MacroUtils.h"
@@ -30,7 +28,7 @@
 
 namespace FuncDoodle {
 	ProjectFile::ProjectFile(char name[], int width, int height, char author[],
-							 int fps, char desc[], GLFWwindow* win)
+							 int fps, char desc[], GLFWwindow* win, Col bgCol)
 		: m_Window(win) {
 		strcpy(m_Name, name);
 		m_Width = width;
@@ -38,7 +36,11 @@ namespace FuncDoodle {
 		strcpy(m_Author, author);
 		m_FPS = fps;
 		strcpy(m_Desc, desc);
-		m_Frames = new LongIndexArray(width, height);
+
+		m_BG = bgCol;
+		FUNC_DBG("m_BG RGB -- " + std::to_string(m_BG.r) + "," + std::to_string(m_BG.g) + "," + std::to_string(m_BG.b));
+
+		m_Frames = new LongIndexArray(width, height, bgCol);
 		m_Frames->PushBackEmpty();
 
 		m_UndoStack = std::stack<std::unique_ptr<Action>>();
@@ -56,7 +58,7 @@ namespace FuncDoodle {
 	}
 
 	void ProjectFile::Export(char* filePath, int format) {
-		std::cout << "Exporting to " << filePath << std::endl;
+		FUNC_GRAY(strcat((char*)"Exporting to ", filePath));
 
 		LongIndexArray* frames = AnimFrames();
 
@@ -72,7 +74,7 @@ namespace FuncDoodle {
 		}
 
 		if (format == 1) {
-			std::cout << "EXPORTING TO MP4" << std::endl;
+			FUNC_GRAY("Exporting to mp4...");
 			// TODO: properly implement video exporting...
 			char cmd[1024];
 #ifndef _WIN32
@@ -93,8 +95,7 @@ namespace FuncDoodle {
 		}
 
 		if (format > 1) {
-			std::cerr << "Failed to export animation: format not yet supported"
-					  << std::endl;
+			FUNC_WARN("Failed to export animation -- format not yet supported, this shouldn't normally occur unless there's a bug. Submit a github issue");
 			std::exit(-1);
 		}
 	}
@@ -174,7 +175,7 @@ namespace FuncDoodle {
 	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
-			std::cout << "INFO: Nothing to undo" << std::endl;
+			FUNC_INF("Nothing to undo");
 			return;
 		}
 
@@ -190,7 +191,7 @@ namespace FuncDoodle {
 
 	void ProjectFile::Redo() {
 		if (m_RedoStack.empty()) {
-			std::cout << "INFO: Nothing to redo" << std::endl;
+			FUNC_INF("Nothing to redo");
 			return;
 		}
 		m_Saved = false;
@@ -205,7 +206,7 @@ namespace FuncDoodle {
 	void ProjectFile::Write(char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
 		if (!outFile.is_open()) {
-			std::cerr << "Failed to open file for writing" << std::endl;
+			FUNC_WARN("Failed to open file for writing");
 			return;
 		}
 
@@ -225,6 +226,8 @@ namespace FuncDoodle {
 		outFile << m_Desc;	// animation description
 		WRITEB(null);
 		outFile << m_Author;  // animation author
+		WRITEB(null);
+		outFile << m_BG;
 		WRITEB(null);
 
 		LongIndexArray* frameData = AnimFrames();
@@ -279,7 +282,7 @@ namespace FuncDoodle {
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {
-			std::cerr << "Failed to open file" << std::endl;
+			FUNC_WARN("Failed to open file");
 			std::exit(-1);
 		}
 
@@ -289,7 +292,7 @@ namespace FuncDoodle {
 		file.read(&str[0], numBytes);
 
 		if (str != "FDProj") {
-			std::cerr << "This isn't a funcdooodle project" << std::endl;
+			FUNC_WARN("This isn't a funcdoodle project...");
 			std::exit(-1);
 		}
 
@@ -313,31 +316,35 @@ namespace FuncDoodle {
 		file.getline(m_Name, sizeof(m_Name), '\0');
 
 		if (file.fail()) {
-			std::cerr << file.tellg();
-			std::cerr << "IM DISSAPOINTED THAT THE DAMN FILE HAS JUST FAILED"
-					  << std::endl;
+			FUNC_WARN("Failed to read file");
 		}
 
 		file.getline(m_Desc, sizeof(m_Desc), '\0');
 
 		file.getline(m_Author, sizeof(m_Author), '\0');
 
+		unsigned char bgR = 255;
+		unsigned char bgG = 255;
+		unsigned char bgB = 255;
+
+		file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
+		file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
+		file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
+
+		FUNC_DBG("BG RGB - " + std::to_string(bgR) + ";" + std::to_string(bgG) + ";" + std::to_string(bgB));
+
 		std::vector<Col> plte;
 
 		std::size_t plteLen = 0;
 
 		if (file.fail()) {
-			std::cerr << file.tellg();
-			std::cerr << "IM DISSAPOINTED THAT THE DAMN FILE HAS JUST FAILED"
-					  << std::endl;
+			FUNC_WARN("Failed to read file");
 		}
 
 		file.read(reinterpret_cast<char*>(&plteLen), sizeof(plteLen));
 
 		if (file.fail()) {
-			std::cerr << file.tellg();
-			std::cerr << "IM DISSAPOINTED THAT THE DAMN FILE HAS JUST FAILED"
-					  << std::endl;
+			FUNC_WARN("Failed to read file");
 		}
 
 		for (std::size_t i = 0; i < plteLen; i++) {
@@ -352,22 +359,19 @@ namespace FuncDoodle {
 			plte.push_back(Col{.r = r, .g = g, .b = b});
 		}
 
-		m_Frames = new LongIndexArray(m_Width, m_Height);
+		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 
 		for (long i = 0; i < frameCount; i++) {
-			ImageArray* img = new ImageArray(animWidth, animHeight);
-			// read colorarr: OOPS
+			ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 			for (int y = 0; y < animHeight; y++) {
 				for (int x = 0; x < animWidth; x++) {
-					// Read raw bytes first
 					unsigned char bytes[sizeof(int)];
 					file.read(reinterpret_cast<char*>(bytes), sizeof(int));
 
-					// Convert to index
 					int index = *reinterpret_cast<int*>(bytes);
 
 					if (index > plteLen) {
-						std::cerr << "ERROR: INDEX OUT OF BOUNDS" << std::endl;
+						FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
 						std::exit(-1);
 					}
 
@@ -390,11 +394,11 @@ namespace FuncDoodle {
 		file.getline(eop, sizeof(eop), '\0');
 
 		if (strcmp(eop, "EOP") == 0) {
-			std::cout << "SUCCESS!" << std::endl;
+			FUNC_INF("SUCCESS READING FILE!");
 		}
 
 		if (!file) {
-			std::cerr << "Failed to read from file." << std::endl;
+			FUNC_WARN("Failed to read from file");
 			std::exit(-1);
 		}
 

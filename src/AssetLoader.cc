@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "MacroUtils.h"
+
 #include <glad/glad.h>
 
 namespace FuncDoodle {
@@ -20,19 +22,17 @@ namespace FuncDoodle {
 	}
 
 	void AssetLoader::LoadAssets() {
-		std::cout << "Finding assets path..." << std::endl;
+		FUNC_DBG("Finding assets path...");
 		if (std::filesystem::exists(m_AssetsPath)) {
-			std::cout << "Successfully found assets path: " << m_AssetsPath
-					  << std::endl;
+			FUNC_DBG("Found assets path @" + m_AssetsPath.string());
 		} else {
-			std::cerr << "Assets path does not exist: " << m_AssetsPath
-					  << std::endl;
+			FUNC_WARN("Failed to find assets path -- " + m_AssetsPath.string() + " doesn't exist");
 			std::exit(-1);
 		}
 	}
 	void AssetLoader::UnloadAssets() {
-		std::cout << "Unloading assets..." << std::endl;
-		std::cout << "Assets unloaded." << std::endl;
+		FUNC_DBG("Unloading assets even though there aren't even any assets to unload, this is a useless function (for now)-");
+		FUNC_DBG("\"Unloaded assets\"...");
 	}
 
 	// NOTE: this function doesnt support svg because stb_image doesn't support
@@ -44,13 +44,10 @@ namespace FuncDoodle {
 		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(),
 										&width, &height, &channels, 0);
 		if (!data) {
-			std::cerr << "Failed to load image "
-					  << (m_AssetsPath / name).string().c_str() << std::endl;
-			std::cerr << "Error: " << stbi_failure_reason() << std::endl;
-			std::cerr << "Image dimensions: " << width << "x" << height
-					  << ", channels: " << channels << std::endl;
-			std::cerr << "Attempted to load from assets path: " << m_AssetsPath
-					  << std::endl;
+			FUNC_WARN("Failed to load image " + (m_AssetsPath / name).string());
+			FUNC_WARN("Error: " << stbi_failure_reason());
+			FUNC_WARN("Image dim: " + std::to_string(width) + "x" + std::to_string(height) + ", channels: " + std::to_string(channels));
+			FUNC_WARN("Tried to load from assets path -- " + m_AssetsPath.string());
 			std::exit(-1);
 		}
 
@@ -74,13 +71,10 @@ namespace FuncDoodle {
 		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(),
 										&width, &height, &channels, 0);
 		if (!data) {
-			std::cerr << "Failed to load image "
-					  << (m_AssetsPath / name).string().c_str() << std::endl;
-			std::cerr << "Error: " << stbi_failure_reason() << std::endl;
-			std::cerr << "Image dimensions: " << width << "x" << height
-					  << ", channels: " << channels << std::endl;
-			std::cerr << "Attempted to load from assets path: " << m_AssetsPath
-					  << std::endl;
+			FUNC_WARN("Failed to load image " + (m_AssetsPath / name).string());
+			FUNC_WARN("Error: " << stbi_failure_reason());
+			FUNC_WARN("Image dim: " + std::to_string(width) + "x" + std::to_string(height) + ", channels: " + std::to_string(channels));
+			FUNC_WARN("Tried to load from assets path -- " + m_AssetsPath.string());
 			std::exit(-1);
 		}
 

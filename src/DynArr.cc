@@ -3,8 +3,10 @@
 #include "Frame.h"
 #include <iostream>
 
+#include "MacroUtils.h"
+
 namespace FuncDoodle {
-	LongIndexArray::LongIndexArray(int width, int height, long initialcap)
+	LongIndexArray::LongIndexArray(int width, int height, Col bgCol, long initialcap)
 		: m_Capacity(initialcap), size(0), m_Width(width), m_Height(height) {
 		if (m_Capacity < 1)
 			m_Capacity = 1;
@@ -14,13 +16,16 @@ namespace FuncDoodle {
 			m_Height = 1;
 		m_Data = (Frame*)malloc(m_Capacity * sizeof(Frame));
 		for (int i = 0; i < m_Capacity; ++i) {
-			m_Data[i] = Frame(m_Width, m_Height);
+			m_Data[i] = Frame(m_Width, m_Height, bgCol);
 		}
 		if (!m_Data) {	// Error if allocation fails
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Memory allocation for m_Data failed.\n";
+			FUNC_WARN("Failed to initialize LongIndexArray");
+			FUNC_DBG("Memory allocation for m_Data failed.");
+			std::exit(-1);
 		}
+
+		m_BG = bgCol;
+		FUNC_DBG("m_BG RGB -- " + std::to_string(m_BG.r) + "," + std::to_string(m_BG.g) + "," + std::to_string(m_BG.b));
 	}
 
 	LongIndexArray::~LongIndexArray() {
@@ -29,9 +34,8 @@ namespace FuncDoodle {
 
 	void LongIndexArray::PushBack(const Frame* value) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted push_back on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted push_back on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
@@ -40,14 +44,13 @@ namespace FuncDoodle {
 		}
 
 		m_Data[size++] = *value;
-		std::cout << "PUSH BACK" << std::endl;
+		FUNC_DBG("PUSH BACK TO LONGINDEXARRAY");
 	}
 
 	void LongIndexArray::PushBackEmpty() {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted push_back on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted push_back on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
@@ -55,22 +58,19 @@ namespace FuncDoodle {
 			Resize(m_Capacity * 2);
 		}
 
-		static Frame empty = Frame(m_Width, m_Height);
+		Frame empty = Frame(m_Width, m_Height, m_BG);
 		m_Data[size++] = empty;
 	}
 
 	void LongIndexArray::InsertAfterEmpty(long index) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertAfter on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -84,23 +84,21 @@ namespace FuncDoodle {
 		}
 
 		// Insert the new value after the specified index
-		Frame* empty = new Frame(m_Width, m_Height);
+		Frame* empty = new Frame(m_Width, m_Height, m_BG);
+		// here bg is white for some reason
 		m_Data[index + 1] = *empty;
 		++size;
 	}
 
 	void LongIndexArray::InsertBeforeEmpty(long index) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertBefore on nullptr m_Data.\n";
+			FUNC_WARN("Tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("InsertBeforeEmpty");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -114,28 +112,25 @@ namespace FuncDoodle {
 		}
 
 		// Insert the new element at the selected index
-		Frame* empty = new Frame(m_Width, m_Height);
+		Frame* empty = new Frame(m_Width, m_Height, m_BG);
 		m_Data[index] = *empty;
 		++size;
 	}
 
 	void LongIndexArray::InsertAfter(long index, const Frame* value) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertAfter on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (!value) {
-			std::cerr << "Trying to insert nullptr frame" << std::endl;
+			FUNC_WARN("Tried to insert invalid frame");
 			return;
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -155,16 +150,13 @@ namespace FuncDoodle {
 
 	void LongIndexArray::InsertAfter(long index, const Frame val) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertAfter on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -184,21 +176,18 @@ namespace FuncDoodle {
 
 	void LongIndexArray::InsertBefore(long index, const Frame* value) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertBefore on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted insert_before on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (!value) {
-			std::cerr << "Trying to insert a nullptr frame." << std::endl;
+			FUNC_WARN("tried to add invalid frame");
 			return;
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -217,15 +206,12 @@ namespace FuncDoodle {
 	}
 	void LongIndexArray::InsertBefore(long index, const Frame val) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted insertBefore on nullptr m_Data.\n";
+			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted insert_before on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -245,9 +231,8 @@ namespace FuncDoodle {
 
 	void LongIndexArray::MoveBackward(long i) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted moveBackward on nullptr m_Data.\n";
+			FUNC_WARN("tried to move a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted move_backward on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
@@ -260,9 +245,8 @@ namespace FuncDoodle {
 
 	void LongIndexArray::MoveForward(long i) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted moveForward on nullptr m_Data.\n";
+			FUNC_WARN("tried to move a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted move_forward on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
@@ -275,16 +259,13 @@ namespace FuncDoodle {
 
 	void LongIndexArray::Remove(long index) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted remove on nullptr m_Data.\n";
+			FUNC_WARN("Tried to delete a frame on invalid LongIndexArray");
+			FUNC_DBG("Attempted remove on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return;
 		}
 
@@ -297,18 +278,13 @@ namespace FuncDoodle {
 
 	Frame* LongIndexArray::operator[](long index) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted index access on nullptr m_Data.\n";
-			// Return a reference to a dummy value (nullptr equivalent
-			// behavior)
+			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
+			FUNC_DBG("operator[], NOT LongIndexArray::Get even though they're the exact same");
 			return nullptr;
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			// Returning a reference to a dummy value
 			return nullptr;
 		}
@@ -318,16 +294,13 @@ namespace FuncDoodle {
 
 	const Frame* LongIndexArray::operator[](long index) const {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted index access on nullptr m_Data.\n";
+			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
+			FUNC_DBG("const operator[], NOT LongIndexArray::Get even though they're the exact same");
 			return nullptr;
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return nullptr;
 		}
 
@@ -336,16 +309,13 @@ namespace FuncDoodle {
 
 	Frame* LongIndexArray::Get(long index) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted get on nullptr m_Data.\n";
+			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
+			FUNC_DBG("LongIndexArray::Get, NOT const operator[] even though they're the exact same");
 			return nullptr;
 		}
 
 		if (index < 0 || index >= size) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__ << ": Index " << index
-					  << " is out of range.\n";
+			FUNC_WARN("index out of range");
 			return nullptr;
 		}
 
@@ -354,9 +324,8 @@ namespace FuncDoodle {
 
 	void LongIndexArray::Resize(long newCap) {
 		if (!m_Data) {
-			std::cerr << "Error in " << __func__ << " in file " << __FILE__
-					  << " at line " << __LINE__
-					  << ": Attempted Resize on nullptr m_Data.\n";
+			FUNC_WARN("Attempted to resize invalid LongIndexArray");
+			FUNC_DBG("LongIndexArray::Resize, nullptr m_Data");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
