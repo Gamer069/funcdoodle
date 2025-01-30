@@ -211,7 +211,7 @@ namespace FuncDoodle {
 
 		outFile << "FDProj";
 		int major = 0;
-		int minor = 1;
+		int minor = 2;
 		long frames = m_Frames->Size();
 		WRITEB(major);	   // version major
 		WRITEB(minor);	   // version minor
