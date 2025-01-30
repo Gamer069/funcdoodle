@@ -38,7 +38,6 @@ namespace FuncDoodle {
 		strcpy(m_Desc, desc);
 
 		m_BG = bgCol;
-		FUNC_DBG("m_BG RGB -- " + std::to_string(m_BG.r) + "," + std::to_string(m_BG.g) + "," + std::to_string(m_BG.b));
 
 		m_Frames = new LongIndexArray(width, height, bgCol);
 		m_Frames->PushBackEmpty();

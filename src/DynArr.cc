@@ -25,7 +25,6 @@ namespace FuncDoodle {
 		}
 
 		m_BG = bgCol;
-		FUNC_DBG("m_BG RGB -- " + std::to_string(m_BG.r) + "," + std::to_string(m_BG.g) + "," + std::to_string(m_BG.b));
 	}
 
 	LongIndexArray::~LongIndexArray() {
