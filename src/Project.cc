@@ -301,6 +301,7 @@ namespace FuncDoodle {
 		if (verMinor != FDPVERMINOR || verMajor != FDPVERMAJOR) {
 			FUNC_WARN("The project version " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR) + " isn't supported by this version by FuncDoodle.");
 			FUNC_GRAY("Perhaps migrate your project file to this version: " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR));
+			std::exit(-1);
 		}
 		unsigned long frameCount = 0;
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
