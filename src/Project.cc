@@ -63,7 +63,7 @@ namespace FuncDoodle {
 
 		char curFilePath[512];
 
-		for (long i = 0; i < AnimFrameCount(); i++) {
+		for (unsigned long i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
 			sprintf(curFilePath, "%s/frame_%ld.png", filePath, i);
 #else
@@ -104,7 +104,7 @@ namespace FuncDoodle {
 	}
 
 	void ProjectFile::SetAnimWidth(int width, bool clear) {
-		for (long i = 0; i < AnimFrameCount(); ++i) {
+		for (unsigned long i = 0; i < AnimFrameCount(); ++i) {
 			m_Frames->Get(i)->SetWidth(width, clear);
 		}
 		m_Width = width;
@@ -114,7 +114,7 @@ namespace FuncDoodle {
 		return m_Height;
 	}
 	void ProjectFile::SetAnimHeight(int height, bool clear) {
-		for (long i = 0; i < AnimFrameCount(); ++i) {
+		for (unsigned long i = 0; i < AnimFrameCount(); ++i) {
 			m_Frames->Get(i)->SetHeight(height, clear);
 		}
 		m_Height = height;
@@ -141,7 +141,7 @@ namespace FuncDoodle {
 		strcpy(m_Desc, desc);
 	}
 
-	const long ProjectFile::AnimFrameCount() const {
+	const unsigned long ProjectFile::AnimFrameCount() const {
 		return m_Frames->Size();
 	}
 	LongIndexArray* ProjectFile::AnimFrames() {
@@ -210,11 +210,10 @@ namespace FuncDoodle {
 		}
 
 		outFile << "FDProj";
-		int major = 0;
-		int minor = 2;
-		long frames = m_Frames->Size();
-		WRITEB(major);	   // version major
-		WRITEB(minor);	   // version minor
+		// 0.3
+		unsigned long frames = m_Frames->Size();
+		WRITEB(FDPVERMAJOR);
+		WRITEB(FDPVERMINOR);
 		WRITEB(frames);	   // frame count (default)
 		WRITEB(m_Width);   // animation width
 		WRITEB(m_Height);  // animation height
@@ -236,7 +235,7 @@ namespace FuncDoodle {
 		std::map<Col, int> colorToIndex;  // Map each color to its stable index
 
 		// First pass: collect unique colors with stable ordering
-		for (long i = 0; i < AnimFrameCount(); i++) {
+		for (unsigned long i = 0; i < AnimFrameCount(); i++) {
 			auto pixels = frameData->Get(i)->Pixels();
 			for (int x = 0; x < pixels->Width(); x++) {
 				for (int y = 0; y < pixels->Height(); y++) {
@@ -261,7 +260,7 @@ namespace FuncDoodle {
 		}
 
 		// Write frame data using stable indices
-		for (long i = 0; i < AnimFrameCount(); i++) {
+		for (unsigned long i = 0; i < AnimFrameCount(); i++) {
 			auto pixels = frameData->Get(i)->Pixels();
 			for (int y = 0; y < pixels->Height(); y++) {
 				for (int x = 0; x < pixels->Width(); x++) {
@@ -299,7 +298,11 @@ namespace FuncDoodle {
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
-		long frameCount = 0;
+		if (verMinor != FDPVERMINOR || verMajor != FDPVERMAJOR) {
+			FUNC_WARN("The project version " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR) + " isn't supported by this version by FuncDoodle.");
+			FUNC_GRAY("Perhaps migrate your project file to this version: " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR));
+		}
+		unsigned long frameCount = 0;
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -360,7 +363,7 @@ namespace FuncDoodle {
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 
-		for (long i = 0; i < frameCount; i++) {
+		for (unsigned long i = 0; i < frameCount; i++) {
 			ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 			for (int y = 0; y < animHeight; y++) {
 				for (int x = 0; x < animWidth; x++) {

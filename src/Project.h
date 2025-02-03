@@ -31,8 +31,8 @@ namespace FuncDoodle {
 			void SetAnimFPS(int FPS);
 			const char* AnimDesc() const;
 			void SetAnimDesc(char* desc);
-			const long AnimFrameCount() const;
-			void SetAnimFrameCount(long count);
+			const unsigned long AnimFrameCount() const;
+			void SetAnimFrameCount(unsigned long count);
 			inline void SetBgCol(const float* bgCol) {
 				// Ensure bgCol is valid and has at least 3 elements
 				if (bgCol) {

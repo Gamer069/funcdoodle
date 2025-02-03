@@ -25,7 +25,7 @@ namespace FuncDoodle {
 
 		private:
 			ProjectFile* m_Proj;
-			long m_SelectedFrame;
+			unsigned long m_SelectedFrame;
 			FrameRenderer* m_FrameRenderer;
 			ToolManager* m_ToolManager;
 			AnimationPlayer* m_Player;

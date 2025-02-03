@@ -15,7 +15,7 @@
 | str  | Must be "FDProj". If it's not this, isn't an .fdp file |
 | int  | Version major |
 | int  | Version minor |
-| long | Length of animation in frames |
+| unsigned long | Length of animation in frames |
 | int  | Animation width |
 | int  | Animation height |
 | int  | Animation FPS |
@@ -31,7 +31,7 @@ For each color in the palette, this is the structure:
 
 | Type | Description |
 | ---- | ----------- |
-| long | color index |
+| unsigned long | color index |
 | [col](#Color) | color |
   
 
@@ -49,7 +49,7 @@ The .fdp file format uses this structure per frame to describe frames:
 
 An array variant which is used to describe palette colors:
 
-It's just continuous longs which are palette color indices.
+It's just continuous unsigned longs which are palette color indices.
 
 Also the origin for colors in frames is the top-left corner.
 

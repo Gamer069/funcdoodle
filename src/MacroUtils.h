@@ -64,3 +64,6 @@
 #else
 #define FUNCVER "v0.0.5md"
 #endif
+
+#define FDPVERMAJOR 0
+#define FDPVERMINOR 3

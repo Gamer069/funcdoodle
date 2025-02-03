@@ -165,7 +165,7 @@ namespace FuncDoodle {
 		}
 
 		// Render frames
-		for (long i = 0; i < m_Proj->AnimFrameCount(); i++) {
+		for (unsigned long i = 0; i < m_Proj->AnimFrameCount(); i++) {
 			drawList->AddText(
 				font, fontSize,
 				m_SelectedFrame == i

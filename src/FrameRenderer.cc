@@ -15,7 +15,7 @@
 #include "Player.h"
 
 namespace FuncDoodle {
-	void FrameRenderer::RenderFrame(long frameI) {
+	void FrameRenderer::RenderFrame(unsigned long frameI) {
 		ImGui::SetNextWindowPos(ImVec2(0, 32), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Frame");
@@ -62,7 +62,7 @@ namespace FuncDoodle {
 
 		ImGui::End();
 	}
-	void FrameRenderer::InitPixels(long frameI) {
+	void FrameRenderer::InitPixels(unsigned long frameI) {
 		const ImageArray* pixels = m_Frame->Pixels();
 
 		// Get window dimensions before handling zoom

@@ -6,7 +6,7 @@
 #include "MacroUtils.h"
 
 namespace FuncDoodle {
-	LongIndexArray::LongIndexArray(int width, int height, Col bgCol, long initialcap)
+	LongIndexArray::LongIndexArray(int width, int height, Col bgCol, unsigned long initialcap)
 		: m_Capacity(initialcap), size(0), m_Width(width), m_Height(height) {
 		if (m_Capacity < 1)
 			m_Capacity = 1;
@@ -61,7 +61,7 @@ namespace FuncDoodle {
 		m_Data[size++] = empty;
 	}
 
-	void LongIndexArray::InsertAfterEmpty(long index) {
+	void LongIndexArray::InsertAfterEmpty(unsigned long index) {
 		if (!m_Data) {
 			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
@@ -78,7 +78,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right, starting from the end
-		for (long i = size; i > index + 1; --i) {
+		for (unsigned long i = size; i > index + 1; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -89,7 +89,7 @@ namespace FuncDoodle {
 		++size;
 	}
 
-	void LongIndexArray::InsertBeforeEmpty(long index) {
+	void LongIndexArray::InsertBeforeEmpty(unsigned long index) {
 		if (!m_Data) {
 			FUNC_WARN("Tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("InsertBeforeEmpty");
@@ -106,7 +106,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right from the selected index
-		for (long i = size; i > index; --i) {
+		for (unsigned long i = size; i > index; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -116,7 +116,7 @@ namespace FuncDoodle {
 		++size;
 	}
 
-	void LongIndexArray::InsertAfter(long index, const Frame* value) {
+	void LongIndexArray::InsertAfter(unsigned long index, const Frame* value) {
 		if (!m_Data) {
 			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
@@ -138,7 +138,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right, starting from the end
-		for (long i = size; i > index + 1; --i) {
+		for (unsigned long i = size; i > index + 1; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -147,7 +147,7 @@ namespace FuncDoodle {
 		++size;
 	}
 
-	void LongIndexArray::InsertAfter(long index, const Frame val) {
+	void LongIndexArray::InsertAfter(unsigned long index, const Frame val) {
 		if (!m_Data) {
 			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
@@ -164,7 +164,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right, starting from the end
-		for (long i = size; i > index + 1; --i) {
+		for (unsigned long i = size; i > index + 1; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -173,7 +173,7 @@ namespace FuncDoodle {
 		++size;
 	}
 
-	void LongIndexArray::InsertBefore(long index, const Frame* value) {
+	void LongIndexArray::InsertBefore(unsigned long index, const Frame* value) {
 		if (!m_Data) {
 			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_before on nullptr m_Data.");
@@ -195,7 +195,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right from the selected index
-		for (long i = size; i > index; --i) {
+		for (unsigned long i = size; i > index; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -203,7 +203,7 @@ namespace FuncDoodle {
 		m_Data[index] = *value;
 		++size;
 	}
-	void LongIndexArray::InsertBefore(long index, const Frame val) {
+	void LongIndexArray::InsertBefore(unsigned long index, const Frame val) {
 		if (!m_Data) {
 			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_before on nullptr m_Data.");
@@ -219,7 +219,7 @@ namespace FuncDoodle {
 		}
 
 		// Shift elements to the right from the selected index
-		for (long i = size; i > index; --i) {
+		for (unsigned long i = size; i > index; --i) {
 			m_Data[i] = m_Data[i - 1];
 		}
 
@@ -228,7 +228,7 @@ namespace FuncDoodle {
 		++size;
 	}
 
-	void LongIndexArray::MoveBackward(long i) {
+	void LongIndexArray::MoveBackward(unsigned long i) {
 		if (!m_Data) {
 			FUNC_WARN("tried to move a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted move_backward on nullptr m_Data.");
@@ -242,7 +242,7 @@ namespace FuncDoodle {
 		m_Data[i - 1] = temp;
 	}
 
-	void LongIndexArray::MoveForward(long i) {
+	void LongIndexArray::MoveForward(unsigned long i) {
 		if (!m_Data) {
 			FUNC_WARN("tried to move a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted move_forward on nullptr m_Data.");
@@ -256,7 +256,7 @@ namespace FuncDoodle {
 		m_Data[i + 1] = temp;
 	}
 
-	void LongIndexArray::Remove(long index) {
+	void LongIndexArray::Remove(unsigned long index) {
 		if (!m_Data) {
 			FUNC_WARN("Tried to delete a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted remove on nullptr m_Data.");
@@ -269,13 +269,13 @@ namespace FuncDoodle {
 		}
 
 		// Shift all elements after index one position to the left
-		for (long i = index; i < size - 1; i++) {
+		for (unsigned long i = index; i < size - 1; i++) {
 			m_Data[i] = m_Data[i + 1];
 		}
 		size--;
 	}
 
-	Frame* LongIndexArray::operator[](long index) {
+	Frame* LongIndexArray::operator[](unsigned long index) {
 		if (!m_Data) {
 			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
 			FUNC_DBG("operator[], NOT LongIndexArray::Get even though they're the exact same");
@@ -291,7 +291,7 @@ namespace FuncDoodle {
 		return &m_Data[index];
 	}
 
-	const Frame* LongIndexArray::operator[](long index) const {
+	const Frame* LongIndexArray::operator[](unsigned long index) const {
 		if (!m_Data) {
 			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
 			FUNC_DBG("const operator[], NOT LongIndexArray::Get even though they're the exact same");
@@ -306,7 +306,7 @@ namespace FuncDoodle {
 		return &m_Data[index];
 	}
 
-	Frame* LongIndexArray::Get(long index) {
+	Frame* LongIndexArray::Get(unsigned long index) {
 		if (!m_Data) {
 			FUNC_WARN("Attempted to access index on invalid LongIndexArray");
 			FUNC_DBG("LongIndexArray::Get, NOT const operator[] even though they're the exact same");
@@ -321,7 +321,7 @@ namespace FuncDoodle {
 		return &m_Data[index];
 	}
 
-	void LongIndexArray::Resize(long newCap) {
+	void LongIndexArray::Resize(unsigned long newCap) {
 		if (!m_Data) {
 			FUNC_WARN("Attempted to resize invalid LongIndexArray");
 			FUNC_DBG("LongIndexArray::Resize, nullptr m_Data");
@@ -331,7 +331,7 @@ namespace FuncDoodle {
 		if (newCap <= m_Capacity)
 			return;
 		Frame* newData = (Frame*)malloc(newCap * sizeof(Frame));
-		for (long i = 0; i < size; ++i) {
+		for (unsigned long i = 0; i < size; ++i) {
 			newData[i] = m_Data[i];
 		}
 
