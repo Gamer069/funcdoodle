@@ -20,6 +20,8 @@
 
 #include <stb_image.h>
 
+#include "exepath.h"
+
 float SAMPLE_RATE = 44100.0;
 
 std::vector<double> notes = {
@@ -148,7 +150,8 @@ int main(int argc, char** argv) {
 	FUNC_INF("Info");
 	FUNC_DBG("DEBUG");
 	FUNC_GRAY("Gray");
-	const char* path = argv[0];
+	const char* path = exepath::get();
+	FUNC_DBG(path);
 	const char* lastSlash = strrchr(path, '/');
 	if (!lastSlash) {
 		lastSlash = strrchr(path, '\\');
