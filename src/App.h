@@ -10,8 +10,8 @@ namespace FuncDoodle {
 			Application(GLFWwindow* win, AssetLoader* assetLoader);
 			~Application();
 			void RenderImGui();
-			void OpenFileDialog();
-			void SaveFileDialog();
+			void OpenFileDialog(std::function<void()> done);
+			void SaveFileDialog(std::function<void()> done);
 			void ReadProjectFile();
 			void SaveProjectFile();
 			void CheckKeybinds(char* newProj, char* open, char* save,
@@ -35,5 +35,6 @@ namespace FuncDoodle {
 			bool m_EditPrefsOpen = false;
 			bool m_ShowKeybindsOpen = false;
 			int m_Theme = 0;
+			int m_MigrationProjVersion = 0;
 	};
 }  // namespace FuncDoodle

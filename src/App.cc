@@ -10,12 +10,14 @@
 #include <iostream>
 #include <stdint.h>
 #include <string.h>
+#include <vector>
 
 #include <fstream>
 
 #include "LoadedImages.h"
 
 #include "MacroUtils.h"
+
 
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader)
@@ -132,10 +134,10 @@ namespace FuncDoodle {
 			m_NewProjOpen = true;
 		}
 		if (isShortcutPressed(openShortcut)) {
-			OpenFileDialog();
+			OpenFileDialog([&](){this->ReadProjectFile();});
 		}
 		if (isShortcutPressed(saveShortcut)) {
-			SaveFileDialog();
+			SaveFileDialog([&](){this->SaveProjectFile();});
 		}
 		if (isShortcutPressed(quitShortcut)) {
 			glfwSetWindowShouldClose(m_Window, true);
@@ -166,10 +168,10 @@ namespace FuncDoodle {
 				}
 
 				if (ImGui::MenuItem("Open", openShortcut)) {
-					this->OpenFileDialog();
+					this->OpenFileDialog([&](){this->ReadProjectFile();});
 				}
 				if (ImGui::MenuItem("Save", saveShortcut)) {
-					this->SaveFileDialog();
+					this->SaveFileDialog([&](){this->SaveProjectFile();});
 				}
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
@@ -226,7 +228,6 @@ namespace FuncDoodle {
 		}
 
 		// TODO: add default pos for keybinds
-
 		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
 			const char* themes[] = {"Custom", "Dark", "Light", "Classic"};
@@ -303,7 +304,7 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
 		}
 		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+					ImGuiWindowFlags_AlwaysAutoResize) && m_CurrentProj) {
 			char name[256];
 			strcpy(name, m_CurrentProj->AnimName());
 			int width = m_CurrentProj->AnimWidth();
@@ -521,21 +522,22 @@ namespace FuncDoodle {
 		free(exportShortcut);
 		free(quitShortcut);
 	}
-	void Application::OpenFileDialog() {
+	void Application::OpenFileDialog(std::function<void()> done) {
 		nfdchar_t* outPath = 0;
 		nfdresult_t result = NFD_OpenDialog("fdp", 0, &outPath);
 
 		if (result == NFD_OKAY) {
 			m_FilePath = outPath;
-			ReadProjectFile();
+			done();
+			free(outPath);
 		} else if (result == NFD_CANCEL) {
 			FUNC_DBG("Cancelled");
 		} else {
-			FUNC_WARN("Failed to open file dialog -- " + (std::string)NFD_GetError());
+			FUNC_WARN("Failed to open open file dialog -- " + (std::string)NFD_GetError());
 		}
-		free(outPath);
+		//free(outPath);
 	}
-	void Application::SaveFileDialog() {
+	void Application::SaveFileDialog(std::function<void()> done) {
 		if (m_CurrentProj == nullptr) {
 			FUNC_INF("No project to save");
 			return;
@@ -545,7 +547,7 @@ namespace FuncDoodle {
 
 		if (result == NFD_OKAY) {
 			m_FilePath = outPath;
-			SaveProjectFile();
+			done();
 			free(outPath);
 		} else if (result == NFD_CANCEL) {
 			FUNC_DBG("Cancelled");
@@ -634,7 +636,7 @@ namespace FuncDoodle {
 				invertColor(btnOpenCol);
 				invertColor(tintOpen);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-					OpenFileDialog();
+					OpenFileDialog([&](){this->ReadProjectFile();});
 				}
 			}
 		}
@@ -662,7 +664,7 @@ namespace FuncDoodle {
 		ImGui::Separator();
 
 		if (ImGui::Button("Yes")) {
-			SaveFileDialog();
+			SaveFileDialog([&](){this->SaveProjectFile();});
 			glfwSetWindowShouldClose(m_Window, true);
 		}
 		ImGui::SameLine();

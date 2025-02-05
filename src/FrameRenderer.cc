@@ -143,7 +143,8 @@ namespace FuncDoodle {
 							DrawAction(newX, newY, prevColor, nextColor, frameI,
 									   m_Player->Proj());
 						if (prevColor != nextColor) {
-							m_Player->Proj()->PushUndoableDrawAction(action);
+							// if (m_Player->Proj())
+								m_Player->Proj()->PushUndoableDrawAction(action);
 						}
 					}
 				}

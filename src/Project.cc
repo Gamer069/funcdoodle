@@ -212,8 +212,10 @@ namespace FuncDoodle {
 		outFile << "FDProj";
 		// 0.3
 		unsigned long frames = m_Frames->Size();
-		WRITEB(FDPVERMAJOR);
-		WRITEB(FDPVERMINOR);
+		int major = FDPVERMAJOR;
+		int minor = FDPVERMINOR;
+		WRITEB(major);
+		WRITEB(minor);
 		WRITEB(frames);	   // frame count (default)
 		WRITEB(m_Width);   // animation width
 		WRITEB(m_Height);  // animation height
@@ -294,15 +296,18 @@ namespace FuncDoodle {
 			std::exit(-1);
 		}
 
+		m_UndoStack = std::stack<std::unique_ptr<Action>>();
+		m_RedoStack = std::stack<std::unique_ptr<Action>>();
+
 		int verMajor = 0;
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
-		if (verMinor != FDPVERMINOR || verMajor != FDPVERMAJOR) {
-			FUNC_WARN("The project version " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR) + " isn't supported by this version by FuncDoodle.");
-			FUNC_GRAY("Perhaps migrate your project file to this version: " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR));
-			std::exit(-1);
-		}
+		// if (verMinor != FDPVERMINOR || verMajor != FDPVERMAJOR) {
+			// FUNC_WARN("The project version " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR) + " isn't supported by this version by FuncDoodle.");
+			// FUNC_GRAY("Perhaps migrate your project file to this version: " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR));
+			// std::exit(-1);
+		// }
 		unsigned long frameCount = 0;
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
@@ -330,9 +335,19 @@ namespace FuncDoodle {
 		unsigned char bgG = 255;
 		unsigned char bgB = 255;
 
-		file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
-		file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
-		file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
+		FUNC_WARN("STARTING VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
+
+		if (verMajor != 0 && verMinor != 1) {
+			file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
+			file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
+			file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
+		} else {
+			verMinor++;
+			if (verMinor >= 10) {
+				verMinor = 0;
+				verMajor++;
+			}
+		}
 
 		FUNC_DBG("BG RGB - " + std::to_string(bgR) + ";" + std::to_string(bgG) + ";" + std::to_string(bgB));
 
@@ -363,29 +378,59 @@ namespace FuncDoodle {
 		}
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
+		if (verMajor != 0 && verMinor != 2) {
+			for (unsigned long i = 0; i < frameCount; i++) {
+				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
+				for (int y = 0; y < animHeight; y++) {
+					for (int x = 0; x < animWidth; x++) {
+						unsigned char bytes[sizeof(int)];
+						file.read(reinterpret_cast<char*>(bytes), sizeof(int));
 
-		for (unsigned long i = 0; i < frameCount; i++) {
-			ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
-			for (int y = 0; y < animHeight; y++) {
-				for (int x = 0; x < animWidth; x++) {
-					unsigned char bytes[sizeof(int)];
-					file.read(reinterpret_cast<char*>(bytes), sizeof(int));
+						int index = *reinterpret_cast<int*>(bytes);
 
-					int index = *reinterpret_cast<int*>(bytes);
+						if (index > plteLen) {
+							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
+							std::exit(-1);
+						}
 
-					if (index > plteLen) {
-						FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
-						std::exit(-1);
+						img->Set(x, y, plte[index]);
 					}
-
-					img->Set(x, y, plte[index]);
 				}
-			}
-			Frame newFrame = Frame(img);
-			m_Frames->PushBack(&newFrame);
+				Frame newFrame = Frame(img);
+				m_Frames->PushBack(&newFrame);
 
-			unsigned char null;
-			file.read(reinterpret_cast<char*>(&null), 1);
+				unsigned char null;
+				file.read(reinterpret_cast<char*>(&null), 1);
+			}
+		} else {
+			for (long i = 0; i < frameCount; i++) {
+				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
+				for (int y = 0; y < animHeight; y++) {
+					for (int x = 0; x < animWidth; x++) {
+						unsigned char bytes[sizeof(int)];
+						file.read(reinterpret_cast<char*>(bytes), sizeof(int));
+
+						int index = *reinterpret_cast<int*>(bytes);
+
+						if (index < 0 || index > plteLen) {
+							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_INF("Index: " + std::to_string(index));
+							std::exit(-1);
+						}
+
+						img->Set(x, y, plte[index]);
+					}
+				}
+				Frame newFrame = Frame(img);
+				m_Frames->PushBack(&newFrame);
+				unsigned char null;
+				file.read(reinterpret_cast<char*>(&null), 1);
+			}
+			if (verMinor >= 10) {
+				verMinor = 0;
+				verMajor++;
+			}
+			verMinor++;
 		}
 		m_Width = animWidth;
 		m_Height = animHeight;

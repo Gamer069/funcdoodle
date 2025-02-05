@@ -19,7 +19,7 @@ namespace FuncDoodle {
 			void RenderControls();
 
 			const ProjectFile* Proj() const { return m_Proj; }
-			void SetProj(ProjectFile* proj) { m_Proj = proj; }
+			void SetProj(ProjectFile* proj) { m_Proj = proj; m_Player->SetProj(proj); }
 			AnimationPlayer* Player() const { return m_Player; }
 			void SetPlayer(AnimationPlayer* player) { m_Player = player; }
 

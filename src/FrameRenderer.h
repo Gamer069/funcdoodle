@@ -35,6 +35,7 @@ namespace FuncDoodle {
 			const int Index() const { return m_Index; }
 			void SetIndex(int index) { m_Index = index; }
 			void SetPreviousFrame(Frame* frame) { m_PreviousFrame = frame; }
+			void SetPlayer(AnimationPlayer* player) { m_Player = player; }
 			const Frame* PreviousFrame() const { return m_PreviousFrame; }
 			inline void SetPixelScale(int pixelScale) {
 				m_PixelScale = pixelScale;
