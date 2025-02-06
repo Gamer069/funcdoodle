@@ -1,5 +1,0 @@
-/usr/bin/caffeine-indicator:184: PyGIDeprecationWarning: Since version 3.11, calling threads_init is no longer needed. See: https://wiki.gnome.org/PyGObject/Threading
-  GObject.threads_init()
-/usr/bin/caffeine-indicator:106: DeprecationWarning: AyatanaAppIndicator3.Indicator.set_icon is deprecated
-  self.AppInd.set_icon(icon_name)
-INFO:root:caffeine-indicator is inhibiting desktop idleness
