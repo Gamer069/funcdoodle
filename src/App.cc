@@ -376,7 +376,7 @@ namespace FuncDoodle {
 		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =
-				m_AssetLoader->GetPath().parent_path() / "keys.txt";
+				m_AssetLoader->GetPath() / "keys.txt";
 			std::ifstream keysIn(keysPath);
 			if (!keysIn) {
 				FUNC_WARN("Failed to open file keys.txt");
