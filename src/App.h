@@ -27,10 +27,10 @@ namespace FuncDoodle {
 			ProjectFile* m_CurrentProj;
 			ProjectFile* m_CacheProj;
 			AnimationManager* m_Manager;
-			bool m_EditProjOpen;
 			GLFWwindow* m_Window;
 			AssetLoader* m_AssetLoader;
 			int m_ExportFormat = 0;
+			bool m_EditProjOpen = false;
 			bool m_ExportOpen = false;
 			bool m_EditPrefsOpen = false;
 			bool m_ShowKeybindsOpen = false;
