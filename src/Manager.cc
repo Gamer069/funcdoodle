@@ -183,6 +183,9 @@ namespace FuncDoodle {
 			curFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
 			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
+			// wasn't here b4
+			delete curFrameRenderer;
+
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();

@@ -71,7 +71,7 @@ namespace FuncDoodle {
 		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 
 		// Handle zoom input with window size constraints
-		if (!ImGui::IsAnyItemActive()) {
+		if (!ImGui::IsAnyItemActive() && ImGui::IsWindowFocused()) {
 			if (ImGui::IsKeyPressed(ImGuiKey_Equal)) {	// = key for zoom in
 				m_PixelScale += 1;
 			}
@@ -116,9 +116,10 @@ namespace FuncDoodle {
 		ImVec2 mousePos = ImGui::GetMousePos();
 		ImVec2 frameMin(startX, startY);
 		ImVec2 frameMax(startX + frameWidth, startY + frameHeight);
-		unsigned char colNew[3] = {255, 255, 255};
+		unsigned char colNew[3] = {m_Player->Proj()->BgCol().r, m_Player->Proj()->BgCol().g, m_Player->Proj()->BgCol().b};
 
 		auto pencil = [&](ImVec2 currentPixel) {
+			// if (m_ToolManager->PickerSelected()) return;
 			const float* colOld = m_ToolManager->Col();
 			for (int j = 0; j < 3; j++) {
 				colNew[j] =
@@ -143,14 +144,14 @@ namespace FuncDoodle {
 							DrawAction(newX, newY, prevColor, nextColor, frameI,
 									   m_Player->Proj());
 						if (prevColor != nextColor) {
-							// if (m_Player->Proj())
-								m_Player->Proj()->PushUndoableDrawAction(action);
+							m_Player->Proj()->PushUndoableDrawAction(action);
 						}
 					}
 				}
 			}
 		};
 		auto eraser = [&](ImVec2 currentPixel) {
+			// if (m_ToolManager->PickerSelected()) return;
 			int size = m_ToolManager->Size();
 
 			for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
@@ -177,6 +178,7 @@ namespace FuncDoodle {
 		};
 
 		auto bucket = [&](ImVec2 currentPixel) {
+			// if (m_ToolManager->PickerSelected()) return;
 			const float* colOld = m_ToolManager->Col();
 			unsigned char colResult[3];
 			for (int j = 0; j < 3; j++) {
@@ -210,14 +212,13 @@ namespace FuncDoodle {
 			colNew[1] = (float)col.g / 255.0f;
 			colNew[2] = (float)col.b / 255.0f;
 		};
+		if (m_ToolManager == nullptr) {
+			FUNC_WARN("tool manager is nullptr");
+			std::exit(-1);
+		}
 
 		// Check if mouse is within frame bounds and mouse button is down
-		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) &&
-				ImGui::IsMouseDown(0)) {
-			if (m_ToolManager == nullptr) {
-				FUNC_WARN("tool manager is nullptr");
-				std::exit(-1);
-			}
+		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && ImGui::IsMouseDown(0)) {
 
 			// Calculate current pixel coordinates
 			ImVec2 currentPixel((mousePos.x - startX) / m_PixelScale,
@@ -274,8 +275,7 @@ namespace FuncDoodle {
 					}
 				} else {
 					// Draw single pixel if no last position
-					unsigned char colNew[3] = {
-						255, 255, 255};	 // Default white for eraser
+					unsigned char colNew[3] = {m_Player->Proj()->BgCol().r, m_Player->Proj()->BgCol().g, m_Player->Proj()->BgCol().b};
 					if (focusedWindow &&
 							strcmp(focusedWindow->Name, curName) == 0) {
 						if (selectedTool == 0) {

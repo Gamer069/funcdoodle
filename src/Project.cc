@@ -277,6 +277,7 @@ namespace FuncDoodle {
 
 		outFile << "EOP";
 		outFile.close();
+		m_Saved = true;
 	}
 	void ProjectFile::ReadAndPopulate(char* filePath) {
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
@@ -435,6 +436,7 @@ namespace FuncDoodle {
 		m_Width = animWidth;
 		m_Height = animHeight;
 		m_FPS = animFPS;
+		m_Saved = true;
 		// maybe decide if the color space is needed cos everything is sRGB
 		// nowadays.
 
@@ -451,7 +453,6 @@ namespace FuncDoodle {
 		}
 
 		file.close();
-		m_Saved = true;
 	}
 
 	void ProjectFile::DisplayFPS() {

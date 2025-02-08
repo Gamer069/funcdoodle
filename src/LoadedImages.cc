@@ -1,17 +1,17 @@
 #include "LoadedImages.h"
 
 namespace FuncDoodle {
-	uint32_t s_PlayTexId = 255;
-	uint32_t s_PauseTexId = 255;
-	uint32_t s_RewindTexId = 255;
-	uint32_t s_EndTexId = 255;
-	uint32_t s_PencilTexId = 255;
-	uint32_t s_PickerTexId = 255;
-	uint32_t s_EraserTexId = 255;
-	uint32_t s_BucketTexId = 255;
-	uint32_t s_TextTexId = 255;
-	uint32_t s_AddTexId = 255;
-	uint32_t s_OpenTexId = 255;
+	uint32_t s_PlayTexId = 0;
+	uint32_t s_PauseTexId = 0;
+	uint32_t s_RewindTexId = 0;
+	uint32_t s_EndTexId = 0;
+	uint32_t s_PencilTexId = 0;
+	uint32_t s_PickerTexId = 0;
+	uint32_t s_EraserTexId = 0;
+	uint32_t s_BucketTexId = 0;
+	uint32_t s_TextTexId = 0;
+	uint32_t s_AddTexId = 0;
+	uint32_t s_OpenTexId = 0;
 	void GlobalLoadImages(AssetLoader* assetLoader) {
 		s_PlayTexId = assetLoader->LoadImage("play.png");
 		s_PauseTexId = assetLoader->LoadImage("pause.png");

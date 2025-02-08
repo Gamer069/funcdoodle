@@ -1,12 +1,10 @@
 #pragma once
 
-#include "Gui.h"
-
-#include "Tool.h"
-
 #include "Frame.h"
 
 #include "AssetLoader.h"
+
+#include "MacroUtils.h"
 
 namespace FuncDoodle {
 	class ToolManager {
@@ -25,11 +23,13 @@ namespace FuncDoodle {
 			}
 			const int Size() const { return m_Size; }
 			void SetSize(int size) { m_Size = size; }
+			const bool PickerSelected() { return m_PickerSelected; }
 
 		private:
 			int m_SelectedTool = 0;
 			float m_Col[3] = {0.0f, 0.0f, 0.0f};
 			int m_Size = 1;
 			AssetLoader* m_AssetLoader;
+			bool m_PickerSelected = false;
 	};
 }  // namespace FuncDoodle

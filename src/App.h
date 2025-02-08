@@ -4,6 +4,8 @@
 #include "Manager.h"
 #include "Project.h"
 
+#include <functional>
+
 namespace FuncDoodle {
 	class Application {
 		public:
@@ -18,9 +20,12 @@ namespace FuncDoodle {
 							   char* exportShortcut, char* quit);
 			void RenderOptions();
 			void SaveChangesDialog();
+			void OpenSaveChangesDialog();
+			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
 			static void CustomStyle();
 			inline ProjectFile* CurProj() { return m_CurrentProj; }
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
+			inline bool ShouldClose() { return m_ShouldClose; }
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;
@@ -34,7 +39,9 @@ namespace FuncDoodle {
 			bool m_ExportOpen = false;
 			bool m_EditPrefsOpen = false;
 			bool m_ShowKeybindsOpen = false;
+			bool m_SaveChangesOpen = false;
 			int m_Theme = 0;
 			int m_MigrationProjVersion = 0;
+			bool m_ShouldClose = false;
 	};
 }  // namespace FuncDoodle

@@ -3,6 +3,8 @@
 #include "Gui.h"
 #include "Tool.h"
 
+#include "MacroUtils.h"
+
 #include "LoadedImages.h"
 
 namespace FuncDoodle {
@@ -91,6 +93,7 @@ namespace FuncDoodle {
 
 		if (m_SelectedTool != 1) {
 			ImGui::ColorPicker3("Col", m_Col);
+			// TODO: change m_PickerSelected
 		}
 
 		if (m_Size < 1)

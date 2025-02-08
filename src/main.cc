@@ -85,12 +85,13 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
 }
 
 GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
+	FUNC_INF(assetsPath / "icon.png");
 	std::filesystem::path icon = assetsPath / "icon.png";
 	int width, height, chan;
 	unsigned char* data =
 		stbi_load(icon.string().c_str(), &width, &height, &chan, 0);
 	if (data) {
-		GLFWimage* icon = (GLFWimage*)malloc(sizeof(GLFWimage*));
+		GLFWimage* icon = (GLFWimage*)malloc(sizeof(GLFWimage));
 		icon->width = width;
 		icon->height = height;
 		icon->pixels = data;
@@ -224,6 +225,8 @@ int main(int argc, char** argv) {
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
+	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
+
 	// In your style setup
 	FuncDoodle::Application::CustomStyle();
 
@@ -271,6 +274,15 @@ int main(int argc, char** argv) {
 
 	while (!glfwWindowShouldClose(win)) {
 		GlobalAppTick(win, lastFrameTime, application, io);
+		if (application->ShouldClose()) {
+			break;
+		}
+		if (glfwWindowShouldClose(win)) {
+			if (application->CurProj() && !application->CurProj()->Saved()) {
+				glfwSetWindowShouldClose(win, false);
+				application->OpenSaveChangesDialog();
+			}
+		}
 	}
 	delete application;
 

@@ -27,7 +27,7 @@ namespace FuncDoodle {
 		m_AssetLoader(assetLoader) {}
 	Application::~Application() {
 		delete m_Manager;
-		delete m_FilePath;
+		//delete m_FilePath;
 		delete m_CurrentProj;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
@@ -251,6 +251,8 @@ namespace FuncDoodle {
 			ImGui::EndPopup();
 		}
 
+		SaveChangesDialog();
+
 		if (m_ExportOpen) {
 			ImGui::OpenPopup("Export##modal");
 		}
@@ -406,26 +408,25 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
 		}
-
-		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256] = "";
 			int width = 32;
 			int height = 32;
 			char author[100] = "";
 			int fps = 0;
 			char desc[512] = "";
-			float* bgCol = (float*)std::malloc(sizeof(float)*3);
+			static float* bgCol = (float*)std::malloc(sizeof(float)*3);  // Initialize as nullptr
+
 			if (!m_CacheProj) {
 				strcpy(name, (char*)"testproj");
 				width = 32;
 				height = 32;
-				char* username = std::getenv("USER");  // Common on Linux and macOS
+				char* username = std::getenv("USER");
 				if (!username) {
-					username = std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+					username = std::getenv("LOGNAME");
 				}
 				if (!username) {
-					username = std::getenv("USERNAME");	 // Common on Windows
+					username = std::getenv("USERNAME");
 				}
 				strcpy(author, username);
 				fps = 10;
@@ -440,16 +441,19 @@ namespace FuncDoodle {
 				strcpy(author, m_CacheProj->AnimAuthor());
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
+
 				if (bgCol) {
 					float r = (float)(m_CacheProj->BgCol().r) / 255;
 					float g = (float)(m_CacheProj->BgCol().g) / 255;
 					float b = (float)(m_CacheProj->BgCol().b) / 255;
-					bgCol = new float[3];
+					bgCol = new float[3];  // Allocate a new array for bgCol
 					bgCol[0] = r;
 					bgCol[1] = g;
 					bgCol[2] = b;
 				}
 			}
+
+			// GUI inputs for project properties
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
 			}
@@ -482,19 +486,17 @@ namespace FuncDoodle {
 					m_CacheProj->SetBgCol(bgCol);
 			}
 
-			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				m_NewProjOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("OK") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+			if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
 				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
 				m_NewProjOpen = false;
 			}
+
 			ImGui::EndPopup();
 		}
 
@@ -659,19 +661,38 @@ namespace FuncDoodle {
 				ImGui::ColorConvertFloat4ToU32(tintOpen));
 	}
 	void Application::SaveChangesDialog() {
-		ImGui::Begin("Save Changes?", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-		ImGui::Text("There are unsaved changes. Do you wanna save them?");
-		ImGui::Separator();
+		if (m_SaveChangesOpen) {
+			ImGui::OpenPopup("SaveChanges");
+			m_SaveChangesOpen = false;
+		}
 
-		if (ImGui::Button("Yes")) {
-			SaveFileDialog([&](){this->SaveProjectFile();});
-			glfwSetWindowShouldClose(m_Window, true);
+		if (ImGui::BeginPopupModal("SaveChanges")) {
+			ImGui::Text("Save changes?");
+			if (ImGui::Button("Yes")) {
+				SaveFileDialog([&]{ SaveProjectFile(); });
+				//glfwSetWindowShouldClose(m_Window, true);
+				m_ShouldClose = true;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("No")) {
+				//glfwSetWindowShouldClose(m_Window, true);
+				m_ShouldClose = true;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel")) {
+				m_ShouldClose = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button("No")) {
-			glfwSetWindowShouldClose(m_Window, true);
-		}
-		ImGui::End();
+	}
+	void Application::OpenSaveChangesDialog() {
+		FUNC_DBG("Saved?: " + std::to_string(m_CurrentProj->Saved()));
+		FUNC_DBG("m_SaveChangesOpen is getting set to true");
+		m_SaveChangesOpen = true;
+		FUNC_DBG("set m_SaveChangesOpen");
 	}
 	void Application::CustomStyle() {
 		ImGui::StyleColorsDark();
