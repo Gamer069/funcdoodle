@@ -17,6 +17,8 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
+#include <format>
+
 #include <ctime>
 
 #include <stdlib.h>
@@ -227,7 +229,9 @@ namespace FuncDoodle {
 		WRITEB(null);
 		outFile << m_Author;  // animation author
 		WRITEB(null);
-		outFile << m_BG;
+		outFile << m_BG.r;
+		outFile << m_BG.g;
+		outFile << m_BG.b;
 		WRITEB(null);
 
 		LongIndexArray* frameData = AnimFrames();
@@ -304,11 +308,6 @@ namespace FuncDoodle {
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
-		// if (verMinor != FDPVERMINOR || verMajor != FDPVERMAJOR) {
-			// FUNC_WARN("The project version " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR) + " isn't supported by this version by FuncDoodle.");
-			// FUNC_GRAY("Perhaps migrate your project file to this version: " + std::to_string(FDPVERMAJOR) + "." + std::to_string(FDPVERMINOR));
-			// std::exit(-1);
-		// }
 		unsigned long frameCount = 0;
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
@@ -336,19 +335,22 @@ namespace FuncDoodle {
 		unsigned char bgG = 255;
 		unsigned char bgB = 255;
 
-		FUNC_WARN("STARTING VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
+		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
 
 		if (verMajor != 0 && verMinor != 1) {
 			file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
 			file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
 			file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
 		} else {
-			verMinor++;
-			if (verMinor >= 10) {
-				verMinor = 0;
-				verMajor++;
+			if (verMajor != FDPVERMAJOR && verMinor != FDPVERMINOR) {
+				verMinor++;
+				if (verMinor >= 10) {
+					verMinor = 0;
+					verMajor++;
+				}
 			}
 		}
+		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
 
 		FUNC_DBG("BG RGB - " + std::to_string(bgR) + ";" + std::to_string(bgG) + ";" + std::to_string(bgB));
 
@@ -379,11 +381,13 @@ namespace FuncDoodle {
 		}
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
+		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
 		if (verMajor != 0 && verMinor != 2) {
 			for (unsigned long i = 0; i < frameCount; i++) {
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {
+						std::cout << "PIXEL " << std::endl;
 						unsigned char bytes[sizeof(int)];
 						file.read(reinterpret_cast<char*>(bytes), sizeof(int));
 
@@ -431,7 +435,9 @@ namespace FuncDoodle {
 				verMinor = 0;
 				verMajor++;
 			}
-			verMinor++;
+			if (verMajor != FDPVERMAJOR && verMinor != FDPVERMINOR) {
+				verMinor++;
+			}
 		}
 		m_Width = animWidth;
 		m_Height = animHeight;
