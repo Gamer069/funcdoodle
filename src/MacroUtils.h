@@ -58,6 +58,10 @@
 	do {                                                                       \
 		std::cout << "\033[90m[Note]: " << x << "\033[0m" << std::endl;        \
 	} while (0)
+
+#include "Gui.h"
+
+#define INVERTED_IMCOL(r, g, b) IM_COL32(255 - r, 255 - g, 255 - b, 255)
 // VERSION SCHEME -- major, minor, patch, modifier -- minor/&debug ||
 // (m)ajor/&debug
 

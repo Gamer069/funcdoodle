@@ -2,10 +2,12 @@
 
 #include "Gui.h"
 
+#include "Frame.h"
+
 namespace FuncDoodle {
 	class Grid {
 		public:
-			Grid(int gridWidth, int gridHeight);
+			Grid(int gridWidth, int gridHeight, Col opposite);
 			~Grid();
 			void RenderWithDrawList(ImDrawList* drawList, ImVec2 startPos,
 									ImVec2 endPos);
@@ -26,5 +28,6 @@ namespace FuncDoodle {
 			int m_GridWidth;
 			int m_GridHeight;
 			bool m_ShowGrid;
+			Col m_OppositeCol;
 	};
 }  // namespace FuncDoodle

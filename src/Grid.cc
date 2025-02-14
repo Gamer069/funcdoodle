@@ -4,7 +4,11 @@
 
 #include <iostream>
 
+#include "MacroUtils.h"
+
 #include <cmath>
+
+#include "Frame.h"
 
 namespace FuncDoodle {
 	void Grid::RenderWithDrawList(ImDrawList* drawList, ImVec2 startPos,
@@ -20,20 +24,18 @@ namespace FuncDoodle {
 		// Draw vertical lines with rounded positions
 		for (int x = 0; x <= m_GridWidth; x++) {
 			float xPos = std::round(startPos.x + x * cellWidth) - 0.7f;
-			drawList->AddLine(ImVec2(xPos, startPos.y), ImVec2(xPos, endPos.y),
-							  IM_COL32(0, 0, 0, 255)  // Gray color
+			drawList->AddLine(ImVec2(xPos, startPos.y), ImVec2(xPos, endPos.y), INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g, m_OppositeCol.b)  // Gray color
 			);
 		}
 
 		// Draw horizontal lines with rounded positions
 		for (int y = 0; y <= m_GridHeight; y++) {
 			float yPos = std::round(startPos.y + y * cellHeight) - 0.7f;
-			drawList->AddLine(ImVec2(startPos.x, yPos), ImVec2(endPos.x, yPos),
-							  IM_COL32(0, 0, 0, 255)  // Gray color
+			drawList->AddLine(ImVec2(startPos.x, yPos), ImVec2(endPos.x, yPos), INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g, m_OppositeCol.b)  // Gray color
 			);
 		}
 	}
-	Grid::Grid(int gridWidth, int gridHeight)
-		: m_GridWidth(gridWidth), m_GridHeight(gridHeight), m_ShowGrid(false) {}
+	Grid::Grid(int gridWidth, int gridHeight, Col opposite)
+		: m_GridWidth(gridWidth), m_GridHeight(gridHeight), m_ShowGrid(false), m_OppositeCol(opposite) {}
 	Grid::~Grid() {}
 }  // namespace FuncDoodle

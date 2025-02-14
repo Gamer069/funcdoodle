@@ -24,7 +24,7 @@ namespace FuncDoodle {
 			return;
 
 		if (!m_Grid) {
-			m_Grid = new Grid(m_Frame->Width(), m_Frame->Height());
+			m_Grid = new Grid(m_Frame->Width(), m_Frame->Height(), m_Player->Proj()->BgCol());
 		}
 
 		if (ImGui::BeginPopupContextWindow()) {

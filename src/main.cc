@@ -290,7 +290,7 @@ int main(int argc, char** argv) {
 	Pa_CloseStream(stream);
 	Pa_Terminate();
 
-	// Cleanup
+	// cleanup code
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
