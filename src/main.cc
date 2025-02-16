@@ -40,7 +40,7 @@ enum Note { C4, D4, E4, F4, G4, A4, B4, C5 };
 std::vector<std::pair<Note, double>> melody = {};
 
 void GLFWErrorCallback(int error, const char* desc) {
-	FUNC_WARN("GLFW ERROR (" + std::to_string(error) + "): " + (std::string)desc);
+	FUNC_WARN("GLFW ERROR (" << error << "): " << desc);
 }
 
 void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,

@@ -46,7 +46,7 @@ namespace FuncDoodle {
 		if (!data) {
 			FUNC_WARN("Failed to load image " + (m_AssetsPath / name).string());
 			FUNC_WARN("Error: " << stbi_failure_reason());
-			FUNC_WARN("Image dim: " + std::to_string(width) + "x" + std::to_string(height) + ", channels: " + std::to_string(channels));
+			FUNC_WARN("Image dim: " << width << "x" << height << ", channels: " << channels);
 			FUNC_WARN("Tried to load from assets path -- " + m_AssetsPath.string());
 			std::exit(-1);
 		}
@@ -73,7 +73,7 @@ namespace FuncDoodle {
 		if (!data) {
 			FUNC_WARN("Failed to load image " + (m_AssetsPath / name).string());
 			FUNC_WARN("Error: " << stbi_failure_reason());
-			FUNC_WARN("Image dim: " + std::to_string(width) + "x" + std::to_string(height) + ", channels: " + std::to_string(channels));
+			FUNC_WARN("Image dim: " << width << "x" << height << ", channels: " << channels);
 			FUNC_WARN("Tried to load from assets path -- " + m_AssetsPath.string());
 			std::exit(-1);
 		}

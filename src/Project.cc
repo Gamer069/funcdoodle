@@ -341,11 +341,9 @@ namespace FuncDoodle {
 		unsigned char bgB = 255;
 
 		if (verMajor >= 0 && verMinor >= 1) {
-			FUNC_INF("BG READ!! YAY!!");
 			file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
 			file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
 			file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
-			FUNC_INF("bgR: " + std::to_string(bgR) + ", bgG: " + std::to_string(bgG) + ", bgB: " + std::to_string(bgB));
 		} else {
 			if (verMajor != FDPVERMAJOR && verMinor != FDPVERMINOR) {
 				verMinor++;
@@ -355,9 +353,7 @@ namespace FuncDoodle {
 				}
 			}
 		}
-		FUNC_DBG("BG RGB - " + std::to_string(bgR) + ";" + std::to_string(bgG) + ";" + std::to_string(bgB));
 
-		std::vector<Col> plte;
 
 		int plteLen = 0;
 
@@ -371,7 +367,6 @@ namespace FuncDoodle {
 			FUNC_WARN("Failed to read file");
 		}
 
-		FUNC_INF("Palette len: " + std::to_string(plteLen));
 		for (int i = 0; i < plteLen; i++) {
 			// read the rgb
 			unsigned char r = 0;
@@ -426,7 +421,7 @@ namespace FuncDoodle {
 
 						if (index < 0 || index > plteLen) {
 							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
-							FUNC_INF("Index: " + std::to_string(index));
+							FUNC_INF("Index: " << index);
 							std::exit(-1);
 						}
 

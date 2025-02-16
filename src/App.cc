@@ -689,7 +689,7 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::OpenSaveChangesDialog() {
-		FUNC_DBG("Saved?: " + std::to_string(m_CurrentProj->Saved()));
+		FUNC_DBG("Saved?: " << m_CurrentProj->Saved());
 		FUNC_DBG("m_SaveChangesOpen is getting set to true");
 		m_SaveChangesOpen = true;
 		FUNC_DBG("set m_SaveChangesOpen");

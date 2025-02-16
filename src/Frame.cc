@@ -52,10 +52,6 @@ namespace FuncDoodle {
 	Col ImageArray::Get(int x, int y) const {
 		if (x < 0 || x >= m_Width || y < 0 || y >= m_Height) {
 			// no
-			FUNC_DBG("X: " + std::to_string(x));
-			FUNC_DBG("Y: " + std::to_string(y));
-			FUNC_DBG("Width: " + std::to_string(m_Width));
-			FUNC_DBG("Height: " + std::to_string(m_Height));
 			throw std::out_of_range("Index out of range");
 		}
 		return m_Data[y * m_Width + x];
