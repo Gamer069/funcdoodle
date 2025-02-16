@@ -354,6 +354,7 @@ namespace FuncDoodle {
 			}
 		}
 
+		std::vector<Col> plte;
 
 		int plteLen = 0;
 
