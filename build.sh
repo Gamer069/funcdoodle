@@ -1,10 +1,11 @@
-if [[ $# -ne 3 ]]; then
-	echo "Usage: $0 <Debug/Release> <Is Tiling? (true/false)> <clean?>"
+if [[ $# -ne 4 ]]; then
+	echo "Usage: $0 <Debug/Release> <tiling?> <clean?> <run?>"
 	exit -1
 fi
 arg1=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 arg3=$(echo "$3" | tr '[:upper:]' '[:lower:]')
+arg4=$(echo "$4" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$arg1" != "debug" && "$arg1" != "release" ]]; then
 	echo "Mode must be either debug or release -- $arg1 is invalid"
@@ -16,6 +17,10 @@ if [[ "$arg2" != "true" && "$arg2" != "false" ]]; then
 fi
 if [[ "$arg3" != "true" && "$arg3" != "false" ]]; then
 	echo "clean argument must be true or false -- $arg3 is invalid"
+	exit -1
+fi
+if [[ "$arg4" != "true" && "$arg4" != "false" ]]; then
+	echo "run argument must be true or false -- $arg4 is invalid"
 	exit -1
 fi
 
@@ -32,4 +37,6 @@ make || exit -1
 cp -r ../assets . || exit -1
 cp ../keys.txt ./assets/ || exit -1
 cp ../icon.png ./assets/ || exit -1
-./FuncDoodle || exit -1
+if [[ "$arg4" == "true" ]]; then
+	./FuncDoodle || exit -1
+fi

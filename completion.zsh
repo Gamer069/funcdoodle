@@ -9,6 +9,7 @@ _script_completion() {
         1) opts="Debug Release" ;;
         2) opts="true false" ;;
         3) opts="true false" ;;
+		4) opts="true false" ;;
         *) return 0 ;;
     esac
 
