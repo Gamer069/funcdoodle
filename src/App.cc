@@ -759,4 +759,12 @@ namespace FuncDoodle {
 			style->WindowRounding = 1.0f;
 		}
 	}
+	void Application::DropCallback(GLFWwindow* win, int count, const char** paths) {
+		if (count == 0) return;
+		if (count > 1) {
+			FUNC_WARN("Attempted to drag and drop multiple items when 1 is expected: Attempting to use first item");
+		}
+		m_FilePath = const_cast<char*>(paths[0]);
+		this->ReadProjectFile();
+	}
 }  // namespace FuncDoodle

@@ -170,8 +170,7 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
-	// glfwSetErrorCallback(GLFWErrorCallback);
-	
+	//glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -268,7 +267,9 @@ int main(int argc, char** argv) {
 
 	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
 
+	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
+	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths){((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);});
 
 	stbi_image_free(icon->pixels);
 

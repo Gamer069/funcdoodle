@@ -32,3 +32,4 @@ make || exit -1
 cp -r ../assets . || exit -1
 cp ../keys.txt ./assets/ || exit -1
 cp ../icon.png ./assets/ || exit -1
+./FuncDoodle || exit -1

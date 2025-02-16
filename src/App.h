@@ -26,6 +26,7 @@ namespace FuncDoodle {
 			inline ProjectFile* CurProj() { return m_CurrentProj; }
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
+			void DropCallback(GLFWwindow* win, int count, const char** paths);
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;

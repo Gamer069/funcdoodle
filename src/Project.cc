@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <stack>
+#include <type_traits>
 #include <vector>
 
 #include <GLFW/glfw3.h>
@@ -254,6 +255,10 @@ namespace FuncDoodle {
 			}
 		}
 
+		if (count(uniqueColors.begin(), uniqueColors.end(), m_BG) < 0) {
+			uniqueColors.push_back(m_BG);
+		}
+
 		// Write palette size
 		std::size_t plteLen = uniqueColors.size();
 		WRITEB(plteLen);
@@ -308,7 +313,7 @@ namespace FuncDoodle {
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
-		unsigned long frameCount = 0;
+		void* frameCount = malloc(sizeof(long));
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -335,12 +340,12 @@ namespace FuncDoodle {
 		unsigned char bgG = 255;
 		unsigned char bgB = 255;
 
-		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
-
-		if (verMajor != 0 && verMinor != 1) {
+		if (verMajor >= 0 && verMinor >= 1) {
+			FUNC_INF("BG READ!! YAY!!");
 			file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
 			file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
 			file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
+			FUNC_INF("bgR: " + std::to_string(bgR) + ", bgG: " + std::to_string(bgG) + ", bgB: " + std::to_string(bgB));
 		} else {
 			if (verMajor != FDPVERMAJOR && verMinor != FDPVERMINOR) {
 				verMinor++;
@@ -350,13 +355,11 @@ namespace FuncDoodle {
 				}
 			}
 		}
-		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
-
 		FUNC_DBG("BG RGB - " + std::to_string(bgR) + ";" + std::to_string(bgG) + ";" + std::to_string(bgB));
 
 		std::vector<Col> plte;
 
-		std::size_t plteLen = 0;
+		int plteLen = 0;
 
 		if (file.fail()) {
 			FUNC_WARN("Failed to read file");
@@ -368,7 +371,8 @@ namespace FuncDoodle {
 			FUNC_WARN("Failed to read file");
 		}
 
-		for (std::size_t i = 0; i < plteLen; i++) {
+		FUNC_INF("Palette len: " + std::to_string(plteLen));
+		for (int i = 0; i < plteLen; i++) {
 			// read the rgb
 			unsigned char r = 0;
 			unsigned char g = 0;
@@ -381,21 +385,23 @@ namespace FuncDoodle {
 		}
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
-		FUNC_WARN("VERSION: " + std::to_string(verMajor) + "." + std::to_string(verMinor));
-		if (verMajor != 0 && verMinor != 2) {
-			for (unsigned long i = 0; i < frameCount; i++) {
+		if (verMajor >= 0 && verMinor >= 2) {
+			FUNC_INF((unsigned long)frameCount);
+			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {
+				FUNC_INF("i: " << i);
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {
-						std::cout << "PIXEL " << std::endl;
+						std::streampos start = file.tellg();
 						unsigned char bytes[sizeof(int)];
 						file.read(reinterpret_cast<char*>(bytes), sizeof(int));
-
 						int index = *reinterpret_cast<int*>(bytes);
-
 						if (index > plteLen) {
-							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
-							std::exit(-1);
+							FUNC_DBG("Index -- " << index);
+							FUNC_DBG("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_DBG("trying to break...");
+							file.seekg(start);
+							break;
 						}
 
 						img->Set(x, y, plte[index]);
@@ -408,7 +414,8 @@ namespace FuncDoodle {
 				file.read(reinterpret_cast<char*>(&null), 1);
 			}
 		} else {
-			for (long i = 0; i < frameCount; i++) {
+			FUNC_INF((long)frameCount);
+			for (long i = 0; i < (long)frameCount; i++) {
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {
@@ -431,12 +438,12 @@ namespace FuncDoodle {
 				unsigned char null;
 				file.read(reinterpret_cast<char*>(&null), 1);
 			}
-			if (verMinor >= 10) {
-				verMinor = 0;
-				verMajor++;
-			}
 			if (verMajor != FDPVERMAJOR && verMinor != FDPVERMINOR) {
 				verMinor++;
+				if (verMinor >= 10) {
+					verMinor = 0;
+					verMajor++;
+				}
 			}
 		}
 		m_Width = animWidth;
