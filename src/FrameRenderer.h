@@ -16,7 +16,8 @@ namespace FuncDoodle {
 		public:
 			FrameRenderer(Frame* frame, ToolManager* manager,
 						  AnimationPlayer* player)
-				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr), m_Player(player) {}
+				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
+				  m_Player(player) {}
 			~FrameRenderer() {
 				delete m_Grid;
 				// free(m_Frame);
@@ -43,7 +44,8 @@ namespace FuncDoodle {
 
 			void FloodFill(int x, int y, Col targetCol, Col fillCol);
 			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
-								   bool usePrevPxScale = true, bool renderPreview = true);
+								   bool usePrevPxScale = true,
+								   bool renderPreview = true);
 
 		private:
 			Frame* m_Frame;

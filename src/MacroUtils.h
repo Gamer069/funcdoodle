@@ -48,7 +48,6 @@
 		std::cout << "\033[34m[Info]: " << x << "\033[0m" << std::endl;        \
 	} while (0)
 
-
 #define FUNC_WARN(x)                                                           \
 	do {                                                                       \
 		std::cout << "\033[33m[Warn]: " << x << "\033[0m" << std::endl;        \

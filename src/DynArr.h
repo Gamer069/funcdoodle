@@ -7,7 +7,8 @@
 namespace FuncDoodle {
 	class LongIndexArray {
 		public:
-			LongIndexArray(int width, int height, Col bgCol, unsigned long initial_capacity = 10);
+			LongIndexArray(int width, int height, Col bgCol,
+						   unsigned long initial_capacity = 10);
 			~LongIndexArray();
 
 			void PushBack(const Frame* value);

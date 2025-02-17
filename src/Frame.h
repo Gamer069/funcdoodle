@@ -74,9 +74,7 @@ namespace FuncDoodle {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr) {};
-			~Frame() {
-				delete m_Pixels;
-			};
+			~Frame() { delete m_Pixels; };
 			void ReInit(int width, int height, Col bgCol) {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			}
@@ -96,6 +94,7 @@ namespace FuncDoodle {
 			inline const int Width() { return m_Pixels->Width(); }
 			inline const int Height() { return m_Pixels->Height(); }
 			inline std::vector<Col> Data() const { return m_Pixels->Data(); }
+
 		private:
 			ImageArray* m_Pixels;
 	};

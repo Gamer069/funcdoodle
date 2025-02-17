@@ -12,4 +12,4 @@ namespace FuncDoodle {
 			void PlayWav(AudioData wavPath);
 			AudioData ParseWav(std::filesystem::path wav);
 	};
-};
+};	// namespace FuncDoodle

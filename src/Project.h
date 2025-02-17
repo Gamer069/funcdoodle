@@ -8,8 +8,8 @@
 
 #include "MacroUtils.h"
 
-#include <memory>
 #include <algorithm>
+#include <memory>
 
 #include <GLFW/glfw3.h>
 
@@ -36,15 +36,16 @@ namespace FuncDoodle {
 			inline void SetBgCol(const float* bgCol) {
 				// Ensure bgCol is valid and has at least 3 elements
 				if (bgCol) {
-					m_BG = Col{
-						.r = static_cast<unsigned char>(std::clamp(bgCol[0] * 255, 0.0f, 255.0f)),
-						.g = static_cast<unsigned char>(std::clamp(bgCol[1] * 255, 0.0f, 255.0f)),
-						.b = static_cast<unsigned char>(std::clamp(bgCol[2] * 255, 0.0f, 255.0f))
-					};
+					m_BG = Col{.r = static_cast<unsigned char>(
+								   std::clamp(bgCol[0] * 255, 0.0f, 255.0f)),
+							   .g = static_cast<unsigned char>(
+								   std::clamp(bgCol[1] * 255, 0.0f, 255.0f)),
+							   .b = static_cast<unsigned char>(
+								   std::clamp(bgCol[2] * 255, 0.0f, 255.0f))};
 				}
 				m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 				m_Frames->PushBackEmpty();
-   			}
+			}
 			inline const Col BgCol() { return m_BG; }
 			LongIndexArray* AnimFrames();
 			void Write(char* filePath);
