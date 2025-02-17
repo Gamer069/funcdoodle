@@ -17,7 +17,7 @@ namespace FuncDoodle {
 			void ReadProjectFile();
 			void SaveProjectFile();
 			void CheckKeybinds(char* newProj, char* open, char* save,
-							   char* exportShortcut, char* quit);
+							   char* exportShortcut, char* quit, char* pref);
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
@@ -45,5 +45,6 @@ namespace FuncDoodle {
 			int m_Theme = 0;
 			int m_MigrationProjVersion = 0;
 			bool m_ShouldClose = false;
+			bool m_SFXEnabled = true;
 	};
 }  // namespace FuncDoodle

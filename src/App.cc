@@ -66,7 +66,7 @@ namespace FuncDoodle {
 	}
 
 	void Application::CheckKeybinds(char* newProj, char* open, char* save,
-			char* exportShortcut, char* quit) {
+			char* exportShortcut, char* quit, char* pref) {
 		ImGuiIO& io = ImGui::GetIO();
 
 		// Inline struct to store each shortcut's parsed values
@@ -109,6 +109,8 @@ namespace FuncDoodle {
 				result.key = ImGuiKey_E;
 			else if (std::strcmp(key, "Q") == 0)
 				result.key = ImGuiKey_Q;
+			else if (std::strcmp(key, ",") == 0)
+				result.key = ImGuiKey_Comma;
 			// Add more key mappings as needed
 
 			return result;
@@ -120,6 +122,7 @@ namespace FuncDoodle {
 		Shortcut saveShortcut = parseShortcut(save);
 		Shortcut exportShortcutShortcut = parseShortcut(exportShortcut);
 		Shortcut quitShortcut = parseShortcut(quit);
+		Shortcut prefShortcut = parseShortcut(pref);
 
 		// Inline lambda to check if a given shortcut is pressed
 		auto isShortcutPressed = [&](const Shortcut& shortcut) {
@@ -131,17 +134,23 @@ namespace FuncDoodle {
 
 		// Check if each shortcut is pressed and perform the appropriate action
 		if (isShortcutPressed(newProjShortcut)) {
-			m_AssetLoader->PlaySound(s_ProjCreateSound);
+			if (m_SFXEnabled)
+				m_AssetLoader->PlaySound(s_ProjCreateSound);
 			m_NewProjOpen = true;
 		}
 		if (isShortcutPressed(openShortcut)) {
 			OpenFileDialog([&](){this->ReadProjectFile();});
 		}
 		if (isShortcutPressed(saveShortcut)) {
+			if (m_SFXEnabled)
+				m_AssetLoader->PlaySound(s_ProjSaveSound);
 			SaveFileDialog([&](){this->SaveProjectFile();});
 		}
 		if (isShortcutPressed(quitShortcut)) {
 			glfwSetWindowShouldClose(m_Window, true);
+		}
+		if (isShortcutPressed(prefShortcut)) {
+			m_EditPrefsOpen = true;
 		}
 		if (m_CurrentProj) {
 			if (isShortcutPressed(exportShortcutShortcut)) {
@@ -159,13 +168,15 @@ namespace FuncDoodle {
 		char* saveShortcut = GlobalGetShortcut("S", false, false);
 		char* exportShortcut = GlobalGetShortcut("E", false, false);
 		char* quitShortcut = GlobalGetShortcut("Q", false, false);
+		char* prefShortcut = GlobalGetShortcut(",", false, false);
 		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut,
-				exportShortcut, quitShortcut);
+				exportShortcut, quitShortcut, prefShortcut);
 
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
 				if (ImGui::MenuItem("New project", newProjShortcut)) {
-					m_AssetLoader->PlaySound(s_ProjCreateSound);
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_NewProjOpen = true;
 				}
 
@@ -173,6 +184,8 @@ namespace FuncDoodle {
 					this->OpenFileDialog([&](){this->ReadProjectFile();});
 				}
 				if (ImGui::MenuItem("Save", saveShortcut)) {
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ProjSaveSound);
 					this->SaveFileDialog([&](){this->SaveProjectFile();});
 				}
 				if (m_CurrentProj) {
@@ -249,6 +262,12 @@ namespace FuncDoodle {
 						ImGui::StyleColorsClassic();
 						break;
 				}
+			}
+			ImGui::Checkbox("SFX", &m_SFXEnabled);
+			ImGui::SameLine();
+			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::Button("OK")) {
+				m_EditPrefsOpen = false;
+				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}
@@ -631,7 +650,8 @@ namespace FuncDoodle {
 				invertColor(btnNewCol);
 				invertColor(tintNew);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
-					m_AssetLoader->PlaySound(s_ProjCreateSound);
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_NewProjOpen = true;
 				}
 			}
