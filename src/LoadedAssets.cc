@@ -1,4 +1,6 @@
-#include "LoadedImages.h"
+#include "LoadedAssets.h"
+
+#include <cstdint>
 
 namespace FuncDoodle {
 	uint32_t s_PlayTexId = 0;
@@ -12,7 +14,8 @@ namespace FuncDoodle {
 	uint32_t s_TextTexId = 0;
 	uint32_t s_AddTexId = 0;
 	uint32_t s_OpenTexId = 0;
-	void GlobalLoadImages(AssetLoader* assetLoader) {
+	AudioData s_ProjCreateSound;
+	void GlobalLoadAssets(AssetLoader* assetLoader) {
 		s_PlayTexId = assetLoader->LoadImage("play.png");
 		s_PauseTexId = assetLoader->LoadImage("pause.png");
 		s_RewindTexId = assetLoader->LoadImage("rewind.png");
@@ -24,5 +27,6 @@ namespace FuncDoodle {
 		s_TextTexId = assetLoader->LoadImage("text.png");
 		s_AddTexId = assetLoader->LoadImage("add.png");
 		s_OpenTexId = assetLoader->LoadImage("folder.png");
+		s_ProjCreateSound = assetLoader->ParseSound("create.wav");
 	}
 }  // namespace FuncDoodle

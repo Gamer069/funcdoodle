@@ -14,7 +14,7 @@
 
 #include <fstream>
 
-#include "LoadedImages.h"
+#include "LoadedAssets.h"
 
 #include "MacroUtils.h"
 
@@ -131,6 +131,7 @@ namespace FuncDoodle {
 
 		// Check if each shortcut is pressed and perform the appropriate action
 		if (isShortcutPressed(newProjShortcut)) {
+			m_AssetLoader->PlaySound(s_ProjCreateSound);
 			m_NewProjOpen = true;
 		}
 		if (isShortcutPressed(openShortcut)) {
@@ -164,6 +165,7 @@ namespace FuncDoodle {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
 				if (ImGui::MenuItem("New project", newProjShortcut)) {
+					m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_NewProjOpen = true;
 				}
 
@@ -629,6 +631,7 @@ namespace FuncDoodle {
 				invertColor(btnNewCol);
 				invertColor(tintNew);
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+					m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_NewProjOpen = true;
 				}
 			}

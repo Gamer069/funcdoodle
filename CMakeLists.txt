@@ -95,6 +95,7 @@ target_include_directories(FuncDoodle PRIVATE
 	lib/glad/include
 	lib/nfd/src/include
 	lib/stb/
+	lib/
 	lib/glm/
 	${PORTAUDIO_INCLDIR}
 )

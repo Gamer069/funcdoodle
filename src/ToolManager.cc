@@ -5,7 +5,7 @@
 
 #include "MacroUtils.h"
 
-#include "LoadedImages.h"
+#include "LoadedAssets.h"
 
 namespace FuncDoodle {
 	ToolManager::ToolManager(AssetLoader* assetLoader)

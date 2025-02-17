@@ -12,9 +12,11 @@
 
 #include <glad/glad.h>
 
+#include "AudioManager.h"
+
 namespace FuncDoodle {
 	AssetLoader::AssetLoader(const std::filesystem::path& assetsPath)
-		: m_AssetsPath(assetsPath) {
+		: m_AssetsPath(assetsPath), m_AudioManager(new AudioManager) {
 		LoadAssets();
 	}
 	AssetLoader::~AssetLoader() {
@@ -90,5 +92,16 @@ namespace FuncDoodle {
 		stbi_image_free(data);
 
 		return textureID;
+	}
+	AudioData AssetLoader::ParseSound(std::filesystem::path soundName) {
+		if (std::filesystem::exists(m_AssetsPath / soundName)) {
+			return m_AudioManager->ParseWav(m_AssetsPath / soundName);
+		} else {
+			FUNC_WARN("sound doesn't exist");
+			std::exit(-1);
+		}
+	}
+	void AssetLoader::PlaySound(AudioData data) {
+		m_AudioManager->PlayWav(data);
 	}
 }  // namespace FuncDoodle

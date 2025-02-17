@@ -1,10 +1,11 @@
 #pragma once
 
-#include "LoadedImages.h"
-
 #include <iostream>
 
 #include "AssetLoader.h"
+
+#include "Audio.h"
+#include "AudioManager.h"
 
 namespace FuncDoodle {
 	extern uint32_t s_PlayTexId;
@@ -18,5 +19,6 @@ namespace FuncDoodle {
 	extern uint32_t s_TextTexId;
 	extern uint32_t s_AddTexId;
 	extern uint32_t s_OpenTexId;
-	void GlobalLoadImages(AssetLoader* assetLoader);
+	extern AudioData s_ProjCreateSound;
+	void GlobalLoadAssets(AssetLoader* assetLoader);
 }  // namespace FuncDoodle

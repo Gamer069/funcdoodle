@@ -13,7 +13,7 @@
 #include <iostream>
 #include <string>
 
-#include "LoadedImages.h"
+#include "LoadedAssets.h"
 
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(ProjectFile* proj,

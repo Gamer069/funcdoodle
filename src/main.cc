@@ -13,8 +13,9 @@
 
 #include "App.h"
 #include "AssetLoader.h"
+#include "Audio.h"
 
-#include "LoadedImages.h"
+#include "LoadedAssets.h"
 
 #include "MacroUtils.h"
 
@@ -23,21 +24,6 @@
 #include "exepath.h"
 
 float SAMPLE_RATE = 44100.0;
-
-std::vector<double> notes = {
-	261.63,	 // C4
-	293.66,	 // D4
-	329.63,	 // E4
-	349.23,	 // F4
-	392.00,	 // G4
-	440.00,	 // A4
-	493.88,	 // B4
-	523.25,	 // C5
-};
-
-enum Note { C4, D4, E4, F4, G4, A4, B4, C5 };
-
-std::vector<std::pair<Note, double>> melody = {};
 
 void GLFWErrorCallback(int error, const char* desc) {
 	FUNC_WARN("GLFW ERROR (" << error << "): " << desc);
@@ -100,50 +86,6 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 		FUNC_WARN("Failed to read image data from window icon");
 		return nullptr;
 	}
-}
-
-static int AudioCB(const void* inputBuffer, void* outputBuffer,
-				   unsigned long framesPerBuffer,
-				   const PaStreamCallbackTimeInfo* timeInfo,
-				   PaStreamCallbackFlags statusFlags, void* userData) {
-	float* out = static_cast<float*>(outputBuffer);
-	static double phase = 0.0;
-	static size_t noteIndex = 0;
-	static double phaseIncrement = 0.0;
-	static double noteDuration = 0.0;
-	static double noteTimer = 0.0;
-
-	if (noteIndex >= melody.size()) {
-		// End of melody
-		return paComplete;
-	}
-
-	double frequency = notes[melody[noteIndex].first];
-	phaseIncrement = 2.0 * 3.141592653589793238462643383279502884719 *
-					 frequency / SAMPLE_RATE;
-	noteDuration = melody[noteIndex].second * SAMPLE_RATE;
-	noteTimer += framesPerBuffer;
-
-	for (unsigned long i = 0; i < framesPerBuffer; ++i) {
-		if (noteTimer >= noteDuration) {
-			noteTimer = 0.0;
-			noteIndex++;
-			if (noteIndex < melody.size()) {
-				frequency = notes[melody[noteIndex].first];
-				phaseIncrement = 2.0 *
-								 3.141592653589793238462643383279502884719 *
-								 frequency / SAMPLE_RATE;
-				noteDuration = melody[noteIndex].second * SAMPLE_RATE;
-			}
-		}
-		out[i] = static_cast<float>(std::sin(phase));
-		phase += phaseIncrement;
-		if (phase >= 2.0 * 3.141592653589793238462643383279502884719) {
-			phase -= 2.0 * 3.141592653589793238462643383279502884719;
-		}
-	}
-
-	return paContinue;
 }
 
 int main(int argc, char** argv) {
@@ -241,7 +183,7 @@ int main(int argc, char** argv) {
 		free(stream);
 		exit(-1);
 	}
-	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, AudioCB,
+	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB,
 							   nullptr);
 	if (err != paNoError) {
 		FUNC_WARN("Failed to open default stream: " + (std::string)Pa_GetErrorText(err));
@@ -258,7 +200,7 @@ int main(int argc, char** argv) {
 
 	FuncDoodle::AssetLoader assetLoader(assetsPath);
 
-	FuncDoodle::GlobalLoadImages(&assetLoader);
+	FuncDoodle::GlobalLoadAssets(&assetLoader);
 
 	FuncDoodle::Application* application =
 		new FuncDoodle::Application(win, &assetLoader);
