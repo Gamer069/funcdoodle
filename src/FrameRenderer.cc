@@ -216,6 +216,12 @@ namespace FuncDoodle {
 			FUNC_WARN("tool manager is nullptr");
 			std::exit(-1);
 		}
+		if (!ImGui::IsMouseDown(0)) {
+			m_Frame = m_FrameRT;
+		} else {
+			m_FrameRT = m_Frame;
+		}
+
 
 		// Check if mouse is within frame bounds and mouse button is down
 		if (ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
@@ -302,12 +308,6 @@ namespace FuncDoodle {
 				!ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
 			m_LastMousePos = ImVec2(-1, -1);
 		} 
-
-		if (!ImGui::IsMouseDown(0)) {
-			m_FrameRT = m_Frame;
-		} else {
-			m_Frame = m_FrameRT;
-		}
 
 		RenderFramePixels(startX, startY, drawList);
 
