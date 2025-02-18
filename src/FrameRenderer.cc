@@ -2,6 +2,7 @@
 
 #include "Gui.h"
 
+#include "imgui.h"
 #include "imgui_internal.h"
 
 #include "Frame.h"
@@ -139,12 +140,14 @@ namespace FuncDoodle {
 										  Col{.r = colNew[0],
 											  .g = colNew[1],
 											  .b = colNew[2]});
-						Col nextColor = m_FrameRT->Pixels()->Get(newX, newY);
-						DrawAction action =
-							DrawAction(newX, newY, prevColor, nextColor, frameI,
-									   m_Player->Proj());
-						if (prevColor != nextColor) {
-							m_Player->Proj()->PushUndoableDrawAction(action);
+						if (ImGui::IsMouseDown(0)) {
+							Col nextColor = m_FrameRT->Pixels()->Get(newX, newY);
+							DrawAction action =
+								DrawAction(newX, newY, prevColor, nextColor, frameI,
+										m_Player->Proj());
+							if (prevColor != nextColor) {
+								m_Player->Proj()->PushUndoableDrawAction(action);
+							}
 						}
 					}
 				}
