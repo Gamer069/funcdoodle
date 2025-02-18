@@ -313,6 +313,7 @@ namespace FuncDoodle {
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
+
 		void* frameCount = malloc(sizeof(long));
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
