@@ -145,6 +145,8 @@ namespace FuncDoodle {
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjSaveSound);
 			SaveFileDialog([&](){this->SaveProjectFile();});
+			if (m_SFXEnabled)
+				m_AssetLoader->PlaySound(s_ProjSaveEndSound);
 		}
 		if (isShortcutPressed(quitShortcut)) {
 			glfwSetWindowShouldClose(m_Window, true);

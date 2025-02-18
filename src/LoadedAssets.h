@@ -22,5 +22,6 @@ namespace FuncDoodle {
 	extern AudioData s_ProjCreateSound;
 	extern AudioData s_ProjSaveSound;
 	extern AudioData s_ExportSound;
+	extern AudioData s_ProjSaveEndSound;
 	void GlobalLoadAssets(AssetLoader* assetLoader);
 }  // namespace FuncDoodle
