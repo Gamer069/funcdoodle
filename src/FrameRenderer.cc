@@ -209,7 +209,7 @@ namespace FuncDoodle {
 		};
 		auto picker = [&](ImVec2 currentPixel) {
 			const Col& col =
-				m_FrameRT->Pixels()->Get(currentPixel.x, currentPixel.y);
+				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
 			m_ToolManager->SetCol(col);
 			colNew[0] = (float)col.r / 255.0f;
 			colNew[1] = (float)col.g / 255.0f;
@@ -261,8 +261,10 @@ namespace FuncDoodle {
 						} else if (selectedTool == 2) {
 							bucket(currentPixel);
 						} else if (selectedTool == 3) {
-							picker(currentPixel);
-							steps = 0;
+							if (ImGui::IsMouseDown(0)) {
+								picker(currentPixel);
+								steps = 0;
+							}
 						}
 					}
 
