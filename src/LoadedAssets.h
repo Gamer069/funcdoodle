@@ -21,5 +21,6 @@ namespace FuncDoodle {
 	extern uint32_t s_OpenTexId;
 	extern AudioData s_ProjCreateSound;
 	extern AudioData s_ProjSaveSound;
+	extern AudioData s_ExportSound;
 	void GlobalLoadAssets(AssetLoader* assetLoader);
 }  // namespace FuncDoodle

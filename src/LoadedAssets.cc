@@ -16,6 +16,7 @@ namespace FuncDoodle {
 	uint32_t s_OpenTexId = 0;
 	AudioData s_ProjCreateSound;
 	AudioData s_ProjSaveSound;
+	AudioData s_ExportSound;
 	void GlobalLoadAssets(AssetLoader* assetLoader) {
 		// images
 		s_PlayTexId = assetLoader->LoadImage("play.png");
@@ -33,5 +34,6 @@ namespace FuncDoodle {
 		// audio
 		s_ProjCreateSound = assetLoader->ParseSound("create.wav");
 		s_ProjSaveSound = assetLoader->ParseSound("save.wav");
+		s_ExportSound = assetLoader->ParseSound("export.wav");
 	}
 }  // namespace FuncDoodle

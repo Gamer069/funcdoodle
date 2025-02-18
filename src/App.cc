@@ -299,6 +299,7 @@ namespace FuncDoodle {
 				nfdresult_t result = NFD_PickFolder(0, &outPath);
 
 				if (result == NFD_OKAY) {
+					m_AssetLoader->PlaySound(s_ExportSound);
 					FUNC_INF("Exporting to " + (std::string)outPath);
 					m_CurrentProj->Export(outPath, m_ExportFormat);
 					free(outPath);

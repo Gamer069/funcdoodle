@@ -60,7 +60,7 @@ namespace FuncDoodle {
 	}
 
 	void ProjectFile::Export(char* filePath, int format) {
-		FUNC_GRAY(strcat((char*)"Exporting to ", filePath));
+		FUNC_GRAY("Exporting to " << filePath);
 
 		LongIndexArray* frames = AnimFrames();
 
