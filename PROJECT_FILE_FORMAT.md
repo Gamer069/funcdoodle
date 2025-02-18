@@ -23,6 +23,7 @@
 | str  | Animation description, terminating with byte 0 |
 | str  | Animation author, terminating with byte 0 |
 | [col](#Color) | BG color |
+| int | palette length |
   
 
 ## <span style="color: cyan;">Palette</span>

@@ -17,7 +17,11 @@ namespace FuncDoodle {
 			FrameRenderer(Frame* frame, ToolManager* manager,
 						  AnimationPlayer* player)
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
-				  m_Player(player) {}
+				  m_Player(player) {
+					  if (frame != nullptr)
+						  m_FrameRT = new Frame(*frame);
+					  else m_FrameRT = nullptr;
+				  }
 			~FrameRenderer() {
 				delete m_Grid;
 				// free(m_Frame);
@@ -26,7 +30,7 @@ namespace FuncDoodle {
 			void InitPixels(unsigned long frameI);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
-			void SetFrame(Frame* frame) { m_Frame = frame; }
+			void SetFrame(Frame* frame) { m_Frame = frame; m_FrameRT = new Frame(*frame); }
 			inline const ToolManager* GetToolManager() const {
 				return m_ToolManager;
 			}
@@ -48,6 +52,7 @@ namespace FuncDoodle {
 								   bool renderPreview = true);
 
 		private:
+			Frame* m_FrameRT;
 			Frame* m_Frame;
 			Frame* m_PreviousFrame;
 			int m_Index;
