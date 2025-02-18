@@ -264,6 +264,8 @@ namespace FuncDoodle {
 							if (ImGui::IsMouseDown(0)) {
 								picker(currentPixel);
 								steps = 0;
+							} else {
+								steps = 0;	
 							}
 						}
 					}
