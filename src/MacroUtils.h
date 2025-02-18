@@ -65,9 +65,9 @@
 // (m)ajor/&debug
 
 #ifdef NDEBUG
-#define FUNCVER "v0.0.7a"
+#define FUNCVER "v0.0.8m"
 #else
-#define FUNCVER "v0.0.7ad"
+#define FUNCVER "v0.0.8md"
 #endif
 
 #define FDPVERMAJOR 0
