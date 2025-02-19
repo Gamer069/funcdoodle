@@ -47,5 +47,6 @@ namespace FuncDoodle {
 			int m_MigrationProjVersion = 0;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = true;
+			float* m_CacheBGCol;
 	};
 }  // namespace FuncDoodle

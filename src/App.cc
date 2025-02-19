@@ -24,11 +24,12 @@ namespace FuncDoodle {
 		: m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		m_CacheProj(nullptr),
 		m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
-		m_AssetLoader(assetLoader) {}
+		m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{0, 0, 0}) {}
 	Application::~Application() {
 		delete m_Manager;
 		//delete m_FilePath;
 		delete m_CurrentProj;
+		delete[] m_CacheBGCol;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		// Calculate the maximum possible length of the shortcut string
@@ -442,7 +443,6 @@ namespace FuncDoodle {
 			char author[100] = "";
 			int fps = 0;
 			char desc[512] = "";
-			static float* bgCol = (float*)std::malloc(sizeof(float)*3);  // Initialize as nullptr
 
 			if (!m_CacheProj) {
 				strcpy(name, (char*)"testproj");
@@ -469,14 +469,14 @@ namespace FuncDoodle {
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
 
-				if (bgCol) {
+				if (m_CacheBGCol) {
 					float r = (float)(m_CacheProj->BgCol().r) / 255;
 					float g = (float)(m_CacheProj->BgCol().g) / 255;
 					float b = (float)(m_CacheProj->BgCol().b) / 255;
-					bgCol = new float[3];  // Allocate a new array for bgCol
-					bgCol[0] = r;
-					bgCol[1] = g;
-					bgCol[2] = b;
+					m_CacheBGCol = new float[3];  // Allocate a new array for m_CacheBGCol
+					m_CacheBGCol[0] = r;
+					m_CacheBGCol[1] = g;
+					m_CacheBGCol[2] = b;
 				}
 			}
 
@@ -508,9 +508,9 @@ namespace FuncDoodle {
 			if (ImGui::InputText("Description", desc, sizeof(name))) {
 				m_CacheProj->SetAnimDesc(desc);
 			}
-			if (ImGui::ColorPicker3("BG", bgCol)) {
+			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
 				if (m_CacheProj)
-					m_CacheProj->SetBgCol(bgCol);
+					m_CacheProj->SetBgCol(m_CacheBGCol);
 			}
 
 			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
@@ -550,6 +550,7 @@ namespace FuncDoodle {
 		free(saveShortcut);
 		free(exportShortcut);
 		free(quitShortcut);
+		free(prefShortcut);
 	}
 	void Application::OpenFileDialog(std::function<void()> done) {
 		nfdchar_t* outPath = 0;

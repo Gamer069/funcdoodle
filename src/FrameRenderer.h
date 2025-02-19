@@ -24,7 +24,8 @@ namespace FuncDoodle {
 				  }
 			~FrameRenderer() {
 				delete m_Grid;
-				// free(m_Frame);
+				delete m_FrameRT;
+				// delete m_ToolManager;
 			}
 			void RenderFrame(unsigned long frameI, bool prevEnabled);
 			void InitPixels(unsigned long frameI, bool prevEnabled);
