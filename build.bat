@@ -14,8 +14,8 @@ if errorlevel 1 exit /b -1
 xcopy /E /I ..\assets .\assets
 if errorlevel 1 exit /b -1
 
-copy ..\keys.txt .\keys.txt
+copy ..\assets\keys.txt .\assets\keys.txt
 if errorlevel 1 exit /b -1
 
-copy ..\icon.png .\assets\icon.png
+copy ..\assets\icon.png .\assets\icon.png
 if errorlevel 1 exit /b -1

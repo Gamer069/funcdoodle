@@ -35,8 +35,8 @@ cd build || exit -1
 cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) .. || exit -1
 make || exit -1
 cp -r ../assets . || exit -1
-cp ../keys.txt ./assets/ || exit -1
-cp ../icon.png ./assets/ || exit -1
+cp ../assets/keys.txt ./assets/ || exit -1
+cp ../assets/icon.png ./assets/ || exit -1
 if [[ "$arg4" == "true" ]]; then
 	./FuncDoodle || exit -1
 fi
