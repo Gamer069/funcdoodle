@@ -267,6 +267,8 @@ namespace FuncDoodle {
 			}
 			ImGui::Checkbox("SFX", &m_SFXEnabled);
 			ImGui::SameLine();
+			ImGui::Checkbox("Preview", &m_PrevEnabled);
+			ImGui::SameLine();
 			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::Button("OK")) {
 				m_EditPrefsOpen = false;
 				ImGui::CloseCurrentPopup();
@@ -527,7 +529,7 @@ namespace FuncDoodle {
 
 		if (m_CurrentProj != nullptr) {
 			// render timeline line is broken
-			m_Manager->RenderTimeline();
+			m_Manager->RenderTimeline(m_PrevEnabled);
 			m_Manager->RenderControls();
 			m_Manager->Player()->Play();
 			m_CurrentProj->DisplayFPS();

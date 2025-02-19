@@ -28,7 +28,7 @@ namespace FuncDoodle {
 		delete m_FrameRenderer;
 		delete m_Player;
 	}
-	void AnimationManager::RenderTimeline() {
+	void AnimationManager::RenderTimeline(bool prevEnabled) {
 		// Set scrollbar size (thickness)
 		ImGui::GetStyle().ScrollbarSize =
 			20.0f;	// Increase the thickness of the scrollbars
@@ -196,7 +196,7 @@ namespace FuncDoodle {
 					Frame* prevFrame = frames->Get(i - 1);
 					m_FrameRenderer->SetPreviousFrame(prevFrame);
 				}
-				m_FrameRenderer->RenderFrame(i);
+				m_FrameRenderer->RenderFrame(i, prevEnabled);
 				drawList->AddRect(
 					topLeft, ImVec2(bottomRight.x, bottomRight.y),
 					IM_COL32(255, 0, 0, 255),  // Red color

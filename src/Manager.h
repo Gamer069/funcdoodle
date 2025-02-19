@@ -15,7 +15,7 @@ namespace FuncDoodle {
 		public:
 			AnimationManager(ProjectFile* proj, AssetLoader* assetLoader);
 			~AnimationManager();
-			void RenderTimeline();
+			void RenderTimeline(bool prevEnabled);
 			void RenderControls();
 
 			const ProjectFile* Proj() const { return m_Proj; }
