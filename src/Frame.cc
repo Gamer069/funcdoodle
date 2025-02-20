@@ -242,5 +242,20 @@ namespace FuncDoodle {
 			m_Pixels = new ImageArray(*other.Pixels());
 		}
 		return *this;
+	};
+	bool operator==(const Frame& lhs, const Frame& rhs) {
+		if (lhs.Width() != rhs.Width() || lhs.Height() != rhs.Height()) {
+			return false;
+		}
+		return *lhs.Pixels() == *rhs.Pixels();
+	};
+	bool operator!=(const Frame& lhs, const Frame& rhs) {
+		return !(lhs == rhs);
+	}
+	bool operator==(const ImageArray& lhs, const ImageArray& rhs) {
+		return lhs.Width() == rhs.Width() && lhs.Height() == rhs.Height() && lhs.Data() == rhs.Data() && lhs.BgCol() == rhs.BgCol();
+	}
+	bool operator!=(const ImageArray& lhs, const ImageArray& rhs) {
+		return !(lhs == rhs);
 	}
 }  // namespace FuncDoodle
