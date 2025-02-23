@@ -24,19 +24,16 @@ namespace FuncDoodle {
 		: m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		m_CacheProj(nullptr),
 		m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
-		m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{0, 0, 0}) {}
+		m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{255,255,255}) {}
 	Application::~Application() {
 		delete m_Manager;
-		//delete m_FilePath;
+		// delete m_CacheProj;
+		delete m_FilePath;
 		delete m_CurrentProj;
 		delete[] m_CacheBGCol;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
-		// Calculate the maximum possible length of the shortcut string
-		int maxLen =
-			11 +
-			strlen(
-					key);  // Assuming "Ctrl+" or "Cmd+" and "+Shift" and "+Super"
+		int maxLen = 11 + strlen(key);  // Assuming "Ctrl+" or "Cmd+" and "+Shift" and "+Super"
 
 		// Allocate memory for the shortcut string
 		char* shortcut = (char*)malloc(maxLen);
@@ -172,377 +169,25 @@ namespace FuncDoodle {
 		char* exportShortcut = GlobalGetShortcut("E", false, false);
 		char* quitShortcut = GlobalGetShortcut("Q", false, false);
 		char* prefShortcut = GlobalGetShortcut(",", false, false);
-		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut,
-				exportShortcut, quitShortcut, prefShortcut);
-
-		if (ImGui::BeginMainMenuBar()) {
-			if (ImGui::BeginMenu("File", true)) {
-				if (ImGui::MenuItem("New project", newProjShortcut)) {
-					if (m_SFXEnabled)
-						m_AssetLoader->PlaySound(s_ProjCreateSound);
-					m_NewProjOpen = true;
-				}
-
-				if (ImGui::MenuItem("Open", openShortcut)) {
-					this->OpenFileDialog([&](){this->ReadProjectFile();});
-				}
-				if (ImGui::MenuItem("Save", saveShortcut)) {
-					if (m_SFXEnabled)
-						m_AssetLoader->PlaySound(s_ProjSaveSound);
-					this->SaveFileDialog([&](){this->SaveProjectFile();});
-				}
-				if (m_CurrentProj) {
-					if (ImGui::MenuItem("Close")) {
-						m_CurrentProj = nullptr;
-						delete m_CurrentProj;
-					}
-					if (ImGui::MenuItem("Edit project")) {
-						m_EditProjOpen = true;
-					}
-					if (ImGui::MenuItem("Export", exportShortcut)) {
-						m_ExportOpen = true;
-					}
-				}
-				if (ImGui::MenuItem("Exit", quitShortcut)) {
-					m_EditProjOpen = false;
-					m_ExportOpen = false;
-					m_NewProjOpen = false;
-					glfwSetWindowShouldClose(m_Window, true);
-				}
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Edit", true)) {
-				if (ImGui::MenuItem("Preferences")) {
-					m_EditPrefsOpen = true;
-				}
-				ImGui::EndMenu();
-			}
-			if (ImGui::BeginMenu("Help", true)) {
-				if (ImGui::MenuItem("Show keybinds")) {
-					m_ShowKeybindsOpen = true;
-				}
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
-
-		if (m_EditPrefsOpen) {
-			ImGui::OpenPopup("EditPrefs");
-		}
-
-		if (m_NewProjOpen) {
-			ImGui::OpenPopup("NewProj");
-		}
-
-		// wasnt here before
-		if (m_ShowKeybindsOpen) {
-			ImGui::OpenPopup("Keybinds");
-		}
-
-		if (ImGui::IsPopupOpen("EditPrefs")) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(655, 478), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
-		}
-
-		// TODO: add default pos for keybinds
-		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
-			const char* themes[] = {"Custom", "Dark", "Light", "Classic"};
-			if (ImGui::ListBox("Theme", &m_Theme, themes,
-						IM_ARRAYSIZE(themes))) {
-				switch (m_Theme) {
-					case 0:
-						CustomStyle();
-						break;
-					case 1:
-						ImGui::StyleColorsDark();
-						break;
-					case 2:
-						ImGui::StyleColorsLight();
-						break;
-					case 3:
-						ImGui::StyleColorsClassic();
-						break;
-				}
-			}
-			ImGui::Checkbox("SFX", &m_SFXEnabled);
-			ImGui::SameLine();
-			ImGui::Checkbox("Preview", &m_PrevEnabled);
-			ImGui::SameLine();
-			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::Button("OK")) {
-				m_EditPrefsOpen = false;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-
+		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut, exportShortcut, quitShortcut, prefShortcut);
+		RenderMainMenuBar(newProjShortcut, openShortcut, saveShortcut, exportShortcut, quitShortcut, prefShortcut);
+		RenderEditPrefs();
 		SaveChangesDialog();
-
-		if (m_ExportOpen) {
-			ImGui::OpenPopup("Export##modal");
-		}
-
-		if (ImGui::IsPopupOpen("Export##modal")) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(503, 467), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(367, 168), ImGuiCond_FirstUseEver);
-		}
-
-		if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
-			const char* formats[] = {"PNGs", "MP4"};
-			ImGui::ListBox("Export Format", &m_ExportFormat, formats,
-					IM_ARRAYSIZE(formats));
-			if (ImGui::IsItemClicked()) {
-				m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
-			}
-			if (ImGui::Button("Export") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
-				nfdchar_t* outPath = 0;
-				nfdresult_t result = NFD_PickFolder(0, &outPath);
-
-				if (result == NFD_OKAY) {
-					if (m_SFXEnabled)
-						m_AssetLoader->PlaySound(s_ExportSound);
-					FUNC_INF("Exporting to " + (std::string)outPath);
-					m_CurrentProj->Export(outPath, m_ExportFormat);
-					free(outPath);
-				} else if (result == NFD_CANCEL) {
-					FUNC_DBG("Cancelled");
-				} else {
-					FUNC_DBG("Failed to open file dialog" + (std::string)NFD_GetError());
-				}
-				m_ExportOpen = false;
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_ExportOpen = false;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-		if (m_EditProjOpen) {
-			ImGui::OpenPopup("EditProj");
-		}
-
-		if (ImGui::IsPopupOpen("EditProj")) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
-		}
-		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
-					ImGuiWindowFlags_AlwaysAutoResize) && m_CurrentProj) {
-			char name[256];
-			strcpy(name, m_CurrentProj->AnimName());
-			int width = m_CurrentProj->AnimWidth();
-			int height = m_CurrentProj->AnimHeight();
-			char author[100];
-			strcpy(author, m_CurrentProj->AnimAuthor());
-			int fps = m_CurrentProj->AnimFPS();
-			char desc[512];
-			strcpy(desc, m_CurrentProj->AnimDesc());
-			if (m_CacheProj) {
-				strcpy(name, m_CacheProj->AnimName());
-				width = m_CacheProj->AnimWidth();
-				height = m_CacheProj->AnimHeight();
-				strcpy(author, m_CacheProj->AnimAuthor());
-				fps = m_CacheProj->AnimFPS();
-				strcpy(desc, m_CacheProj->AnimDesc());
-			} else {
-				strcpy(name, (char*)"testproj");
-				width = 32;
-				height = 32;
-				char* username =
-					std::getenv("USER");  // Common on Linux and macOS
-				if (!username) {
-					username =
-						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
-				}
-				if (!username) {
-					username = std::getenv("USERNAME");	 // Common on Windows
-				}
-				strcpy(author, username);
-				free(username);
-				fps = 10;
-				strcpy(desc, "Simple test project");
-			}
-			if (ImGui::InputText("Name", name, sizeof(name))) {
-				m_CacheProj->SetAnimName(name);
-			}
-			if (ImGui::InputInt("Width", &width)) {
-				m_CacheProj->SetAnimWidth(width);
-			}
-			if (ImGui::InputInt("Height", &height)) {
-				m_CacheProj->SetAnimHeight(height);
-			}
-			if (ImGui::InputText("Author", author, sizeof(author))) {
-				m_CacheProj->SetAnimAuthor(author);
-			}
-			if (ImGui::InputInt("FPS", &fps)) {
-				m_CacheProj->SetAnimFPS(fps);
-			}
-			if (ImGui::InputText("Description", desc, sizeof(desc))) {
-				m_CacheProj->SetAnimDesc(desc);
-			}
-
-			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_EditProjOpen = false;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("OK") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
-				m_CurrentProj = m_CacheProj;
-				m_EditProjOpen = false;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
-			std::filesystem::path keysPath =
-				m_AssetLoader->GetPath() / "keys.txt";
-			std::ifstream keysIn(keysPath);
-			if (!keysIn) {
-				FUNC_WARN("Failed to open file keys.txt");
-				ImGui::EndPopup();
-			}
-
-			keysIn.seekg(0, std::ios::end);
-			std::streamsize fileSize = keysIn.tellg();
-			keysIn.seekg(0, std::ios::beg);
-
-			char* buf = new char[fileSize + 1];
-
-			if (keysIn.read(buf, fileSize)) {
-				buf[fileSize] = '\0';
-				ImGui::Text("%s", buf);
-			} else {
-				FUNC_WARN("Failed to read file keys.txt");
-				delete[] buf;
-				ImGui::EndPopup();
-			}
-
-			ImGui::EndPopup();
-		}
-
-		if (ImGui::IsPopupOpen("NewProj")) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
-		}
-		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
-			char name[256] = "";
-			int width = 32;
-			int height = 32;
-			char author[100] = "";
-			int fps = 0;
-			char desc[512] = "";
-
-			if (!m_CacheProj) {
-				strcpy(name, (char*)"testproj");
-				width = 32;
-				height = 32;
-				char* username = std::getenv("USER");
-				if (!username) {
-					username = std::getenv("LOGNAME");
-				}
-				if (!username) {
-					username = std::getenv("USERNAME");
-				}
-				strcpy(author, username);
-				fps = 10;
-				strcpy(desc, "Simple test project");
-				m_CacheProj = new ProjectFile(
-						(char*)"testproj", width, height, username, fps,
-						(char*)"Simple test project", m_Window, Col{.r = 255, .g = 255, .b = 255});
-			} else {
-				strcpy(name, m_CacheProj->AnimName());
-				width = m_CacheProj->AnimWidth();
-				height = m_CacheProj->AnimHeight();
-				strcpy(author, m_CacheProj->AnimAuthor());
-				fps = m_CacheProj->AnimFPS();
-				strcpy(desc, m_CacheProj->AnimDesc());
-
-				if (m_CacheBGCol) {
-					float r = (float)(m_CacheProj->BgCol().r) / 255;
-					float g = (float)(m_CacheProj->BgCol().g) / 255;
-					float b = (float)(m_CacheProj->BgCol().b) / 255;
-					m_CacheBGCol = new float[3];  // Allocate a new array for m_CacheBGCol
-					m_CacheBGCol[0] = r;
-					m_CacheBGCol[1] = g;
-					m_CacheBGCol[2] = b;
-				}
-			}
-
-			// GUI inputs for project properties
-			if (ImGui::InputText("Name", name, sizeof(name))) {
-				m_CacheProj->SetAnimName(name);
-			}
-			if (ImGui::InputInt("Width", &width)) {
-				if (m_CurrentProj)
-					m_CacheProj->SetAnimWidth(width, false);
-				else {
-					if (m_CacheProj) {
-						m_CacheProj->SetAnimWidth(width, true);
-					}
-				}
-			}
-			if (ImGui::InputInt("Height", &height)) {
-				if (m_CurrentProj)
-					m_CacheProj->SetAnimHeight(height, false);
-				else
-					m_CacheProj->SetAnimHeight(height, true);
-			}
-			if (ImGui::InputText("Author", author, sizeof(name))) {
-				m_CacheProj->SetAnimAuthor(author);
-			}
-			if (ImGui::InputInt("FPS", &fps)) {
-				m_CacheProj->SetAnimFPS(fps);
-			}
-			if (ImGui::InputText("Description", desc, sizeof(name))) {
-				m_CacheProj->SetAnimDesc(desc);
-			}
-			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
-				if (m_CacheProj)
-					m_CacheProj->SetBgCol(m_CacheBGCol);
-			}
-
-			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_NewProjOpen = false;
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
-				m_CurrentProj = m_CacheProj;
-				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
-				m_NewProjOpen = false;
-			}
-
-			ImGui::EndPopup();
-		}
-
-		if (m_CurrentProj != nullptr) {
-			// render timeline line is broken
+		RenderExport();
+		RenderEditProj();
+		RenderKeybinds();
+		RenderNewProj();
+		
+		if (m_CurrentProj) {
 			m_Manager->RenderTimeline(m_PrevEnabled);
 			m_Manager->RenderControls();
 			m_Manager->Player()->Play();
 			m_CurrentProj->DisplayFPS();
 		} else {
 			char* title = (char*)malloc(35);
-			if (title != 0) {
-				snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER,
-						(int)ImGui::GetIO().Framerate);
-				glfwSetWindowTitle(m_Window, title);
-				free(title);
-			} else {
-				FUNC_WARN("Failed to allocate title -- perhaps you ran out of RAM?");
-			}
+			snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER, (int)ImGui::GetIO().Framerate);
+			glfwSetWindowTitle(m_Window, title);
+			free(title);
 		}
 
 		free(newProjShortcut);
@@ -559,13 +204,12 @@ namespace FuncDoodle {
 		if (result == NFD_OKAY) {
 			m_FilePath = outPath;
 			done();
-			free(outPath);
 		} else if (result == NFD_CANCEL) {
 			FUNC_DBG("Cancelled");
 		} else {
 			FUNC_WARN("Failed to open open file dialog -- " + (std::string)NFD_GetError());
 		}
-		//free(outPath);
+		free(outPath);
 	}
 	void Application::SaveFileDialog(std::function<void()> done) {
 		if (m_CurrentProj == nullptr) {
@@ -796,5 +440,360 @@ namespace FuncDoodle {
 		}
 		m_FilePath = const_cast<char*>(paths[0]);
 		this->ReadProjectFile();
+	}
+	void Application::RenderEditProj() {
+		if (m_EditProjOpen) {
+			ImGui::OpenPopup("EditProj");
+		}
+
+		if (ImGui::IsPopupOpen("EditProj")) {
+			ImGui::SetNextWindowFocus();
+			ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
+		}
+		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
+					ImGuiWindowFlags_AlwaysAutoResize) && m_CurrentProj) {
+			char name[256];
+			strcpy(name, m_CurrentProj->AnimName());
+			int width = m_CurrentProj->AnimWidth();
+			int height = m_CurrentProj->AnimHeight();
+			char author[100];
+			strcpy(author, m_CurrentProj->AnimAuthor());
+			int fps = m_CurrentProj->AnimFPS();
+			char desc[512];
+			strcpy(desc, m_CurrentProj->AnimDesc());
+			if (m_CacheProj) {
+				strcpy(name, m_CacheProj->AnimName());
+				width = m_CacheProj->AnimWidth();
+				height = m_CacheProj->AnimHeight();
+				strcpy(author, m_CacheProj->AnimAuthor());
+				fps = m_CacheProj->AnimFPS();
+				strcpy(desc, m_CacheProj->AnimDesc());
+			} else {
+				strcpy(name, (char*)"testproj");
+				width = 32;
+				height = 32;
+				char* username =
+					std::getenv("USER");  // Common on Linux and macOS
+				if (!username) {
+					username =
+						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+				}
+				if (!username) {
+					username = std::getenv("USERNAME");	 // Common on Windows
+				}
+				strcpy(author, username);
+				free(username);
+				fps = 10;
+				strcpy(desc, "Simple test project");
+			}
+			if (ImGui::InputText("Name", name, sizeof(name))) {
+				m_CacheProj->SetAnimName(name);
+			}
+			if (ImGui::InputInt("Width", &width)) {
+				m_CacheProj->SetAnimWidth(width);
+			}
+			if (ImGui::InputInt("Height", &height)) {
+				m_CacheProj->SetAnimHeight(height);
+			}
+			if (ImGui::InputText("Author", author, sizeof(author))) {
+				m_CacheProj->SetAnimAuthor(author);
+			}
+			if (ImGui::InputInt("FPS", &fps)) {
+				m_CacheProj->SetAnimFPS(fps);
+			}
+			if (ImGui::InputText("Description", desc, sizeof(desc))) {
+				m_CacheProj->SetAnimDesc(desc);
+			}
+
+			if (ImGui::Button("Close") ||
+					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				m_EditProjOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("OK") ||
+					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				m_CurrentProj = m_CacheProj;
+				m_EditProjOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+	void Application::RenderNewProj() {
+		if (m_NewProjOpen) {
+			ImGui::OpenPopup("NewProj");
+		}
+		if (ImGui::IsPopupOpen("NewProj")) {
+			ImGui::SetNextWindowFocus();
+			ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
+		}
+		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+			char name[256] = "";
+			int width = 32;
+			int height = 32;
+			char author[100] = "";
+			int fps = 0;
+			char desc[512] = "";
+
+			if (!m_CacheProj) {
+				strcpy(name, (char*)"testproj");
+				width = 32;
+				height = 32;
+				char* username = std::getenv("USER");
+				if (!username) {
+					username = std::getenv("LOGNAME");
+				}
+				if (!username) {
+					username = std::getenv("USERNAME");
+				}
+				strcpy(author, username);
+				fps = 10;
+				strcpy(desc, "Simple test project");
+				m_CacheProj = new ProjectFile(
+						name, width, height, username, fps,
+						desc, m_Window, Col());
+			} else {
+				strcpy(name, m_CacheProj->AnimName());
+				width = m_CacheProj->AnimWidth();
+				height = m_CacheProj->AnimHeight();
+				strcpy(author, m_CacheProj->AnimAuthor());
+				fps = m_CacheProj->AnimFPS();
+				strcpy(desc, m_CacheProj->AnimDesc());
+
+				if (m_CacheBGCol) {
+					float r = (float)(m_CacheProj->BgCol().r) / 255;
+					float g = (float)(m_CacheProj->BgCol().g) / 255;
+					float b = (float)(m_CacheProj->BgCol().b) / 255;
+					m_CacheBGCol[0] = r;
+					m_CacheBGCol[1] = g;
+					m_CacheBGCol[2] = b;
+				}
+			}
+
+			// GUI inputs for project properties
+			if (ImGui::InputText("Name", name, sizeof(name))) {
+				m_CacheProj->SetAnimName(name);
+			}
+			if (ImGui::InputInt("Width", &width)) {
+				if (m_CurrentProj)
+					m_CacheProj->SetAnimWidth(width, false);
+				else {
+					if (m_CacheProj) {
+						m_CacheProj->SetAnimWidth(width, true);
+					}
+				}
+			}
+			if (ImGui::InputInt("Height", &height)) {
+				if (m_CurrentProj)
+					m_CacheProj->SetAnimHeight(height, false);
+				else
+					m_CacheProj->SetAnimHeight(height, true);
+			}
+			if (ImGui::InputText("Author", author, sizeof(name))) {
+				m_CacheProj->SetAnimAuthor(author);
+			}
+			if (ImGui::InputInt("FPS", &fps)) {
+				m_CacheProj->SetAnimFPS(fps);
+			}
+			if (ImGui::InputText("Description", desc, sizeof(name))) {
+				m_CacheProj->SetAnimDesc(desc);
+			}
+			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
+				if (m_CacheProj)
+					m_CacheProj->SetBgCol(m_CacheBGCol);
+			}
+
+			if (ImGui::Button("Close") || ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				m_NewProjOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("OK") || ImGui::IsKeyPressed(ImGuiKey_Enter, false) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				m_CurrentProj = m_CacheProj;
+				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
+				m_NewProjOpen = false;
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+	void Application::RenderMainMenuBar(char* newProjShortcut, char* openShortcut, char* saveShortcut, char* exportShortcut, char* quitShortcut, char* prefShortcut) {
+		if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("File", true)) {
+				if (ImGui::MenuItem("New project", newProjShortcut)) {
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ProjCreateSound);
+					m_NewProjOpen = true;
+				}
+
+				if (ImGui::MenuItem("Open", openShortcut)) {
+					this->OpenFileDialog([&](){this->ReadProjectFile();});
+				}
+				if (ImGui::MenuItem("Save", saveShortcut)) {
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ProjSaveSound);
+					this->SaveFileDialog([&](){this->SaveProjectFile();});
+				}
+				if (m_CurrentProj) {
+					if (ImGui::MenuItem("Close")) {
+						m_CurrentProj = nullptr;
+						delete m_CurrentProj;
+					}
+					if (ImGui::MenuItem("Edit project")) {
+						m_EditProjOpen = true;
+					}
+					if (ImGui::MenuItem("Export", exportShortcut)) {
+						m_ExportOpen = true;
+					}
+				}
+				if (ImGui::MenuItem("Exit", quitShortcut)) {
+					m_EditProjOpen = false;
+					m_ExportOpen = false;
+					m_NewProjOpen = false;
+					glfwSetWindowShouldClose(m_Window, true);
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Edit", true)) {
+				if (ImGui::MenuItem("Preferences", prefShortcut)) {
+					m_EditPrefsOpen = true;
+				}
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Help", true)) {
+				if (ImGui::MenuItem("Show keybinds")) {
+					m_ShowKeybindsOpen = true;
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+	}
+	void Application::RenderEditPrefs() {
+		if (ImGui::IsPopupOpen("EditPrefs")) {
+			ImGui::SetNextWindowFocus();
+			ImGui::SetNextWindowPos(ImVec2(655, 478), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
+		}
+
+		if (m_EditPrefsOpen) {
+			ImGui::OpenPopup("EditPrefs");
+		}
+
+		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
+					ImGuiWindowFlags_AlwaysAutoResize)) {
+			const char* themes[] = {"Custom", "Dark", "Light", "Classic"};
+			if (ImGui::ListBox("Theme", &m_Theme, themes,
+						IM_ARRAYSIZE(themes))) {
+				switch (m_Theme) {
+					case 0:
+						CustomStyle();
+						break;
+					case 1:
+						ImGui::StyleColorsDark();
+						break;
+					case 2:
+						ImGui::StyleColorsLight();
+						break;
+					case 3:
+						ImGui::StyleColorsClassic();
+						break;
+				}
+			}
+			ImGui::Checkbox("SFX", &m_SFXEnabled);
+			ImGui::SameLine();
+			ImGui::Checkbox("Preview", &m_PrevEnabled);
+			ImGui::SameLine();
+			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::Button("OK")) {
+				m_EditPrefsOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+	void Application::RenderExport() {
+		if (m_ExportOpen) {
+			ImGui::OpenPopup("Export##modal");
+		}
+
+		if (ImGui::IsPopupOpen("Export##modal")) {
+			ImGui::SetNextWindowFocus();
+			ImGui::SetNextWindowPos(ImVec2(503, 467), ImGuiCond_FirstUseEver);
+			ImGui::SetNextWindowSize(ImVec2(367, 168), ImGuiCond_FirstUseEver);
+		}
+
+		if (ImGui::BeginPopupModal("Export##modal", &m_ExportOpen,
+					ImGuiWindowFlags_AlwaysAutoResize)) {
+			const char* formats[] = {"PNGs", "MP4"};
+			ImGui::ListBox("Export Format", &m_ExportFormat, formats,
+					IM_ARRAYSIZE(formats));
+			if (ImGui::IsItemClicked()) {
+				m_ExportFormat = (m_ExportFormat + 1) % IM_ARRAYSIZE(formats);
+			}
+			if (ImGui::Button("Export") ||
+					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				nfdchar_t* outPath = 0;
+				nfdresult_t result = NFD_PickFolder(0, &outPath);
+
+				if (result == NFD_OKAY) {
+					if (m_SFXEnabled)
+						m_AssetLoader->PlaySound(s_ExportSound);
+					FUNC_INF("Exporting to " + (std::string)outPath);
+					m_CurrentProj->Export(outPath, m_ExportFormat);
+					free(outPath);
+				} else if (result == NFD_CANCEL) {
+					FUNC_DBG("Cancelled");
+					free(outPath);
+				} else {
+					FUNC_DBG("Failed to open file dialog" + (std::string)NFD_GetError());
+					free(outPath);
+				}
+				m_ExportOpen = false;
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Close") ||
+					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				m_ExportOpen = false;
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+	}
+	void Application::RenderKeybinds() {
+		if (m_ShowKeybindsOpen) {
+			ImGui::OpenPopup("Keybinds");
+		}
+		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
+					ImGuiWindowFlags_AlwaysAutoResize)) {
+			std::filesystem::path keysPath =
+				m_AssetLoader->GetPath() / "keys.txt";
+			std::ifstream keysIn(keysPath);
+			if (!keysIn) {
+				FUNC_WARN("Failed to open file keys.txt");
+				ImGui::EndPopup();
+			}
+
+			keysIn.seekg(0, std::ios::end);
+			std::streamsize fileSize = keysIn.tellg();
+			keysIn.seekg(0, std::ios::beg);
+
+			char* buf = new char[fileSize + 1];
+
+			if (keysIn.read(buf, fileSize)) {
+				buf[fileSize] = '\0';
+				ImGui::Text("%s", buf);
+			} else {
+				FUNC_WARN("Failed to read file keys.txt");
+				delete[] buf;
+				ImGui::EndPopup();
+			}
+
+			ImGui::EndPopup();
+		}
 	}
 }  // namespace FuncDoodle

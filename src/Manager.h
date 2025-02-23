@@ -30,6 +30,7 @@ namespace FuncDoodle {
 			ProjectFile* m_Proj;
 			unsigned long m_SelectedFrame;
 			FrameRenderer* m_FrameRenderer;
+			FrameRenderer* m_TimelineFrameRenderer;
 			ToolManager* m_ToolManager;
 			AnimationPlayer* m_Player;
 			AssetLoader* m_AssetLoader;

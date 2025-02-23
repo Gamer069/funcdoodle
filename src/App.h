@@ -27,7 +27,12 @@ namespace FuncDoodle {
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
-
+			void RenderEditProj();
+			void RenderNewProj();
+			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut, char* saveShortcut, char* exportShortcut, char* quitShortcut, char* prefShortcut);
+			void RenderEditPrefs();
+			void RenderExport();
+			void RenderKeybinds();
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;

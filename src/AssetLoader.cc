@@ -20,6 +20,7 @@ namespace FuncDoodle {
 		LoadAssets();
 	}
 	AssetLoader::~AssetLoader() {
+		delete m_AudioManager;
 		UnloadAssets();
 	}
 

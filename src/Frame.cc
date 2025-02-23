@@ -239,6 +239,7 @@ namespace FuncDoodle {
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {
+			delete m_Pixels;
 			m_Pixels = new ImageArray(*other.Pixels());
 		}
 		return *this;

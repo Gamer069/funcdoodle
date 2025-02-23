@@ -22,10 +22,12 @@ namespace FuncDoodle {
 		  m_AssetLoader(assetLoader) {
 		m_ToolManager = new ToolManager(assetLoader);
 		m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
+		m_TimelineFrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
 	}
 	AnimationManager::~AnimationManager() {
 		delete m_ToolManager;
 		delete m_FrameRenderer;
+		delete m_TimelineFrameRenderer;
 		delete m_Player;
 	}
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
@@ -165,6 +167,7 @@ namespace FuncDoodle {
 		}
 
 		// Render frames
+		// TODO: tiurwelyiuvyn3586e7btero8btw678e0srts78vberwot78v6er078tw478ertbo
 		for (unsigned long i = 0; i < m_Proj->AnimFrameCount(); i++) {
 			drawList->AddText(
 				font, fontSize,
@@ -173,28 +176,22 @@ namespace FuncDoodle {
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
 				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
-			FrameRenderer* curFrameRenderer = new FrameRenderer(
-				m_Proj->AnimFrames()->Get(i), m_ToolManager, m_Player);
+			m_TimelineFrameRenderer->SetFrame(m_Proj->AnimFrames()->Get(i));
 
 			float width = bottomRight.x - topLeft.x;
 			float height = bottomRight.y - topLeft.y;
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
-			curFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
-			curFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
-
-			// wasn't here b4
-			delete curFrameRenderer;
+			m_TimelineFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
+			m_TimelineFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
-				Frame* frame = frames->Get(i);
-				m_FrameRenderer->SetFrame(frame);
+				m_FrameRenderer->SetFrame(frames->Get(i));
 				m_FrameRenderer->SetIndex(i);
 				if (i > 0) {
-					Frame* prevFrame = frames->Get(i - 1);
-					m_FrameRenderer->SetPreviousFrame(prevFrame);
+					m_FrameRenderer->SetPreviousFrame(frames->Get(i - 1));
 				}
 				m_FrameRenderer->RenderFrame(i, prevEnabled);
 				drawList->AddRect(

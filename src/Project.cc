@@ -468,7 +468,7 @@ namespace FuncDoodle {
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
 		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)%s", FUNCVER, AnimName(),
-				(int)ImGui::GetIO().Framerate, !m_Saved ? "*" : "");
+				(int)ImGui::GetIO().Framerate, m_Saved ? "" : "*");
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}
