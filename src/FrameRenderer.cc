@@ -241,9 +241,11 @@ namespace FuncDoodle {
 		}
 		if (prevEnabled) {
 			if (!ImGui::IsMouseDown(0)) {
-				*m_Frame = *m_FrameRT;
+				m_Frame = m_FrameRT;
+				// *m_Frame = *m_FrameRT;
 			} else {
-				*m_FrameRT = *m_Frame;
+				m_FrameRT = m_Frame;
+				// *m_FrameRT = *m_Frame;
 			}
 		}
 

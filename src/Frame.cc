@@ -21,9 +21,7 @@ namespace FuncDoodle {
 		RedoColorAdjustment(bgCol);
 		m_BG = bgCol;
 	}
-	ImageArray::~ImageArray() {
-		//m_Data.clear();
-		//m_Data.shrink_to_fit();
+	ImageArray::~ImageArray() { 
 	}
 
 	void ImageArray::RedoColorAdjustment(Col bgCol) {
@@ -239,6 +237,7 @@ namespace FuncDoodle {
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {
+			m_Pixels = nullptr;
 			delete m_Pixels;
 			m_Pixels = new ImageArray(*other.Pixels());
 		}
@@ -246,6 +245,12 @@ namespace FuncDoodle {
 	};
 	bool operator==(const Frame& lhs, const Frame& rhs) {
 		if (lhs.Width() != rhs.Width() || lhs.Height() != rhs.Height()) {
+			return false;
+		}
+		if (lhs.Pixels() == nullptr && rhs.Pixels() == nullptr) {
+			return true;
+		}
+		if (lhs.Pixels() == nullptr || rhs.Pixels() == nullptr) {
 			return false;
 		}
 		return *lhs.Pixels() == *rhs.Pixels();
