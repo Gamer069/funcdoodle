@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+// define to get around the stupid VS thing where it doesn't see header files
+#define FUNCAOV(x)
+
 #ifdef DEBUG
 #define FUNCAOV(x)                                                             \
 	do {                                                                       \

@@ -15,6 +15,8 @@
 
 #include "Player.h"
 
+#include <cmath>
+
 namespace FuncDoodle {
 	void FrameRenderer::RenderFrame(unsigned long frameI, bool prevEnabled) {
 		ImGui::SetNextWindowPos(ImVec2(0, 32), ImGuiCond_FirstUseEver);
@@ -209,7 +211,7 @@ namespace FuncDoodle {
 					static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
 			}
 			// FLOODFILL
-			Col curPixelCol = pixels->Get(currentPixel.x, currentPixel.y);
+			Col curPixelCol = pixels->Get(floor(currentPixel.x), floor(currentPixel.y));
 			FloodFill(
 					currentPixel.x, currentPixel.y, curPixelCol,
 					Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
@@ -229,11 +231,11 @@ namespace FuncDoodle {
 		};
 		auto picker = [&](ImVec2 currentPixel) {
 			const Col& col =
-				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
+				m_Frame->Pixels()->Get(floor(currentPixel.x), floor(currentPixel.y));
 			m_ToolManager->SetCol(col);
-			colNew[0] = (float)col.r / 255.0f;
-			colNew[1] = (float)col.g / 255.0f;
-			colNew[2] = (float)col.b / 255.0f;
+			colNew[0] = (uint8_t)((float)col.r / 255.0f);
+			colNew[1] = (uint8_t)((float)col.g / 255.0f);
+			colNew[2] = (uint8_t)((float)col.b / 255.0f);
 		};
 		if (m_ToolManager == nullptr) {
 			FUNC_WARN("tool manager is nullptr");
@@ -330,8 +332,7 @@ namespace FuncDoodle {
 						}
 					}
 
-					if (prevEnabled && selectedTool !=
-							3) {  // Only draw if not using color picker
+					if (prevEnabled && selectedTool != 3) {  // Only draw if not using color picker
 						m_FrameRT->SetPixel(currentPixel.x, currentPixel.y,
 								Col{.r = colNew[0],
 								.g = colNew[1],

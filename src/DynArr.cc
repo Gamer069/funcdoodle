@@ -15,7 +15,7 @@ namespace FuncDoodle {
 		if (m_Height < 1)
 			m_Height = 1;
 		m_Data = (Frame*)malloc(m_Capacity * sizeof(Frame));
-		for (int i = 0; i < m_Capacity; ++i) {
+		for (unsigned long i = 0; i < m_Capacity; ++i) {
 			m_Data[i] = Frame(m_Width, m_Height, bgCol);
 		}
 		if (!m_Data) {	// Error if allocation fails

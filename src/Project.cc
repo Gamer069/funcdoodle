@@ -86,7 +86,7 @@ namespace FuncDoodle {
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
 				m_FPS, filePath, filePath);
 #else
-			sprintf(cmd,
+			snprintf(cmd, 500,
 					"ffmpeg.exe -framerate %d -pattern-type glob -i "
 					"\"%s/frame_*.png\" "
 					"-c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y",
@@ -127,7 +127,8 @@ namespace FuncDoodle {
 		return m_Author;
 	}
 	void ProjectFile::SetAnimAuthor(char* author) {
-		strcpy(m_Author, author);
+		strncpy(m_Author, author, sizeof(m_Author) - 1);
+		m_Author[sizeof(m_Author) - 1] = '\0';	// Ensure null termination
 	}
 
 	const int ProjectFile::AnimFPS() const {
@@ -248,7 +249,7 @@ namespace FuncDoodle {
 				for (int y = 0; y < pixels->Height(); y++) {
 					Col px = pixels->Get(x, y);
 					if (colorToIndex.find(px) == colorToIndex.end()) {
-						colorToIndex[px] = uniqueColors.size();
+						colorToIndex[px] = (int)uniqueColors.size();
 						uniqueColors.push_back(px);
 					}
 				}
@@ -314,7 +315,7 @@ namespace FuncDoodle {
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
 
-		void* frameCount = malloc(sizeof(long));
+		long* frameCount = (long*)malloc(sizeof(long));
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -467,6 +468,7 @@ namespace FuncDoodle {
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
+		FUNCAOV(title != 0);
 		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)%s", FUNCVER, AnimName(),
 				(int)ImGui::GetIO().Framerate, m_Saved ? "" : "*");
 		glfwSetWindowTitle(m_Window, title);

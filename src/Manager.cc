@@ -182,7 +182,7 @@ namespace FuncDoodle {
 			float height = bottomRight.y - topLeft.y;
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
-			m_TimelineFrameRenderer->SetPixelScale(std::min(scaleX, scaleY));
+			m_TimelineFrameRenderer->SetPixelScale(std::min<float>(scaleX, scaleY));
 			m_TimelineFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||

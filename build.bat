@@ -1,5 +1,5 @@
 @echo off
-mkdir build
+if not exist "build" mkdir build
 if errorlevel 1 exit /b -1
 
 cd build
@@ -8,14 +8,18 @@ if errorlevel 1 exit /b -1
 cmake ..
 if errorlevel 1 exit /b -1
 
-"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" .\FuncDoodle.sln
+set /p vspath=Enter MSBuild.exe path:
+"%vspath%" .\FuncDoodle.sln
 if errorlevel 1 exit /b -1
 
-xcopy /E /I ..\assets .\assets
+xcopy /q /E /I ..\assets .\assets
 if errorlevel 1 exit /b -1
 
 copy ..\assets\keys.txt .\assets\keys.txt
 if errorlevel 1 exit /b -1
 
 copy ..\assets\icon.png .\assets\icon.png
+if errorlevel 1 exit /b -1
+
+cd ..
 if errorlevel 1 exit /b -1
