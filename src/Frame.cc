@@ -55,6 +55,10 @@ namespace FuncDoodle {
 		return m_Data[y * m_Width + x];
 	}
 
+	Frame::~Frame() {
+		//delete m_Pixels;
+	}
+
 	void Frame::SetWidth(int width, bool clear) {
 		if (m_Pixels == nullptr) {
 			m_Pixels = new ImageArray(width, 1, Col());  // default height of 1 bc we dont

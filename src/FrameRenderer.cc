@@ -243,10 +243,13 @@ namespace FuncDoodle {
 		}
 		if (prevEnabled) {
 			if (!ImGui::IsMouseDown(0)) {
-				m_Frame = m_FrameRT;
+				// hacky but whatever
+				delete m_Frame;
+				m_Frame = new Frame(m_FrameRT->PixelsMut());
 				// *m_Frame = *m_FrameRT;
 			} else {
-				m_FrameRT = m_Frame;
+				delete m_FrameRT;
+				m_FrameRT = new Frame(m_Frame->PixelsMut());
 				// *m_FrameRT = *m_Frame;
 			}
 		}

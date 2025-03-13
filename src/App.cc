@@ -433,6 +433,119 @@ namespace FuncDoodle {
 			style->WindowRounding = 1.0f;
 		}
 	}
+	void Application::CatppuccinMochaStyle() {
+		ImGui::StyleColorsDark();
+		auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
+			return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
+		};
+
+		// Mocha Colors
+		ImVec4 rosewater = rgb(245, 224, 220);
+		ImVec4 flamingo = rgb(242, 205, 205);
+		ImVec4 pink = rgb(245, 194, 231);
+		ImVec4 mauve = rgb(203, 166, 247);
+		ImVec4 red = rgb(243, 139, 168);
+		ImVec4 maroon = rgb(235, 160, 172);
+		ImVec4 peach = rgb(250, 179, 135);
+		ImVec4 yellow = rgb(249, 226, 175);
+		ImVec4 green = rgb(166, 227, 161);
+		ImVec4 teal = rgb(148, 226, 213);
+		ImVec4 sky = rgb(137, 220, 235);
+		ImVec4 sapphire = rgb(116, 199, 236);
+		ImVec4 blue = rgb(137, 180, 250);
+		ImVec4 lavender = rgb(180, 190, 254);
+		ImVec4 text = rgb(205, 214, 244);
+		ImVec4 subtext1 = rgb(186, 194, 222);
+		ImVec4 subtext0 = rgb(166, 173, 200);
+		ImVec4 overlay2 = rgb(147, 153, 178);
+		ImVec4 overlay1 = rgb(127, 132, 156);
+		ImVec4 overlay0 = rgb(108, 112, 134);
+		ImVec4 surface2 = rgb(88, 91, 112);
+		ImVec4 surface1 = rgb(69, 71, 90);
+		ImVec4 surface0 = rgb(49, 50, 68);
+		ImVec4 base_mocha = rgb(30, 30, 46);
+		ImVec4 mantle_mocha = rgb(24, 24, 37);
+		ImVec4 crust_mocha = rgb(17, 17, 27);
+
+		ImGui::GetStyle().Colors[ImGuiCol_Text] = text;	 // Text color
+		ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] =
+			subtext1;  // Disabled text
+		ImGui::GetStyle().Colors[ImGuiCol_WindowBg] =
+			base_mocha;	 // Background color
+		ImGui::GetStyle().Colors[ImGuiCol_ChildBg] =
+			mantle_mocha;  // Child window background
+		ImGui::GetStyle().Colors[ImGuiCol_PopupBg] =
+			mantle_mocha;  // Popup background
+		ImGui::GetStyle().Colors[ImGuiCol_Border] =
+			crust_mocha;  // Border color
+		ImGui::GetStyle().Colors[ImGuiCol_BorderShadow] =
+			ImVec4(0.0f, 0.0f, 0.0f, 0.0f);	 // No shadow
+		ImGui::GetStyle().Colors[ImGuiCol_FrameBg] =
+			surface1;  // Frame background
+		ImGui::GetStyle().Colors[ImGuiCol_FrameBgHovered] =
+			surface2;  // Hovered frame background
+		ImGui::GetStyle().Colors[ImGuiCol_FrameBgActive] =
+			surface0;  // Active frame background
+		ImGui::GetStyle().Colors[ImGuiCol_TitleBg] =
+			crust_mocha;  // Title bar background
+		ImGui::GetStyle().Colors[ImGuiCol_TitleBgActive] =
+			surface1;  // Active title background
+		ImGui::GetStyle().Colors[ImGuiCol_TitleBgCollapsed] =
+			surface2;  // Collapsed title background
+		ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg] =
+			base_mocha;	 // Menu bar background
+		ImGui::GetStyle().Colors[ImGuiCol_ScrollbarBg] =
+			mantle_mocha;  // Scrollbar background
+		ImGui::GetStyle().Colors[ImGuiCol_ScrollbarGrab] =
+			overlay1;  // Scrollbar grab
+		ImGui::GetStyle().Colors[ImGuiCol_ScrollbarGrabHovered] =
+			overlay0;  // Scrollbar grab hovered
+		ImGui::GetStyle().Colors[ImGuiCol_ScrollbarGrabActive] =
+			surface0;  // Scrollbar grab active
+		ImGui::GetStyle().Colors[ImGuiCol_CheckMark] =
+			green;	// Checkmark color
+		ImGui::GetStyle().Colors[ImGuiCol_SliderGrab] =
+			overlay1;  // Slider grab
+		ImGui::GetStyle().Colors[ImGuiCol_SliderGrabActive] =
+			overlay0;  // Active slider grab
+		ImGui::GetStyle().Colors[ImGuiCol_Button] = surface2;  // Button color
+		ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered] =
+			surface1;  // Button hover
+		ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] =
+			surface0;										   // Active button
+		ImGui::GetStyle().Colors[ImGuiCol_Header] = surface1;  // Header color
+		ImGui::GetStyle().Colors[ImGuiCol_HeaderHovered] =
+			surface2;  // Header hover
+		ImGui::GetStyle().Colors[ImGuiCol_HeaderActive] =
+			surface0;  // Active header
+		ImGui::GetStyle().Colors[ImGuiCol_Separator] =
+			crust_mocha;  // Separator
+		ImGui::GetStyle().Colors[ImGuiCol_SeparatorHovered] =
+			overlay1;  // Separator hover
+		ImGui::GetStyle().Colors[ImGuiCol_SeparatorActive] =
+			overlay0;  // Active separator
+		ImGui::GetStyle().Colors[ImGuiCol_ResizeGrip] =
+			overlay1;  // Resize grip
+		ImGui::GetStyle().Colors[ImGuiCol_ResizeGripHovered] =
+			overlay0;  // Resize grip hover
+		ImGui::GetStyle().Colors[ImGuiCol_ResizeGripActive] =
+			surface0;  // Active resize grip
+		ImGui::GetStyle().Colors[ImGuiCol_Tab] = surface1;	// Tab background
+		ImGui::GetStyle().Colors[ImGuiCol_TabHovered] = surface2;  // Tab hover
+		ImGui::GetStyle().Colors[ImGuiCol_TabActive] = surface0;   // Active tab
+		ImGui::GetStyle().Colors[ImGuiCol_TabUnfocused] =
+			base_mocha;	 // Unfocused tab
+		ImGui::GetStyle().Colors[ImGuiCol_TabUnfocusedActive] =
+			mantle_mocha;  // Unfocused active tab
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		ImGui::GetStyle().WindowRounding = 5.0f;	 // Window rounding
+		ImGui::GetStyle().FrameRounding = 5.0f;		 // Frame rounding
+		ImGui::GetStyle().PopupRounding = 4.0f;		 // Popup rounding
+		ImGui::GetStyle().ScrollbarRounding = 5.0f;	 // Scrollbar rounding
+		ImGui::GetStyle().GrabRounding = 5.0f;		 // Grab rounding
+		ImGui::GetStyle().TabRounding = 5.0f;
+	}
 	void Application::DropCallback(GLFWwindow* win, int count, const char** paths) {
 		if (count == 0) return;
 		if (count > 1) {
@@ -686,7 +799,7 @@ namespace FuncDoodle {
 
 		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
-			const char* themes[] = {"Custom", "Dark", "Light", "Classic"};
+			const char* themes[] = {"Custom", "Dark", "Light", "Classic", "Catppuccin Mocha (beta)"};
 			if (ImGui::ListBox("Theme", &m_Theme, themes,
 						IM_ARRAYSIZE(themes))) {
 				switch (m_Theme) {
@@ -701,6 +814,9 @@ namespace FuncDoodle {
 						break;
 					case 3:
 						ImGui::StyleColorsClassic();
+						break;
+					case 4:
+						CatppuccinMochaStyle();
 						break;
 				}
 			}

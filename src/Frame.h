@@ -76,7 +76,7 @@ namespace FuncDoodle {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr) {};
-			~Frame() { delete m_Pixels; };
+			~Frame();
 			void ReInit(int width, int height, Col bgCol) {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			}
