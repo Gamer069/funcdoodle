@@ -179,7 +179,7 @@ namespace FuncDoodle {
 		RenderEditProj();
 		RenderKeybinds();
 		RenderNewProj();
-		
+
 		if (m_CurrentProj) {
 			m_Manager->RenderTimeline(m_PrevEnabled);
 			m_Manager->RenderControls();
@@ -611,13 +611,12 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderEditPrefs() {
-		if (ImGui::IsPopupOpen("EditPrefs")) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(655, 478), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
+		if (m_EditPrefsOpen) {
+			ImGui::OpenPopup("EditPrefs");
+			m_EditPrefsOpen = false; // Reset flag since OpenPopup only sets visibility
 		}
 
-		if (m_EditPrefsOpen && ImGui::Begin("EditPrefs")) {
+		if (ImGui::BeginPopup("EditPrefs")) {
 			const char* themes[] = {"FuncDoodle style", "Dark", "Light", "Classic", "Catppuccin Mocha", "Catppuccin Macchiato", "Catppuccin Frappe", "Catppuccin Latte"};
 			if (ImGui::BeginCombo("Theme", themes[m_Theme])) {
 				for (int i = 0; i < IM_ARRAYSIZE(themes); i++) {
@@ -641,25 +640,29 @@ namespace FuncDoodle {
 				}
 				ImGui::EndCombo();
 			}
+
 			ImGui::Checkbox("SFX", &m_SFXEnabled);
 			ImGui::SameLine();
 			ImGui::Checkbox("Preview", &m_PrevEnabled);
 			ImGui::SameLine();
-			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || ImGui::IsKeyPressed(ImGuiKey_Enter) || ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || ImGui::Button("OK")) {
-				m_EditPrefsOpen = false;
+
+			if (ImGui::IsKeyPressed(ImGuiKey_Escape) || 
+					ImGui::IsKeyPressed(ImGuiKey_Enter) || 
+					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) || 
+					ImGui::Button("OK")) {
 				ImGui::CloseCurrentPopup();
 			}
-			ImGui::End();
+
+			ImGui::EndPopup();
 		}
 	}
 	void Application::RenderExport() {
 		if (m_ExportOpen) {
-			ImGui::SetNextWindowFocus();
-			ImGui::SetNextWindowPos(ImVec2(503, 467), ImGuiCond_FirstUseEver);
-			ImGui::SetNextWindowSize(ImVec2(367, 168), ImGuiCond_FirstUseEver);
+			ImGui::OpenPopup("Export##export");
+			m_ExportOpen = false; // Reset flag since OpenPopup only sets visibility
 		}
 
-		if (m_ExportOpen && ImGui::Begin("Export##export")) {
+		if (ImGui::BeginPopup("Export##export")) {
 			const char* formats[] = {"PNGs", "MP4"};
 			ImGui::Combo("Export Format", &m_ExportFormat, formats, IM_ARRAYSIZE(formats));
 			if (ImGui::Button("Export") ||
@@ -681,15 +684,14 @@ namespace FuncDoodle {
 					FUNC_DBG("Failed to open file dialog" + (std::string)NFD_GetError());
 					free(outPath);
 				}
-				m_ExportOpen = false;
-				FUNC_INF("a");
+				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close") ||
 					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_ExportOpen = false;
+				ImGui::CloseCurrentPopup();
 			}
-			ImGui::End();
+			ImGui::EndPopup();
 		}
 	}
 	void Application::RenderKeybinds() {
