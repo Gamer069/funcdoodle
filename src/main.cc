@@ -1,3 +1,4 @@
+#include "Themes.h"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <filesystem>
@@ -168,7 +169,7 @@ int main(int argc, char** argv) {
 	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
 
 	// In your style setup
-	FuncDoodle::Application::FuncDoodleStyle();
+	FuncDoodle::Themes::FuncDoodleStyle();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
