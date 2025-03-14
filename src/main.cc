@@ -169,7 +169,7 @@ int main(int argc, char** argv) {
 	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
 
 	// In your style setup
-	FuncDoodle::Application::CustomStyle();
+	FuncDoodle::Application::FuncDoodleStyle();
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);

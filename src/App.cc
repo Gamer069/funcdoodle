@@ -368,7 +368,7 @@ namespace FuncDoodle {
 		m_SaveChangesOpen = true;
 		FUNC_DBG("set m_SaveChangesOpen");
 	}
-	void Application::CustomStyle() {
+	void Application::FuncDoodleStyle() {
 		ImGui::StyleColorsDark();
 
 		ImGuiStyle* style = &ImGui::GetStyle();
@@ -436,7 +436,7 @@ namespace FuncDoodle {
 
 	void Application::CatppuccinLatteStyle() {
 		ImGui::StyleColorsDark();
-		CustomStyle();
+		FuncDoodleStyle();
 		auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 			return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 		};
@@ -610,7 +610,7 @@ namespace FuncDoodle {
 
 	void Application::CatppuccinFrappeStyle() {
 		ImGui::StyleColorsDark();
-		CustomStyle();
+		FuncDoodleStyle();
 		auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 			return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 		};
@@ -784,7 +784,7 @@ namespace FuncDoodle {
 
 	void Application::CatppuccinMacchiatoStyle() {
 		ImGui::StyleColorsDark();
-		CustomStyle();
+		FuncDoodleStyle();
 		auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 			return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 		};
@@ -889,7 +889,7 @@ namespace FuncDoodle {
 
 	void Application::CatppuccinMochaStyle() {
 		ImGui::StyleColorsDark();
-		CustomStyle();
+		FuncDoodleStyle();
 		auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 			return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 		};
@@ -1246,12 +1246,12 @@ namespace FuncDoodle {
 
 		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
 					ImGuiWindowFlags_AlwaysAutoResize)) {
-			const char* themes[] = {"Custom", "Dark", "Light", "Classic", "Catppuccin Mocha (beta)", "Catppuccin Macchiato (beta)", "Catppuccin Frappe (beta)", "Catppuccin Latte (beta)"};
+			const char* themes[] = {"FuncDoodle style", "Dark", "Light", "Classic", "Catppuccin Mocha (beta)", "Catppuccin Macchiato (beta)", "Catppuccin Frappe (beta)", "Catppuccin Latte (beta)"};
 			if (ImGui::ListBox("Theme", &m_Theme, themes,
 						IM_ARRAYSIZE(themes))) {
 				switch (m_Theme) {
 					case 0:
-						CustomStyle();
+						FuncDoodleStyle();
 						break;
 					case 1:
 						ImGui::StyleColorsDark();

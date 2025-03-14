@@ -22,7 +22,7 @@ namespace FuncDoodle {
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
 			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
-			static void CustomStyle();
+			static void FuncDoodleStyle();
 			static void CatppuccinMochaStyle();
 			static void CatppuccinMacchiatoStyle();
 			static void CatppuccinFrappeStyle();
