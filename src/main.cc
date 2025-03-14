@@ -156,7 +156,6 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 #endif
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 	io.Fonts->AddFontFromFileTTF(
 		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);

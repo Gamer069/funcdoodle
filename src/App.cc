@@ -885,7 +885,7 @@ namespace FuncDoodle {
 		ImGui::GetStyle().Colors[ImGuiCol_TabUnfocusedActive] =
 			mantle_macchiato;  // Unfocused active tab
 	}
-	
+
 
 	void Application::CatppuccinMochaStyle() {
 		ImGui::StyleColorsDark();
@@ -1240,41 +1240,29 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(323, 152), ImGuiCond_FirstUseEver);
 		}
 
-		if (m_EditPrefsOpen) {
-			ImGui::OpenPopup("EditPrefs");
-		}
-
-		if (ImGui::BeginPopupModal("EditPrefs", &m_EditPrefsOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
-			const char* themes[] = {"FuncDoodle style", "Dark", "Light", "Classic", "Catppuccin Mocha (beta)", "Catppuccin Macchiato (beta)", "Catppuccin Frappe (beta)", "Catppuccin Latte (beta)"};
-			if (ImGui::ListBox("Theme", &m_Theme, themes,
-						IM_ARRAYSIZE(themes))) {
-				switch (m_Theme) {
-					case 0:
-						FuncDoodleStyle();
-						break;
-					case 1:
-						ImGui::StyleColorsDark();
-						break;
-					case 2:
-						ImGui::StyleColorsLight();
-						break;
-					case 3:
-						ImGui::StyleColorsClassic();
-						break;
-					case 4:
-						CatppuccinMochaStyle();
-						break;
-					case 5:
-						CatppuccinMacchiatoStyle();
-						break;
-					case 6:
-						CatppuccinFrappeStyle();
-						break;
-					case 7:
-						CatppuccinLatteStyle();
-						break;
+		if (m_EditPrefsOpen && ImGui::Begin("EditPrefs")) {
+			const char* themes[] = {"FuncDoodle style", "Dark", "Light", "Classic", "Catppuccin Mocha", "Catppuccin Macchiato", "Catppuccin Frappe", "Catppuccin Latte"};
+			if (ImGui::BeginCombo("Theme", themes[m_Theme])) {
+				for (int i = 0; i < IM_ARRAYSIZE(themes); i++) {
+					bool is_selected = (m_Theme == i);
+					if (ImGui::Selectable(themes[i], is_selected)) {
+						m_Theme = i;
+						switch (m_Theme) {
+							case 0: FuncDoodleStyle(); break;
+							case 1: ImGui::StyleColorsDark(); break;
+							case 2: ImGui::StyleColorsLight(); break;
+							case 3: ImGui::StyleColorsClassic(); break;
+							case 4: CatppuccinMochaStyle(); break;
+							case 5: CatppuccinMacchiatoStyle(); break;
+							case 6: CatppuccinFrappeStyle(); break;
+							case 7: CatppuccinLatteStyle(); break;
+						}
+					}
+					if (is_selected) {
+						ImGui::SetItemDefaultFocus();
+					}
 				}
+				ImGui::EndCombo();
 			}
 			ImGui::Checkbox("SFX", &m_SFXEnabled);
 			ImGui::SameLine();
@@ -1284,7 +1272,7 @@ namespace FuncDoodle {
 				m_EditPrefsOpen = false;
 				ImGui::CloseCurrentPopup();
 			}
-			ImGui::EndPopup();
+			ImGui::End();
 		}
 	}
 	void Application::RenderExport() {
