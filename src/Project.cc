@@ -315,7 +315,7 @@ namespace FuncDoodle {
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
 
-		long* frameCount = (long*)malloc(sizeof(long));
+		unsigned long* frameCount = (unsigned long*)malloc(sizeof(long));
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -384,8 +384,8 @@ namespace FuncDoodle {
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 		if (verMajor >= 0 && verMinor >= 2) {
-			FUNC_INF((unsigned long)frameCount);
-			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {
+			FUNC_INF(*frameCount);
+			for (unsigned long i = 0; i < *frameCount; i++) {
 				FUNC_INF("i: " << i);
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
@@ -412,8 +412,8 @@ namespace FuncDoodle {
 				file.read(reinterpret_cast<char*>(&null), 1);
 			}
 		} else {
-			FUNC_INF((long)frameCount);
-			for (long i = 0; i < (long)frameCount; i++) {
+			FUNC_INF(*frameCount);
+			for (long i = 0; i < *frameCount; i++) {
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {

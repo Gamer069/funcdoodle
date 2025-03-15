@@ -407,14 +407,12 @@ namespace FuncDoodle {
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
 			} else {
-				strcpy(name, (char*)"testproj");
+				strcpy(name, (char*)"Untitled Animation");
 				width = 32;
 				height = 32;
-				char* username =
-					std::getenv("USER");  // Common on Linux and macOS
+				char* username = std::getenv("USER");  // Common on Linux and macOS
 				if (!username) {
-					username =
-						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+					username = std::getenv("LOGNAME");	 // Fallback for Linux and macOS
 				}
 				if (!username) {
 					username = std::getenv("USERNAME");	 // Common on Windows
@@ -726,4 +724,4 @@ namespace FuncDoodle {
 			ImGui::EndPopup();
 		}
 	}
-}  // namespace FuncDoodle
+}

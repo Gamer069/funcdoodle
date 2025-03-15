@@ -138,7 +138,9 @@ elseif(UNIX AND NOT APPLE)
 	)
 elseif(WIN32)
 	target_link_libraries(FuncDoodle
-		${PORTAUDIO_LIBDIR}portaudio_x64.lib
+		# was lib before
+		#${PORTAUDIO_LIBDIR}
+		portaudio_x64.lib
 	)
 endif()
 

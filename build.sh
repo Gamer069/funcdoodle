@@ -32,7 +32,13 @@ fi
 
 mkdir -p build || exit -1 
 cd build || exit -1 
-cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) .. || exit -1
+if [ "$arg2" == "true" ]; then
+    distiling_value="ON"
+else
+    distiling_value="OFF"
+fi
+
+cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$distiling_value .. || exit -1
 make || exit -1
 cp -r ../assets . || exit -1
 cp ../assets/keys.txt ./assets/ || exit -1
