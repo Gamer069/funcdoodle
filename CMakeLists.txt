@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_C_COMPILER /usr/bin/clang)
-set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+if(UNIX)
+	set(CMAKE_C_COMPILER /usr/bin/clang)
+	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+endif()
 
 if(APPLE)
 	project(FuncDoodle C CXX OBJC)
@@ -143,6 +145,8 @@ elseif(WIN32)
 		portaudio_x64.lib
 	)
 endif()
+
+add_compile_definitions(__WINE__)
 
 message(STATUS "CMAKE BUILD TYPE ${CMAKE_BUILD_TYPE}")
 # Build options
