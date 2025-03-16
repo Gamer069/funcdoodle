@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
-	ImGui_ImplOpenGL3_Init("#version 460");
+	ImGui_ImplOpenGL3_Init("#version 410");
 	PaStream* stream;
 
 	PaError err = Pa_Initialize();
