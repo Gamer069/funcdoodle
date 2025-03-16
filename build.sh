@@ -27,11 +27,11 @@ fi
 arg1=$(echo "$arg1" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
 if (( arg3 == true )); then
-	rm -rf build
+	rm -rf bin
 fi
 
-mkdir -p build || exit -1 
-cd build || exit -1 
+mkdir -p bin || exit -1 
+cd bin || exit -1 
 if [ "$arg2" == "true" ]; then
     distiling_value="ON"
 else

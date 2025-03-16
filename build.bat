@@ -1,8 +1,8 @@
 @echo off
-if not exist "build" mkdir build
+if not exist "bin" mkdir bin
 if errorlevel 1 exit /b -1
 
-cd build
+cd bin
 if errorlevel 1 exit /b -1
 
 cmake ..

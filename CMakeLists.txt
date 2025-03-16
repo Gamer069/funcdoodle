@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_BUILD_PARALLEL_LEVEL 8)
+
 if(UNIX)
-	set(CMAKE_C_COMPILER /usr/bin/clang)
-	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+	# set(CMAKE_C_COMPILER /usr/bin/clang)
+	# set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 endif()
 
 if(APPLE)
@@ -52,7 +54,7 @@ elseif(UNIX AND NOT APPLE)
 	set(NFD_SOURCES lib/nfd/src/nfd_gtk.c lib/nfd/src/nfd_common.c)
 endif()
 
-set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
+# set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
 set(PORTAUDIO_INCLDIR "" CACHE STRING "required")
 
 if(NOT PORTAUDIO_LIBDIR)
@@ -140,9 +142,8 @@ elseif(UNIX AND NOT APPLE)
 	)
 elseif(WIN32)
 	target_link_libraries(FuncDoodle
-		# was lib before
-		#${PORTAUDIO_LIBDIR}
-		portaudio_x64.lib
+		${CMAKE_DL_LIBS}
+		${PORTAUDIO_LIBDIR}portaudio_x64.lib
 	)
 endif()
 

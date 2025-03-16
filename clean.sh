@@ -1,1 +1,1 @@
-rm -rf build/{CMakeCache.txt,CMakeFiles,cmake_install.cmake,compile_commands.json,lib,Makefile}
+rm -rf bin/{CMakeCache.txt,CMakeFiles,cmake_install.cmake,compile_commands.json,lib,Makefile}

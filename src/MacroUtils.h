@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-// define to get around the stupid VS thing where it doesn't see header files
-#define FUNCAOV(x)
-
 #ifdef DEBUG
 #define FUNCAOV(x)                                                             \
 	do {                                                                       \
@@ -14,7 +11,6 @@
 		}                                                                      \
 	} while (0)
 #else
-#ifdef NDEBUG
 #define FUNCAOV(x)                                                             \
 	do {                                                                       \
 		if (!(x)) {                                                            \
@@ -22,7 +18,6 @@
 					  << " in file " << __FILE__ << std::endl;                 \
 		}                                                                      \
 	} while (0)
-#endif
 #endif
 
 #ifdef DEBUG
