@@ -2,7 +2,7 @@
 
 ## building
 To build, run build.sh or build.bat depending on your OS, after that if everything worked correctly, the built exec should be in bin/.
-BTW for unix a completion script is available for zsh: 
+BTW for unix a zsh completion script is available: 
 ```sh
 source completion.zsh
 ```
