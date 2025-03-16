@@ -54,7 +54,7 @@ elseif(UNIX AND NOT APPLE)
 	set(NFD_SOURCES lib/nfd/src/nfd_gtk.c lib/nfd/src/nfd_common.c)
 endif()
 
-# set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
+set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
 set(PORTAUDIO_INCLDIR "" CACHE STRING "required")
 
 if(NOT PORTAUDIO_LIBDIR)
