@@ -1,5 +1,5 @@
-if [[ $# -ne 4 ]]; then
-	echo "Usage: $0 <Debug/Release> <tiling?> <clean?> <run?>"
+if [[ $# -ne 6 ]]; then
+	echo "Usage: $0 <Debug/Release> <tiling?> <clean?> <run?> <portaudio.h path> <portaudio lib path>"
 	exit -1
 fi
 
@@ -7,6 +7,8 @@ arg1=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 arg3=$(echo "$3" | tr '[:upper:]' '[:lower:]')
 arg4=$(echo "$4" | tr '[:upper:]' '[:lower:]')
+arg5=$(echo "$5")
+arg6=$(echo "$6")
 
 if [[ "$arg1" != "debug" && "$arg1" != "release" ]]; then
 	echo "Mode must be either debug or release -- $arg1 is invalid"
@@ -39,11 +41,14 @@ else
     distiling_value="OFF"
 fi
 
-cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$distiling_value .. || exit -1
+mkdir incl
+cp $arg5 incl/
+cp $arg6 portaudio_x64.lib
+cmake -DCMAKE_TOOLCHAIN_FILE=../mingw.cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$distiling_value .. || exit -1
 make || exit -1
 cp -r ../assets . || exit -1
 cp ../assets/keys.txt ./assets/ || exit -1
 cp ../assets/icon.png ./assets/ || exit -1
 if [[ "$arg4" == "true" ]]; then
-	./FuncDoodle || exit -1
+	wine ./FuncDoodle.exe || exit -1
 fi

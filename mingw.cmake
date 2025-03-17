@@ -4,6 +4,7 @@ endif()
 set(__MINGW_TOOLCHAIN_LOADED TRUE)
 set(WIN32 1)
 set(APPLE 0)
+set(UNIX 0)
 
 set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_SYSTEM_VERSION 10)
