@@ -36,6 +36,10 @@ namespace FuncDoodle {
 	};
 	class ImageArray {
 		public:
+			ImageArray& operator=(const ImageArray&) = default;
+			ImageArray& operator=(ImageArray&&) = delete;
+			ImageArray(const ImageArray&) = default;
+			ImageArray(ImageArray&&) = default;
 			ImageArray(int width, int height, Col bgCol);
 			~ImageArray();
 

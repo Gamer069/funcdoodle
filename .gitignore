@@ -7,7 +7,7 @@ Makefile
 FuncDoodle
 FuncDoodle.app
 pkg_app.sh
-build/
+bin/
 .git
 .editorconfig
 .vscode/

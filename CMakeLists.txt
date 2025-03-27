@@ -97,6 +97,7 @@ target_include_directories(FuncDoodle PRIVATE
 	lib/stb/
 	lib/
 	lib/glm/
+	lib/toml++/
 	${PORTAUDIO_INCLDIR}
 )
 

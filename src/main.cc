@@ -1,3 +1,10 @@
+<<<<<<< Updated upstream
+=======
+#include "Themes.h"
+#include "imgui_internal.h"
+#include <cstdio>
+#include <cstring>
+>>>>>>> Stashed changes
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <filesystem>
@@ -168,8 +175,81 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
 
+<<<<<<< Updated upstream
 	// In your style setup
 	FuncDoodle::Application::CustomStyle();
+=======
+	FuncDoodle::AssetLoader assetLoader(assetsPath);
+	FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
+
+	ImGui::GetStyle() = FuncDoodle::Themes::FuncDoodleStyle();
+
+	FuncDoodle::Themes::InitThemes();
+
+	ImGuiSettingsHandler handler;
+	handler.TypeName = "UserData";
+	handler.TypeHash = ImHashStr(handler.TypeName);
+	handler.UserData = application;
+	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, const char* val) -> void* {
+		if (std::strcmp(val, "Preferences") == 0) {
+			FUNC_WARN("ReadOpenFn");  // Debugging
+			return handler->UserData;
+		}
+		return nullptr;
+	};
+	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, void* entry, const char* line) {
+		FUNC_WARN("ReadLineFn called with line: " << line);  // Debugging
+		int sel;
+		if (std::sscanf(line, "Theme=%i", &sel) == 1) {
+			static_cast<FuncDoodle::Application*>(entry)->SetTheme(sel);
+		}
+		FUNC_WARN("sel: " << sel);
+		switch (static_cast<FuncDoodle::Application*>(entry)->Theme()) {
+			case 0: { 
+				ImGui::GetStyle() = FuncDoodle::Themes::FuncDoodleStyle();
+				break;
+			};
+			case 1: { 
+				ImGui::StyleColorsDark();
+				break;
+			};
+			case 2: { 
+				ImGui::StyleColorsLight();
+				break;
+			};
+			case 3: { 
+				ImGui::StyleColorsClassic();
+				break;
+			};
+			case 4: { 
+				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinMochaStyle();
+				break;
+			};
+			case 5: { 
+				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinMacchiatoStyle();
+				break;
+			};
+			case 6: { 
+				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinFrappeStyle();
+				break;
+			}
+			case 7: { 
+				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinLatteStyle();
+				break;
+			};
+		}
+	};
+	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, ImGuiTextBuffer* buf) {
+		int theme = static_cast<FuncDoodle::Application*>(handler->UserData)->Theme();
+		buf->reserve(buf->size() + sizeof(int));
+		buf->append("[UserData][Preferences]\n");
+		buf->appendf("Theme=%d", theme);
+		buf->append("\n");
+	};
+	ImGui::AddSettingsHandler(&handler);
+
+    ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
+>>>>>>> Stashed changes
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
@@ -186,7 +266,7 @@ int main(int argc, char** argv) {
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB,
 							   nullptr);
 	if (err != paNoError) {
-		FUNC_WARN("Failed to open default stream: " + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to open default stream: " << Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
@@ -198,12 +278,7 @@ int main(int argc, char** argv) {
 		exit(-1);
 	}
 
-	FuncDoodle::AssetLoader assetLoader(assetsPath);
-
 	FuncDoodle::GlobalLoadAssets(&assetLoader);
-
-	FuncDoodle::Application* application =
-		new FuncDoodle::Application(win, &assetLoader);
 
 	auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
@@ -214,6 +289,42 @@ int main(int argc, char** argv) {
 	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths){((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);});
 
 	stbi_image_free(icon->pixels);
+
+	// In your style setup
+	switch (application->Theme()) {
+		case 0: { 
+			FuncDoodle::Themes::FuncDoodleStyle();
+			break;
+		};
+		case 1: { 
+			ImGui::StyleColorsDark();
+			break;
+		};
+		case 2: { 
+			ImGui::StyleColorsLight();
+			break;
+		};
+		case 3: { 
+			ImGui::StyleColorsClassic();
+			break;
+		};
+		case 4: { 
+			FuncDoodle::Themes::CatppuccinMochaStyle();
+			break;
+		};
+		case 5: { 
+			FuncDoodle::Themes::CatppuccinMacchiatoStyle();
+			break;
+		};
+		case 6: { 
+			FuncDoodle::Themes::CatppuccinFrappeStyle();
+			break;
+		}
+		case 7: { 
+			FuncDoodle::Themes::CatppuccinLatteStyle();
+			break;
+		};
+	}
 
 	while (!glfwWindowShouldClose(win)) {
 		GlobalAppTick(win, lastFrameTime, application, io);
@@ -242,4 +353,4 @@ int main(int argc, char** argv) {
 	glfwTerminate();
 
 	return 0;
-}
+	}

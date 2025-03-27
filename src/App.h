@@ -16,8 +16,7 @@ namespace FuncDoodle {
 			void SaveFileDialog(std::function<void()> done);
 			void ReadProjectFile();
 			void SaveProjectFile();
-			void CheckKeybinds(char* newProj, char* open, char* save,
-							   char* exportShortcut, char* quit, char* pref);
+			void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut, char* quit, char* pref, char* themeEditorShortcut);
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
@@ -26,8 +25,19 @@ namespace FuncDoodle {
 			inline ProjectFile* CurProj() { return m_CurrentProj; }
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
+			inline int Theme() { return m_Theme; }
+			inline void SetTheme(int theme) { m_Theme = theme; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
+<<<<<<< Updated upstream
 
+=======
+			void RenderEditProj();
+			void RenderNewProj();
+			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut, char* saveShortcut, char* exportShortcut, char* quitShortcut, char* prefShortcut, char* themeEditorShortcut);
+			void RenderEditPrefs();
+			void RenderExport();
+			void RenderKeybinds();
+>>>>>>> Stashed changes
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen;
