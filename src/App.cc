@@ -42,7 +42,6 @@ namespace FuncDoodle {
 		strcpy(shortcut, "Cmd");
 #endif
 
-		// Append modifiers if necessary
 		if (shift) {
 			strcat(shortcut, "+Shift");
 		}
@@ -51,7 +50,6 @@ namespace FuncDoodle {
 			strcat(shortcut, "+Super");
 		}
 
-		// Append the key
 		strcat(shortcut, "+");
 		strcat(shortcut, key);
 
@@ -61,7 +59,6 @@ namespace FuncDoodle {
 	void Application::CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut, char* quit, char* pref, char* themeEditorShortcut) {
 		ImGuiIO& io = ImGui::GetIO();
 
-		// Inline struct to store each shortcut's parsed values
 		struct Shortcut {
 			bool requiresCtrl;
 			bool requiresShift;
@@ -69,7 +66,6 @@ namespace FuncDoodle {
 			ImGuiKey key;
 		};
 
-		// Parse a shortcut string into a Shortcut struct
 		auto parseShortcut = [](const char* shortcut) -> Shortcut {
 			Shortcut result = {false, false, false, ImGuiKey_None};
 
@@ -702,16 +698,13 @@ namespace FuncDoodle {
 				}
 				ImGui::EndCombo();
 			}
-
 			if (ImGui::Button("Save current")) {
 				Themes::g_SaveThemeOpen = true;
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Add from file")) {
 				Themes::CustomTheme* style = Themes::LoadThemeFromFile();
-				if (!style) {
-					FUNC_WARN("Failed to load theme for an unknown reason.");
-				} else {
+				if (style) {
 					Themes::g_Themes.push_back(*style);
 				}
 			}
@@ -749,7 +742,7 @@ namespace FuncDoodle {
 				if (result == NFD_OKAY) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ExportSound);
-					FUNC_INF("Exporting to " + (std::string)outPath);
+					FUNC_INF("Exporting to " << outPath);
 					m_CurrentProj->Export(outPath, m_ExportFormat);
 					free(outPath);
 				} else if (result == NFD_CANCEL) {

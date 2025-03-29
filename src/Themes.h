@@ -741,6 +741,9 @@ namespace FuncDoodle {
 				FUNC_WARN("Failed to open file dialog (error: " << NFD_GetError() << ")");
 				return nullptr;
 			}
+			if (res == NFD_CANCEL) {
+				return nullptr;
+			}
 
 			toml::parse_result result = toml::parse_file(std::string_view(path));
 			if (!result) {
