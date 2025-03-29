@@ -26,28 +26,16 @@ fi
 
 arg1=$(echo "$arg1" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
-<<<<<<< Updated upstream
-if (( arg3 == true )); then
-	rm -rf build
-=======
 if [ "$arg3" == "true" ]; then
 	rm -rf bin
->>>>>>> Stashed changes
 fi
 
-mkdir -p build || exit -1 
-cd build || exit -1 
+mkdir -p bin || exit -1 
+cd bin || exit -1 
 cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) .. || exit -1
 make || exit -1
 cp -r ../assets . || exit -1
-<<<<<<< Updated upstream
-cp ../keys.txt ./assets/ || exit -1
-cp ../icon.png ./assets/ || exit -1
-=======
-cp ../assets/keys.txt ./assets/ || exit -1
-cp ../assets/icon.png ./assets/ || exit -1
 cd ..
->>>>>>> Stashed changes
 if [[ "$arg4" == "true" ]]; then
 	./bin/FuncDoodle || exit -1
 fi

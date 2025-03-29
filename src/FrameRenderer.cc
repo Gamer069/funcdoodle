@@ -15,8 +15,10 @@
 
 #include "Player.h"
 
+#include <cmath>
+
 namespace FuncDoodle {
-	void FrameRenderer::RenderFrame(unsigned long frameI) {
+	void FrameRenderer::RenderFrame(unsigned long frameI, bool prevEnabled) {
 		ImGui::SetNextWindowPos(ImVec2(0, 32), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Frame");
@@ -25,7 +27,7 @@ namespace FuncDoodle {
 			return;
 
 		if (!m_Grid) {
-			m_Grid = new Grid(m_FrameRT->Width(), m_Frame->Height(), m_Player->Proj()->BgCol());
+			m_Grid = new Grid(m_Frame->Width(), m_Frame->Height(), m_Player->Proj()->BgCol());
 		}
 
 		if (ImGui::BeginPopupContextWindow()) {
@@ -59,12 +61,15 @@ namespace FuncDoodle {
 			}
 			ImGui::EndPopup();
 		}
-		InitPixels(frameI);
+		InitPixels(frameI, prevEnabled);
 
 		ImGui::End();
 	}
-	void FrameRenderer::InitPixels(unsigned long frameI) {
-		const ImageArray* pixels = m_FrameRT->Pixels();
+	void FrameRenderer::InitPixels(unsigned long frameI, bool prevEnabled) {
+		const ImageArray* pixels;
+		if (prevEnabled)
+			pixels = m_FrameRT->Pixels();
+		else pixels = m_Frame->Pixels();
 
 		// Get window dimensions before handling zoom
 		ImVec2 windowPos = ImGui::GetWindowPos();
@@ -133,20 +138,37 @@ namespace FuncDoodle {
 				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
 					int newX = currentPixel.x + offsetX;
 					int newY = currentPixel.y + offsetY;
-					if (newX >= 0 && newX < m_FrameRT->Pixels()->Width() &&
-						newY >= 0 && newY < m_FrameRT->Pixels()->Height()) {
-						Col prevColor = m_FrameRT->Pixels()->Get(newX, newY);
-						m_FrameRT->SetPixel(newX, newY,
-										  Col{.r = colNew[0],
-											  .g = colNew[1],
-											  .b = colNew[2]});
-						if (ImGui::IsMouseDown(0)) {
-							Col nextColor = m_FrameRT->Pixels()->Get(newX, newY);
-							DrawAction action =
-								DrawAction(newX, newY, prevColor, nextColor, frameI,
-										m_Player->Proj());
-							if (prevColor != nextColor) {
-								m_Player->Proj()->PushUndoableDrawAction(action);
+					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
+						newY >= 0 && newY < m_Frame->Pixels()->Height()) {
+						if (prevEnabled) {
+							Col prevColor = m_FrameRT->Pixels()->Get(newX, newY);
+							m_FrameRT->SetPixel(newX, newY,
+									Col{.r = colNew[0],
+									.g = colNew[1],
+									.b = colNew[2]});
+							if (ImGui::IsMouseDown(0)) {
+								Col nextColor = m_FrameRT->Pixels()->Get(newX, newY);
+								DrawAction action =
+									DrawAction(newX, newY, prevColor, nextColor, frameI,
+											m_Player->Proj());
+								if (prevColor != nextColor) {
+									m_Player->Proj()->PushUndoableDrawAction(action);
+								}
+							}
+						} else {
+							Col prevColor = m_Frame->Pixels()->Get(newX, newY);
+							m_Frame->SetPixel(newX, newY,
+									Col{.r = colNew[0],
+									.g = colNew[1],
+									.b = colNew[2]});
+							if (ImGui::IsMouseDown(0)) {
+								Col nextColor = m_Frame->Pixels()->Get(newX, newY);
+								DrawAction action =
+									DrawAction(newX, newY, prevColor, nextColor, frameI,
+											m_Player->Proj());
+								if (prevColor != nextColor) {
+									m_Player->Proj()->PushUndoableDrawAction(action);
+								}
 							}
 						}
 					}
@@ -161,17 +183,17 @@ namespace FuncDoodle {
 				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
 					int newX = currentPixel.x + offsetX;
 					int newY = currentPixel.y + offsetY;
-					if (newX >= 0 && newX < m_FrameRT->Pixels()->Width() &&
-						newY >= 0 && newY < m_FrameRT->Pixels()->Height()) {
+					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
+							newY >= 0 && newY < m_Frame->Pixels()->Height()) {
 						Col prevColor = m_FrameRT->Pixels()->Get(newX, newY);
 						m_FrameRT->SetPixel(newX, newY,
-										  Col{.r = colNew[0],
-											  .g = colNew[1],
-											  .b = colNew[2]});
+								Col{.r = colNew[0],
+								.g = colNew[1],
+								.b = colNew[2]});
 						Col nextColor = m_FrameRT->Pixels()->Get(newX, newY);
 						DrawAction action =
 							DrawAction(newX, newY, prevColor, nextColor, frameI,
-									   m_Player->Proj());
+									m_Player->Proj());
 						if (prevColor != nextColor) {
 							m_Player->Proj()->PushUndoableDrawAction(action);
 						}
@@ -189,17 +211,17 @@ namespace FuncDoodle {
 					static_cast<unsigned char>(colOld[j] * 255.0f + 0.5f);
 			}
 			// FLOODFILL
-			Col curPixelCol = pixels->Get(currentPixel.x, currentPixel.y);
+			Col curPixelCol = pixels->Get(floor(currentPixel.x), floor(currentPixel.y));
 			FloodFill(
-				currentPixel.x, currentPixel.y, curPixelCol,
-				Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
+					currentPixel.x, currentPixel.y, curPixelCol,
+					Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]});
 
 			FillAction action = FillAction(
-				curPixelCol,
-				Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]},
-				frameI, m_Player->Proj(), i_PixelsChangedByBucketTool);
+					curPixelCol,
+					Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]},
+					frameI, m_Player->Proj(), i_PixelsChangedByBucketTool);
 			if (curPixelCol !=
-				Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]}) {
+					Col{.r = colResult[0], .g = colResult[1], .b = colResult[2]}) {
 				m_Player->Proj()->PushUndoableFillAction(action);
 			}
 
@@ -209,25 +231,35 @@ namespace FuncDoodle {
 		};
 		auto picker = [&](ImVec2 currentPixel) {
 			const Col& col =
-				m_Frame->Pixels()->Get(currentPixel.x, currentPixel.y);
+				m_Frame->Pixels()->Get(floor(currentPixel.x), floor(currentPixel.y));
 			m_ToolManager->SetCol(col);
-			colNew[0] = (float)col.r / 255.0f;
-			colNew[1] = (float)col.g / 255.0f;
-			colNew[2] = (float)col.b / 255.0f;
+			colNew[0] = (uint8_t)((float)col.r / 255.0f);
+			colNew[1] = (uint8_t)((float)col.g / 255.0f);
+			colNew[2] = (uint8_t)((float)col.b / 255.0f);
 		};
 		if (m_ToolManager == nullptr) {
 			FUNC_WARN("tool manager is nullptr");
 			std::exit(-1);
 		}
-		if (!ImGui::IsMouseDown(0)) {
-			m_Frame = m_FrameRT;
-		} else {
-			m_FrameRT = m_Frame;
+		if (prevEnabled) {
+			if (!ImGui::IsMouseDown(0)) {
+				// hacky but whatever
+				delete m_Frame;
+				m_Frame = new Frame(m_FrameRT->PixelsMut());
+				// *m_Frame = *m_FrameRT;
+			} else {
+				delete m_FrameRT;
+				m_FrameRT = new Frame(m_Frame->PixelsMut());
+				// *m_FrameRT = *m_Frame;
+			}
 		}
 
+		bool cond = true;
+		if (!prevEnabled)
+			cond = ImGui::IsMouseDown(0);
 
 		// Check if mouse is within frame bounds and mouse button is down
-		if (ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
+		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && cond) {
 			// Calculate current pixel coordinates
 			ImVec2 currentPixel((mousePos.x - startX) / m_PixelScale,
 					(mousePos.y - startY) / m_PixelScale);
@@ -279,10 +311,12 @@ namespace FuncDoodle {
 
 						if (interpX >= 0 && interpX < pixels->Width() &&
 								interpY >= 0 && interpY < pixels->Height()) {
-							m_FrameRT->SetPixel(interpX, interpY,
-									Col{.r = colNew[0],
-									.g = colNew[1],
-									.b = colNew[2]});
+							if (prevEnabled)
+								m_FrameRT->SetPixel(interpX, interpY,
+										Col{.r = colNew[0],
+										.g = colNew[1],
+										.b = colNew[2]});
+							else m_Frame->SetPixel(interpX, interpY, Col{.r = colNew[0], .g = colNew[1], .b = colNew[2]});
 						}
 					}
 				} else {
@@ -301,9 +335,13 @@ namespace FuncDoodle {
 						}
 					}
 
-					if (selectedTool !=
-							3) {  // Only draw if not using color picker
+					if (prevEnabled && selectedTool != 3) {  // Only draw if not using color picker
 						m_FrameRT->SetPixel(currentPixel.x, currentPixel.y,
+								Col{.r = colNew[0],
+								.g = colNew[1],
+								.b = colNew[2]});
+					} else if (!prevEnabled) {
+						m_Frame->SetPixel(currentPixel.x, currentPixel.y,
 								Col{.r = colNew[0],
 								.g = colNew[1],
 								.b = colNew[2]});

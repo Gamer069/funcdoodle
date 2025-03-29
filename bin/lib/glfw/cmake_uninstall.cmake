@@ -1,9 +1,9 @@
 
-if (NOT EXISTS "/home/illia/funcdoodle/bin/lib/glfw/install_manifest.txt")
-    message(FATAL_ERROR "Cannot find install manifest: \"/home/illia/funcdoodle/bin/lib/glfw/install_manifest.txt\"")
+if (NOT EXISTS "/home/illia/proj/funcdoodle/bin/lib/glfw/install_manifest.txt")
+    message(FATAL_ERROR "Cannot find install manifest: \"/home/illia/proj/funcdoodle/bin/lib/glfw/install_manifest.txt\"")
 endif()
 
-file(READ "/home/illia/funcdoodle/bin/lib/glfw/install_manifest.txt" files)
+file(READ "/home/illia/proj/funcdoodle/bin/lib/glfw/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})

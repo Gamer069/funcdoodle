@@ -24,13 +24,17 @@ namespace FuncDoodle {
 				  }
 			~FrameRenderer() {
 				delete m_Grid;
-				// free(m_Frame);
+				delete m_FrameRT;
 			}
-			void RenderFrame(unsigned long frameI);
-			void InitPixels(unsigned long frameI);
+			void RenderFrame(unsigned long frameI, bool prevEnabled);
+			void InitPixels(unsigned long frameI, bool prevEnabled);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
-			void SetFrame(Frame* frame) { m_Frame = frame; m_FrameRT = new Frame(*frame); }
+			void SetFrame(Frame* frame) {
+				delete m_FrameRT;
+				m_Frame = frame;
+				m_FrameRT = new Frame(*frame);
+			}
 			inline const ToolManager* GetToolManager() const {
 				return m_ToolManager;
 			}

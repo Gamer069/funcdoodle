@@ -28,19 +28,15 @@ namespace FuncDoodle {
 			inline int Theme() { return m_Theme; }
 			inline void SetTheme(int theme) { m_Theme = theme; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
-<<<<<<< Updated upstream
-
-=======
 			void RenderEditProj();
 			void RenderNewProj();
 			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut, char* saveShortcut, char* exportShortcut, char* quitShortcut, char* prefShortcut, char* themeEditorShortcut);
 			void RenderEditPrefs();
 			void RenderExport();
 			void RenderKeybinds();
->>>>>>> Stashed changes
 		private:
 			char* m_FilePath;
-			bool m_NewProjOpen;
+			bool m_NewProjOpen = false;
 			ProjectFile* m_CurrentProj;
 			ProjectFile* m_CacheProj;
 			AnimationManager* m_Manager;
@@ -56,5 +52,7 @@ namespace FuncDoodle {
 			int m_MigrationProjVersion = 0;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
+			bool m_PrevEnabled = false;
+			float* m_CacheBGCol;
 	};
 }  // namespace FuncDoodle

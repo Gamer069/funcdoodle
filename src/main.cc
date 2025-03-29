@@ -1,10 +1,7 @@
-<<<<<<< Updated upstream
-=======
 #include "Themes.h"
 #include "imgui_internal.h"
 #include <cstdio>
 #include <cstring>
->>>>>>> Stashed changes
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <filesystem>
@@ -175,10 +172,6 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
 
-<<<<<<< Updated upstream
-	// In your style setup
-	FuncDoodle::Application::CustomStyle();
-=======
 	FuncDoodle::AssetLoader assetLoader(assetsPath);
 	FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
@@ -249,7 +242,6 @@ int main(int argc, char** argv) {
 	ImGui::AddSettingsHandler(&handler);
 
     ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
->>>>>>> Stashed changes
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);

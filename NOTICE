@@ -10,8 +10,6 @@ https://fonts.google.com/specimen/Roboto
 
 AudioFile: 
 https://www.github.com/adamstark/AudioFile
-<<<<<<< Updated upstream
-=======
 
 toml++:
 https://github.com/marzer/tomlplusplus
@@ -20,4 +18,3 @@ NOTICE: PREVIEW IS CURRENTLY BROKEN. DO NOT USE PREVIEW YET.
 
 also credits to catppuccin
 https://www.catppuccin.com/
->>>>>>> Stashed changes
