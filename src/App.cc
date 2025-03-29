@@ -692,6 +692,11 @@ namespace FuncDoodle {
 						m_Theme = i;
 						ImGui::GetStyle() = *Themes::g_Themes[i].Style;
 					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("by %s", Themes::g_Themes[i].Author);
+						ImGui::EndTooltip();
+					}
 					if (is_selected) {
 						ImGui::SetItemDefaultFocus();
 					}

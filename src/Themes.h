@@ -731,12 +731,12 @@ namespace FuncDoodle {
 				}
 			}
 		}
-		static CustomTheme g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
+		static CustomTheme* g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
 		inline CustomTheme* LoadThemeFromFile() {
 			using namespace std::string_view_literals;
 
-			nfdchar_t* path = 0;
-			nfdresult_t res = NFD_OpenDialog("toml", 0, &path);
+			nfdchar_t* path = nullptr;
+			nfdresult_t res = NFD_OpenDialog("toml", nullptr, &path);
 			if (res == NFD_ERROR) {
 				FUNC_WARN("Failed to open file dialog (error: " << NFD_GetError() << ")");
 				return nullptr;
@@ -751,38 +751,73 @@ namespace FuncDoodle {
 				FUNC_WARN("error: " << result.error());
 				return nullptr;
 			}
+
 			toml::table table = result.table();
-			if (!table.contains("meta"sv)) {
-				FUNC_WARN("There's no metadata field... please make sure that your theme is valid");
+			if (!table.contains("meta"sv) || !table.contains("colors"sv)) {
+				FUNC_WARN("Theme file is missing required fields (meta/colors)");
 				return nullptr;
 			}
-			if (!table.contains("colors"sv)) {
-				FUNC_WARN("There's no colors in your theme...");
-				return nullptr;
-			}
+
 			toml::table* meta = table.get("meta"sv)->as_table();
 			const char* name = meta->get("name")->as_string()->get().c_str();
 			const char* author = meta->get("author")->as_string()->get().c_str();
 
+			// Allocate memory for name and author (because TOML parser returns temporary strings)
+			char* name_copy = (char*)malloc(strlen(name) + 1);
+			char* author_copy = (char*)malloc(strlen(author) + 1);
+
+			if (!name_copy || !author_copy) {
+				FUNC_WARN("Memory allocation failed!");
+				if (name_copy) free(name_copy);
+				if (author_copy) free(author_copy);
+				return nullptr;
+			}
+
+			strcpy(name_copy, name);
+			strcpy(author_copy, author);
+
 			toml::table* colors = table.get("colors"sv)->as_table();
-			static ImGuiStyle& style = ImGui::GetStyle();
-			for (auto node : *colors) {
-				for (const auto& [k,v] : *colors) {
-					if (!v.is_array()) continue;
-					unsigned char parsed = std::atoi(k.str().data());
-					toml::array arr = *v.as_array();
-					if (arr.size() != 4) continue;
-					style.Colors[parsed] = ImVec4(
+			ImGuiStyle& style = ImGui::GetStyle();
+
+			for (const auto& [k, v] : *colors) {
+				if (!v.is_array()) continue;
+
+				// Convert key to an integer safely
+				int parsed;
+				try {
+					parsed = std::stoi(std::string(k.str()));
+				} catch (...) {
+					FUNC_WARN("Invalid color key: " << k.str());
+					continue;
+				}
+
+				if (parsed < 0 || parsed >= ImGuiCol_COUNT) {
+					FUNC_WARN("Invalid ImGui color index: " << parsed);
+					continue;
+				}
+
+				toml::array arr = *v.as_array();
+				if (arr.size() != 4) continue;
+
+				style.Colors[parsed] = ImVec4(
 						arr.get(0)->as_floating_point()->get(),
 						arr.get(1)->as_floating_point()->get(),
 						arr.get(2)->as_floating_point()->get(),
 						arr.get(3)->as_floating_point()->get()
-					);
-				}
-
+						);
 			}
-			g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable = CustomTheme{name, author, &style};
-			return &g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
+
+			// Free the old theme if it exists
+			// if (g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable) {
+				// free((void*)g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable->Name);
+				// free((void*)g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable->Author);
+				// delete g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
+			// }
+
+			g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable = 
+				new CustomTheme{name_copy, author_copy, &style};
+
+			return g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
 		}
 		inline void SaveCurrentTheme() {
 			if (g_SaveThemeOpen) {
