@@ -1,4 +1,5 @@
-appbuild/
+appbin/
+.cache
 dmg/*.dmg
 release.sh
 CMakeCache.txt
