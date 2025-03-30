@@ -731,7 +731,7 @@ namespace FuncDoodle {
 				}
 			}
 		}
-		static CustomTheme* g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
+		static CustomTheme* g_LastLoadedTheme;
 		inline CustomTheme* LoadThemeFromFile() {
 			using namespace std::string_view_literals;
 
@@ -800,24 +800,20 @@ namespace FuncDoodle {
 				if (arr.size() != 4) continue;
 
 				style.Colors[parsed] = ImVec4(
-						arr.get(0)->as_floating_point()->get(),
-						arr.get(1)->as_floating_point()->get(),
-						arr.get(2)->as_floating_point()->get(),
-						arr.get(3)->as_floating_point()->get()
-						);
+					arr.get(0)->as_floating_point()->get(),
+					arr.get(1)->as_floating_point()->get(),
+					arr.get(2)->as_floating_point()->get(),
+					arr.get(3)->as_floating_point()->get()
+				);
 			}
 
-			// Free the old theme if it exists
-			// if (g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable) {
-				// free((void*)g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable->Name);
-				// free((void*)g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable->Author);
-				// delete g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
-			// }
+			static ImGuiStyle* copy;
+			copy = new ImGuiStyle(style);
 
-			g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable = 
-				new CustomTheme{name_copy, author_copy, &style};
+			g_LastLoadedTheme = 
+				new CustomTheme{name_copy, author_copy, copy};
 
-			return g_LastOpenedThemeWhichIsBasicallyAHackToNotReturnADanglingPointerInLoadThemeFromFileFunctionBecauseIWantThisToBeUsable;
+			return g_LastLoadedTheme;
 		}
 		inline void SaveCurrentTheme() {
 			if (g_SaveThemeOpen) {

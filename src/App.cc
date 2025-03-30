@@ -708,7 +708,8 @@ namespace FuncDoodle {
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Add from file")) {
-				Themes::CustomTheme* style = Themes::LoadThemeFromFile();
+				static Themes::CustomTheme* style;
+				style = Themes::LoadThemeFromFile();
 				if (style) {
 					Themes::g_Themes.push_back(*style);
 				}
