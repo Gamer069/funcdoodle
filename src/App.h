@@ -49,7 +49,6 @@ namespace FuncDoodle {
 			bool m_ShowKeybindsOpen = false;
 			bool m_SaveChangesOpen = false;
 			int m_Theme = 0;
-			int m_MigrationProjVersion = 0;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;

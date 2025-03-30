@@ -238,8 +238,7 @@ namespace FuncDoodle {
 			colNew[2] = (uint8_t)((float)col.b / 255.0f);
 		};
 		if (m_ToolManager == nullptr) {
-			FUNC_WARN("tool manager is nullptr");
-			std::exit(-1);
+			FUNC_FATAL("Tool manager is nullptr");
 		}
 		if (prevEnabled) {
 			if (!ImGui::IsMouseDown(0)) {

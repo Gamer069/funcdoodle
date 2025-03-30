@@ -93,12 +93,8 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 }
 
 int main(int argc, char** argv) {
-	FUNC_WARN("Warning");
-	FUNC_INF("Info");
-	FUNC_DBG("DEBUG");
-	FUNC_GRAY("Gray");
 	const char* path = exepath::get();
-	FUNC_DBG(path);
+	FUNC_DBG("Starting funcdoodle with exe path: " << path);
 	const char* lastSlash = strrchr(path, '/');
 	if (!lastSlash) {
 		lastSlash = strrchr(path, '\\');
@@ -126,11 +122,15 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // try to use older OpenGL version, because some laptops dont support 4.1, i don't want users to have to patch something out
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, 1);
 #ifdef __APPLE__
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#else
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #endif
 
 	GLFWwindow* win = glfwCreateWindow(900, 900, "FuncDoodle", NULL, NULL);
@@ -162,10 +162,18 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
-	io.Fonts->AddFontFromFileTTF(
-		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
+	float xScale, yScale;
+	glfwGetWindowContentScale(win, &xScale, &yScale);
+	float dpiScale = xScale;
+	ImFontConfig fontConfig;
+	fontConfig.OversampleH = 4;
+	fontConfig.OversampleV = 4;
+	fontConfig.PixelSnapH = true;
+
+	io.Fonts->AddFontFromFileTTF((assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0, &fontConfig);
 	io.Fonts->Build();
-	(void)io;
+
+    ImGui::GetStyle().ScaleAllSizes(1.0f / dpiScale);
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -183,14 +191,15 @@ int main(int argc, char** argv) {
 	handler.TypeName = "UserData";
 	handler.TypeHash = ImHashStr(handler.TypeName);
 	handler.UserData = application;
+	FUNC_WARN("stupid application: " << application);
+	FUNC_WARN("stupid userdata: " << handler.UserData);
 	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, const char* val) -> void* {
 		if (std::strcmp(val, "Preferences") == 0) {
-			FUNC_WARN("ReadOpenFn");  // Debugging
 			return handler->UserData;
 		}
 		return nullptr;
 	};
-	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, void* entry, const char* line) {
+	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry, const char* line) {
 		FUNC_WARN("ReadLineFn called with line: " << line);  // Debugging
 		int sel;
 		if (std::sscanf(line, "Theme=%i", &sel) == 1) {
@@ -233,7 +242,12 @@ int main(int argc, char** argv) {
 		}
 	};
 	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, ImGuiTextBuffer* buf) {
-		int theme = static_cast<FuncDoodle::Application*>(handler->UserData)->Theme();
+		FuncDoodle::Application* application = static_cast<FuncDoodle::Application*>(handler->UserData);
+		if (!application) {
+			FUNC_INF("???");
+			return;
+		}
+		int theme = application->Theme();
 		buf->reserve(buf->size() + sizeof(int));
 		buf->append("[UserData][Preferences]\n");
 		buf->appendf("Theme=%d", theme);
@@ -330,8 +344,6 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-	delete application;
-
 	Pa_StopStream(stream);
 	Pa_CloseStream(stream);
 	Pa_Terminate();
@@ -344,5 +356,7 @@ int main(int argc, char** argv) {
 	glfwDestroyWindow(win);
 	glfwTerminate();
 
+	delete application;
+
 	return 0;
-	}
+}

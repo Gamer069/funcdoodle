@@ -58,6 +58,17 @@
 		std::cout << "\033[90m[Note]: " << x << "\033[0m" << std::endl;        \
 	} while (0)
 
+#define FUNC_ERR(x)                                                           \
+	do {                                                                      \
+		std::cout << "\033[1;35m[Error]: " << x << "\033[0m" << std::endl;    \
+	} while (0) 
+
+#define FUNC_FATAL(x)                                                         \
+	do {                                                                      \
+		std::cout << "\033[1;31m[FATAL]: " << x << "\033[0m" << std::endl;    \
+		std::exit(-1);                                                        \
+	} while (0) 
+
 #include "Gui.h"
 
 #define INVERTED_IMCOL(r, g, b) IM_COL32(255 - r, 255 - g, 255 - b, 255)
@@ -65,9 +76,9 @@
 // (m)ajor/&debug
 
 #ifdef NDEBUG
-#define FUNCVER "v0.0.7a"
+#define FUNCVER "v0.1.0a"
 #else
-#define FUNCVER "v0.0.7ad"
+#define FUNCVER "v0.1.0a"
 #endif
 
 #define FDPVERMAJOR 0

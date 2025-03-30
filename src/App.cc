@@ -690,6 +690,7 @@ namespace FuncDoodle {
 					bool is_selected = (m_Theme == i);
 					if (ImGui::Selectable(Themes::g_Themes[i].Name, is_selected)) {
 						m_Theme = i;
+						FUNC_WARN("Setting theme to " << m_Theme);
 						ImGui::GetStyle() = *Themes::g_Themes[i].Style;
 					}
 					if (ImGui::IsItemHovered()) {

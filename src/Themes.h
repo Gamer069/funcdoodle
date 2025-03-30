@@ -834,7 +834,7 @@ namespace FuncDoodle {
 						theme.insert("meta"sv, meta);
 						toml::table colors = toml::table();
 						ImGuiStyle& style = ImGui::GetStyle();
-						for (unsigned char i; i < ImGuiCol_COUNT; ++i) {
+						for (unsigned char i = 0; i < ImGuiCol_COUNT; ++i) {
 							std::string is = std::to_string(i);
 							std::string_view iv = std::string_view(is);
 							colors.insert(iv, toml::array{ style.Colors[i].x, style.Colors[i].y, style.Colors[i].z, style.Colors[i].w });

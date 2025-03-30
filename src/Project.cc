@@ -97,8 +97,7 @@ namespace FuncDoodle {
 		}
 
 		if (format > 1) {
-			FUNC_WARN("Failed to export animation -- format not yet supported, this shouldn't normally occur unless there's a bug. Submit a github issue");
-			std::exit(-1);
+			FUNC_FATAL("Failed to export animation -- format not yet supported, this shouldn't normally occur unless there's a bug. Submit a github issue");
 		}
 	}
 
@@ -208,7 +207,7 @@ namespace FuncDoodle {
 	void ProjectFile::Write(char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
 		if (!outFile.is_open()) {
-			FUNC_WARN("Failed to open file for writing");
+			FUNC_ERR("Failed to open file for writing");
 			return;
 		}
 
@@ -292,8 +291,7 @@ namespace FuncDoodle {
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {
-			FUNC_WARN("Failed to open file");
-			std::exit(-1);
+			FUNC_FATAL("Failed to open file");
 		}
 
 		const int numBytes = 6;
@@ -302,8 +300,7 @@ namespace FuncDoodle {
 		file.read(&str[0], numBytes);
 
 		if (str != "FDProj") {
-			FUNC_WARN("This isn't a funcdoodle project...");
-			std::exit(-1);
+			FUNC_FATAL("This isn't a funcdoodle project...");
 		}
 
 		m_UndoStack = std::stack<std::unique_ptr<Action>>();
@@ -458,8 +455,7 @@ namespace FuncDoodle {
 		}
 
 		if (!file) {
-			FUNC_WARN("Failed to read from file");
-			std::exit(-1);
+			FUNC_FATAL("Failed to read from file");
 		}
 
 		file.close();

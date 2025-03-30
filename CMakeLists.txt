@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_C_COMPILER /usr/bin/clang)
-set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+if(UNIX)
+	set(CMAKE_C_COMPILER /usr/bin/clang)
+	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+endif()
+
+if(APPLE)
+	set(CMAKE_C_COMPILER /opt/homebrew/bin/aarch64-apple-darwin23-gcc-14)
+	set(CMAKE_CXX_COMPILER /opt/homebrew/bin/aarch64-apple-darwin23-g++-14)
+endif()
 
 if(APPLE)
 	project(FuncDoodle C CXX OBJC)
@@ -11,7 +18,7 @@ else()
 	project(FuncDoodle C CXX)
 endif()
 
-if(UNIX AND NOT APPLE)
+if(UNIX)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
 
