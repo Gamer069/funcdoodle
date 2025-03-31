@@ -135,7 +135,7 @@ namespace FuncDoodle {
 
 		inline ImGuiStyle CatppuccinLatteStyle() {
 			// ImGui::StyleColorsDark();
-			ImGuiStyle style = ImGui::GetStyle();
+			ImGuiStyle style = FuncDoodleStyle();
 			auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 				return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 			};
@@ -309,7 +309,7 @@ namespace FuncDoodle {
 		}
 
 		inline ImGuiStyle CatppuccinFrappeStyle() {
-			ImGuiStyle style = ImGui::GetStyle();
+			ImGuiStyle style = FuncDoodleStyle();
 			auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 				return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 			};
@@ -483,7 +483,7 @@ namespace FuncDoodle {
 		}
 
 		inline ImGuiStyle CatppuccinMacchiatoStyle() {
-			ImGuiStyle style = ImGui::GetStyle();
+			ImGuiStyle style = FuncDoodleStyle();
 			auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 				return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 			};
@@ -588,7 +588,7 @@ namespace FuncDoodle {
 
 
 		inline ImGuiStyle CatppuccinMochaStyle() {
-			ImGuiStyle style = ImGui::GetStyle();
+			ImGuiStyle style = FuncDoodleStyle();
 			auto rgb = [](unsigned char r, unsigned char g, unsigned char b) {
 				return ImGui::ColorConvertU32ToFloat4(IM_COL32(r, g, b, 255));
 			};

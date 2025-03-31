@@ -327,7 +327,7 @@ namespace FuncDoodle {
 		file.getline(m_Name, sizeof(m_Name), '\0');
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		file.getline(m_Desc, sizeof(m_Desc), '\0');
@@ -357,13 +357,13 @@ namespace FuncDoodle {
 		int plteLen = 0;
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		file.read(reinterpret_cast<char*>(&plteLen), sizeof(plteLen));
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		for (int i = 0; i < plteLen; i++) {
@@ -463,8 +463,7 @@ namespace FuncDoodle {
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
-		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)%s", FUNCVER, AnimName(),
-				(int)ImGui::GetIO().Framerate, !m_Saved ? "*" : "");
+		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(), !m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

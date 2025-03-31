@@ -112,6 +112,9 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
+	std::filesystem::path themesPath(dirPath);
+	themesPath /= "themes";
+
 	//glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
@@ -183,8 +186,6 @@ int main(int argc, char** argv) {
 	FuncDoodle::AssetLoader assetLoader(assetsPath);
 	FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
 
-	ImGui::GetStyle() = FuncDoodle::Themes::FuncDoodleStyle();
-
 	FuncDoodle::Themes::InitThemes();
 
 	ImGuiSettingsHandler handler;
@@ -205,7 +206,6 @@ int main(int argc, char** argv) {
 		if (std::sscanf(line, "Theme=%i", &sel) == 1) {
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(sel);
 		}
-		FUNC_WARN("sel: " << sel);
 		switch (static_cast<FuncDoodle::Application*>(entry)->Theme()) {
 			case 0: { 
 				ImGui::GetStyle() = FuncDoodle::Themes::FuncDoodleStyle();

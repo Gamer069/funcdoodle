@@ -19,9 +19,8 @@ namespace FuncDoodle {
 			m_Data[i] = Frame(m_Width, m_Height, bgCol);
 		}
 		if (!m_Data) {	// Error if allocation fails
-			FUNC_WARN("Failed to initialize LongIndexArray");
 			FUNC_DBG("Memory allocation for m_Data failed.");
-			std::exit(-1);
+			FUNC_FATAL("Failed to initialize LongIndexArray");
 		}
 
 		m_BG = bgCol;
@@ -33,7 +32,7 @@ namespace FuncDoodle {
 
 	void LongIndexArray::PushBack(const Frame* value) {
 		if (!m_Data) {
-			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_ERR("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted push_back on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
@@ -48,7 +47,7 @@ namespace FuncDoodle {
 
 	void LongIndexArray::PushBackEmpty() {
 		if (!m_Data) {
-			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_FATAL("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted push_back on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
@@ -63,13 +62,13 @@ namespace FuncDoodle {
 
 	void LongIndexArray::InsertAfterEmpty(unsigned long index) {
 		if (!m_Data) {
-			FUNC_WARN("tried to add a frame on invalid LongIndexArray");
+			FUNC_ERR("tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("Attempted insert_after on nullptr m_Data.");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
 
 		if (index < 0 || index >= size) {
-			FUNC_WARN("index out of range");
+			FUNC_ERR("index out of range");
 			return;
 		}
 
@@ -82,16 +81,14 @@ namespace FuncDoodle {
 			m_Data[i] = m_Data[i - 1];
 		}
 
-		// Insert the new value after the specified index
 		Frame* empty = new Frame(m_Width, m_Height, m_BG);
-		// here bg is white for some reason
 		m_Data[index + 1] = *empty;
 		++size;
 	}
 
 	void LongIndexArray::InsertBeforeEmpty(unsigned long index) {
 		if (!m_Data) {
-			FUNC_WARN("Tried to add a frame on invalid LongIndexArray");
+			FUNC_ERR("Tried to add a frame on invalid LongIndexArray");
 			FUNC_DBG("InsertBeforeEmpty");
 			return;	 // Don't proceed if m_Data is nullptr
 		}
