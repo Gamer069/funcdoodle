@@ -296,42 +296,6 @@ int main(int argc, char** argv) {
 
 	stbi_image_free(icon->pixels);
 
-	// In your style setup
-	switch (application->Theme()) {
-		case 0: { 
-			FuncDoodle::Themes::FuncDoodleStyle();
-			break;
-		};
-		case 1: { 
-			ImGui::StyleColorsDark();
-			break;
-		};
-		case 2: { 
-			ImGui::StyleColorsLight();
-			break;
-		};
-		case 3: { 
-			ImGui::StyleColorsClassic();
-			break;
-		};
-		case 4: { 
-			FuncDoodle::Themes::CatppuccinMochaStyle();
-			break;
-		};
-		case 5: { 
-			FuncDoodle::Themes::CatppuccinMacchiatoStyle();
-			break;
-		};
-		case 6: { 
-			FuncDoodle::Themes::CatppuccinFrappeStyle();
-			break;
-		}
-		case 7: { 
-			FuncDoodle::Themes::CatppuccinLatteStyle();
-			break;
-		};
-	}
-
 	while (!glfwWindowShouldClose(win)) {
 		GlobalAppTick(win, lastFrameTime, application, io);
 		if (application->ShouldClose()) {

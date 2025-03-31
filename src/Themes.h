@@ -14,6 +14,8 @@
 
 #include "MacroUtils.h"
 
+#include "UUID.h"
+
 namespace FuncDoodle {
 	namespace Themes {
 		struct CustomTheme {
@@ -777,7 +779,7 @@ namespace FuncDoodle {
 			strcpy(author_copy, author);
 
 			toml::table* colors = table.get("colors"sv)->as_table();
-			ImGuiStyle& style = ImGui::GetStyle();
+			ImGuiStyle style = ImGui::GetStyle();
 
 			for (const auto& [k, v] : *colors) {
 				if (!v.is_array()) continue;
@@ -831,6 +833,7 @@ namespace FuncDoodle {
 						toml::table meta = toml::table();
 						meta.insert("name"sv, themeName);
 						meta.insert("author"sv, themeAuthor);
+						meta.insert("uuid"sv, UUID::GenV4().ToString());
 						theme.insert("meta"sv, meta);
 						toml::table colors = toml::table();
 						ImGuiStyle& style = ImGui::GetStyle();
@@ -849,6 +852,7 @@ namespace FuncDoodle {
 						FUNC_INF("saving current theme to " << savePath << "...");
 						f << theme;
 						f.close();
+						g_SaveThemeOpen = false;
 					} else if (res == NFD_ERROR) {
 						FUNC_WARN("Failed to open save theme dialog: " << NFD_GetError());
 					}
@@ -875,7 +879,7 @@ namespace FuncDoodle {
 			static ImGuiStyle catppuccinFrappe = CatppuccinFrappeStyle();
 			g_Themes.at(6).Style = &catppuccinFrappe;
 			static ImGuiStyle catppuccinLatte = CatppuccinLatteStyle();
-			g_Themes.at(7).Style = &catppuccinFrappe;
+			g_Themes.at(7).Style = &catppuccinLatte;
 		}
 	}
 }
