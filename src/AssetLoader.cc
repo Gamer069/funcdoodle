@@ -28,15 +28,18 @@ namespace FuncDoodle {
 		if (std::filesystem::exists(m_AssetsPath)) {
 			FUNC_DBG("Found assets path @" << m_AssetsPath.string());
 		} else {
-			FUNC_FATAL("Failed to find assets path -- " << m_AssetsPath << " doesn't exist");
+			FUNC_FATAL("Failed to find assets path -- " << m_AssetsPath
+														<< " doesn't exist");
 		}
 	}
 	void AssetLoader::UnloadAssets() {
-		FUNC_DBG("Unloading assets even though there aren't even any assets to unload, this is a useless function (for now)-");
+		FUNC_DBG("Unloading assets even though there aren't even any assets to "
+				 "unload, this is a useless function (for now)-");
 		FUNC_DBG("\"Unloaded assets\"...");
 	}
 
-	// NOTE: this function doesn't support svg because stb_image doesn't support it
+	// NOTE: this function doesn't support svg because stb_image doesn't support
+	// it
 	void AssetLoader::RenderImage(const char* name, ImDrawList* drawList,
 								  const ImVec2& pos, const ImVec2& size,
 								  const ImVec4& tint) {
@@ -44,7 +47,10 @@ namespace FuncDoodle {
 		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(),
 										&width, &height, &channels, 0);
 		if (!data) {
-			FUNC_FATAL("Failed to load image\n" << (m_AssetsPath / name) << "\nTried to load from assets path -- " << m_AssetsPath << ", error: " << stbi_failure_reason());
+			FUNC_FATAL("Failed to load image\n"
+					   << (m_AssetsPath / name)
+					   << "\nTried to load from assets path -- " << m_AssetsPath
+					   << ", error: " << stbi_failure_reason());
 		}
 
 		uint32_t textureID;
@@ -67,7 +73,10 @@ namespace FuncDoodle {
 		unsigned char* data = stbi_load((m_AssetsPath / name).string().c_str(),
 										&width, &height, &channels, 0);
 		if (!data) {
-			FUNC_FATAL("Failed to load image\n" << (m_AssetsPath / name) << "\nTried to load from assets path -- " << m_AssetsPath << ", error: " << stbi_failure_reason());
+			FUNC_FATAL("Failed to load image\n"
+					   << (m_AssetsPath / name)
+					   << "\nTried to load from assets path -- " << m_AssetsPath
+					   << ", error: " << stbi_failure_reason());
 		}
 
 		uint32_t textureID;

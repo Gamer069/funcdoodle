@@ -9,14 +9,17 @@
 namespace FuncDoodle {
 	class Application {
 		public:
-			Application(GLFWwindow* win, AssetLoader* assetLoader);
+			Application(GLFWwindow* win, AssetLoader* assetLoader,
+						std::filesystem::path themesPath);
 			~Application();
 			void RenderImGui();
 			void OpenFileDialog(std::function<void()> done);
 			void SaveFileDialog(std::function<void()> done);
 			void ReadProjectFile();
 			void SaveProjectFile();
-			void CheckKeybinds(char* newProj, char* open, char* save, char* exportShortcut, char* quit, char* pref, char* themeEditorShortcut);
+			void CheckKeybinds(char* newProj, char* open, char* save,
+							   char* exportShortcut, char* quit, char* pref,
+							   char* themeEditorShortcut);
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
@@ -30,10 +33,14 @@ namespace FuncDoodle {
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
-			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut, char* saveShortcut, char* exportShortcut, char* quitShortcut, char* prefShortcut, char* themeEditorShortcut);
+			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut,
+								   char* saveShortcut, char* exportShortcut,
+								   char* quitShortcut, char* prefShortcut,
+								   char* themeEditorShortcut);
 			void RenderEditPrefs();
 			void RenderExport();
 			void RenderKeybinds();
+
 		private:
 			char* m_FilePath;
 			bool m_NewProjOpen = false;
@@ -53,5 +60,6 @@ namespace FuncDoodle {
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
 			float* m_CacheBGCol;
+			std::filesystem::path m_ThemesPath;
 	};
 }  // namespace FuncDoodle

@@ -19,8 +19,8 @@ namespace FuncDoodle {
 		float fps = static_cast<float>(m_Proj->AnimFPS());
 		static float timeElapsed = 0.0f;
 		timeElapsed += dt;
-		m_CurFrame =
-			static_cast<unsigned long>(timeElapsed * fps) % m_Proj->AnimFrameCount();
+		m_CurFrame = static_cast<unsigned long>(timeElapsed * fps) %
+					 m_Proj->AnimFrameCount();
 	}
 	void AnimationPlayer::Rewind() {
 		m_CurFrame = 0;

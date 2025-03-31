@@ -18,10 +18,11 @@ namespace FuncDoodle {
 						  AnimationPlayer* player)
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
 				  m_Player(player) {
-					  if (frame != nullptr)
-						  m_FrameRT = new Frame(*frame);
-					  else m_FrameRT = nullptr;
-				  }
+				if (frame != nullptr)
+					m_FrameRT = new Frame(*frame);
+				else
+					m_FrameRT = nullptr;
+			}
 			~FrameRenderer() {
 				delete m_Grid;
 				delete m_FrameRT;

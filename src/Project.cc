@@ -97,7 +97,9 @@ namespace FuncDoodle {
 		}
 
 		if (format > 1) {
-			FUNC_FATAL("Failed to export animation -- format not yet supported, this shouldn't normally occur unless there's a bug. Submit a github issue");
+			FUNC_FATAL("Failed to export animation -- format not yet "
+					   "supported, this shouldn't normally occur unless "
+					   "there's a bug. Submit a github issue");
 		}
 	}
 
@@ -159,19 +161,25 @@ namespace FuncDoodle {
 		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
-		m_UndoStack.push(std::make_unique<DeleteFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<DeleteFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
-		m_UndoStack.push(std::make_unique<InsertFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<InsertFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameLeftAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameRightAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameRightAction>(std::move(action)));
 		m_Saved = false;
 	}
 	void ProjectFile::Undo() {
@@ -392,7 +400,8 @@ namespace FuncDoodle {
 						int index = *reinterpret_cast<int*>(bytes);
 						if (index > plteLen) {
 							FUNC_DBG("Index -- " << index);
-							FUNC_DBG("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_DBG("Index out of bounds -- maybe the project "
+									 "file is corrupted..?");
 							FUNC_DBG("trying to break...");
 							file.seekg(start);
 							break;
@@ -419,7 +428,8 @@ namespace FuncDoodle {
 						int index = *reinterpret_cast<int*>(bytes);
 
 						if (index < 0 || index > plteLen) {
-							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_WARN("Index out of bounds -- maybe the "
+									  "project file is corrupted..?");
 							FUNC_INF("Index: " << index);
 							std::exit(-1);
 						}
@@ -463,7 +473,8 @@ namespace FuncDoodle {
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
-		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(), !m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
+		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
+				!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

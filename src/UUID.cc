@@ -4,6 +4,8 @@
 
 #include <random>
 
+#include "MacroUtils.h"
+
 namespace FuncDoodle {
 	std::ostream& operator<<(std::ostream& os, const UUID& obj) {
 		os << obj.ToString();
@@ -55,10 +57,29 @@ namespace FuncDoodle {
 			bytes[i] = static_cast<unsigned char>(dis(gen));
 		}
 
-		bytes[6] = (bytes[6] & 0x0f) | 0x60; // Version 6
-		bytes[8] = (bytes[8] & 0x3f) | 0x80; // Variant RFC 4122
+		bytes[6] = (bytes[6] & 0x0f) | 0x60;  // Version 6
+		bytes[8] = (bytes[8] & 0x3f) | 0x80;  // Variant RFC 4122
 
 		UUID uuid(bytes);
 		return uuid;
 	}
-}
+	UUID UUID::FromString(const char* str) {
+		char* buf = (char*)malloc(strlen(str) + 1);
+		strcpy(buf, str);
+		char* tok = strtok(buf, "-");
+		int i = 0;
+		unsigned char* bytes =
+			(unsigned char*)malloc(16 * sizeof(unsigned char));
+		while (tok != nullptr) {
+			unsigned int cur = 0;
+			if (sscanf(&tok[i], "%02x", &cur) != 1) {
+				FUNC_FATAL(
+					"Failed to convert string to UUID, failed to scan number");
+			}
+			bytes[i] = cur;
+			++i;
+			tok = strtok(nullptr, "-");
+		}
+		return UUID(bytes);
+	}
+}  // namespace FuncDoodle

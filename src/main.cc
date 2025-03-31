@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
 	std::filesystem::path themesPath(dirPath);
 	themesPath /= "themes";
 
-	//glfwSetErrorCallback(GLFWErrorCallback);
+	// glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -173,20 +173,23 @@ int main(int argc, char** argv) {
 	fontConfig.OversampleV = 4;
 	fontConfig.PixelSnapH = true;
 
-	io.Fonts->AddFontFromFileTTF((assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0, &fontConfig);
+	io.Fonts->AddFontFromFileTTF(
+		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0,
+		&fontConfig);
 	io.Fonts->Build();
 
-    ImGui::GetStyle().ScaleAllSizes(1.0f / dpiScale);
+	ImGui::GetStyle().ScaleAllSizes(1.0f / dpiScale);
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
-	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
+	glfwSetWindowCloseCallback(win, [](GLFWwindow* win) {});
 
 	FuncDoodle::AssetLoader assetLoader(assetsPath);
-	FuncDoodle::Application* application = new FuncDoodle::Application(win, &assetLoader);
+	FuncDoodle::Application* application =
+		new FuncDoodle::Application(win, &assetLoader, themesPath);
 
-	FuncDoodle::Themes::InitThemes();
+	FuncDoodle::Themes::LoadThemes(themesPath);
 
 	ImGuiSettingsHandler handler;
 	handler.TypeName = "UserData";
@@ -194,55 +197,29 @@ int main(int argc, char** argv) {
 	handler.UserData = application;
 	FUNC_WARN("stupid application: " << application);
 	FUNC_WARN("stupid userdata: " << handler.UserData);
-	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, const char* val) -> void* {
+	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
+							const char* val) -> void* {
 		if (std::strcmp(val, "Preferences") == 0) {
 			return handler->UserData;
 		}
 		return nullptr;
 	};
-	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry, const char* line) {
-		FUNC_WARN("ReadLineFn called with line: " << line);  // Debugging
+	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry,
+							const char* line) {
+		FUNC_WARN("ReadLineFn called with line: " << line);	 // Debugging
 		int sel;
 		if (std::sscanf(line, "Theme=%i", &sel) == 1) {
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(sel);
 		}
-		switch (static_cast<FuncDoodle::Application*>(entry)->Theme()) {
-			case 0: { 
-				ImGui::GetStyle() = FuncDoodle::Themes::FuncDoodleStyle();
-				break;
-			};
-			case 1: { 
-				ImGui::StyleColorsDark();
-				break;
-			};
-			case 2: { 
-				ImGui::StyleColorsLight();
-				break;
-			};
-			case 3: { 
-				ImGui::StyleColorsClassic();
-				break;
-			};
-			case 4: { 
-				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinMochaStyle();
-				break;
-			};
-			case 5: { 
-				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinMacchiatoStyle();
-				break;
-			};
-			case 6: { 
-				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinFrappeStyle();
-				break;
-			}
-			case 7: { 
-				ImGui::GetStyle() = FuncDoodle::Themes::CatppuccinLatteStyle();
-				break;
-			};
-		}
+		int i = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		ImGui::GetStyle().Alpha = 1.0f;
+		ImGui::GetStyle().WindowRounding = 1.0f;
+		ImGui::GetStyle() = *FuncDoodle::Themes::g_Themes[i].Style;
 	};
-	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler, ImGuiTextBuffer* buf) {
-		FuncDoodle::Application* application = static_cast<FuncDoodle::Application*>(handler->UserData);
+	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
+							ImGuiTextBuffer* buf) {
+		FuncDoodle::Application* application =
+			static_cast<FuncDoodle::Application*>(handler->UserData);
 		if (!application) {
 			FUNC_INF("???");
 			return;
@@ -255,7 +232,7 @@ int main(int argc, char** argv) {
 	};
 	ImGui::AddSettingsHandler(&handler);
 
-    ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
+	ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
@@ -265,7 +242,8 @@ int main(int argc, char** argv) {
 
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
-		FUNC_WARN("Failed to initialize port audio: " + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to initialize port audio: " +
+				  (std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
@@ -279,7 +257,8 @@ int main(int argc, char** argv) {
 	err = Pa_StartStream(stream);
 
 	if (err != paNoError) {
-		FUNC_WARN("Failed to start audio stream:" + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to start audio stream:" +
+				  (std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
@@ -292,7 +271,11 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
-	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths){((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);});
+	glfwSetDropCallback(
+		win, [](GLFWwindow* win, int count, const char** paths) {
+			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))
+				->DropCallback(win, count, paths);
+		});
 
 	stbi_image_free(icon->pixels);
 

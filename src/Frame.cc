@@ -22,8 +22,8 @@ namespace FuncDoodle {
 		m_BG = bgCol;
 	}
 	ImageArray::~ImageArray() {
-		//m_Data.clear();
-		//m_Data.shrink_to_fit();
+		// m_Data.clear();
+		// m_Data.shrink_to_fit();
 	}
 
 	void ImageArray::RedoColorAdjustment(Col bgCol) {
@@ -59,8 +59,9 @@ namespace FuncDoodle {
 
 	void Frame::SetWidth(int width, bool clear) {
 		if (m_Pixels == nullptr) {
-			m_Pixels = new ImageArray(width, 1, Col());  // default height of 1 bc we dont
-										   // know required height yet
+			m_Pixels = new ImageArray(width, 1,
+									  Col());  // default height of 1 bc we dont
+											   // know required height yet
 		} else {
 			if (!clear) {
 				const std::vector<Col>& oldData = m_Pixels->Data();
@@ -144,7 +145,9 @@ namespace FuncDoodle {
 			}
 		}
 
-		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d", m_Pixels->BgCol().r, m_Pixels->BgCol().g, m_Pixels->BgCol().b);
+		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d",
+						   m_Pixels->BgCol().r, m_Pixels->BgCol().g,
+						   m_Pixels->BgCol().b);
 		curr += written;
 
 		ImGui::SetClipboardText(fdata);
@@ -181,7 +184,8 @@ namespace FuncDoodle {
 		if (width <= 0 || height <= 0)
 			return nullptr;
 
-		Frame* frame = new Frame(width, height, Col{.r = 255, .g = 255, .b = 255});
+		Frame* frame =
+			new Frame(width, height, Col{.r = 255, .g = 255, .b = 255});
 
 		ptr = pasted;
 		// Skip first line
@@ -221,12 +225,12 @@ namespace FuncDoodle {
 		bgCol.r = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-		if(*ptr)
+		if (*ptr)
 			ptr++;
 		bgCol.g = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-		if(*ptr)
+		if (*ptr)
 			ptr++;
 		bgCol.b = atoi(ptr);
 		frame->PixelsMut()->SetBG(bgCol);
@@ -239,7 +243,7 @@ namespace FuncDoodle {
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {
-			//delete m_Pixels;
+			// delete m_Pixels;
 			m_Pixels = new ImageArray(*other.Pixels());
 		}
 		return *this;

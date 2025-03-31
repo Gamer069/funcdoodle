@@ -1,9 +1,9 @@
 #pragma once
+#include <array>
 #include <iostream>
+#include <ostream>
 #include <random>
 #include <string>
-#include <array>
-#include <ostream>
 
 namespace FuncDoodle {
 	class UUID {
@@ -15,7 +15,9 @@ namespace FuncDoodle {
 			bool operator!=(const UUID& other) const;
 			static UUID GenV4();
 			static UUID GenV6();
+			static UUID FromString(const char* str);
 			friend std::ostream& operator<<(std::ostream& os, const UUID& uuid);
+
 		private:
 			// it's definitely 16 though
 			unsigned char* m_Bytes;
