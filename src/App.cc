@@ -10,7 +10,6 @@
 #include <iostream>
 #include <stdint.h>
 #include <string.h>
-#include <vector>
 
 #include <fstream>
 
@@ -28,7 +27,7 @@ namespace FuncDoodle {
 		  m_CacheProj(nullptr),
 		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
 		  m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{255, 255, 255}),
-		  m_ThemesPath(themesPath) {}
+		  m_ThemesPath(themesPath), m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {}
 	Application::~Application() {
 		delete m_Manager;
 		delete m_CurrentProj;
@@ -715,16 +714,15 @@ namespace FuncDoodle {
 		}
 		if (ImGui::BeginPopup("EditPrefs")) {
 			if (ImGui::BeginCombo("Theme", Themes::g_Themes[m_Theme].Name)) {
-				for (int i = 0; i < Themes::g_Themes.size(); i++) {
-					bool is_selected = (m_Theme == i);
-					if (ImGui::Selectable(Themes::g_Themes[i].Name,
-										  is_selected)) {
-						m_Theme = i;
-						ImGui::GetStyle() = *Themes::g_Themes[i].Style;
+				for (auto& [uuid, theme] : Themes::g_Themes) {
+					bool is_selected = (m_Theme == uuid);
+					if (ImGui::Selectable(theme.Name, is_selected)) {
+						m_Theme = uuid;
+						ImGui::GetStyle() = *theme.Style;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("by %s", Themes::g_Themes[i].Author);
+						ImGui::Text("by %s", theme.Author);
 						ImGui::EndTooltip();
 					}
 					if (is_selected) {
@@ -743,17 +741,16 @@ namespace FuncDoodle {
 				nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
 				if (res == NFD_OKAY) {
 					for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
-						 i++) {
+							i++) {
 						nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
 						style = Themes::LoadThemeFromFile(path);
 						if (style) {
-							Themes::g_Themes.push_back(
-								Themes::CustomTheme(*style));
+							Themes::g_Themes.emplace(style->Uuid, Themes::CustomTheme(*style));
 						}
 					}
 				} else if (res == NFD_ERROR) {
 					FUNC_ERR(
-						"Failed to open save theme dialog: " << NFD_GetError());
+							"Failed to open save theme dialog: " << NFD_GetError());
 				}
 			}
 			if (ImGui::Button("Open themes directory")) {
@@ -771,9 +768,9 @@ namespace FuncDoodle {
 			ImGui::SameLine();
 
 			if (ImGui::IsKeyPressed(ImGuiKey_Escape) ||
-				ImGui::IsKeyPressed(ImGuiKey_Enter) ||
-				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
-				ImGui::Button("OK")) {
+					ImGui::IsKeyPressed(ImGuiKey_Enter) ||
+					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
+					ImGui::Button("OK")) {
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -783,17 +780,16 @@ namespace FuncDoodle {
 	void Application::RenderExport() {
 		if (m_ExportOpen) {
 			ImGui::OpenPopup("Export##export");
-			m_ExportOpen =
-				false;	// Reset flag since OpenPopup only sets visibility
+			m_ExportOpen = false;
 		}
 
 		if (ImGui::BeginPopup("Export##export")) {
 			const char* formats[] = {"PNGs", "MP4"};
 			ImGui::Combo("Export Format", &m_ExportFormat, formats,
-						 IM_ARRAYSIZE(formats));
+					IM_ARRAYSIZE(formats));
 			if (ImGui::Button("Export") ||
-				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				nfdchar_t* outPath = 0;
 				nfdresult_t result = NFD_PickFolder(0, &outPath);
 
@@ -808,14 +804,14 @@ namespace FuncDoodle {
 					free(outPath);
 				} else {
 					FUNC_DBG("Failed to open file dialog" +
-							 (std::string)NFD_GetError());
+							(std::string)NFD_GetError());
 					free(outPath);
 				}
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close") ||
-				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
@@ -826,7 +822,7 @@ namespace FuncDoodle {
 			ImGui::OpenPopup("Keybinds");
 		}
 		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
-								   ImGuiWindowFlags_AlwaysAutoResize)) {
+					ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =
 				m_AssetLoader->GetPath() / "keys.txt";
 			std::ifstream keysIn(keysPath);

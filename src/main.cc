@@ -1,6 +1,8 @@
 #include "Themes.h"
+#include "UUID.h"
 #include "imgui_internal.h"
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -132,7 +134,7 @@ int main(int argc, char** argv) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #else
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #endif
 
@@ -186,17 +188,16 @@ int main(int argc, char** argv) {
 	glfwSetWindowCloseCallback(win, [](GLFWwindow* win) {});
 
 	FuncDoodle::AssetLoader assetLoader(assetsPath);
-	FuncDoodle::Application* application =
-		new FuncDoodle::Application(win, &assetLoader, themesPath);
 
 	FuncDoodle::Themes::LoadThemes(themesPath);
+
+	FuncDoodle::Application* application =
+		new FuncDoodle::Application(win, &assetLoader, themesPath);
 
 	ImGuiSettingsHandler handler;
 	handler.TypeName = "UserData";
 	handler.TypeHash = ImHashStr(handler.TypeName);
 	handler.UserData = application;
-	FUNC_WARN("stupid application: " << application);
-	FUNC_WARN("stupid userdata: " << handler.UserData);
 	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
 							const char* val) -> void* {
 		if (std::strcmp(val, "Preferences") == 0) {
@@ -206,15 +207,15 @@ int main(int argc, char** argv) {
 	};
 	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry,
 							const char* line) {
-		FUNC_WARN("ReadLineFn called with line: " << line);	 // Debugging
-		int sel;
-		if (std::sscanf(line, "Theme=%i", &sel) == 1) {
-			static_cast<FuncDoodle::Application*>(entry)->SetTheme(sel);
+		char* sel = (char*)malloc(37);
+		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
+			FUNC_INF(sel << "\n");
+			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
 		}
-		int i = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		ImGui::GetStyle() = *FuncDoodle::Themes::g_Themes[uuid].Style;
 		ImGui::GetStyle().Alpha = 1.0f;
 		ImGui::GetStyle().WindowRounding = 1.0f;
-		ImGui::GetStyle() = *FuncDoodle::Themes::g_Themes[i].Style;
 	};
 	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
 							ImGuiTextBuffer* buf) {
@@ -224,10 +225,14 @@ int main(int argc, char** argv) {
 			FUNC_INF("???");
 			return;
 		}
-		int theme = application->Theme();
-		buf->reserve(buf->size() + sizeof(int));
+		FuncDoodle::UUID theme = application->Theme();
+		unsigned char* bytes = theme.Bytes();
+		for (int i = 0; i < 16; i++) {
+			FUNC_INF("Byte: " << (int)bytes[i]);
+		}
+		buf->reserve(buf->size() + strlen(theme.ToString()));
 		buf->append("[UserData][Preferences]\n");
-		buf->appendf("Theme=%d", theme);
+		buf->appendf("Theme=\"%s\"", theme.ToString());
 		buf->append("\n");
 	};
 	ImGui::AddSettingsHandler(&handler);
@@ -243,12 +248,12 @@ int main(int argc, char** argv) {
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
 		FUNC_WARN("Failed to initialize port audio: " +
-				  (std::string)Pa_GetErrorText(err));
+				(std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB,
-							   nullptr);
+			nullptr);
 	if (err != paNoError) {
 		FUNC_WARN("Failed to open default stream: " << Pa_GetErrorText(err));
 		free(stream);
@@ -258,7 +263,7 @@ int main(int argc, char** argv) {
 
 	if (err != paNoError) {
 		FUNC_WARN("Failed to start audio stream:" +
-				  (std::string)Pa_GetErrorText(err));
+				(std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
@@ -272,10 +277,10 @@ int main(int argc, char** argv) {
 	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
 	glfwSetDropCallback(
-		win, [](GLFWwindow* win, int count, const char** paths) {
+			win, [](GLFWwindow* win, int count, const char** paths) {
 			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))
-				->DropCallback(win, count, paths);
-		});
+			->DropCallback(win, count, paths);
+			});
 
 	stbi_image_free(icon->pixels);
 

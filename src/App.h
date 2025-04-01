@@ -3,6 +3,7 @@
 #include "AssetLoader.h"
 #include "Manager.h"
 #include "Project.h"
+#include "UUID.h"
 
 #include <functional>
 
@@ -28,8 +29,8 @@ namespace FuncDoodle {
 			inline ProjectFile* CurProj() { return m_CurrentProj; }
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
-			inline int Theme() { return m_Theme; }
-			inline void SetTheme(int theme) { m_Theme = theme; }
+			inline UUID Theme() { return m_Theme; }
+			inline void SetTheme(UUID theme) { m_Theme = theme; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
@@ -55,7 +56,7 @@ namespace FuncDoodle {
 			bool m_EditPrefsOpen = false;
 			bool m_ShowKeybindsOpen = false;
 			bool m_SaveChangesOpen = false;
-			int m_Theme = 0;
+			UUID m_Theme;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;

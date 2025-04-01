@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <string>
 #include <string_view>
+#include <unordered_map>
 #include <vector>
 
 #define TOML_EXCEPTIONS 0
@@ -22,13 +23,15 @@
 namespace FuncDoodle {
 	namespace Themes {
 		struct CustomTheme {
-				const char* Name;
-				const char* Author;
-				ImGuiStyle* Style;
-				UUID uuid;
+			const char* Name;
+			const char* Author;
+			ImGuiStyle* Style;
+			UUID Uuid;
+			CustomTheme() : Uuid(UUID(0)), Name(""), Author(""), Style(nullptr) {}
+			CustomTheme(const char* name, const char* author, ImGuiStyle* style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {}
 		};
 
-		inline std::vector<CustomTheme> g_Themes;
+		inline std::map<UUID, CustomTheme> g_Themes;
 		inline bool g_ThemeEditorOpen = false;
 		inline bool g_SaveThemeOpen = false;
 		inline void ThemeEditor() {
@@ -179,14 +182,35 @@ namespace FuncDoodle {
 					const char* path = pathStr.c_str();
 					CustomTheme* theme = LoadThemeFromFile(path);
 					if (theme) {
-						g_Themes.push_back(*theme);
+						g_Themes.emplace(theme->Uuid, *theme);
 					}
 				}
 			} else {
 				FUNC_FATAL("Failed to load themes -- either the themes/ "
 						   "directory doesn't exist, or it isn't a directory");
 			}
-			std::sort(g_Themes.begin(), g_Themes.end(), [](const CustomTheme& a, const CustomTheme& b) { return strcasecmp(a.Name, b.Name) < 0; });
+			// std::sort(g_Themes.begin(), g_Themes.end(), [](const CustomTheme& a, const CustomTheme& b) { return strcasecmp(a.Name, b.Name) < 0; });
+			std::vector<std::pair<UUID, CustomTheme>> themeVec(g_Themes.begin(), g_Themes.end());
+
+			// Selection sort (or any other sorting algorithm)
+			size_t n = themeVec.size();
+			for (size_t i = 0; i < n - 1; i++) {
+				size_t minIndex = i;
+				for (size_t j = i + 1; j < n; j++) {
+					if (strcasecmp(themeVec[j].second.Name, themeVec[minIndex].second.Name) < 0) {
+						minIndex = j;
+					}
+				}
+				if (minIndex != i) {
+					std::swap(themeVec[i], themeVec[minIndex]);
+				}
+			}
+
+			// Clear and refill the map in sorted order
+			g_Themes.clear();
+			for (auto& [uuid, theme] : themeVec) {
+				g_Themes.emplace(uuid, theme);
+			}
 		}
 		inline void SaveCurrentTheme() {
 			if (g_SaveThemeOpen) {
@@ -212,9 +236,9 @@ namespace FuncDoodle {
 							std::string is = std::to_string(i);
 							std::string_view iv = std::string_view(is);
 							colors.insert(iv, toml::array{style.Colors[i].x,
-														  style.Colors[i].y,
-														  style.Colors[i].z,
-														  style.Colors[i].w});
+									style.Colors[i].y,
+									style.Colors[i].z,
+									style.Colors[i].w});
 						}
 						theme.insert("colors"sv, colors);
 
@@ -224,13 +248,13 @@ namespace FuncDoodle {
 							return;
 						}
 						FUNC_INF("saving current theme to " << savePath
-															<< "...");
+								<< "...");
 						f << theme;
 						f.close();
 						g_SaveThemeOpen = false;
 					} else if (res == NFD_ERROR) {
 						FUNC_ERR("Failed to open save theme dialog: "
-								 << NFD_GetError());
+								<< NFD_GetError());
 					}
 				}
 				ImGui::End();
