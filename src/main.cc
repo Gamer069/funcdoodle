@@ -213,7 +213,7 @@ int main(int argc, char** argv) {
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
 		}
 		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
-		ImGui::GetStyle() = *FuncDoodle::Themes::g_Themes[uuid].Style;
+		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
 		ImGui::GetStyle().Alpha = 1.0f;
 		ImGui::GetStyle().WindowRounding = 1.0f;
 	};
@@ -226,15 +226,10 @@ int main(int argc, char** argv) {
 			return;
 		}
 		FuncDoodle::UUID theme = application->Theme();
-		std::array<unsigned char, 16> bytes = theme.Bytes();
-		for (int i = 0; i < 16; i++) {
-			FUNC_INF("Byte: " << (int)bytes[i]);
-		}
 		buf->reserve(buf->size() + strlen(theme.ToString()));
 		buf->append("[UserData][Preferences]\n");
 		buf->appendf("Theme=\"%s\"", theme.ToString());
 		buf->append("\n");
-		FUNC_INF("end write");
 	};
 	ImGui::AddSettingsHandler(&handler);
 

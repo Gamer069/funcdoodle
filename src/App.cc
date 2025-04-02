@@ -652,7 +652,7 @@ namespace FuncDoodle {
 					bool is_selected = (m_Theme == uuid);
 					if (ImGui::Selectable(theme.Name, is_selected)) {
 						m_Theme = uuid;
-						ImGui::GetStyle() = *theme.Style;
+						ImGui::GetStyle() = theme.Style;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
@@ -679,7 +679,7 @@ namespace FuncDoodle {
 						nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
 						style = Themes::LoadThemeFromFile(path);
 						if (style) {
-							Themes::g_Themes.emplace(style->Uuid, Themes::CustomTheme(*style));
+							Themes::g_Themes.emplace(style->Uuid, *style);
 						}
 					}
 				} else if (res == NFD_ERROR) {

@@ -25,10 +25,10 @@ namespace FuncDoodle {
 		struct CustomTheme {
 			const char* Name;
 			const char* Author;
-			ImGuiStyle* Style;
+			ImGuiStyle Style;
 			UUID Uuid;
-			CustomTheme() : Uuid(UUID()), Name(""), Author(""), Style(nullptr) {}
-			CustomTheme(const char* name, const char* author, ImGuiStyle* style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {}
+			CustomTheme() : Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()) {}
+			CustomTheme(const char* name, const char* author, ImGuiStyle style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {}
 		};
 
 		inline std::map<UUID, CustomTheme> g_Themes;
@@ -158,12 +158,11 @@ namespace FuncDoodle {
 						   arr.get(2)->as_floating_point()->get(),
 						   arr.get(3)->as_floating_point()->get());
 			}
+			style.WindowRounding = 1;
+			style.Alpha = 1;
 
-			g_LastLoadedTheme = new CustomTheme{name_copy, author_copy, new ImGuiStyle(style),
+			g_LastLoadedTheme = new CustomTheme{name_copy, author_copy, style,
 												UUID::FromString(uuid_copy)};
-
-			g_LastLoadedTheme->Style->Alpha = 1.0f;
-			g_LastLoadedTheme->Style->WindowRounding = 1.0f;
 
 			return g_LastLoadedTheme;
 		}
