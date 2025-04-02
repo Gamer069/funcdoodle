@@ -86,7 +86,7 @@ namespace FuncDoodle {
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Minus)) {	// - key for zoom out
 				m_PixelScale -= 1;
-				m_PixelScale = std::max(1, m_PixelScale);  // Minimum of 1
+				m_PixelScale = max(1, m_PixelScale);  // Minimum of 1
 			}
 
 			if (ImGui::IsKeyPressed(ImGuiKey_0)) {
@@ -290,7 +290,7 @@ namespace FuncDoodle {
 					float dx = currentPixel.x - m_LastMousePos.x;
 					float dy = currentPixel.y - m_LastMousePos.y;
 					int steps =
-						std::max(1, std::max(abs(static_cast<int>(dx)),
+						max(1, max(abs(static_cast<int>(dx)),
 											 abs(static_cast<int>(dy))));
 
 					// Pre-calculate color values outside the loop

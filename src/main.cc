@@ -214,8 +214,22 @@ int main(int argc, char** argv) {
 		}
 		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
 		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
-		ImGui::GetStyle().Alpha = 1.0f;
-		ImGui::GetStyle().WindowRounding = 1.0f;
+		ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
+		ImGui::GetStyle().WindowRounding = 10.0f;
+		ImGui::GetStyle().FrameRounding = 5.0f;
+		ImGui::GetStyle().PopupRounding = 12.0f;
+		ImGui::GetStyle().ScrollbarRounding = 10.0f;
+		ImGui::GetStyle().GrabRounding = 6.0f;
+		ImGui::GetStyle().TabRounding = 12.0f;
+		ImGui::GetStyle().ChildRounding = 12.0f;
+		ImGui::GetStyle().WindowPadding = ImVec2(10, 10);
+		ImGui::GetStyle().FramePadding = ImVec2(8, 8);
+		ImGui::GetStyle().ItemSpacing = ImVec2(10, 10);
+		ImGui::GetStyle().IndentSpacing = 20.0f;
+		ImGui::GetStyle().ScrollbarSize = 16.0f;
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			ImGui::GetStyle().WindowRounding = 1.0f;
+		}
 	};
 	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
 							ImGuiTextBuffer* buf) {

@@ -97,7 +97,11 @@
 #ifdef _WIN32
 #include <windows.h>
 #define OPEN_FILE_EXPLORER(path)                                               \
-	ShellExecuteA(nullptr, "explore", path.c_str(), nullptr, nullptr, SW_SHOW)
+	ShellExecuteA(nullptr, "explore", path.string().c_str(), nullptr, nullptr, SW_SHOW)
+#undef LoadImage
+#undef PlaySound
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
 #elif __APPLE__
 #include <cstdlib>
 #define OPEN_FILE_EXPLORER(path)                                               \

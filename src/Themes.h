@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <string>
+#include <string.h>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
@@ -158,8 +159,7 @@ namespace FuncDoodle {
 						   arr.get(2)->as_floating_point()->get(),
 						   arr.get(3)->as_floating_point()->get());
 			}
-			style.WindowRounding = 1;
-			style.Alpha = 1;
+
 
 			g_LastLoadedTheme = new CustomTheme{name_copy, author_copy, style,
 												UUID::FromString(uuid_copy)};
@@ -225,12 +225,15 @@ namespace FuncDoodle {
 						using namespace std::string_view_literals;
 						toml::table theme = toml::table();
 						toml::table meta = toml::table();
+
 						meta.insert("name"sv, themeName);
 						meta.insert("author"sv, themeAuthor);
 						meta.insert("uuid"sv, UUID::Gen().ToString());
 						theme.insert("meta"sv, meta);
+
 						toml::table colors = toml::table();
 						ImGuiStyle& style = ImGui::GetStyle();
+
 						for (unsigned char i = 0; i < ImGuiCol_COUNT; ++i) {
 							std::string is = std::to_string(i);
 							std::string_view iv = std::string_view(is);
@@ -239,6 +242,7 @@ namespace FuncDoodle {
 									style.Colors[i].z,
 									style.Colors[i].w});
 						}
+
 						theme.insert("colors"sv, colors);
 
 						std::ofstream f(savePath);
@@ -246,8 +250,7 @@ namespace FuncDoodle {
 							FUNC_ERR("Failed to open file...");
 							return;
 						}
-						FUNC_INF("saving current theme to " << savePath
-								<< "...");
+						FUNC_INF("saving current theme to " << savePath << "...");
 						f << theme;
 						f.close();
 						g_SaveThemeOpen = false;
