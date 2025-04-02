@@ -118,10 +118,10 @@
 // VERSION SCHEME -- major, minor, patch, modifier -- minor/&debug ||
 // (m)ajor/&debug
 
-#ifdef NDEBUG
-#define FUNCVER "v0.1.0a"
+#ifdef DEBUG
+#define FUNCVER "v0.1.1md"
 #else
-#define FUNCVER "v0.1.0a"
+#define FUNCVER "v0.1.1m"
 #endif
 
 #define FDPVERMAJOR 0
