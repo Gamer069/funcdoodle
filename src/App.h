@@ -25,7 +25,6 @@ namespace FuncDoodle {
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
 			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
-			static void CustomStyle();
 			inline ProjectFile* CurProj() { return m_CurrentProj; }
 			inline ProjectFile* CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }

@@ -277,11 +277,9 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
-	glfwSetDropCallback(
-			win, [](GLFWwindow* win, int count, const char** paths) {
-			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))
-			->DropCallback(win, count, paths);
-			});
+	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths) {
+		((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
+	});
 
 	stbi_image_free(icon->pixels);
 
