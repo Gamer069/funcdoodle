@@ -86,7 +86,11 @@ namespace FuncDoodle {
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_Minus)) {	// - key for zoom out
 				m_PixelScale -= 1;
-				m_PixelScale = max(1, m_PixelScale);  // Minimum of 1
+#ifdef _WIN32
+				m_PixelScale = max(1, m_PixelScale);
+#else
+				m_PixelScale = std::max(1, m_PixelScale);
+#endif
 			}
 
 			if (ImGui::IsKeyPressed(ImGuiKey_0)) {
@@ -289,9 +293,11 @@ namespace FuncDoodle {
 				if (m_LastMousePos.x >= 0 && m_LastMousePos.y >= 0) {
 					float dx = currentPixel.x - m_LastMousePos.x;
 					float dy = currentPixel.y - m_LastMousePos.y;
-					int steps =
-						max(1, max(abs(static_cast<int>(dx)),
-											 abs(static_cast<int>(dy))));
+#ifdef _WIN32
+					int steps = max(1, max(abs(static_cast<int>(dx)), abs(static_cast<int>(dy))));
+#else
+					int steps = std::max(1, std::max(abs(static_cast<int>(dx)), abs(static_cast<int>(dy))));
+#endif
 
 					// Pre-calculate color values outside the loop
 					if (focusedWindow &&
