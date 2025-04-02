@@ -47,21 +47,41 @@ namespace FuncDoodle {
 		return uuid;
 	}
 	UUID UUID::FromString(const char* str) {
-		char* buf = (char*)malloc(strlen(str) + 1);
-		strcpy(buf, str);
-		char* tok = strtok(buf, "-");
-		int i = 0;
+		// Validate input length (expecting 36 chars: 32 hex digits + 4 hyphens)
+		size_t len = strlen(str);
+		if (len != 36) {
+			FUNC_FATAL("Invalid UUID string length");
+		}
+
 		std::array<unsigned char, 16> bytes;
-		while (tok != nullptr) {
-			unsigned int cur = 0;
-			if (sscanf(&tok[i], "%02x", &cur) != 1) {
-				FUNC_FATAL(
-					"Failed to convert string to UUID, failed to scan number");
+		int byteIndex = 0;
+
+		// Temporary buffer to avoid modifying the input string
+		char buf[37]; // 36 chars + null terminator
+		strcpy(buf, str);
+
+		char* tok = strtok(buf, "-");
+		while (tok != nullptr && byteIndex < 16) {
+			// Each token has 2, 4, 4, 4, or 12 hex digits (2, 4, 6, or 8 bytes)
+			size_t tokLen = strlen(tok);
+			if (tokLen % 2 != 0) {
+				FUNC_FATAL("Invalid UUID token length");
 			}
-			bytes[i] = cur;
-			++i;
+
+			for (size_t i = 0; i < tokLen && byteIndex < 16; i += 2) {
+				unsigned int cur = 0;
+				if (sscanf(&tok[i], "%02x", &cur) != 1) {
+					FUNC_FATAL("Failed to parse UUID hex byte");
+				}
+				bytes[byteIndex++] = static_cast<unsigned char>(cur);
+			}
 			tok = strtok(nullptr, "-");
 		}
+
+		if (byteIndex != 16) {
+			FUNC_FATAL("UUID string did not yield 16 bytes");
+		}
+
 		return UUID(bytes);
 	}
 }  // namespace FuncDoodle

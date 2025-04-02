@@ -1,8 +1,8 @@
 @echo off
-mkdir build
+mkdir bin
 if errorlevel 1 exit /b -1
 
-cd build
+cd bin
 if errorlevel 1 exit /b -1
 
 cmake ..
