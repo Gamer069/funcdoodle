@@ -27,7 +27,7 @@ namespace FuncDoodle {
 			const char* Author;
 			ImGuiStyle* Style;
 			UUID Uuid;
-			CustomTheme() : Uuid(UUID(0)), Name(""), Author(""), Style(nullptr) {}
+			CustomTheme() : Uuid(UUID()), Name(""), Author(""), Style(nullptr) {}
 			CustomTheme(const char* name, const char* author, ImGuiStyle* style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {}
 		};
 
@@ -228,7 +228,7 @@ namespace FuncDoodle {
 						toml::table meta = toml::table();
 						meta.insert("name"sv, themeName);
 						meta.insert("author"sv, themeAuthor);
-						meta.insert("uuid"sv, UUID::GenV4().ToString());
+						meta.insert("uuid"sv, UUID::Gen().ToString());
 						theme.insert("meta"sv, meta);
 						toml::table colors = toml::table();
 						ImGuiStyle& style = ImGui::GetStyle();

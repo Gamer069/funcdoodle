@@ -226,7 +226,7 @@ int main(int argc, char** argv) {
 			return;
 		}
 		FuncDoodle::UUID theme = application->Theme();
-		unsigned char* bytes = theme.Bytes();
+		std::array<unsigned char, 16> bytes = theme.Bytes();
 		for (int i = 0; i < 16; i++) {
 			FUNC_INF("Byte: " << (int)bytes[i]);
 		}
@@ -234,6 +234,7 @@ int main(int argc, char** argv) {
 		buf->append("[UserData][Preferences]\n");
 		buf->appendf("Theme=\"%s\"", theme.ToString());
 		buf->append("\n");
+		FUNC_INF("end write");
 	};
 	ImGui::AddSettingsHandler(&handler);
 

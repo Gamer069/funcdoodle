@@ -30,12 +30,12 @@ namespace FuncDoodle {
 	bool UUID::operator==(const UUID& other) const {
 		return other.ToString() == this->ToString();
 	}
-	UUID UUID::GenV4() {
+	UUID UUID::Gen() {
 		std::random_device rd;
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> dis(0, 255);
 
-		unsigned char* bytes = new unsigned char[16]{};
+		std::array<unsigned char, 16> bytes{};
 
 		for (int i = 0; i < 16; ++i) {
 			bytes[i] = static_cast<unsigned char>(dis(gen));
@@ -46,30 +46,12 @@ namespace FuncDoodle {
 		UUID uuid(bytes);
 		return uuid;
 	}
-	UUID UUID::GenV6() {
-		std::random_device rd;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> dis(0, 255);
-
-		unsigned char* bytes = new unsigned char[16]{};
-
-		for (int i = 0; i < 16; ++i) {
-			bytes[i] = static_cast<unsigned char>(dis(gen));
-		}
-
-		bytes[6] = (bytes[6] & 0x0f) | 0x60;  // Version 6
-		bytes[8] = (bytes[8] & 0x3f) | 0x80;  // Variant RFC 4122
-
-		UUID uuid(bytes);
-		return uuid;
-	}
 	UUID UUID::FromString(const char* str) {
 		char* buf = (char*)malloc(strlen(str) + 1);
 		strcpy(buf, str);
 		char* tok = strtok(buf, "-");
 		int i = 0;
-		unsigned char* bytes =
-			(unsigned char*)malloc(16 * sizeof(unsigned char));
+		std::array<unsigned char, 16> bytes;
 		while (tok != nullptr) {
 			unsigned int cur = 0;
 			if (sscanf(&tok[i], "%02x", &cur) != 1) {
