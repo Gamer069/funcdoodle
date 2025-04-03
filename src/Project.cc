@@ -86,7 +86,7 @@ namespace FuncDoodle {
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
 				m_FPS, filePath, filePath);
 #else
-			snprintf(cmd, 500,
+			sprintf(cmd,
 					"ffmpeg.exe -framerate %d -pattern-type glob -i "
 					"\"%s/frame_*.png\" "
 					"-c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y",
@@ -97,8 +97,9 @@ namespace FuncDoodle {
 		}
 
 		if (format > 1) {
-			FUNC_WARN("Failed to export animation -- format not yet supported, this shouldn't normally occur unless there's a bug. Submit a github issue");
-			std::exit(-1);
+			FUNC_FATAL("Failed to export animation -- format not yet "
+					   "supported, this shouldn't normally occur unless "
+					   "there's a bug. Submit a github issue");
 		}
 	}
 
@@ -127,8 +128,7 @@ namespace FuncDoodle {
 		return m_Author;
 	}
 	void ProjectFile::SetAnimAuthor(char* author) {
-		strncpy(m_Author, author, sizeof(m_Author) - 1);
-		m_Author[sizeof(m_Author) - 1] = '\0';	// Ensure null termination
+		strcpy(m_Author, author);
 	}
 
 	const int ProjectFile::AnimFPS() const {
@@ -161,19 +161,25 @@ namespace FuncDoodle {
 		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
-		m_UndoStack.push(std::make_unique<DeleteFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<DeleteFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
 	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
-		m_UndoStack.push(std::make_unique<InsertFrameAction>(std::move(action)));
+		m_UndoStack.push(
+			std::make_unique<InsertFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameLeftAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameLeftAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
-		m_UndoStack.push(std::make_unique<MoveFrameRightAction>(std::move(action)));
+	void
+	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+		m_UndoStack.push(
+			std::make_unique<MoveFrameRightAction>(std::move(action)));
 		m_Saved = false;
 	}
 	void ProjectFile::Undo() {
@@ -209,7 +215,7 @@ namespace FuncDoodle {
 	void ProjectFile::Write(char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
 		if (!outFile.is_open()) {
-			FUNC_WARN("Failed to open file for writing");
+			FUNC_ERR("Failed to open file for writing");
 			return;
 		}
 
@@ -249,7 +255,7 @@ namespace FuncDoodle {
 				for (int y = 0; y < pixels->Height(); y++) {
 					Col px = pixels->Get(x, y);
 					if (colorToIndex.find(px) == colorToIndex.end()) {
-						colorToIndex[px] = (int)uniqueColors.size();
+						colorToIndex[px] = uniqueColors.size();
 						uniqueColors.push_back(px);
 					}
 				}
@@ -293,8 +299,7 @@ namespace FuncDoodle {
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {
-			FUNC_WARN("Failed to open file");
-			std::exit(-1);
+			FUNC_FATAL("Failed to open file");
 		}
 
 		const int numBytes = 6;
@@ -303,8 +308,7 @@ namespace FuncDoodle {
 		file.read(&str[0], numBytes);
 
 		if (str != "FDProj") {
-			FUNC_WARN("This isn't a funcdoodle project...");
-			std::exit(-1);
+			FUNC_FATAL("This isn't a funcdoodle project...");
 		}
 
 		m_UndoStack = std::stack<std::unique_ptr<Action>>();
@@ -315,7 +319,7 @@ namespace FuncDoodle {
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
 
-		unsigned long* frameCount = (unsigned long*)malloc(sizeof(long));
+		void* frameCount = malloc(sizeof(long));
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -331,7 +335,7 @@ namespace FuncDoodle {
 		file.getline(m_Name, sizeof(m_Name), '\0');
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		file.getline(m_Desc, sizeof(m_Desc), '\0');
@@ -361,13 +365,13 @@ namespace FuncDoodle {
 		int plteLen = 0;
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		file.read(reinterpret_cast<char*>(&plteLen), sizeof(plteLen));
 
 		if (file.fail()) {
-			FUNC_WARN("Failed to read file");
+			FUNC_FATAL("Failed to read file");
 		}
 
 		for (int i = 0; i < plteLen; i++) {
@@ -384,8 +388,8 @@ namespace FuncDoodle {
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 		if (verMajor >= 0 && verMinor >= 2) {
-			FUNC_INF(*frameCount);
-			for (unsigned long i = 0; i < *frameCount; i++) {
+			FUNC_INF((unsigned long)frameCount);
+			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {
 				FUNC_INF("i: " << i);
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
@@ -396,7 +400,8 @@ namespace FuncDoodle {
 						int index = *reinterpret_cast<int*>(bytes);
 						if (index > plteLen) {
 							FUNC_DBG("Index -- " << index);
-							FUNC_DBG("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_DBG("Index out of bounds -- maybe the project "
+									 "file is corrupted..?");
 							FUNC_DBG("trying to break...");
 							file.seekg(start);
 							break;
@@ -412,8 +417,8 @@ namespace FuncDoodle {
 				file.read(reinterpret_cast<char*>(&null), 1);
 			}
 		} else {
-			FUNC_INF(*frameCount);
-			for (long i = 0; i < *frameCount; i++) {
+			FUNC_INF((long)frameCount);
+			for (long i = 0; i < (long)frameCount; i++) {
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {
@@ -423,7 +428,8 @@ namespace FuncDoodle {
 						int index = *reinterpret_cast<int*>(bytes);
 
 						if (index < 0 || index > plteLen) {
-							FUNC_WARN("Index out of bounds -- maybe the project file is corrupted..?");
+							FUNC_WARN("Index out of bounds -- maybe the "
+									  "project file is corrupted..?");
 							FUNC_INF("Index: " << index);
 							std::exit(-1);
 						}
@@ -459,8 +465,7 @@ namespace FuncDoodle {
 		}
 
 		if (!file) {
-			FUNC_WARN("Failed to read from file");
-			std::exit(-1);
+			FUNC_FATAL("Failed to read from file");
 		}
 
 		file.close();
@@ -468,9 +473,8 @@ namespace FuncDoodle {
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
-		FUNCAOV(title != 0);
-		sprintf(title, "FuncDoodle -- %s -- %s (%d FPS)%s", FUNCVER, AnimName(),
-				(int)ImGui::GetIO().Framerate, m_Saved ? "" : "*");
+		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
+				!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

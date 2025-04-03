@@ -21,7 +21,9 @@ namespace FuncDoodle {
 		RedoColorAdjustment(bgCol);
 		m_BG = bgCol;
 	}
-	ImageArray::~ImageArray() { 
+	ImageArray::~ImageArray() {
+		// m_Data.clear();
+		// m_Data.shrink_to_fit();
 	}
 
 	void ImageArray::RedoColorAdjustment(Col bgCol) {
@@ -55,14 +57,11 @@ namespace FuncDoodle {
 		return m_Data[y * m_Width + x];
 	}
 
-	Frame::~Frame() {
-		//delete m_Pixels;
-	}
-
 	void Frame::SetWidth(int width, bool clear) {
 		if (m_Pixels == nullptr) {
-			m_Pixels = new ImageArray(width, 1, Col());  // default height of 1 bc we dont
-										   // know required height yet
+			m_Pixels = new ImageArray(width, 1,
+									  Col());  // default height of 1 bc we dont
+											   // know required height yet
 		} else {
 			if (!clear) {
 				const std::vector<Col>& oldData = m_Pixels->Data();
@@ -146,7 +145,9 @@ namespace FuncDoodle {
 			}
 		}
 
-		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d", m_Pixels->BgCol().r, m_Pixels->BgCol().g, m_Pixels->BgCol().b);
+		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d",
+						   m_Pixels->BgCol().r, m_Pixels->BgCol().g,
+						   m_Pixels->BgCol().b);
 		curr += written;
 
 		ImGui::SetClipboardText(fdata);
@@ -183,7 +184,8 @@ namespace FuncDoodle {
 		if (width <= 0 || height <= 0)
 			return nullptr;
 
-		Frame* frame = new Frame(width, height, Col{.r = 255, .g = 255, .b = 255});
+		Frame* frame =
+			new Frame(width, height, Col{.r = 255, .g = 255, .b = 255});
 
 		ptr = pasted;
 		// Skip first line
@@ -223,12 +225,12 @@ namespace FuncDoodle {
 		bgCol.r = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-		if(*ptr)
+		if (*ptr)
 			ptr++;
 		bgCol.g = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-		if(*ptr)
+		if (*ptr)
 			ptr++;
 		bgCol.b = atoi(ptr);
 		frame->PixelsMut()->SetBG(bgCol);
@@ -241,31 +243,9 @@ namespace FuncDoodle {
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {
-			m_Pixels = nullptr;
-			delete m_Pixels;
+			// delete m_Pixels;
 			m_Pixels = new ImageArray(*other.Pixels());
 		}
 		return *this;
-	};
-	bool operator==(const Frame& lhs, const Frame& rhs) {
-		if (lhs.Width() != rhs.Width() || lhs.Height() != rhs.Height()) {
-			return false;
-		}
-		if (lhs.Pixels() == nullptr && rhs.Pixels() == nullptr) {
-			return true;
-		}
-		if (lhs.Pixels() == nullptr || rhs.Pixels() == nullptr) {
-			return false;
-		}
-		return *lhs.Pixels() == *rhs.Pixels();
-	};
-	bool operator!=(const Frame& lhs, const Frame& rhs) {
-		return !(lhs == rhs);
-	}
-	bool operator==(const ImageArray& lhs, const ImageArray& rhs) {
-		return lhs.Width() == rhs.Width() && lhs.Height() == rhs.Height() && lhs.Data() == rhs.Data() && lhs.BgCol() == rhs.BgCol();
-	}
-	bool operator!=(const ImageArray& lhs, const ImageArray& rhs) {
-		return !(lhs == rhs);
 	}
 }  // namespace FuncDoodle

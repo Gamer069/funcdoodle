@@ -22,7 +22,8 @@ namespace FuncDoodle {
 		  m_AssetLoader(assetLoader) {
 		m_ToolManager = new ToolManager(assetLoader);
 		m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
-		m_TimelineFrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
+		m_TimelineFrameRenderer =
+			new FrameRenderer(nullptr, m_ToolManager, m_Player);
 	}
 	AnimationManager::~AnimationManager() {
 		delete m_ToolManager;
@@ -167,7 +168,6 @@ namespace FuncDoodle {
 		}
 
 		// Render frames
-		// TODO: tiurwelyiuvyn3586e7btero8btw678e0srts78vberwot78v6er078tw478ertbo
 		for (unsigned long i = 0; i < m_Proj->AnimFrameCount(); i++) {
 			drawList->AddText(
 				font, fontSize,
@@ -182,8 +182,10 @@ namespace FuncDoodle {
 			float height = bottomRight.y - topLeft.y;
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
-			m_TimelineFrameRenderer->SetPixelScale(std::min<float>(scaleX, scaleY));
-			m_TimelineFrameRenderer->RenderFramePixels(topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
+			m_TimelineFrameRenderer->SetPixelScale(
+				std::min<float>(scaleX, scaleY));
+			m_TimelineFrameRenderer->RenderFramePixels(
+				topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {

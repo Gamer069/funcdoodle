@@ -36,6 +36,10 @@ namespace FuncDoodle {
 	};
 	class ImageArray {
 		public:
+			ImageArray& operator=(const ImageArray&) = default;
+			ImageArray& operator=(ImageArray&&) = delete;
+			ImageArray(const ImageArray&) = default;
+			ImageArray(ImageArray&&) = default;
 			ImageArray(int width, int height, Col bgCol);
 			~ImageArray();
 
@@ -59,8 +63,6 @@ namespace FuncDoodle {
 			inline const Col BgCol() const { return m_BG; }
 			inline void SetBG(const Col bgCol) { m_BG = bgCol; }
 
-			friend bool operator==(const ImageArray& lhs, const ImageArray& rhs);
-			friend bool operator!=(const ImageArray& lhs, const ImageArray& rhs);
 		private:
 			int m_Width = 32;
 			int m_Height = 32;
@@ -76,13 +78,11 @@ namespace FuncDoodle {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			};
 			Frame(ImageArray* arr) : m_Pixels(arr) {};
-			~Frame();
+			~Frame() { delete m_Pixels; };
 			void ReInit(int width, int height, Col bgCol) {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			}
 			Frame& operator=(const Frame& other);
-			friend bool operator==(const Frame& lhs, const Frame& rhs);
-			friend bool operator!=(const Frame& lhs, const Frame& rhs);
 			void SetWidth(int width, bool clear = false);
 			void SetHeight(int height, bool clear = false);
 
@@ -95,8 +95,8 @@ namespace FuncDoodle {
 			inline void SetPixel(int x, int y, Col px) {
 				m_Pixels->Set(x, y, px);
 			}
-			inline const int Width() const { return m_Pixels->Width(); }
-			inline const int Height() const { return m_Pixels->Height(); }
+			inline const int Width() { return m_Pixels->Width(); }
+			inline const int Height() { return m_Pixels->Height(); }
 			inline std::vector<Col> Data() const { return m_Pixels->Data(); }
 
 		private:

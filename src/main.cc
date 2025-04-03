@@ -1,4 +1,9 @@
 #include "Themes.h"
+#include "UUID.h"
+#include "imgui_internal.h"
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <filesystem>
@@ -90,12 +95,8 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 }
 
 int main(int argc, char** argv) {
-	FUNC_WARN("Warning");
-	FUNC_INF("Info");
-	FUNC_DBG("DEBUG");
-	FUNC_GRAY("Gray");
 	const char* path = exepath::get();
-	FUNC_DBG(path);
+	FUNC_DBG("Starting funcdoodle with exe path: " << path);
 	const char* lastSlash = strrchr(path, '/');
 	if (!lastSlash) {
 		lastSlash = strrchr(path, '\\');
@@ -113,7 +114,10 @@ int main(int argc, char** argv) {
 	std::filesystem::path assetsPath(dirPath);
 	assetsPath /= "assets";
 
-	//glfwSetErrorCallback(GLFWErrorCallback);
+	std::filesystem::path themesPath(dirPath);
+	themesPath /= "themes";
+
+	// glfwSetErrorCallback(GLFWErrorCallback);
 
 	if (!glfwInit()) {
 		const char* description;
@@ -123,11 +127,15 @@ int main(int argc, char** argv) {
 		return -1;
 	}
 
+	glfwWindowHint(GLFW_SCALE_TO_MONITOR, 1);
+#ifdef __APPLE__
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-#ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, 1);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#else
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #endif
 
 	GLFWwindow* win = glfwCreateWindow(900, 900, "FuncDoodle", NULL, NULL);
@@ -157,52 +165,120 @@ int main(int argc, char** argv) {
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 #endif
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
+	float xScale, yScale;
+	glfwGetWindowContentScale(win, &xScale, &yScale);
+	float dpiScale = xScale;
+	ImFontConfig fontConfig;
+	fontConfig.OversampleH = 4;
+	fontConfig.OversampleV = 4;
+	fontConfig.PixelSnapH = true;
+
 	io.Fonts->AddFontFromFileTTF(
-		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0f);
+		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0,
+		&fontConfig);
 	io.Fonts->Build();
-	(void)io;
+
+	ImGui::GetStyle().ScaleAllSizes(1.0f / dpiScale);
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
-	glfwSetWindowCloseCallback(win, [](GLFWwindow* win){});
+	glfwSetWindowCloseCallback(win, [](GLFWwindow* win) {});
 
-	// In your style setup
-	FuncDoodle::Themes::FuncDoodleStyle();
+	FuncDoodle::AssetLoader assetLoader(assetsPath);
+
+	FuncDoodle::Themes::LoadThemes(themesPath);
+
+	FuncDoodle::Application* application =
+		new FuncDoodle::Application(win, &assetLoader, themesPath);
+
+	ImGuiSettingsHandler handler;
+	handler.TypeName = "UserData";
+	handler.TypeHash = ImHashStr(handler.TypeName);
+	handler.UserData = application;
+	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
+							const char* val) -> void* {
+		if (std::strcmp(val, "Preferences") == 0) {
+			return handler->UserData;
+		}
+		return nullptr;
+	};
+	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry,
+							const char* line) {
+		char* sel = (char*)malloc(37);
+		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
+			FUNC_INF(sel << "\n");
+			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
+		}
+		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
+		ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
+		ImGui::GetStyle().WindowRounding = 10.0f;
+		ImGui::GetStyle().FrameRounding = 5.0f;
+		ImGui::GetStyle().PopupRounding = 12.0f;
+		ImGui::GetStyle().ScrollbarRounding = 10.0f;
+		ImGui::GetStyle().GrabRounding = 6.0f;
+		ImGui::GetStyle().TabRounding = 12.0f;
+		ImGui::GetStyle().ChildRounding = 12.0f;
+		ImGui::GetStyle().WindowPadding = ImVec2(10, 10);
+		ImGui::GetStyle().FramePadding = ImVec2(8, 8);
+		ImGui::GetStyle().ItemSpacing = ImVec2(10, 10);
+		ImGui::GetStyle().IndentSpacing = 20.0f;
+		ImGui::GetStyle().ScrollbarSize = 16.0f;
+		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			ImGui::GetStyle().WindowRounding = 1.0f;
+		}
+	};
+	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
+							ImGuiTextBuffer* buf) {
+		FuncDoodle::Application* application =
+			static_cast<FuncDoodle::Application*>(handler->UserData);
+		if (!application) {
+			FUNC_INF("???");
+			return;
+		}
+		FuncDoodle::UUID theme = application->Theme();
+		buf->reserve(buf->size() + strlen(theme.ToString()));
+		buf->append("[UserData][Preferences]\n");
+		buf->appendf("Theme=\"%s\"", theme.ToString());
+		buf->append("\n");
+	};
+	ImGui::AddSettingsHandler(&handler);
+
+	ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
 
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
-	ImGui_ImplOpenGL3_Init("#version 410");
+	ImGui_ImplOpenGL3_Init("#version 140");
+
 	PaStream* stream;
 
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
-		FUNC_WARN("Failed to initialize port audio: " + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to initialize port audio: " +
+				(std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB,
-							   nullptr);
+			nullptr);
 	if (err != paNoError) {
-		FUNC_WARN("Failed to open default stream: " + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to open default stream: " << Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 	err = Pa_StartStream(stream);
 
 	if (err != paNoError) {
-		FUNC_WARN("Failed to start audio stream:" + (std::string)Pa_GetErrorText(err));
+		FUNC_WARN("Failed to start audio stream:" +
+				(std::string)Pa_GetErrorText(err));
 		free(stream);
 		exit(-1);
 	}
 
-	FuncDoodle::AssetLoader assetLoader(assetsPath);
-
 	FuncDoodle::GlobalLoadAssets(&assetLoader);
-
-	FuncDoodle::Application* application =
-		new FuncDoodle::Application(win, &assetLoader);
 
 	auto lastFrameTime = std::chrono::high_resolution_clock::now();
 
@@ -210,7 +286,9 @@ int main(int argc, char** argv) {
 
 	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
-	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths){((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);});
+	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths) {
+		((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
+	});
 
 	stbi_image_free(icon->pixels);
 
@@ -226,8 +304,6 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-	delete application;
-
 	Pa_StopStream(stream);
 	Pa_CloseStream(stream);
 	Pa_Terminate();
@@ -239,6 +315,8 @@ int main(int argc, char** argv) {
 
 	glfwDestroyWindow(win);
 	glfwTerminate();
+
+	delete application;
 
 	return 0;
 }

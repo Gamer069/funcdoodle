@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_BUILD_PARALLEL_LEVEL 8)
-
 if(UNIX)
-	# set(CMAKE_C_COMPILER /usr/bin/clang)
-	# set(CMAKE_CXX_COMPILER /usr/bin/clang++)
+	set(CMAKE_C_COMPILER /usr/bin/clang)
+	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 endif()
 
 if(APPLE)
@@ -15,7 +13,7 @@ else()
 	project(FuncDoodle C CXX)
 endif()
 
-if(UNIX AND NOT APPLE)
+if(UNIX)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
 
@@ -54,7 +52,7 @@ elseif(UNIX AND NOT APPLE)
 	set(NFD_SOURCES lib/nfd/src/nfd_gtk.c lib/nfd/src/nfd_common.c)
 endif()
 
-#set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
+set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
 set(PORTAUDIO_INCLDIR "" CACHE STRING "required")
 
 if(NOT PORTAUDIO_LIBDIR)
@@ -101,6 +99,7 @@ target_include_directories(FuncDoodle PRIVATE
 	lib/stb/
 	lib/
 	lib/glm/
+	lib/toml++/
 	${PORTAUDIO_INCLDIR}
 )
 
@@ -174,5 +173,5 @@ endif()
 
 # Extra flags
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations") # -Werror
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
 endif()
