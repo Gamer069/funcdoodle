@@ -209,7 +209,6 @@ int main(int argc, char** argv) {
 							const char* line) {
 		char* sel = (char*)malloc(37);
 		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
-			FUNC_INF(sel << "\n");
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
 		}
 		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
