@@ -32,7 +32,7 @@
 float SAMPLE_RATE = 44100.0;
 
 void GLFWErrorCallback(int error, const char* desc) {
-	FUNC_WARN("GLFW ERROR (" << error << "): " << desc);
+	FUNC_ERR("GLFW ERROR (" << error << "): " << desc);
 }
 
 void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
@@ -211,6 +211,21 @@ int main(int argc, char** argv) {
 		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
 		}
+		int sfxEnabled;
+		if (std::sscanf(line, "Sfx=%d", &sfxEnabled) == 1) {
+			bool sfxEnabledBool = false;
+			if (sfxEnabled >= 1) {
+				sfxEnabledBool = true;
+			}
+			static_cast<FuncDoodle::Application*>(entry)->SetSFXEnabled(sfxEnabledBool);
+		}
+		int prevEnabled;
+		if (std::sscanf(line, "Prev=%d", &prevEnabled) == 1) {
+			bool prevEnabledBool = false;
+			if (prevEnabled >= 1)
+				prevEnabledBool = true;
+			static_cast<FuncDoodle::Application*>(entry)->SetPrevEnabled(prevEnabledBool);
+		}
 		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
 		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
 		ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
@@ -242,6 +257,10 @@ int main(int argc, char** argv) {
 		buf->reserve(buf->size() + strlen(theme.ToString()));
 		buf->append("[UserData][Preferences]\n");
 		buf->appendf("Theme=\"%s\"", theme.ToString());
+		buf->append("\n");
+		buf->appendf("Sfx=%d", application->SFXEnabled() ? 1 : 0);
+		buf->append("\n");
+		buf->appendf("Prev=%d", application->PrevEnabled() ? 1 : 0);
 		buf->append("\n");
 	};
 	ImGui::AddSettingsHandler(&handler);

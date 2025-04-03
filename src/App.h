@@ -30,6 +30,10 @@ namespace FuncDoodle {
 			inline bool ShouldClose() { return m_ShouldClose; }
 			inline UUID Theme() { return m_Theme; }
 			inline void SetTheme(UUID theme) { m_Theme = theme; }
+			inline void SetSFXEnabled(bool enabled) { m_SFXEnabled = enabled; }
+			inline void SetPrevEnabled(bool enabled) { m_PrevEnabled = enabled; }
+			inline bool PrevEnabled() { return m_PrevEnabled; }
+			inline bool SFXEnabled() { return m_SFXEnabled; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();

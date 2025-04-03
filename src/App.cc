@@ -643,8 +643,7 @@ namespace FuncDoodle {
 	void Application::RenderEditPrefs() {
 		if (m_EditPrefsOpen) {
 			ImGui::OpenPopup("EditPrefs");
-			m_EditPrefsOpen =
-				false;	// Reset flag since OpenPopup only sets visibility
+			m_EditPrefsOpen = false;	// Reset flag since OpenPopup only sets visibility
 		}
 		if (ImGui::BeginPopup("EditPrefs")) {
 			if (ImGui::BeginCombo("Theme", Themes::g_Themes[m_Theme].Name)) {
