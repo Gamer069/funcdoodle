@@ -1,6 +1,5 @@
 appbin/
 .cache/
-dmg/*.dmg
 release.sh
 CMakeCache.txt
 CMakeFiles/
@@ -9,6 +8,7 @@ FuncDoodle
 FuncDoodle.app
 pkg_app.sh
 bin/
+dmg/
 .git
 .editorconfig
 .vscode/
