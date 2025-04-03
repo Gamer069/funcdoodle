@@ -8,7 +8,7 @@ FuncDoodle
 FuncDoodle.app
 pkg_app.sh
 bin/
-dmg/
+dmg/*.dmg
 .git
 .editorconfig
 .vscode/
