@@ -88,8 +88,7 @@ namespace FuncDoodle {
 			toml::parse_result result =
 				toml::parse_file(std::string_view(path));
 			if (!result) {
-				FUNC_WARN("Failed to parse theme file... it's probably not "
-						  "valid TOML");
+				FUNC_WARN("Failed to parse theme file... it's probably not valid TOML");
 				FUNC_WARN("error: " << result.error());
 				return nullptr;
 			}
@@ -175,6 +174,9 @@ namespace FuncDoodle {
 						FUNC_GRAY("Skipping "
 								  << e.path()
 								  << "because it isn't a regular file");
+						continue;
+					}
+					if (e.path().filename().string().starts_with(".")) {
 						continue;
 					}
 					std::string pathStr = e.path().string();
