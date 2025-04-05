@@ -227,6 +227,26 @@ int main(int argc, char** argv) {
 			static_cast<FuncDoodle::Application*>(entry)->SetPrevEnabled(prevEnabledBool);
 		}
 		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		if (!FuncDoodle::Themes::g_Themes.contains(uuid)) {
+			ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[FuncDoodle::UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")].Style;
+			ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
+			ImGui::GetStyle().WindowRounding = 10.0f;
+			ImGui::GetStyle().FrameRounding = 5.0f;
+			ImGui::GetStyle().PopupRounding = 12.0f;
+			ImGui::GetStyle().ScrollbarRounding = 10.0f;
+			ImGui::GetStyle().GrabRounding = 6.0f;
+			ImGui::GetStyle().TabRounding = 12.0f;
+			ImGui::GetStyle().ChildRounding = 12.0f;
+			ImGui::GetStyle().WindowPadding = ImVec2(10, 10);
+			ImGui::GetStyle().FramePadding = ImVec2(8, 8);
+			ImGui::GetStyle().ItemSpacing = ImVec2(10, 10);
+			ImGui::GetStyle().IndentSpacing = 20.0f;
+			ImGui::GetStyle().ScrollbarSize = 16.0f;
+			if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+				ImGui::GetStyle().WindowRounding = 1.0f;
+			}
+			return;
+		}
 		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
 		ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
 		ImGui::GetStyle().WindowRounding = 10.0f;
@@ -246,7 +266,7 @@ int main(int argc, char** argv) {
 		}
 	};
 	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
-							ImGuiTextBuffer* buf) {
+			ImGuiTextBuffer* buf) {
 		FuncDoodle::Application* application =
 			static_cast<FuncDoodle::Application*>(handler->UserData);
 		if (!application) {
@@ -305,8 +325,8 @@ int main(int argc, char** argv) {
 	glfwSetWindowUserPointer(win, application);
 	glfwSetWindowIcon(win, 1, icon);
 	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths) {
-		((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
-	});
+			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
+			});
 
 	stbi_image_free(icon->pixels);
 
