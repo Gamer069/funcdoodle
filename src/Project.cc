@@ -388,9 +388,8 @@ namespace FuncDoodle {
 
 		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 		if (verMajor >= 0 && verMinor >= 2) {
-			FUNC_INF((unsigned long)frameCount);
+			FUNC_DBG((unsigned long)frameCount);
 			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {
-				FUNC_INF("i: " << i);
 				ImageArray* img = new ImageArray(animWidth, animHeight, m_BG);
 				for (int y = 0; y < animHeight; y++) {
 					for (int x = 0; x < animWidth; x++) {

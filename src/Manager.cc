@@ -190,6 +190,7 @@ namespace FuncDoodle {
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
+				FUNC_DBG("i: " << i);
 				m_FrameRenderer->SetFrame(frames->Get(i));
 				m_FrameRenderer->SetIndex(i);
 				if (i > 0) {

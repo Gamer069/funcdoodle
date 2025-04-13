@@ -258,12 +258,12 @@ namespace FuncDoodle {
 		if (prevEnabled) {
 			if (!ImGui::IsMouseDown(0)) {
 				// hacky but whatever
-				delete m_Frame;
-				m_Frame = new Frame(m_FrameRT->PixelsMut());
+				// delete m_Frame;
+				m_Frame = std::move(m_FrameRT);
 				// *m_Frame = *m_FrameRT;
 			} else {
-				delete m_FrameRT;
-				m_FrameRT = new Frame(m_Frame->PixelsMut());
+				// delete m_FrameRT;
+				m_FrameRT = std::move(m_Frame);
 				// *m_FrameRT = *m_Frame;
 			}
 		}
@@ -430,6 +430,7 @@ namespace FuncDoodle {
 										  ImDrawList* drawList,
 										  bool usePrevPxScale,
 										  bool renderPreview) {
+		FUNC_DASS(m_FrameRT);
 		const ImageArray* pixels = m_FrameRT->Pixels();
 		for (int y = 0; y < pixels->Height(); y++) {
 			for (int x = 0; x < pixels->Width(); x++) {
