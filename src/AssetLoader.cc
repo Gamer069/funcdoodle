@@ -33,9 +33,7 @@ namespace FuncDoodle {
 		}
 	}
 	void AssetLoader::UnloadAssets() {
-		FUNC_DBG("Unloading assets even though there aren't even any assets to "
-				 "unload, this is a useless function (for now)-");
-		FUNC_DBG("\"Unloaded assets\"...");
+		delete m_AudioManager;
 	}
 
 	// NOTE: this function doesn't support svg because stb_image doesn't support

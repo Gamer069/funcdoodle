@@ -300,8 +300,7 @@ int main(int argc, char** argv) {
 		free(stream);
 		exit(-1);
 	}
-	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB,
-			nullptr);
+	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB, nullptr);
 	if (err != paNoError) {
 		FUNC_WARN("Failed to open default stream: " << Pa_GetErrorText(err));
 		free(stream);
