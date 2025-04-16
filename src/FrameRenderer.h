@@ -32,10 +32,14 @@ namespace FuncDoodle {
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
 			void SetFrame(Frame* frame) {
-				Frame* newFrameRT = new Frame(*frame);  // copy first
-				// delete m_FrameRT;                       // then delete old
+				if (+m_Frame != +frame) {
+					delete m_Frame;
+				}
+				if (+m_FrameRT != +frame) {
+					delete m_FrameRT;
+				}
 				m_Frame = frame;
-				m_FrameRT = newFrameRT;
+				m_FrameRT = new Frame(*frame);
 			}
 			inline const ToolManager* GetToolManager() const {
 				return m_ToolManager;

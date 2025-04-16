@@ -83,6 +83,7 @@ namespace FuncDoodle {
 				m_Pixels = new ImageArray(width, height, bgCol);
 			}
 			Frame& operator=(const Frame& other);
+			bool operator==(const Frame& other);
 			void SetWidth(int width, bool clear = false);
 			void SetHeight(int height, bool clear = false);
 

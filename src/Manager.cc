@@ -176,22 +176,23 @@ namespace FuncDoodle {
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
 				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
-			m_TimelineFrameRenderer->SetFrame(m_Proj->AnimFrames()->Get(i));
+			if (m_TimelineFrameRenderer->AnimFrame() != m_Proj->AnimFrames()->Get(i)) {
+				m_TimelineFrameRenderer->SetFrame(m_Proj->AnimFrames()->Get(i));
+			}
 
 			float width = bottomRight.x - topLeft.x;
 			float height = bottomRight.y - topLeft.y;
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
-			m_TimelineFrameRenderer->SetPixelScale(
-				std::min<float>(scaleX, scaleY));
+			m_TimelineFrameRenderer->SetPixelScale(std::min<float>(scaleX, scaleY));
 			m_TimelineFrameRenderer->RenderFramePixels(
 				topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
 			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 				(!m_Player->Playing() && m_SelectedFrame == i)) {
 				const auto frames = m_Proj->AnimFrames();
-				FUNC_DBG("i: " << i);
-				m_FrameRenderer->SetFrame(frames->Get(i));
+				if (m_FrameRenderer->AnimFrame() != frames->Get(i))
+					m_FrameRenderer->SetFrame(frames->Get(i));
 				m_FrameRenderer->SetIndex(i);
 				if (i > 0) {
 					m_FrameRenderer->SetPreviousFrame(frames->Get(i - 1));
