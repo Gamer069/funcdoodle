@@ -8,6 +8,7 @@
 #include "Player.h"
 
 #include <vector>
+#include <memory>
 
 namespace FuncDoodle {
 	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool =
@@ -19,27 +20,28 @@ namespace FuncDoodle {
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
 				  m_Player(player) {
 				if (frame != nullptr)
-					m_FrameRT = new Frame(*frame);
+					m_FrameRT = std::make_unique<Frame>(*frame);
 				else
 					m_FrameRT = nullptr;
 			}
 			~FrameRenderer() {
 				delete m_Grid;
-				// delete m_FrameRT;
+				// m_FrameRT will be automatically cleaned up by unique_ptr
 			}
 			void RenderFrame(unsigned long frameI, bool prevEnabled);
 			void InitPixels(unsigned long frameI, bool prevEnabled);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
 			void SetFrame(Frame* frame) {
-				if (+m_Frame != +frame) {
+				if (m_Frame != frame) {
 					delete m_Frame;
 				}
-				if (+m_FrameRT != +frame) {
-					delete m_FrameRT;
-				}
 				m_Frame = frame;
-				m_FrameRT = new Frame(*frame);
+				if (frame != nullptr) {
+					m_FrameRT = std::make_unique<Frame>(*frame);
+				} else {
+					m_FrameRT.reset();
+				}
 			}
 			inline const ToolManager* GetToolManager() const {
 				return m_ToolManager;
@@ -56,13 +58,13 @@ namespace FuncDoodle {
 				m_PixelScale = pixelScale;
 			}
 
-			void FloodFill(int x, int y, Col targetCol, Col fillCol);
+			void FloodFill(int x, int y, Col targetCol, Col fillCol, Frame* targetFrame);
 			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
 								   bool usePrevPxScale = true,
 								   bool renderPreview = true);
 
 		private:
-			Frame* m_FrameRT;
+			std::unique_ptr<Frame> m_FrameRT;
 			Frame* m_Frame;
 			Frame* m_PreviousFrame;
 			int m_Index;

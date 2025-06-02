@@ -24,7 +24,7 @@ namespace FuncDoodle {
 		ImGui::SetNextWindowSize(ImVec2(1073, 886), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Frame");
 
-		if (!m_Frame || !m_ToolManager || !m_FrameRT || !m_FrameRT->Pixels()) {
+		if (!m_Frame || !m_ToolManager) {
 			ImGui::End();
 			return;
 		}
@@ -68,6 +68,12 @@ namespace FuncDoodle {
 	}
 
 	void FrameRenderer::InitPixels(unsigned long frameI, bool prevEnabled) {
+		// Initialize preview frame if needed
+		if (prevEnabled && !m_FrameRT && m_Frame) {
+			// Create a fresh copy of the current frame for preview
+			m_FrameRT = std::make_unique<Frame>(*m_Frame);
+		}
+
 		const ImageArray* pixels;
 		if (prevEnabled && m_FrameRT && m_FrameRT->Pixels())
 			pixels = m_FrameRT->Pixels();
@@ -137,7 +143,7 @@ namespace FuncDoodle {
 			int size = m_ToolManager->Size();
 			bool actionPerformed = false;
 
-			Frame* targetFrame = prevEnabled ? m_FrameRT : m_Frame;
+			Frame* targetFrame = prevEnabled ? m_FrameRT.get() : m_Frame;
 			if (!targetFrame || !targetFrame->Pixels()) return false;
 
 			for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
@@ -153,7 +159,8 @@ namespace FuncDoodle {
 						
 						targetFrame->SetPixel(newX, newY, newColor);
 						
-						if (ImGui::IsMouseDown(0) && prevColor != newColor) {
+						// Only push undo actions when not in preview mode AND mouse is down
+						if (!prevEnabled && ImGui::IsMouseDown(0) && prevColor != newColor) {
 							DrawAction action(newX, newY, prevColor, newColor, frameI, m_Player->Proj());
 							m_Player->Proj()->PushUndoableDrawAction(action);
 							actionPerformed = true;
@@ -169,7 +176,7 @@ namespace FuncDoodle {
 			bool actionPerformed = false;
 			Col bgColor = m_Player->Proj()->BgCol();
 
-			Frame* targetFrame = prevEnabled ? m_FrameRT : m_Frame;
+			Frame* targetFrame = prevEnabled ? m_FrameRT.get() : m_Frame;
 			if (!targetFrame || !targetFrame->Pixels()) return false;
 
 			for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
@@ -183,7 +190,8 @@ namespace FuncDoodle {
 						Col prevColor = targetFrame->Pixels()->Get(newX, newY);
 						targetFrame->SetPixel(newX, newY, bgColor);
 						
-						if (prevColor != bgColor) {
+						// Only push undo actions when not in preview mode AND mouse is down
+						if (!prevEnabled && ImGui::IsMouseDown(0) && prevColor != bgColor) {
 							DrawAction action(newX, newY, prevColor, bgColor, frameI, m_Player->Proj());
 							m_Player->Proj()->PushUndoableDrawAction(action);
 							actionPerformed = true;
@@ -205,12 +213,15 @@ namespace FuncDoodle {
 			int pixelX = static_cast<int>(std::floor(currentPixel.x));
 			int pixelY = static_cast<int>(std::floor(currentPixel.y));
 			
-			if (pixelX < 0 || pixelX >= pixels->Width() || 
-				pixelY < 0 || pixelY >= pixels->Height()) {
+			Frame* targetFrame = prevEnabled ? m_FrameRT.get() : m_Frame;
+			if (!targetFrame || !targetFrame->Pixels()) return false;
+			
+			if (pixelX < 0 || pixelX >= targetFrame->Pixels()->Width() || 
+				pixelY < 0 || pixelY >= targetFrame->Pixels()->Height()) {
 				return false;
 			}
 
-			Col curPixelCol = pixels->Get(pixelX, pixelY);
+			Col curPixelCol = targetFrame->Pixels()->Get(pixelX, pixelY);
 			Col fillColor = {colResult[0], colResult[1], colResult[2]};
 			
 			if (curPixelCol == fillColor) {
@@ -221,10 +232,10 @@ namespace FuncDoodle {
 			i_PixelsChangedByBucketTool.clear();
 			
 			// Perform flood fill
-			FloodFill(pixelX, pixelY, curPixelCol, fillColor);
+			FloodFill(pixelX, pixelY, curPixelCol, fillColor, targetFrame);
 
-			// Create fill action if pixels were changed
-			if (!i_PixelsChangedByBucketTool.empty()) {
+			// Create fill action if pixels were changed and not in preview mode
+			if (!prevEnabled && !i_PixelsChangedByBucketTool.empty()) {
 				FillAction action(curPixelCol, fillColor, frameI, m_Player->Proj(), i_PixelsChangedByBucketTool);
 				m_Player->Proj()->PushUndoableFillAction(action);
 				return true;
@@ -236,26 +247,21 @@ namespace FuncDoodle {
 			int pixelX = static_cast<int>(std::floor(currentPixel.x));
 			int pixelY = static_cast<int>(std::floor(currentPixel.y));
 			
-			if (pixelX < 0 || pixelX >= m_Frame->Pixels()->Width() || 
-				pixelY < 0 || pixelY >= m_Frame->Pixels()->Height()) {
+			Frame* sourceFrame = prevEnabled ? m_FrameRT.get() : m_Frame;
+			if (!sourceFrame || !sourceFrame->Pixels()) return false;
+			
+			if (pixelX < 0 || pixelX >= sourceFrame->Pixels()->Width() || 
+				pixelY < 0 || pixelY >= sourceFrame->Pixels()->Height()) {
 				return false;
 			}
 
-			const Col& col = m_Frame->Pixels()->Get(pixelX, pixelY);
+			const Col& col = sourceFrame->Pixels()->Get(pixelX, pixelY);
 			m_ToolManager->SetCol(col);
 			return true;
 		};
 
-		// Handle frame swapping for preview mode
-		if (prevEnabled) {
-			if (!ImGui::IsMouseDown(0) && m_FrameRT) {
-				m_Frame = std::move(m_FrameRT);
-			} else if (ImGui::IsMouseDown(0) && m_Frame) {
-				m_FrameRT = std::move(m_Frame);
-			}
-		}
-
-		bool shouldDraw = prevEnabled || ImGui::IsMouseDown(0);
+		// Handle drawing conditions
+		bool shouldDraw = ImGui::IsMouseDown(0);
 
 		// Check if mouse is within frame bounds and conditions are met
 		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && shouldDraw) {
@@ -319,6 +325,15 @@ namespace FuncDoodle {
 			m_LastMousePos = ImVec2(-1, -1);
 		}
 
+		// Handle preview mode finalization
+		if (!prevEnabled) {
+			// When preview is disabled, commit any changes and clear preview frame
+			if (m_FrameRT) {
+				*m_Frame = *m_FrameRT;
+				m_FrameRT.reset();
+			}
+		}
+
 		RenderFramePixels(startX, startY, drawList);
 
 		// Draw the previous frame with transparency if available
@@ -346,8 +361,8 @@ namespace FuncDoodle {
 		}
 	}
 
-	void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol) {
-		if (!m_FrameRT || !m_FrameRT->Pixels()) return;
+	void FrameRenderer::FloodFill(int x, int y, Col targetCol, Col fillCol, Frame* targetFrame) {
+		if (!targetFrame || !targetFrame->Pixels()) return;
 
 		// Use iterative approach to avoid stack overflow
 		std::stack<std::pair<int, int>> pixelStack;
@@ -358,20 +373,20 @@ namespace FuncDoodle {
 			pixelStack.pop();
 
 			// Check bounds
-			if (currentX < 0 || currentX >= m_FrameRT->Pixels()->Width() || 
-				currentY < 0 || currentY >= m_FrameRT->Pixels()->Height()) {
+			if (currentX < 0 || currentX >= targetFrame->Pixels()->Width() || 
+				currentY < 0 || currentY >= targetFrame->Pixels()->Height()) {
 				continue;
 			}
 
 			// Check if pixel needs to be filled
-			Col currentCol = m_FrameRT->Pixels()->Get(currentX, currentY);
+			Col currentCol = targetFrame->Pixels()->Get(currentX, currentY);
 			if (currentCol != targetCol || currentCol == fillCol) {
 				continue;
 			}
 
 			// Fill the pixel
 			i_PixelsChangedByBucketTool.emplace_back(currentX, currentY);
-			m_FrameRT->SetPixel(currentX, currentY, fillCol);
+			targetFrame->SetPixel(currentX, currentY, fillCol);
 
 			// Add neighboring pixels to stack
 			pixelStack.push({currentX + 1, currentY});
@@ -383,12 +398,16 @@ namespace FuncDoodle {
 
 	void FrameRenderer::RenderFramePixels(int startX, int startY, ImDrawList* drawList,
 										  bool usePrevPxScale, bool renderPreview) {
-		if (!m_FrameRT || !m_FrameRT->Pixels()) {
-			FUNC_DBG("FrameRT or pixels are null");
+		// Use the appropriate frame for rendering
+		const ImageArray* pixels = nullptr;
+		if (m_FrameRT && m_FrameRT->Pixels()) {
+			pixels = m_FrameRT->Pixels();
+		} else if (m_Frame && m_Frame->Pixels()) {
+			pixels = m_Frame->Pixels();
+		} else {
+			FUNC_DBG("No valid frame or pixels available");
 			return;
 		}
-
-		const ImageArray* pixels = m_FrameRT->Pixels();
 		
 		for (int y = 0; y < pixels->Height(); y++) {
 			for (int x = 0; x < pixels->Width(); x++) {
