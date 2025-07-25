@@ -33,9 +33,6 @@ namespace FuncDoodle {
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
 			void SetFrame(Frame* frame) {
-				if (m_Frame != frame) {
-					delete m_Frame;
-				}
 				m_Frame = frame;
 				if (frame != nullptr) {
 					m_FrameRT = std::make_unique<Frame>(*frame);
