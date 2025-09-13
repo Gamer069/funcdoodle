@@ -328,6 +328,7 @@ int main(int argc, char** argv) {
 			});
 
 	stbi_image_free(icon->pixels);
+	free(icon);
 
 	while (!glfwWindowShouldClose(win)) {
 		GlobalAppTick(win, lastFrameTime, application, io);

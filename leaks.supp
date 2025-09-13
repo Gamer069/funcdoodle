@@ -1,0 +1,8 @@
+leak:Fc*
+leak:libpango-1.0.so*
+leak:libpangocairo-1.0.so*
+leak:libgtk-3.so*
+leak:libglib-2.0.so*
+leak:libcairo.so*
+leak:libfontconfig.so*
+leak:libfreetype.so*

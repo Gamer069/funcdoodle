@@ -36,8 +36,6 @@ namespace FuncDoodle {
 				m_Frame = frame;
 				if (frame != nullptr) {
 					m_FrameRT = std::make_unique<Frame>(*frame);
-				} else {
-					m_FrameRT.reset();
 				}
 			}
 			inline const ToolManager* GetToolManager() const {

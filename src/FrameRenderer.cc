@@ -330,7 +330,7 @@ namespace FuncDoodle {
 			// When preview is disabled, commit any changes and clear preview frame
 			if (m_FrameRT) {
 				*m_Frame = *m_FrameRT;
-				m_FrameRT.reset();
+				// m_FrameRT.reset();
 			}
 		}
 

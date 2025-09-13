@@ -10,6 +10,7 @@
 
 #include "ToolManager.h"
 
+#include <cstdint>
 #include <iostream>
 #include <string>
 
@@ -49,9 +50,6 @@ namespace FuncDoodle {
 						 ImGuiWindowFlags_NoBackground);
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-		// Define frame size and padding
-		// float frameWidth = 200.0f;
-		// float frameHeight = 100.0f;
 		float frameWidth = (float)m_Proj->AnimWidth();
 		float frameHeight = (float)m_Proj->AnimHeight();
 		float padding = 25.0f;
@@ -75,12 +73,24 @@ namespace FuncDoodle {
 
 		if (!ImGui::IsAnyItemActive()) {
 			if (ImGui::IsKeyPressed(ImGuiKey_LeftBracket, true)) {
-				if (m_SelectedFrame > 0)
+				if (m_SelectedFrame > 0) {
+					auto prevFrame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
 					m_SelectedFrame--;
+
+					auto frame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
+					m_FrameRenderer->SetPreviousFrame(prevFrame);
+					m_FrameRenderer->SetFrame(frame);
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_RightBracket, true)) {
-				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1)
-					++m_SelectedFrame;
+				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1) {
+					auto prevFrame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
+					m_SelectedFrame++;
+
+					auto frame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
+					m_FrameRenderer->SetPreviousFrame(prevFrame);
+					m_FrameRenderer->SetFrame(frame);
+				}
 			}
 			const int X1 = 3;
 			const int X2 = 4;

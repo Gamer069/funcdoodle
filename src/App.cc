@@ -210,6 +210,8 @@ namespace FuncDoodle {
 		free(saveShortcut);
 		free(exportShortcut);
 		free(quitShortcut);
+		free(prefShortcut);
+		free(themeEditorShortcut);
 	}
 	void Application::OpenFileDialog(std::function<void()> done) {
 		nfdchar_t* outPath = 0;

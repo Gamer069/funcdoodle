@@ -96,6 +96,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("InsertBeforeEmpty");
 			return;
 		}
 
@@ -128,6 +129,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("InsertAfter");
 			return;
 		}
 
@@ -154,6 +156,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("InsertAfter (non-ptr)");
 			return;
 		}
 
@@ -185,6 +188,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("InsertBefore");
 			return;
 		}
 
@@ -209,6 +213,7 @@ namespace FuncDoodle {
 		}
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("InsertBefore (non-ptr)");
 			return;
 		}
 
@@ -263,6 +268,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("Remove");
 			return;
 		}
 
@@ -283,6 +289,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("operator[]");
 			// Returning a reference to a dummy value
 			return nullptr;
 		}
@@ -300,6 +307,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("const operator[]");
 			return nullptr;
 		}
 
@@ -316,6 +324,7 @@ namespace FuncDoodle {
 
 		if (index < 0 || index >= size) {
 			FUNC_WARN("index out of range");
+			FUNC_DBG("Get");
 			return nullptr;
 		}
 
