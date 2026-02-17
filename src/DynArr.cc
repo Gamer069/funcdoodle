@@ -15,20 +15,16 @@ namespace FuncDoodle {
 			m_Width = 1;
 		if (m_Height < 1)
 			m_Height = 1;
-		m_Data = (Frame*)malloc(m_Capacity * sizeof(Frame));
+		m_Data = new Frame[m_Capacity];
 		for (int i = 0; i < m_Capacity; ++i) {
 			m_Data[i] = Frame(m_Width, m_Height, bgCol);
-		}
-		if (!m_Data) {	// Error if allocation fails
-			FUNC_DBG("Memory allocation for m_Data failed.");
-			FUNC_FATAL("Failed to initialize LongIndexArray");
 		}
 
 		m_BG = bgCol;
 	}
 
 	LongIndexArray::~LongIndexArray() {
-		free(m_Data);  // Always delete m_Data pointer
+		delete[] m_Data;
 	}
 
 	void LongIndexArray::PushBack(const Frame* value) {
@@ -82,8 +78,8 @@ namespace FuncDoodle {
 			m_Data[i] = m_Data[i - 1];
 		}
 
-		Frame* empty = new Frame(m_Width, m_Height, m_BG);
-		m_Data[index + 1] = *empty;
+		Frame empty(m_Width, m_Height, m_BG);
+		m_Data[index + 1] = empty;
 		++size;
 	}
 
@@ -110,8 +106,8 @@ namespace FuncDoodle {
 		}
 
 		// Insert the new element at the selected index
-		Frame* empty = new Frame(m_Width, m_Height, m_BG);
-		m_Data[index] = *empty;
+		Frame empty(m_Width, m_Height, m_BG);
+		m_Data[index] = empty;
 		++size;
 	}
 
@@ -340,11 +336,12 @@ namespace FuncDoodle {
 
 		if (newCap <= m_Capacity)
 			return;
-		Frame* newData = (Frame*)malloc(newCap * sizeof(Frame));
+		Frame* newData = new Frame[newCap];
 		for (unsigned long i = 0; i < size; ++i) {
 			newData[i] = m_Data[i];
 		}
 
+		delete[] m_Data;
 		m_Data = newData;
 		m_Capacity = newCap;
 	}

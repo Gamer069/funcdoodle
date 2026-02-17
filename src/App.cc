@@ -23,7 +23,7 @@
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
 							 std::filesystem::path themesPath)
-		: m_FilePath(nullptr), m_NewProjOpen(false), m_CurrentProj(nullptr),
+		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
 		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
 		  m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{255, 255, 255}),
@@ -31,6 +31,9 @@ namespace FuncDoodle {
 	Application::~Application() {
 		delete m_Manager;
 		delete m_CurrentProj;
+		if (m_CacheProj != m_CurrentProj) {
+			delete m_CacheProj;
+		}
 		delete[] m_CacheBGCol;
 	}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
@@ -250,7 +253,7 @@ namespace FuncDoodle {
 	}
 	void Application::ReadProjectFile() {
 		// m_FilePath is the actual file that we're going to read
-		if (m_FilePath == nullptr) {
+		if (m_FilePath.empty()) {
 			FUNC_DBG("@Application::ReadProjectFile -- m_FilePath is nullptr");
 			return;
 		}
@@ -261,16 +264,16 @@ namespace FuncDoodle {
 								m_Window, Col{.r = 0, .g = 0, .b = 0});
 		}
 
-		m_CurrentProj->ReadAndPopulate(m_FilePath);
+		m_CurrentProj->ReadAndPopulate(m_FilePath.c_str());
 
 		m_Manager->SetProj(m_CurrentProj);
 	}
 	void Application::SaveProjectFile() {
-		if (m_FilePath == nullptr) {
+		if (m_FilePath.empty()) {
 			FUNC_DBG("@Application::SaveProjectFile -- m_FilePath is nullptr");
 			return;
 		}
-		m_CurrentProj->Write(m_FilePath);
+		m_CurrentProj->Write(m_FilePath.c_str());
 	}
 	void Application::RenderOptions() {
 		// Get the viewport dimensions
@@ -396,7 +399,7 @@ namespace FuncDoodle {
 			FUNC_WARN("Attempted to drag and drop multiple items when 1 is "
 					  "expected: Attempting to use first item");
 		}
-		m_FilePath = const_cast<char*>(paths[0]);
+		m_FilePath = paths[0] ? paths[0] : "";
 		this->ReadProjectFile();
 	}
 	void Application::RenderEditProj() {
@@ -428,24 +431,27 @@ namespace FuncDoodle {
 				strcpy(author, m_CacheProj->AnimAuthor());
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
-			} else {
-				strcpy(name, (char*)"Untitled Animation");
-				width = 32;
-				height = 32;
-				char* username =
-					std::getenv("USER");  // Common on Linux and macOS
-				if (!username) {
-					username =
-						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+				} else {
+					strcpy(name, (char*)"Untitled Animation");
+					width = 32;
+					height = 32;
+					const char* username =
+						std::getenv("USER");  // Common on Linux and macOS
+					if (!username) {
+						username =
+							std::getenv("LOGNAME");	 // Fallback for Linux and macOS
+					}
+					if (!username) {
+						username = std::getenv("USERNAME");	 // Common on Windows
+					}
+					if (!username) {
+						username = "unknown";
+					}
+					strncpy(author, username, sizeof(author) - 1);
+					author[sizeof(author) - 1] = '\0';
+					fps = 10;
+					strcpy(desc, "Simple test project");
 				}
-				if (!username) {
-					username = std::getenv("USERNAME");	 // Common on Windows
-				}
-				strcpy(author, username);
-				free(username);
-				fps = 10;
-				strcpy(desc, "Simple test project");
-			}
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
 			}
@@ -499,23 +505,27 @@ namespace FuncDoodle {
 			int fps = 0;
 			char desc[512] = "";
 
-			if (!m_CacheProj) {
-				strcpy(name, (char*)"testproj");
-				width = 32;
-				height = 32;
-				char* username = std::getenv("USER");
-				if (!username) {
-					username = std::getenv("LOGNAME");
-				}
-				if (!username) {
-					username = std::getenv("USERNAME");
-				}
-				strcpy(author, username);
-				fps = 10;
-				strcpy(desc, "Simple test project");
-				m_CacheProj = new ProjectFile(name, width, height, username,
-											  fps, desc, m_Window, Col());
-			} else {
+				if (!m_CacheProj) {
+					strcpy(name, (char*)"testproj");
+					width = 32;
+					height = 32;
+					const char* username = std::getenv("USER");
+					if (!username) {
+						username = std::getenv("LOGNAME");
+					}
+					if (!username) {
+						username = std::getenv("USERNAME");
+					}
+					if (!username) {
+						username = "unknown";
+					}
+					strncpy(author, username, sizeof(author) - 1);
+					author[sizeof(author) - 1] = '\0';
+					fps = 10;
+					strcpy(desc, "Simple test project");
+					m_CacheProj = new ProjectFile(name, width, height, author,
+												  fps, desc, m_Window, Col());
+				} else {
 				strcpy(name, m_CacheProj->AnimName());
 				width = m_CacheProj->AnimWidth();
 				height = m_CacheProj->AnimHeight();
@@ -552,15 +562,15 @@ namespace FuncDoodle {
 				else
 					m_CacheProj->SetAnimHeight(height, true);
 			}
-			if (ImGui::InputText("Author", author, sizeof(name))) {
-				m_CacheProj->SetAnimAuthor(author);
-			}
+				if (ImGui::InputText("Author", author, sizeof(author))) {
+					m_CacheProj->SetAnimAuthor(author);
+				}
 			if (ImGui::InputInt("FPS", &fps)) {
 				m_CacheProj->SetAnimFPS(fps);
 			}
-			if (ImGui::InputText("Description", desc, sizeof(name))) {
-				m_CacheProj->SetAnimDesc(desc);
-			}
+				if (ImGui::InputText("Description", desc, sizeof(desc))) {
+					m_CacheProj->SetAnimDesc(desc);
+				}
 			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
 				if (m_CacheProj)
 					m_CacheProj->SetBgCol(m_CacheBGCol);
@@ -576,6 +586,7 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
+				delete m_Manager;
 				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
 				m_NewProjOpen = false;
 			}
@@ -606,8 +617,9 @@ namespace FuncDoodle {
 				}
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
-						m_CurrentProj = nullptr;
 						delete m_CurrentProj;
+						m_CurrentProj = nullptr;
+						m_Manager->SetProj(nullptr);
 					}
 					if (ImGui::MenuItem("Edit project")) {
 						m_EditProjOpen = true;

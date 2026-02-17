@@ -6,6 +6,7 @@
 #include "UUID.h"
 
 #include <functional>
+#include <string>
 
 namespace FuncDoodle {
 	class Application {
@@ -46,7 +47,7 @@ namespace FuncDoodle {
 			void RenderKeybinds();
 
 		private:
-			char* m_FilePath;
+			std::string m_FilePath;
 			bool m_NewProjOpen = false;
 			ProjectFile* m_CurrentProj;
 			ProjectFile* m_CacheProj;

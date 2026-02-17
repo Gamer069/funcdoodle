@@ -7,34 +7,37 @@
 #include <thread>
 
 namespace FuncDoodle {
+	std::mutex AudioManager::s_PlaybackMutex;
+	std::condition_variable AudioManager::s_PlaybackCv;
+	int AudioManager::s_ActivePlaybacks = 0;
+
 	// Plays the provided AudioData asynchronously.
 	void AudioManager::PlayWav(AudioData wav) {
 		// Allocate a heap copy so that the callback has a valid pointer
 		AudioData* audioData = new AudioData(std::move(wav));
-
-		// Initialize PortAudio
-		PaError err = Pa_Initialize();
-		if (err != paNoError) {
-			std::cerr << "PortAudio initialization error: "
-					  << Pa_GetErrorText(err) << std::endl;
-			delete audioData;
-			return;
+		{
+			std::lock_guard<std::mutex> lk(s_PlaybackMutex);
+			++s_ActivePlaybacks;
 		}
 
 		PaStream* stream = nullptr;
-		err = Pa_OpenDefaultStream(&stream,
-								   0,						// no input channels
-								   audioData->numChannels,	// output channels
-								   paFloat32,				// sample format
-								   audioData->sampleRate,
-								   paFramesPerBufferUnspecified,
-								   paCB,		// callback function
-								   audioData);	// user data
+		PaError err = Pa_OpenDefaultStream(&stream,
+										   0,						// no input channels
+										   audioData->numChannels,	// output channels
+										   paFloat32,				// sample format
+										   audioData->sampleRate,
+										   paFramesPerBufferUnspecified,
+										   paCB,		// callback function
+										   audioData);	// user data
 		if (err != paNoError) {
 			std::cerr << "Error opening default stream: "
 					  << Pa_GetErrorText(err) << std::endl;
-			Pa_Terminate();
 			delete audioData;
+			{
+				std::lock_guard<std::mutex> lk(s_PlaybackMutex);
+				--s_ActivePlaybacks;
+			}
+			s_PlaybackCv.notify_all();
 			return;
 		}
 
@@ -43,8 +46,12 @@ namespace FuncDoodle {
 			std::cerr << "Error starting stream: " << Pa_GetErrorText(err)
 					  << std::endl;
 			Pa_CloseStream(stream);
-			Pa_Terminate();
 			delete audioData;
+			{
+				std::lock_guard<std::mutex> lk(s_PlaybackMutex);
+				--s_ActivePlaybacks;
+			}
+			s_PlaybackCv.notify_all();
 			return;
 		}
 
@@ -57,11 +64,20 @@ namespace FuncDoodle {
 			// Clean up PortAudio
 			Pa_StopStream(stream);
 			Pa_CloseStream(stream);
-			Pa_Terminate();
 
 			// Free the audio data allocated in PlayWav
 			delete audioData;
+			{
+				std::lock_guard<std::mutex> lk(s_PlaybackMutex);
+				--s_ActivePlaybacks;
+			}
+			s_PlaybackCv.notify_all();
 		}).detach();
+	}
+
+	void AudioManager::WaitForAllPlayback() {
+		std::unique_lock<std::mutex> lk(s_PlaybackMutex);
+		s_PlaybackCv.wait(lk, [] { return s_ActivePlaybacks == 0; });
 	}
 
 	// Parses a WAV file from the given path, then plays it.

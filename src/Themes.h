@@ -29,7 +29,7 @@ namespace FuncDoodle {
 			ImGuiStyle Style;
 			UUID Uuid;
 			CustomTheme() : Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()) {}
-			CustomTheme(const char* name, const char* author, ImGuiStyle style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {}
+			CustomTheme(const char* name, const char* author, ImGuiStyle style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {};
 		};
 
 		inline std::map<UUID, CustomTheme> g_Themes;

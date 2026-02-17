@@ -37,7 +37,7 @@ namespace FuncDoodle {
 	class ImageArray {
 		public:
 			ImageArray& operator=(const ImageArray&) = default;
-			ImageArray& operator=(ImageArray&&) = delete;
+			ImageArray& operator=(ImageArray&&) = default;
 			ImageArray(const ImageArray&) = default;
 			ImageArray(ImageArray&&) = default;
 			ImageArray(int width, int height, Col bgCol);
@@ -71,16 +71,17 @@ namespace FuncDoodle {
 	};
 	class Frame {
 		public:
-			Frame(const Frame& other) {
-				m_Pixels = new ImageArray(*other.Pixels());
-			}
-			Frame(int width, int height, Col bgCol) {
-				m_Pixels = new ImageArray(width, height, bgCol);
-			};
-			Frame(ImageArray* arr) : m_Pixels(arr) {};
-			~Frame() { delete m_Pixels; };
+			Frame() : m_Pixels(1, 1, Col()) {}
+			Frame(const Frame& other) : m_Pixels(other.m_Pixels) {}
+			Frame(int width, int height, Col bgCol) : m_Pixels(width, height, bgCol) {}
+			Frame(const ImageArray& arr) : m_Pixels(arr) {}
+			Frame(const ImageArray* arr)
+				: m_Pixels(arr ? *arr : ImageArray(1, 1, Col())) {}
+
+			~Frame() = default;
+
 			void ReInit(int width, int height, Col bgCol) {
-				m_Pixels = new ImageArray(width, height, bgCol);
+				m_Pixels = ImageArray(width, height, bgCol);
 			}
 			Frame& operator=(const Frame& other);
 			bool operator==(const Frame& other);
@@ -89,18 +90,18 @@ namespace FuncDoodle {
 
 			void CopyToClipboard();
 			static Frame* PastedFrame();
-			void Export(char* filePath);
+			void Export(const char* filePath);
 
-			inline const ImageArray* Pixels() const { return m_Pixels; }
-			inline ImageArray* PixelsMut() { return m_Pixels; }
+			inline const ImageArray* Pixels() const { return &m_Pixels; }
+			inline ImageArray* PixelsMut() { return &m_Pixels; }
 			inline void SetPixel(int x, int y, Col px) {
-				m_Pixels->Set(x, y, px);
+				m_Pixels.Set(x, y, px);
 			}
-			inline const int Width() { return m_Pixels->Width(); }
-			inline const int Height() { return m_Pixels->Height(); }
-			inline std::vector<Col> Data() const { return m_Pixels->Data(); }
+			inline const int Width() const { return m_Pixels.Width(); }
+			inline const int Height() const { return m_Pixels.Height(); }
+			inline std::vector<Col> Data() const { return m_Pixels.Data(); }
 
 		private:
-			ImageArray* m_Pixels;
+			ImageArray m_Pixels;
 	};
 }  // namespace FuncDoodle

@@ -48,9 +48,9 @@ namespace FuncDoodle {
 			}
 			inline const Col BgCol() { return m_BG; }
 			LongIndexArray* AnimFrames();
-			void Write(char* filePath);
-			void ReadAndPopulate(char* filePath);
-			void Export(char* filePath, int format);
+			void Write(const char* filePath);
+			void ReadAndPopulate(const char* filePath);
+			void Export(const char* filePath, int format);
 			constexpr inline GLFWwindow* Window() const { return m_Window; }
 			inline bool Saved() { return m_Saved; }
 			void DisplayFPS();

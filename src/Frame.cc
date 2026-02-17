@@ -58,65 +58,55 @@ namespace FuncDoodle {
 	}
 
 	void Frame::SetWidth(int width, bool clear) {
-		if (m_Pixels == nullptr) {
-			m_Pixels = new ImageArray(width, 1,
-									  Col());  // default height of 1 bc we dont
-											   // know required height yet
-		} else {
-			if (!clear) {
-				const std::vector<Col>& oldData = m_Pixels->Data();
-				int oldWidth = m_Pixels->Width();
-				int oldHeight = m_Pixels->Height();
-				m_Pixels->SetWidth(width);
-				m_Pixels->Resize();
-				std::vector<Col> newData(width * oldHeight);
-				int xOffset = (width - oldWidth) / 2;
-				for (int y = 0; y < oldHeight; y++) {
-					for (int x = 0; x < oldWidth; x++) {
-						if (newData.size() >= oldData.size()) {
-							newData[y * width + (x + xOffset)] =
-								oldData[y * oldWidth + x];
-						} else {
-							newData[y * oldWidth + x] =
-								oldData[y * oldWidth + x];
-						}
+		if (!clear) {
+			const std::vector<Col>& oldData = m_Pixels.Data();
+			int oldWidth = m_Pixels.Width();
+			int oldHeight = m_Pixels.Height();
+			m_Pixels.SetWidth(width);
+			m_Pixels.Resize();
+			std::vector<Col> newData(width * oldHeight);
+			int xOffset = (width - oldWidth) / 2;
+			for (int y = 0; y < oldHeight; y++) {
+				for (int x = 0; x < oldWidth; x++) {
+					if (newData.size() >= oldData.size()) {
+						newData[y * width + (x + xOffset)] =
+							oldData[y * oldWidth + x];
+					} else {
+						newData[y * oldWidth + x] =
+							oldData[y * oldWidth + x];
 					}
 				}
-				m_Pixels->SetData(newData);
-			} else {
-				ReInit(width, m_Pixels->Height(), m_Pixels->BgCol());
 			}
+			m_Pixels.SetData(newData);
+		} else {
+			ReInit(width, m_Pixels.Height(), m_Pixels.BgCol());
 		}
 	}
 	void Frame::SetHeight(int height, bool clear) {
-		if (m_Pixels == nullptr) {
-			m_Pixels = new ImageArray(1, height, Col());
-		} else {
-			if (!clear) {
-				std::vector<Col> oldData = m_Pixels->Data();
-				int oldWidth = m_Pixels->Width();
-				int oldHeight = m_Pixels->Height();
-				m_Pixels->SetHeight(height);
-				m_Pixels->Resize();
-				std::vector<Col> newData(oldWidth * height);
-				int yOffset = (height - oldHeight) / 2;
-				for (int y = 0; y < oldHeight; y++) {
-					for (int x = 0; x < oldWidth; x++) {
-						if (newData.size() >= oldData.size()) {
-							newData[(y + yOffset) * oldWidth + x] =
-								oldData[y * oldWidth + x];
-						} else {
-							newData[y * oldWidth + x] =
-								oldData[y * oldWidth + x];
-						}
+		if (!clear) {
+			std::vector<Col> oldData = m_Pixels.Data();
+			int oldWidth = m_Pixels.Width();
+			int oldHeight = m_Pixels.Height();
+			m_Pixels.SetHeight(height);
+			m_Pixels.Resize();
+			std::vector<Col> newData(oldWidth * height);
+			int yOffset = (height - oldHeight) / 2;
+			for (int y = 0; y < oldHeight; y++) {
+				for (int x = 0; x < oldWidth; x++) {
+					if (newData.size() >= oldData.size()) {
+						newData[(y + yOffset) * oldWidth + x] =
+							oldData[y * oldWidth + x];
+					} else {
+						newData[y * oldWidth + x] =
+							oldData[y * oldWidth + x];
 					}
 				}
-				m_Pixels->SetData(newData);
-			} else {
-				m_Pixels->SetHeight(height);
-				m_Pixels->Resize();
-				m_Pixels->RedoColorAdjustment(m_Pixels->BgCol());
 			}
+			m_Pixels.SetData(newData);
+		} else {
+			m_Pixels.SetHeight(height);
+			m_Pixels.Resize();
+			m_Pixels.RedoColorAdjustment(m_Pixels.BgCol());
 		}
 	}
 
@@ -146,8 +136,8 @@ namespace FuncDoodle {
 		}
 
 		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d",
-						   m_Pixels->BgCol().r, m_Pixels->BgCol().g,
-						   m_Pixels->BgCol().b);
+						   m_Pixels.BgCol().r, m_Pixels.BgCol().g,
+						   m_Pixels.BgCol().b);
 		curr += written;
 
 		ImGui::SetClipboardText(fdata);
@@ -230,21 +220,21 @@ namespace FuncDoodle {
 		bgCol.g = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-		if (*ptr)
-			ptr++;
-		bgCol.b = atoi(ptr);
-		frame->PixelsMut()->SetBG(bgCol);
+			if (*ptr)
+				ptr++;
+			bgCol.b = atoi(ptr);
 
-		return frame;
-	}
-	void Frame::Export(char* filePath) {
+			frame->PixelsMut()->SetBG(bgCol);
+
+			return frame;
+		}
+	void Frame::Export(const char* filePath) {
 		stbi_write_png(filePath, Width(), Height(), 3, Data().data(),
 					   Width() * 3);
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {
-			// delete m_Pixels;
-			m_Pixels = new ImageArray(*other.Pixels());
+			m_Pixels = other.m_Pixels;
 		}
 		return *this;
 	}

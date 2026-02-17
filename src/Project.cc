@@ -59,7 +59,7 @@ namespace FuncDoodle {
 		strcpy(m_Name, name);
 	}
 
-	void ProjectFile::Export(char* filePath, int format) {
+	void ProjectFile::Export(const char* filePath, int format) {
 		FUNC_GRAY("Exporting to " << filePath);
 
 		LongIndexArray* frames = AnimFrames();
@@ -212,7 +212,7 @@ namespace FuncDoodle {
 		m_UndoStack.push(std::move(action));
 	}
 
-	void ProjectFile::Write(char* fileName) {
+	void ProjectFile::Write(const char* fileName) {
 		std::ofstream outFile(fileName, std::ios::binary);
 		if (!outFile.is_open()) {
 			FUNC_ERR("Failed to open file for writing");
@@ -295,7 +295,7 @@ namespace FuncDoodle {
 		outFile.close();
 		m_Saved = true;
 	}
-	void ProjectFile::ReadAndPopulate(char* filePath) {
+	void ProjectFile::ReadAndPopulate(const char* filePath) {
 		std::ifstream file(filePath, std::ios::in | std::ios::binary);
 
 		if (!file.is_open()) {
@@ -319,7 +319,7 @@ namespace FuncDoodle {
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
 
-		void* frameCount = malloc(sizeof(long));
+		unsigned long frameCount = 0; // temp val
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));

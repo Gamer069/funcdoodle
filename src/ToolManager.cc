@@ -10,7 +10,9 @@
 namespace FuncDoodle {
 	ToolManager::ToolManager(AssetLoader* assetLoader)
 		: m_SelectedTool(0), m_AssetLoader(assetLoader) {}
-	ToolManager::~ToolManager() {}
+
+	ToolManager::~ToolManager() {
+	}
 	void ToolManager::RenderTools() {
 		ToolType types[] = {ToolType::Pencil, ToolType::Eraser,
 							ToolType::Bucket, ToolType::Picker};

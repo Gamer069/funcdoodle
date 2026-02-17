@@ -291,27 +291,10 @@ int main(int argc, char** argv) {
 	ImGui_ImplGlfw_InitForOpenGL(win, true);
 	ImGui_ImplOpenGL3_Init("#version 140");
 
-	PaStream* stream;
-
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
 		FUNC_WARN("Failed to initialize port audio: " +
 				(std::string)Pa_GetErrorText(err));
-		free(stream);
-		exit(-1);
-	}
-	err = Pa_OpenDefaultStream(&stream, 0, 2, paFloat32, 44100, 256, paCB, nullptr);
-	if (err != paNoError) {
-		FUNC_WARN("Failed to open default stream: " << Pa_GetErrorText(err));
-		free(stream);
-		exit(-1);
-	}
-	err = Pa_StartStream(stream);
-
-	if (err != paNoError) {
-		FUNC_WARN("Failed to start audio stream:" +
-				(std::string)Pa_GetErrorText(err));
-		free(stream);
 		exit(-1);
 	}
 
@@ -322,13 +305,17 @@ int main(int argc, char** argv) {
 	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
 
 	glfwSetWindowUserPointer(win, application);
-	glfwSetWindowIcon(win, 1, icon);
+	if (icon != nullptr) {
+		glfwSetWindowIcon(win, 1, icon);
+	}
 	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths) {
 			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
 			});
 
-	stbi_image_free(icon->pixels);
-	free(icon);
+	if (icon != nullptr) {
+		stbi_image_free(icon->pixels);
+		free(icon);
+	}
 
 	while (!glfwWindowShouldClose(win)) {
 		GlobalAppTick(win, lastFrameTime, application, io);
@@ -342,8 +329,7 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
-	Pa_StopStream(stream);
-	Pa_CloseStream(stream);
+	FuncDoodle::AudioManager::WaitForAllPlayback();
 	Pa_Terminate();
 
 	// cleanup code
