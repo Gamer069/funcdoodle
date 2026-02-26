@@ -20,4 +20,4 @@ source scripts/completion/completion_cross.zsh
 for completion, and run scripts/build_cross.sh. (usage is shown if ran with no arguments)
 
 ### macOS
-For macOS users, there's a scripts/pkg_app.sh script and a scripts/create_dmg.sh script. First, run scripts/build.sh to build the project. Then, ./scrippts/pkg_a.sh, and scripts/create_dmg.sh to create a DMG out of the newly created app
+For macOS users, there's a scripts/pkg_app.sh script and a scripts/create_dmg.sh script. First, run scripts/build.sh to build the project. Then, ./scripts/pkg_app.sh, and scripts/create_dmg.sh to create a DMG out of the newly created app

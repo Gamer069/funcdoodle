@@ -78,6 +78,20 @@ namespace FuncDoodle {
 		if (format == 1) {
 			FUNC_GRAY("Exporting to mp4...");
 			// TODO: properly implement video exporting...
+			// now that im looking back on this, HOW DID I EVER THINK THIS WAS A GOOD SOLUTION?????????? 
+			// WAS I STUPID????
+			// apparently yes i was
+			// ...
+			//
+			// if anyone's looking at this comment, please - do NOT use the solution i'm using here
+			// its overwhelmingly hacky, breaks when ffmpeg updates, is very horrible for UX
+			//
+			// i think the only reason i wrote this code was to avoid using a ffmpeg wrapper lib thing 
+			// but like really..?
+			//
+			// so yea sorry for that
+			// idk if/when i'll fix this
+			// see you until then
 			char cmd[1024];
 #ifndef _WIN32
 			sprintf(

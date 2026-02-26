@@ -117,12 +117,19 @@
 
 // VERSION SCHEME -- major, minor, patch, modifier -- minor/&debug ||
 // (m)ajor/&debug
+//
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// old version system, funcdoodle now uses a semver-style version
+// system
+
+// now its just semver + an optional '-dev' suffixa for debug builds
 
 #ifdef DEBUG
-#define FUNCVER "v0.1.1md"
+#define FUNCVER "0.1.1-dev"
 #else
-#define FUNCVER "v0.1.1m"
+#define FUNCVER "0.1.1"
 #endif
 
+// .fdp version
 #define FDPVERMAJOR 0
 #define FDPVERMINOR 4
