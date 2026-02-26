@@ -7,3 +7,4 @@
 - [ ] add text functionality
 - [ ] bug fixing
 - [ ] gzip compression for .fdp
+- [ ] use imgui automation thing
