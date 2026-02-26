@@ -7,8 +7,8 @@
 #include <algorithm>
 #include <cstdlib>
 #include <filesystem>
-#include <string>
 #include <string.h>
+#include <string>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
@@ -24,12 +24,15 @@
 namespace FuncDoodle {
 	namespace Themes {
 		struct CustomTheme {
-			const char* Name;
-			const char* Author;
-			ImGuiStyle Style;
-			UUID Uuid;
-			CustomTheme() : Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()) {}
-			CustomTheme(const char* name, const char* author, ImGuiStyle style, UUID uuid) : Uuid(uuid), Name(name), Author(author), Style(style) {};
+				const char* Name;
+				const char* Author;
+				ImGuiStyle Style;
+				UUID Uuid;
+				CustomTheme()
+					: Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()) {}
+				CustomTheme(const char* name, const char* author,
+					ImGuiStyle style, UUID uuid)
+					: Uuid(uuid), Name(name), Author(author), Style(style) {};
 		};
 
 		inline std::map<UUID, CustomTheme> g_Themes;
@@ -38,7 +41,7 @@ namespace FuncDoodle {
 		inline void ThemeEditor() {
 			if (g_ThemeEditorOpen) {
 				if (ImGui::Begin("Theme editor", &g_ThemeEditorOpen,
-								 ImGuiWindowFlags_NoCollapse)) {
+						ImGuiWindowFlags_NoCollapse)) {
 					ImGuiStyle& style = ImGui::GetStyle();
 
 					ImVec2 windowSize = ImGui::GetWindowSize();
@@ -56,7 +59,7 @@ namespace FuncDoodle {
 						ImVec4& color = style.Colors[col];
 
 						if (ImGui::ColorEdit4(ImGui::GetStyleColorName(col),
-											  (float*)&color)) {
+								(float*)&color)) {
 							style.Colors[col] = color;
 						}
 
@@ -88,7 +91,8 @@ namespace FuncDoodle {
 			toml::parse_result result =
 				toml::parse_file(std::string_view(path));
 			if (!result) {
-				FUNC_WARN("Failed to parse theme file... it's probably not valid TOML");
+				FUNC_WARN("Failed to parse theme file... it's probably not "
+						  "valid TOML");
 				FUNC_WARN("error: " << result.error());
 				return nullptr;
 			}
@@ -154,14 +158,13 @@ namespace FuncDoodle {
 
 				style.Colors[parsed] =
 					ImVec4(arr.get(0)->as_floating_point()->get(),
-						   arr.get(1)->as_floating_point()->get(),
-						   arr.get(2)->as_floating_point()->get(),
-						   arr.get(3)->as_floating_point()->get());
+						arr.get(1)->as_floating_point()->get(),
+						arr.get(2)->as_floating_point()->get(),
+						arr.get(3)->as_floating_point()->get());
 			}
 
-
-			g_LastLoadedTheme = new CustomTheme{name_copy, author_copy, style,
-												UUID::FromString(uuid_copy)};
+			g_LastLoadedTheme = new CustomTheme{
+				name_copy, author_copy, style, UUID::FromString(uuid_copy)};
 
 			return g_LastLoadedTheme;
 		}
@@ -169,7 +172,7 @@ namespace FuncDoodle {
 			if (std::filesystem::exists(path) &&
 				std::filesystem::is_directory(path)) {
 				for (std::filesystem::directory_entry e :
-					 std::filesystem::directory_iterator(path)) {
+					std::filesystem::directory_iterator(path)) {
 					if (!e.is_regular_file()) {
 						FUNC_GRAY("Skipping "
 								  << e.path()
@@ -190,15 +193,19 @@ namespace FuncDoodle {
 				FUNC_FATAL("Failed to load themes -- either the themes/ "
 						   "directory doesn't exist, or it isn't a directory");
 			}
-			// std::sort(g_Themes.begin(), g_Themes.end(), [](const CustomTheme& a, const CustomTheme& b) { return strcasecmp(a.Name, b.Name) < 0; });
-			std::vector<std::pair<UUID, CustomTheme>> themeVec(g_Themes.begin(), g_Themes.end());
+			// std::sort(g_Themes.begin(), g_Themes.end(), [](const CustomTheme&
+			// a, const CustomTheme& b) { return strcasecmp(a.Name, b.Name) < 0;
+			// });
+			std::vector<std::pair<UUID, CustomTheme>> themeVec(
+				g_Themes.begin(), g_Themes.end());
 
 			// Selection sort (or any other sorting algorithm)
 			size_t n = themeVec.size();
 			for (size_t i = 0; i < n - 1; i++) {
 				size_t minIndex = i;
 				for (size_t j = i + 1; j < n; j++) {
-					if (strcasecmp(themeVec[j].second.Name, themeVec[minIndex].second.Name) < 0) {
+					if (strcasecmp(themeVec[j].second.Name,
+							themeVec[minIndex].second.Name) < 0) {
 						minIndex = j;
 					}
 				}
@@ -239,10 +246,10 @@ namespace FuncDoodle {
 						for (unsigned char i = 0; i < ImGuiCol_COUNT; ++i) {
 							std::string is = std::to_string(i);
 							std::string_view iv = std::string_view(is);
-							colors.insert(iv, toml::array{style.Colors[i].x,
-									style.Colors[i].y,
-									style.Colors[i].z,
-									style.Colors[i].w});
+							colors.insert(
+								iv, toml::array{style.Colors[i].x,
+										style.Colors[i].y, style.Colors[i].z,
+										style.Colors[i].w});
 						}
 
 						theme.insert("colors"sv, colors);
@@ -252,13 +259,14 @@ namespace FuncDoodle {
 							FUNC_ERR("Failed to open file...");
 							return;
 						}
-						FUNC_INF("saving current theme to " << savePath << "...");
+						FUNC_INF(
+							"saving current theme to " << savePath << "...");
 						f << theme;
 						f.close();
 						g_SaveThemeOpen = false;
 					} else if (res == NFD_ERROR) {
 						FUNC_ERR("Failed to open save theme dialog: "
-								<< NFD_GetError());
+								 << NFD_GetError());
 					}
 				}
 				ImGui::End();

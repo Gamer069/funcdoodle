@@ -17,7 +17,7 @@ namespace FuncDoodle {
 	class ProjectFile {
 		public:
 			ProjectFile(char name[256], int width, int height, char author[100],
-						int fps, char desc[512], GLFWwindow* win, Col bgCol);
+				int fps, char desc[512], GLFWwindow* win, Col bgCol);
 			~ProjectFile();
 			const char* AnimName() const;
 			void SetAnimName(char name[256]);
@@ -38,10 +38,10 @@ namespace FuncDoodle {
 				if (bgCol) {
 					m_BG = Col{.r = static_cast<unsigned char>(
 								   std::clamp(bgCol[0] * 255, 0.0f, 255.0f)),
-							   .g = static_cast<unsigned char>(
-								   std::clamp(bgCol[1] * 255, 0.0f, 255.0f)),
-							   .b = static_cast<unsigned char>(
-								   std::clamp(bgCol[2] * 255, 0.0f, 255.0f))};
+						.g = static_cast<unsigned char>(
+							std::clamp(bgCol[1] * 255, 0.0f, 255.0f)),
+						.b = static_cast<unsigned char>(
+							std::clamp(bgCol[2] * 255, 0.0f, 255.0f))};
 				}
 				m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
 				m_Frames->PushBackEmpty();

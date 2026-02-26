@@ -26,8 +26,8 @@ namespace FuncDoodle {
 					return g < other.g;
 				return b < other.b;
 			}
-			friend std::ostream& operator<<(std::ostream& stream,
-											const Col& col) {
+			friend std::ostream& operator<<(
+				std::ostream& stream, const Col& col) {
 				stream << "Col{" << (unsigned int)col.r << ", "
 					   << (unsigned int)col.g << ", " << (unsigned int)col.b
 					   << "}";
@@ -73,7 +73,8 @@ namespace FuncDoodle {
 		public:
 			Frame() : m_Pixels(1, 1, Col()) {}
 			Frame(const Frame& other) : m_Pixels(other.m_Pixels) {}
-			Frame(int width, int height, Col bgCol) : m_Pixels(width, height, bgCol) {}
+			Frame(int width, int height, Col bgCol)
+				: m_Pixels(width, height, bgCol) {}
 			Frame(const ImageArray& arr) : m_Pixels(arr) {}
 			Frame(const ImageArray* arr)
 				: m_Pixels(arr ? *arr : ImageArray(1, 1, Col())) {}

@@ -7,19 +7,18 @@
 
 #include "Player.h"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 namespace FuncDoodle {
 	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool =
 		std::vector<std::pair<int, int>>();
 	class FrameRenderer {
 		public:
-			FrameRenderer(Frame* frame, ToolManager* manager,
-						  AnimationPlayer* player)
+			FrameRenderer(
+				Frame* frame, ToolManager* manager, AnimationPlayer* player)
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
-				  m_Player(player) {
-			}
+				  m_Player(player) {}
 			~FrameRenderer() {
 				delete m_Grid;
 				// m_FrameRT will be automatically cleaned up by unique_ptr
@@ -28,9 +27,7 @@ namespace FuncDoodle {
 			void InitPixels(unsigned long frameI, bool prevEnabled);
 
 			inline const Frame* AnimFrame() const { return m_Frame; }
-			void SetFrame(Frame* frame) {
-				m_Frame = frame;
-			}
+			void SetFrame(Frame* frame) { m_Frame = frame; }
 			inline const ToolManager* GetToolManager() const {
 				return m_ToolManager;
 			}
@@ -46,10 +43,10 @@ namespace FuncDoodle {
 				m_PixelScale = pixelScale;
 			}
 
-			void FloodFill(int x, int y, Col targetCol, Col fillCol, Frame* targetFrame);
+			void FloodFill(
+				int x, int y, Col targetCol, Col fillCol, Frame* targetFrame);
 			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
-								   bool usePrevPxScale = true,
-								   bool renderPreview = true);
+				bool usePrevPxScale = true, bool renderPreview = true);
 
 		private:
 			Frame* m_Frame;

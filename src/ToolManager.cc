@@ -11,13 +11,12 @@ namespace FuncDoodle {
 	ToolManager::ToolManager(AssetLoader* assetLoader)
 		: m_SelectedTool(0), m_AssetLoader(assetLoader) {}
 
-	ToolManager::~ToolManager() {
-	}
+	ToolManager::~ToolManager() {}
 	void ToolManager::RenderTools() {
 		ToolType types[] = {ToolType::Pencil, ToolType::Eraser,
-							ToolType::Bucket, ToolType::Picker};
-		char* typeName[] = {(char*)"Pencil", (char*)"Eraser", (char*)"Bucket",
-							(char*)"Picker"};
+			ToolType::Bucket, ToolType::Picker};
+		char* typeName[] = {
+			(char*)"Pencil", (char*)"Eraser", (char*)"Bucket", (char*)"Picker"};
 		ImGui::Begin("Tools");
 
 		if (!ImGui::IsAnyItemActive()) {
@@ -54,10 +53,10 @@ namespace FuncDoodle {
 					break;
 			}
 			if (ImGui::ImageButton(typeName[i], (ImTextureID)(intptr_t)btnTexId,
-								   ImVec2(32, 32), ImVec2(0, 0), ImVec2(1, 1),
-								   ImVec4(0, 0, 0, 0),
-								   m_SelectedTool == i ? ImVec4(1, 1, 1, 1)
-													   : ImVec4(0, 0, 0, 1))) {
+					ImVec2(32, 32), ImVec2(0, 0), ImVec2(1, 1),
+					ImVec4(0, 0, 0, 0),
+					m_SelectedTool == i ? ImVec4(1, 1, 1, 1)
+										: ImVec4(0, 0, 0, 1))) {
 				m_SelectedTool = i;
 			}
 			if (i == 0) {

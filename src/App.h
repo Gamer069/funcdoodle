@@ -12,7 +12,7 @@ namespace FuncDoodle {
 	class Application {
 		public:
 			Application(GLFWwindow* win, AssetLoader* assetLoader,
-						std::filesystem::path themesPath);
+				std::filesystem::path themesPath);
 			~Application();
 			void RenderImGui();
 			void OpenFileDialog(std::function<void()> done);
@@ -20,8 +20,8 @@ namespace FuncDoodle {
 			void ReadProjectFile();
 			void SaveProjectFile();
 			void CheckKeybinds(char* newProj, char* open, char* save,
-							   char* exportShortcut, char* quit, char* pref,
-							   char* themeEditorShortcut);
+				char* exportShortcut, char* quit, char* pref,
+				char* themeEditorShortcut);
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
@@ -32,16 +32,17 @@ namespace FuncDoodle {
 			inline UUID Theme() { return m_Theme; }
 			inline void SetTheme(UUID theme) { m_Theme = theme; }
 			inline void SetSFXEnabled(bool enabled) { m_SFXEnabled = enabled; }
-			inline void SetPrevEnabled(bool enabled) { m_PrevEnabled = enabled; }
+			inline void SetPrevEnabled(bool enabled) {
+				m_PrevEnabled = enabled;
+			}
 			inline bool PrevEnabled() { return m_PrevEnabled; }
 			inline bool SFXEnabled() { return m_SFXEnabled; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
 			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut,
-								   char* saveShortcut, char* exportShortcut,
-								   char* quitShortcut, char* prefShortcut,
-								   char* themeEditorShortcut);
+				char* saveShortcut, char* exportShortcut, char* quitShortcut,
+				char* prefShortcut, char* themeEditorShortcut);
 			void RenderEditPrefs();
 			void RenderExport();
 			void RenderKeybinds();

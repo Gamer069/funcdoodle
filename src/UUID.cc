@@ -57,7 +57,7 @@ namespace FuncDoodle {
 		int byteIndex = 0;
 
 		// Temporary buffer to avoid modifying the input string
-		char buf[37]; // 36 chars + null terminator
+		char buf[37];  // 36 chars + null terminator
 		strcpy(buf, str);
 
 		char* tok = strtok(buf, "-");

@@ -17,8 +17,8 @@
 #include "LoadedAssets.h"
 
 namespace FuncDoodle {
-	AnimationManager::AnimationManager(ProjectFile* proj,
-									   AssetLoader* assetLoader)
+	AnimationManager::AnimationManager(
+		ProjectFile* proj, AssetLoader* assetLoader)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
 		  m_AssetLoader(assetLoader) {
 		m_ToolManager = new ToolManager(assetLoader);
@@ -39,15 +39,15 @@ namespace FuncDoodle {
 
 		// Lock window height but allow horizontal resizing
 		float fixedHeight = 160.0f;
-		ImGui::SetNextWindowSizeConstraints(ImVec2(0, fixedHeight),
-											ImVec2(FLT_MAX, fixedHeight));
+		ImGui::SetNextWindowSizeConstraints(
+			ImVec2(0, fixedHeight), ImVec2(FLT_MAX, fixedHeight));
 
 		// Begin the window with horizontal scrollbar enabled
 		ImGui::SetNextWindowPos(ImVec2(0, 920), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(1074, 160), ImGuiCond_FirstUseEver);
 		ImGui::Begin("Timeline", nullptr,
-					 ImGuiWindowFlags_HorizontalScrollbar |
-						 ImGuiWindowFlags_NoBackground);
+			ImGuiWindowFlags_HorizontalScrollbar |
+				ImGuiWindowFlags_NoBackground);
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
 		float frameWidth = (float)m_Proj->AnimWidth();
@@ -58,8 +58,7 @@ namespace FuncDoodle {
 		float totalWidth = m_Proj->AnimFrameCount() * (frameWidth + padding);
 
 		// Create a scrollable region
-		ImGui::BeginChild(
-			"FrameScrollRegion",
+		ImGui::BeginChild("FrameScrollRegion",
 			ImVec2(ImGui::GetContentRegionAvail().x, frameHeight + padding),
 			false, ImGuiWindowFlags_HorizontalScrollbar);
 
@@ -179,14 +178,14 @@ namespace FuncDoodle {
 
 		// Render frames
 		for (unsigned long i = 0; i < m_Proj->AnimFrameCount(); i++) {
-			drawList->AddText(
-				font, fontSize,
+			drawList->AddText(font, fontSize,
 				m_SelectedFrame == i
 					? ImVec2(topLeft.x + frameWidth / 2, bottomRight.y + 10)
 					: ImVec2(topLeft.x + frameWidth / 2, bottomRight.y),
 				IM_COL32(255, 255, 255, 255), std::to_string(i).c_str());
 
-			if (m_TimelineFrameRenderer->AnimFrame() != m_Proj->AnimFrames()->Get(i)) {
+			if (m_TimelineFrameRenderer->AnimFrame() !=
+				m_Proj->AnimFrames()->Get(i)) {
 				m_TimelineFrameRenderer->SetFrame(m_Proj->AnimFrames()->Get(i));
 			}
 
@@ -194,7 +193,8 @@ namespace FuncDoodle {
 			float height = bottomRight.y - topLeft.y;
 			float scaleX = width / frameWidth;
 			float scaleY = width / frameHeight;
-			m_TimelineFrameRenderer->SetPixelScale(std::min<float>(scaleX, scaleY));
+			m_TimelineFrameRenderer->SetPixelScale(
+				std::min<float>(scaleX, scaleY));
 			m_TimelineFrameRenderer->RenderFramePixels(
 				topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
@@ -208,8 +208,7 @@ namespace FuncDoodle {
 					m_FrameRenderer->SetPreviousFrame(frames->Get(i - 1));
 				}
 				m_FrameRenderer->RenderFrame(i, prevEnabled);
-				drawList->AddRect(
-					topLeft, ImVec2(bottomRight.x, bottomRight.y),
+				drawList->AddRect(topLeft, ImVec2(bottomRight.x, bottomRight.y),
 					IM_COL32(255, 0, 0, 255),  // Red color
 					0.0f,					   // rounding
 					0,						   // flags
@@ -219,7 +218,7 @@ namespace FuncDoodle {
 			ImVec2 mousePos = ImGui::GetMousePos();
 			bool isHovered =
 				(mousePos.x >= topLeft.x && mousePos.x <= bottomRight.x &&
-				 mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
+					mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
 
 			char menuName[32];	// Make buffer big enough for "frame" + numbers
 								// + "menu" + null terminator
@@ -295,9 +294,9 @@ namespace FuncDoodle {
 		ImGui::Begin("Controls");
 
 		if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
-							   ImVec2(20, 20)) ||
+				ImVec2(20, 20)) ||
 			(ImGui::IsKeyPressed(ImGuiKey_J, true) &&
-			 !ImGui::IsAnyItemActive())) {
+				!ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = 0;
 			m_Player->Rewind();
 		}
@@ -305,21 +304,20 @@ namespace FuncDoodle {
 		ImGui::SameLine();
 
 		if (ImGui::ImageButton("togglePlay",
-							   m_Player->Playing()
-								   ? (ImTextureID)(intptr_t)s_PauseTexId
-								   : (ImTextureID)(intptr_t)s_PlayTexId,
-							   ImVec2(20, 20)) ||
+				m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
+									: (ImTextureID)(intptr_t)s_PlayTexId,
+				ImVec2(20, 20)) ||
 			(ImGui::IsKeyPressed(ImGuiKey_K, true) &&
-			 !ImGui::IsAnyItemActive())) {
+				!ImGui::IsAnyItemActive())) {
 			m_Player->SetPlaying(!m_Player->Playing());
 		}
 
 		ImGui::SameLine();
 
-		if (ImGui::ImageButton("end", (ImTextureID)(intptr_t)s_EndTexId,
-							   ImVec2(20, 20)) ||
+		if (ImGui::ImageButton(
+				"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
 			(ImGui::IsKeyPressed(ImGuiKey_L, true) &&
-			 !ImGui::IsAnyItemActive())) {
+				!ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 			m_Player->End();
 		}

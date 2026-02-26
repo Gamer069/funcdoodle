@@ -72,8 +72,7 @@ namespace FuncDoodle {
 						newData[y * width + (x + xOffset)] =
 							oldData[y * oldWidth + x];
 					} else {
-						newData[y * oldWidth + x] =
-							oldData[y * oldWidth + x];
+						newData[y * oldWidth + x] = oldData[y * oldWidth + x];
 					}
 				}
 			}
@@ -97,8 +96,7 @@ namespace FuncDoodle {
 						newData[(y + yOffset) * oldWidth + x] =
 							oldData[y * oldWidth + x];
 					} else {
-						newData[y * oldWidth + x] =
-							oldData[y * oldWidth + x];
+						newData[y * oldWidth + x] = oldData[y * oldWidth + x];
 					}
 				}
 			}
@@ -130,14 +128,13 @@ namespace FuncDoodle {
 			for (int x = 0; x < Width(); x++) {
 				Col pixel = Pixels()->Get(x, y);
 				written = snprintf(curr, bufferSize - (curr - fdata),
-								   "%d %d %d\n", pixel.r, pixel.g, pixel.b);
+					"%d %d %d\n", pixel.r, pixel.g, pixel.b);
 				curr += written;
 			}
 		}
 
 		written = snprintf(curr, bufferSize - (curr - fdata), "%d %d %d",
-						   m_Pixels.BgCol().r, m_Pixels.BgCol().g,
-						   m_Pixels.BgCol().b);
+			m_Pixels.BgCol().r, m_Pixels.BgCol().g, m_Pixels.BgCol().b);
 		curr += written;
 
 		ImGui::SetClipboardText(fdata);
@@ -220,17 +217,17 @@ namespace FuncDoodle {
 		bgCol.g = atoi(ptr);
 		while (*ptr && *ptr != ' ')
 			ptr++;
-			if (*ptr)
-				ptr++;
-			bgCol.b = atoi(ptr);
+		if (*ptr)
+			ptr++;
+		bgCol.b = atoi(ptr);
 
-			frame->PixelsMut()->SetBG(bgCol);
+		frame->PixelsMut()->SetBG(bgCol);
 
-			return frame;
-		}
+		return frame;
+	}
 	void Frame::Export(const char* filePath) {
-		stbi_write_png(filePath, Width(), Height(), 3, Data().data(),
-					   Width() * 3);
+		stbi_write_png(
+			filePath, Width(), Height(), 3, Data().data(), Width() * 3);
 	}
 	Frame& Frame::operator=(const Frame& other) {
 		if (this != &other) {

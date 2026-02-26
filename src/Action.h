@@ -19,7 +19,7 @@ namespace FuncDoodle {
 	class DrawAction : public Action {
 		public:
 			DrawAction(int x, int y, Col prev, Col next, unsigned long frameI,
-					   void* proj)
+				void* proj)
 				: m_X(x), m_Y(y), m_Prev(prev), m_Next(next),
 				  m_FrameIndex(frameI), m_Proj(proj) {};
 			DrawAction(const DrawAction& other)
@@ -40,7 +40,7 @@ namespace FuncDoodle {
 	class FillAction : public Action {
 		public:
 			FillAction(Col prev, Col next, unsigned long frameI, void* proj,
-					   std::vector<std::pair<int, int>> affected)
+				std::vector<std::pair<int, int>> affected)
 				: m_Prev(prev), m_Next(next), m_FrameIndex(frameI),
 				  m_Proj(proj), m_Pixels(affected) {};
 			FillAction(const FillAction& other)

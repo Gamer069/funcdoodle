@@ -9,8 +9,8 @@ namespace FuncDoodle {
 		public:
 			Grid(int gridWidth, int gridHeight, Col opposite);
 			~Grid();
-			void RenderWithDrawList(ImDrawList* drawList, ImVec2 startPos,
-									ImVec2 endPos);
+			void RenderWithDrawList(
+				ImDrawList* drawList, ImVec2 startPos, ImVec2 endPos);
 			inline const void ShowGrid() { m_ShowGrid = true; };
 			inline const void HideGrid() { m_ShowGrid = false; };
 			inline const void ToggleGrid() { m_ShowGrid = !m_ShowGrid; };

@@ -22,12 +22,13 @@
 
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
-							 std::filesystem::path themesPath)
+		std::filesystem::path themesPath)
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
 		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
 		  m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{255, 255, 255}),
-		  m_ThemesPath(themesPath), m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {}
+		  m_ThemesPath(themesPath),
+		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {}
 	Application::~Application() {
 		delete m_Manager;
 		delete m_CurrentProj;
@@ -62,8 +63,8 @@ namespace FuncDoodle {
 	}
 
 	void Application::CheckKeybinds(char* newProj, char* open, char* save,
-									char* exportShortcut, char* quit,
-									char* pref, char* themeEditorShortcut) {
+		char* exportShortcut, char* quit, char* pref,
+		char* themeEditorShortcut) {
 		ImGuiIO& io = ImGui::GetIO();
 
 		struct Shortcut {
@@ -175,11 +176,9 @@ namespace FuncDoodle {
 		char* prefShortcut = GlobalGetShortcut(",", false, false);
 		char* themeEditorShortcut = GlobalGetShortcut("T", false, false);
 		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut,
-					  exportShortcut, quitShortcut, prefShortcut,
-					  themeEditorShortcut);
+			exportShortcut, quitShortcut, prefShortcut, themeEditorShortcut);
 		RenderMainMenuBar(newProjShortcut, openShortcut, saveShortcut,
-						  exportShortcut, quitShortcut, prefShortcut,
-						  themeEditorShortcut);
+			exportShortcut, quitShortcut, prefShortcut, themeEditorShortcut);
 		RenderEditPrefs();
 		SaveChangesDialog();
 		RenderExport();
@@ -199,7 +198,7 @@ namespace FuncDoodle {
 			char* title = (char*)malloc(35);
 			if (title != 0) {
 				snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER,
-						 (int)ImGui::GetIO().Framerate);
+					(int)ImGui::GetIO().Framerate);
 				glfwSetWindowTitle(m_Window, title);
 				free(title);
 			} else {
@@ -259,9 +258,8 @@ namespace FuncDoodle {
 		}
 
 		if (m_CurrentProj == nullptr) {
-			m_CurrentProj =
-				new ProjectFile((char*)"", 1, 1, (char*)"", 0, (char*)"",
-								m_Window, Col{.r = 0, .g = 0, .b = 0});
+			m_CurrentProj = new ProjectFile((char*)"", 1, 1, (char*)"", 0,
+				(char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0});
 		}
 
 		m_CurrentProj->ReadAndPopulate(m_FilePath.c_str());
@@ -284,7 +282,7 @@ namespace FuncDoodle {
 
 		// Calculate center of viewport
 		ImVec2 center(viewportPos.x + (viewportSize.x * 0.5f),
-					  viewportPos.y + (viewportSize.y * 0.5f));
+			viewportPos.y + (viewportSize.y * 0.5f));
 
 		ImVec4 btnNewCol = ImVec4(1, 1, 1, 1);
 		ImVec4 btnOpenCol = ImVec4(1, 1, 1, 1);
@@ -313,9 +311,9 @@ namespace FuncDoodle {
 			ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight);
 
 		drawList->AddRectFilled(viewportPos,
-								ImVec2(viewportPos.x + viewportSize.x,
-									   viewportPos.y + viewportSize.y),
-								IM_COL32(50, 50, 50, 255));
+			ImVec2(
+				viewportPos.x + viewportSize.x, viewportPos.y + viewportSize.y),
+			IM_COL32(50, 50, 50, 255));
 
 		ImVec2 mousePos = ImGui::GetMousePos();
 		if (!ImGui::IsAnyItemHovered()) {
@@ -341,18 +339,14 @@ namespace FuncDoodle {
 		}
 
 		drawList->AddRectFilled(safePosAdd, safePosAddMax,
-								ImGui::ColorConvertFloat4ToU32(btnNewCol),
-								10.0f);
-		drawList->AddImage(
-			(ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
+			ImGui::ColorConvertFloat4ToU32(btnNewCol), 10.0f);
+		drawList->AddImage((ImTextureID)(intptr_t)s_AddTexId, safePosAdd,
 			ImVec2(safePosAdd.x + btnWidth, safePosAdd.y + btnHeight),
 			ImVec2(0, 0), ImVec2(1, 1),
 			ImGui::ColorConvertFloat4ToU32(tintNew));
 		drawList->AddRectFilled(safePosOpen, safePosOpenMax,
-								ImGui::ColorConvertFloat4ToU32(btnOpenCol),
-								10.0f);
-		drawList->AddImage(
-			(ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
+			ImGui::ColorConvertFloat4ToU32(btnOpenCol), 10.0f);
+		drawList->AddImage((ImTextureID)(intptr_t)s_OpenTexId, safePosOpen,
 			ImVec2(safePosOpen.x + btnWidth, safePosOpen.y + btnHeight),
 			ImVec2(0, 0), ImVec2(1, 1),
 			ImGui::ColorConvertFloat4ToU32(tintOpen));
@@ -391,8 +385,8 @@ namespace FuncDoodle {
 		m_SaveChangesOpen = true;
 		FUNC_DBG("set m_SaveChangesOpen");
 	}
-	void Application::DropCallback(GLFWwindow* win, int count,
-								   const char** paths) {
+	void Application::DropCallback(
+		GLFWwindow* win, int count, const char** paths) {
 		if (count == 0)
 			return;
 		if (count > 1) {
@@ -413,7 +407,7 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
 		}
 		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
-								   ImGuiWindowFlags_AlwaysAutoResize) &&
+				ImGuiWindowFlags_AlwaysAutoResize) &&
 			m_CurrentProj) {
 			char name[256];
 			strcpy(name, m_CurrentProj->AnimName());
@@ -431,27 +425,27 @@ namespace FuncDoodle {
 				strcpy(author, m_CacheProj->AnimAuthor());
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
-				} else {
-					strcpy(name, (char*)"Untitled Animation");
-					width = 32;
-					height = 32;
-					const char* username =
-						std::getenv("USER");  // Common on Linux and macOS
-					if (!username) {
-						username =
-							std::getenv("LOGNAME");	 // Fallback for Linux and macOS
-					}
-					if (!username) {
-						username = std::getenv("USERNAME");	 // Common on Windows
-					}
-					if (!username) {
-						username = "unknown";
-					}
-					strncpy(author, username, sizeof(author) - 1);
-					author[sizeof(author) - 1] = '\0';
-					fps = 10;
-					strcpy(desc, "Simple test project");
+			} else {
+				strcpy(name, (char*)"Untitled Animation");
+				width = 32;
+				height = 32;
+				const char* username =
+					std::getenv("USER");  // Common on Linux and macOS
+				if (!username) {
+					username =
+						std::getenv("LOGNAME");	 // Fallback for Linux and macOS
 				}
+				if (!username) {
+					username = std::getenv("USERNAME");	 // Common on Windows
+				}
+				if (!username) {
+					username = "unknown";
+				}
+				strncpy(author, username, sizeof(author) - 1);
+				author[sizeof(author) - 1] = '\0';
+				fps = 10;
+				strcpy(desc, "Simple test project");
+			}
 			if (ImGui::InputText("Name", name, sizeof(name))) {
 				m_CacheProj->SetAnimName(name);
 			}
@@ -496,8 +490,8 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
 		}
-		if (ImGui::BeginPopupModal("NewProj", &m_NewProjOpen,
-								   ImGuiWindowFlags_AlwaysAutoResize)) {
+		if (ImGui::BeginPopupModal(
+				"NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256] = "";
 			int width = 32;
 			int height = 32;
@@ -505,27 +499,27 @@ namespace FuncDoodle {
 			int fps = 0;
 			char desc[512] = "";
 
-				if (!m_CacheProj) {
-					strcpy(name, (char*)"testproj");
-					width = 32;
-					height = 32;
-					const char* username = std::getenv("USER");
-					if (!username) {
-						username = std::getenv("LOGNAME");
-					}
-					if (!username) {
-						username = std::getenv("USERNAME");
-					}
-					if (!username) {
-						username = "unknown";
-					}
-					strncpy(author, username, sizeof(author) - 1);
-					author[sizeof(author) - 1] = '\0';
-					fps = 10;
-					strcpy(desc, "Simple test project");
-					m_CacheProj = new ProjectFile(name, width, height, author,
-												  fps, desc, m_Window, Col());
-				} else {
+			if (!m_CacheProj) {
+				strcpy(name, (char*)"testproj");
+				width = 32;
+				height = 32;
+				const char* username = std::getenv("USER");
+				if (!username) {
+					username = std::getenv("LOGNAME");
+				}
+				if (!username) {
+					username = std::getenv("USERNAME");
+				}
+				if (!username) {
+					username = "unknown";
+				}
+				strncpy(author, username, sizeof(author) - 1);
+				author[sizeof(author) - 1] = '\0';
+				fps = 10;
+				strcpy(desc, "Simple test project");
+				m_CacheProj = new ProjectFile(
+					name, width, height, author, fps, desc, m_Window, Col());
+			} else {
 				strcpy(name, m_CacheProj->AnimName());
 				width = m_CacheProj->AnimWidth();
 				height = m_CacheProj->AnimHeight();
@@ -562,15 +556,15 @@ namespace FuncDoodle {
 				else
 					m_CacheProj->SetAnimHeight(height, true);
 			}
-				if (ImGui::InputText("Author", author, sizeof(author))) {
-					m_CacheProj->SetAnimAuthor(author);
-				}
+			if (ImGui::InputText("Author", author, sizeof(author))) {
+				m_CacheProj->SetAnimAuthor(author);
+			}
 			if (ImGui::InputInt("FPS", &fps)) {
 				m_CacheProj->SetAnimFPS(fps);
 			}
-				if (ImGui::InputText("Description", desc, sizeof(desc))) {
-					m_CacheProj->SetAnimDesc(desc);
-				}
+			if (ImGui::InputText("Description", desc, sizeof(desc))) {
+				m_CacheProj->SetAnimDesc(desc);
+			}
 			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
 				if (m_CacheProj)
 					m_CacheProj->SetBgCol(m_CacheBGCol);
@@ -595,10 +589,8 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderMainMenuBar(char* newProjShortcut,
-										char* openShortcut, char* saveShortcut,
-										char* exportShortcut,
-										char* quitShortcut, char* prefShortcut,
-										char* themeEditorShortcut) {
+		char* openShortcut, char* saveShortcut, char* exportShortcut,
+		char* quitShortcut, char* prefShortcut, char* themeEditorShortcut) {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
 				if (ImGui::MenuItem("New project", newProjShortcut)) {
@@ -657,7 +649,8 @@ namespace FuncDoodle {
 	void Application::RenderEditPrefs() {
 		if (m_EditPrefsOpen) {
 			ImGui::OpenPopup("EditPrefs");
-			m_EditPrefsOpen = false;	// Reset flag since OpenPopup only sets visibility
+			m_EditPrefsOpen =
+				false;	// Reset flag since OpenPopup only sets visibility
 		}
 		if (ImGui::BeginPopup("EditPrefs")) {
 			if (ImGui::BeginCombo("Theme", Themes::g_Themes[m_Theme].Name)) {
@@ -705,7 +698,7 @@ namespace FuncDoodle {
 				nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
 				if (res == NFD_OKAY) {
 					for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
-							i++) {
+						i++) {
 						nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
 						style = Themes::LoadThemeFromFile(path);
 						if (style) {
@@ -714,7 +707,7 @@ namespace FuncDoodle {
 					}
 				} else if (res == NFD_ERROR) {
 					FUNC_ERR(
-							"Failed to open save theme dialog: " << NFD_GetError());
+						"Failed to open save theme dialog: " << NFD_GetError());
 				}
 			}
 			if (ImGui::Button("Open themes directory")) {
@@ -732,9 +725,9 @@ namespace FuncDoodle {
 			ImGui::SameLine();
 
 			if (ImGui::IsKeyPressed(ImGuiKey_Escape) ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
-					ImGui::Button("OK")) {
+				ImGui::IsKeyPressed(ImGuiKey_Enter) ||
+				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
+				ImGui::Button("OK")) {
 				ImGui::CloseCurrentPopup();
 			}
 
@@ -750,10 +743,10 @@ namespace FuncDoodle {
 		if (ImGui::BeginPopup("Export##export")) {
 			const char* formats[] = {"PNGs", "MP4"};
 			ImGui::Combo("Export Format", &m_ExportFormat, formats,
-					IM_ARRAYSIZE(formats));
+				IM_ARRAYSIZE(formats));
 			if (ImGui::Button("Export") ||
-					ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
-					ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
+				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				nfdchar_t* outPath = 0;
 				nfdresult_t result = NFD_PickFolder(0, &outPath);
 
@@ -768,14 +761,14 @@ namespace FuncDoodle {
 					free(outPath);
 				} else {
 					FUNC_DBG("Failed to open file dialog" +
-							(std::string)NFD_GetError());
+							 (std::string)NFD_GetError());
 					free(outPath);
 				}
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Close") ||
-					ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
+				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
@@ -786,7 +779,7 @@ namespace FuncDoodle {
 			ImGui::OpenPopup("Keybinds");
 		}
 		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
-					ImGuiWindowFlags_AlwaysAutoResize)) {
+				ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =
 				m_AssetLoader->GetPath() / "keys.txt";
 			std::ifstream keysIn(keysPath);

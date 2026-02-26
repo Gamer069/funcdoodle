@@ -31,7 +31,7 @@
 
 namespace FuncDoodle {
 	ProjectFile::ProjectFile(char name[], int width, int height, char author[],
-							 int fps, char desc[], GLFWwindow* win, Col bgCol)
+		int fps, char desc[], GLFWwindow* win, Col bgCol)
 		: m_Window(win) {
 		strcpy(m_Name, name);
 		m_Width = width;
@@ -78,33 +78,32 @@ namespace FuncDoodle {
 		if (format == 1) {
 			FUNC_GRAY("Exporting to mp4...");
 			// TODO: properly implement video exporting...
-			// now that im looking back on this, HOW DID I EVER THINK THIS WAS A GOOD SOLUTION?????????? 
-			// WAS I STUPID????
-			// apparently yes i was
+			// now that im looking back on this, HOW DID I EVER THINK THIS WAS A
+			// GOOD SOLUTION?????????? WAS I STUPID???? apparently yes i was
 			// ...
 			//
-			// if anyone's looking at this comment, please - do NOT use the solution i'm using here
-			// its overwhelmingly hacky, breaks when ffmpeg updates, is very horrible for UX
+			// if anyone's looking at this comment, please - do NOT use the
+			// solution i'm using here its overwhelmingly hacky, breaks when
+			// ffmpeg updates, is very horrible for UX
 			//
-			// i think the only reason i wrote this code was to avoid using a ffmpeg wrapper lib thing 
-			// but like really..?
+			// i think the only reason i wrote this code was to avoid using a
+			// ffmpeg wrapper lib thing but like really..?
 			//
 			// so yea sorry for that
 			// idk if/when i'll fix this
 			// see you until then
 			char cmd[1024];
 #ifndef _WIN32
-			sprintf(
-				cmd,
+			sprintf(cmd,
 				"ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" "
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
 				m_FPS, filePath, filePath);
 #else
 			sprintf(cmd,
-					"ffmpeg.exe -framerate %d -pattern-type glob -i "
-					"\"%s/frame_*.png\" "
-					"-c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y",
-					m_FPS, filePath, filePath, filePath);
+				"ffmpeg.exe -framerate %d -pattern-type glob -i "
+				"\"%s/frame_*.png\" "
+				"-c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y",
+				m_FPS, filePath, filePath, filePath);
 #endif
 
 			system(cmd);
@@ -184,14 +183,14 @@ namespace FuncDoodle {
 			std::make_unique<InsertFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void
-	ProjectFile::PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action) {
+	void ProjectFile::PushUndoableMoveFrameLeftAction(
+		MoveFrameLeftAction action) {
 		m_UndoStack.push(
 			std::make_unique<MoveFrameLeftAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void
-	ProjectFile::PushUndoableMoveFrameRightAction(MoveFrameRightAction action) {
+	void ProjectFile::PushUndoableMoveFrameRightAction(
+		MoveFrameRightAction action) {
 		m_UndoStack.push(
 			std::make_unique<MoveFrameRightAction>(std::move(action)));
 		m_Saved = false;
@@ -333,7 +332,7 @@ namespace FuncDoodle {
 		int verMinor = 0;
 		file.read(reinterpret_cast<char*>(&verMinor), sizeof(verMinor));
 
-		unsigned long frameCount = 0; // temp val
+		unsigned long frameCount = 0;  // temp val
 		file.read(reinterpret_cast<char*>(&frameCount), sizeof(frameCount));
 		int animWidth = 0;
 		file.read(reinterpret_cast<char*>(&animWidth), sizeof(animWidth));
@@ -487,7 +486,7 @@ namespace FuncDoodle {
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
 		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
-				!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
+			!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

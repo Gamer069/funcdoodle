@@ -22,13 +22,12 @@ namespace FuncDoodle {
 
 		PaStream* stream = nullptr;
 		PaError err = Pa_OpenDefaultStream(&stream,
-										   0,						// no input channels
-										   audioData->numChannels,	// output channels
-										   paFloat32,				// sample format
-										   audioData->sampleRate,
-										   paFramesPerBufferUnspecified,
-										   paCB,		// callback function
-										   audioData);	// user data
+			0,						 // no input channels
+			audioData->numChannels,	 // output channels
+			paFloat32,				 // sample format
+			audioData->sampleRate, paFramesPerBufferUnspecified,
+			paCB,		 // callback function
+			audioData);	 // user data
 		if (err != paNoError) {
 			std::cerr << "Error opening default stream: "
 					  << Pa_GetErrorText(err) << std::endl;

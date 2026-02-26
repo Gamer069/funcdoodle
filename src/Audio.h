@@ -16,8 +16,8 @@ namespace FuncDoodle {
 };	// namespace FuncDoodle
 
 static int paCB(const void* inBuf, void* outBuf, unsigned long framesPerBuf,
-				const PaStreamCallbackTimeInfo* timeInfo,
-				PaStreamCallbackFlags statusFlags, void* userData) {
+	const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags,
+	void* userData) {
 	if (!userData) {
 		return paAbort;
 	}
@@ -27,13 +27,13 @@ static int paCB(const void* inBuf, void* outBuf, unsigned long framesPerBuf,
 	unsigned long framesToProcess =
 		(framesLeft < framesPerBuf) ? framesLeft : framesPerBuf;
 	std::memcpy(out, data->samples.data() + data->cur * data->numChannels,
-				framesToProcess * data->numChannels * sizeof(float));
+		framesToProcess * data->numChannels * sizeof(float));
 	data->cur += framesToProcess;
 	if (framesToProcess < framesPerBuf) {
 		size_t offset = framesToProcess * data->numChannels;
 		memset(out + offset, 0,
-			   (framesPerBuf - framesToProcess) * data->numChannels *
-				   sizeof(float));
+			(framesPerBuf - framesToProcess) * data->numChannels *
+				sizeof(float));
 		return paComplete;
 	}
 	return paContinue;

@@ -36,7 +36,7 @@ void GLFWErrorCallback(int error, const char* desc) {
 }
 
 void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
-				   FuncDoodle::Application* application, ImGuiIO& io) {
+	FuncDoodle::Application* application, ImGuiIO& io) {
 	auto currentFrameTime = std::chrono::high_resolution_clock::now();
 	auto deltaTime =
 		std::chrono::duration<double>(currentFrameTime - lastFrameTime).count();
@@ -52,7 +52,7 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
 		ImGui::NewFrame();
 
 		ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
-									 ImGuiDockNodeFlags_PassthruCentralNode);
+			ImGuiDockNodeFlags_PassthruCentralNode);
 
 		application->RenderImGui();
 
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
 		const char* description;
 		int error = glfwGetError(&description);
 		fprintf(stderr, "Failed to initialize GLFW: %d -- %s\n", error,
-				description);
+			description);
 		return -1;
 	}
 
@@ -199,17 +199,18 @@ int main(int argc, char** argv) {
 	handler.TypeHash = ImHashStr(handler.TypeName);
 	handler.UserData = application;
 	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
-							const char* val) -> void* {
+							 const char* val) -> void* {
 		if (std::strcmp(val, "Preferences") == 0) {
 			return handler->UserData;
 		}
 		return nullptr;
 	};
 	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry,
-							const char* line) {
+							 const char* line) {
 		char* sel = (char*)malloc(37);
 		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
-			static_cast<FuncDoodle::Application*>(entry)->SetTheme(FuncDoodle::UUID::FromString(sel));
+			static_cast<FuncDoodle::Application*>(entry)->SetTheme(
+				FuncDoodle::UUID::FromString(sel));
 		}
 		int sfxEnabled;
 		if (std::sscanf(line, "Sfx=%d", &sfxEnabled) == 1) {
@@ -217,19 +218,26 @@ int main(int argc, char** argv) {
 			if (sfxEnabled >= 1) {
 				sfxEnabledBool = true;
 			}
-			static_cast<FuncDoodle::Application*>(entry)->SetSFXEnabled(sfxEnabledBool);
+			static_cast<FuncDoodle::Application*>(entry)->SetSFXEnabled(
+				sfxEnabledBool);
 		}
 		int prevEnabled;
 		if (std::sscanf(line, "Prev=%d", &prevEnabled) == 1) {
 			bool prevEnabledBool = false;
 			if (prevEnabled >= 1)
 				prevEnabledBool = true;
-			static_cast<FuncDoodle::Application*>(entry)->SetPrevEnabled(prevEnabledBool);
+			static_cast<FuncDoodle::Application*>(entry)->SetPrevEnabled(
+				prevEnabledBool);
 		}
-		FuncDoodle::UUID uuid = static_cast<FuncDoodle::Application*>(entry)->Theme();
+		FuncDoodle::UUID uuid =
+			static_cast<FuncDoodle::Application*>(entry)->Theme();
 		if (!FuncDoodle::Themes::g_Themes.contains(uuid)) {
-			ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[FuncDoodle::UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")].Style;
-			ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
+			ImGui::GetStyle() =
+				FuncDoodle::Themes::g_Themes
+					[FuncDoodle::UUID::FromString(
+						 "d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")]
+						.Style;
+			ImGui::GetStyle().Alpha = 1.0f;	 // Fully opaque
 			ImGui::GetStyle().WindowRounding = 10.0f;
 			ImGui::GetStyle().FrameRounding = 5.0f;
 			ImGui::GetStyle().PopupRounding = 12.0f;
@@ -248,7 +256,7 @@ int main(int argc, char** argv) {
 			return;
 		}
 		ImGui::GetStyle() = FuncDoodle::Themes::g_Themes[uuid].Style;
-		ImGui::GetStyle().Alpha = 1.0f;  // Fully opaque
+		ImGui::GetStyle().Alpha = 1.0f;	 // Fully opaque
 		ImGui::GetStyle().WindowRounding = 10.0f;
 		ImGui::GetStyle().FrameRounding = 5.0f;
 		ImGui::GetStyle().PopupRounding = 12.0f;
@@ -266,7 +274,7 @@ int main(int argc, char** argv) {
 		}
 	};
 	handler.WriteAllFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
-			ImGuiTextBuffer* buf) {
+							 ImGuiTextBuffer* buf) {
 		FuncDoodle::Application* application =
 			static_cast<FuncDoodle::Application*>(handler->UserData);
 		if (!application) {
@@ -294,7 +302,7 @@ int main(int argc, char** argv) {
 	PaError err = Pa_Initialize();
 	if (err != paNoError) {
 		FUNC_WARN("Failed to initialize port audio: " +
-				(std::string)Pa_GetErrorText(err));
+				  (std::string)Pa_GetErrorText(err));
 		exit(-1);
 	}
 
@@ -308,9 +316,11 @@ int main(int argc, char** argv) {
 	if (icon != nullptr) {
 		glfwSetWindowIcon(win, 1, icon);
 	}
-	glfwSetDropCallback(win, [](GLFWwindow* win, int count, const char** paths) {
-			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))->DropCallback(win, count, paths);
-			});
+	glfwSetDropCallback(
+		win, [](GLFWwindow* win, int count, const char** paths) {
+			((FuncDoodle::Application*)(glfwGetWindowUserPointer(win)))
+				->DropCallback(win, count, paths);
+		});
 
 	if (icon != nullptr) {
 		stbi_image_free(icon->pixels);

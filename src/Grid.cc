@@ -11,8 +11,8 @@
 #include "Frame.h"
 
 namespace FuncDoodle {
-	void Grid::RenderWithDrawList(ImDrawList* drawList, ImVec2 startPos,
-								  ImVec2 endPos) {
+	void Grid::RenderWithDrawList(
+		ImDrawList* drawList, ImVec2 startPos, ImVec2 endPos) {
 		if (!m_ShowGrid)
 			return;
 
@@ -25,8 +25,8 @@ namespace FuncDoodle {
 		for (int x = 0; x <= m_GridWidth; x++) {
 			float xPos = std::round(startPos.x + x * cellWidth) - 0.7f;
 			drawList->AddLine(ImVec2(xPos, startPos.y), ImVec2(xPos, endPos.y),
-							  INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g,
-											 m_OppositeCol.b)  // Gray color
+				INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g,
+					m_OppositeCol.b)  // Gray color
 			);
 		}
 
@@ -34,8 +34,8 @@ namespace FuncDoodle {
 		for (int y = 0; y <= m_GridHeight; y++) {
 			float yPos = std::round(startPos.y + y * cellHeight) - 0.7f;
 			drawList->AddLine(ImVec2(startPos.x, yPos), ImVec2(endPos.x, yPos),
-							  INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g,
-											 m_OppositeCol.b)  // Gray color
+				INVERTED_IMCOL(m_OppositeCol.r, m_OppositeCol.g,
+					m_OppositeCol.b)  // Gray color
 			);
 		}
 	}
