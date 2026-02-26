@@ -1,11 +1,23 @@
-if [[ $# -ne 4 ]]; then
+usage() {
 	echo "Usage: $0 <Debug/Release> <tiling?> <clean?> <run?>"
 	exit -1
+}
+
+if [[ $# -ne 0 ]] && [[ $# -ne 4 ]]; then
+	usage
 fi
+
 arg1=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 arg3=$(echo "$3" | tr '[:upper:]' '[:lower:]')
 arg4=$(echo "$4" | tr '[:upper:]' '[:lower:]')
+
+if [[ $# -eq 0 ]]; then
+	arg1="debug"
+	arg2="true"
+	arg3="false"
+	arg4="true"
+fi
 
 if [[ "$arg1" != "debug" && "$arg1" != "release" ]]; then
 	echo "Mode must be either debug or release -- $arg1 is invalid"

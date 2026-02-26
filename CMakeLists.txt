@@ -21,11 +21,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_COLOR_MAKEFILE ON)
+
+# Prefer colored compiler diagnostics when supported.
+if(NOT MSVC)
+	set(CMAKE_COLOR_DIAGNOSTICS ON)
+endif()
 
 # Set build configurations
 #set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -gdwarf-4")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -gdwarf-4 -fdiagnostics-color=always")
 set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
 
 # Glad sources

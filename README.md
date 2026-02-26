@@ -1,7 +1,7 @@
 # FuncDoodle
 
 ## building
-To build, run scripts/build.sh or scripts/build.bat depending on your OS, after that if everything worked correctly, the built exec should be in bin/. (for scripts/build.sh, usage is shown if ran with no arguments)
+To build, run `scripts/build.sh` (unix) or `scripts/build.bat` (windows). `scripts/build.sh` now works with no arguments (defaults: `debug true false true`) and still accepts optional overrides in this order: `[debug|release] [tiling] [clean] [run]`.
 BTW for unix a zsh completion script is available: 
 ```sh
 source scripts/completion/completion.zsh
