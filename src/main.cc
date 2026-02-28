@@ -119,6 +119,8 @@ int main(int argc, char** argv) {
 
 	// glfwSetErrorCallback(GLFWErrorCallback);
 
+	glfwInitHint(GLFW_WAYLAND_LIBDECOR, GLFW_WAYLAND_DISABLE_LIBDECOR);
+
 	if (!glfwInit()) {
 		const char* description;
 		int error = glfwGetError(&description);
@@ -178,7 +180,6 @@ int main(int argc, char** argv) {
 	io.Fonts->AddFontFromFileTTF(
 		(assetsPath / "Roboto" / "Roboto-Medium.ttf").string().c_str(), 16.0,
 		&fontConfig);
-	io.Fonts->Build();
 
 	ImGui::GetStyle().ScaleAllSizes(1.0f / dpiScale);
 
@@ -207,7 +208,7 @@ int main(int argc, char** argv) {
 	};
 	handler.ReadLineFn = [](ImGuiContext*, ImGuiSettingsHandler*, void* entry,
 							 const char* line) {
-		char* sel = (char*)malloc(37);
+		char sel[37] = {0};
 		if (std::sscanf(line, "Theme=\"%36s\"", sel) == 1) {
 			static_cast<FuncDoodle::Application*>(entry)->SetTheme(
 				FuncDoodle::UUID::FromString(sel));
@@ -341,6 +342,7 @@ int main(int argc, char** argv) {
 	}
 	FuncDoodle::AudioManager::WaitForAllPlayback();
 	Pa_Terminate();
+	FuncDoodle::Themes::ClearThemes();
 
 	// cleanup code
 	ImGui_ImplOpenGL3_Shutdown();

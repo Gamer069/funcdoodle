@@ -31,7 +31,7 @@ endif()
 # Set build configurations
 #set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -gdwarf-4 -fdiagnostics-color=always")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
 set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
 
 # Glad sources
@@ -104,7 +104,6 @@ target_include_directories(FuncDoodle PRIVATE
 	lib/nfd/src/include
 	lib/stb/
 	lib/
-	lib/glm/
 	lib/toml++/
 	${PORTAUDIO_INCLDIR}
 )

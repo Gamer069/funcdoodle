@@ -28,16 +28,32 @@ namespace FuncDoodle {
 				const char* Author;
 				ImGuiStyle Style;
 				UUID Uuid;
+				bool OwnsMeta = false;
 				CustomTheme()
-					: Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()) {}
+					: Uuid(UUID()), Name(""), Author(""), Style(ImGuiStyle()),
+					  OwnsMeta(false) {}
 				CustomTheme(const char* name, const char* author,
-					ImGuiStyle style, UUID uuid)
-					: Uuid(uuid), Name(name), Author(author), Style(style) {};
+					ImGuiStyle style, UUID uuid, bool ownsMeta = false)
+					: Uuid(uuid), Name(name), Author(author), Style(style),
+					  OwnsMeta(ownsMeta) {};
 		};
 
 		inline std::map<UUID, CustomTheme> g_Themes;
 		inline bool g_ThemeEditorOpen = false;
 		inline bool g_SaveThemeOpen = false;
+		inline void ClearThemes() {
+			for (auto& [uuid, theme] : g_Themes) {
+				(void)uuid;
+				if (theme.OwnsMeta) {
+					std::free(const_cast<char*>(theme.Name));
+					std::free(const_cast<char*>(theme.Author));
+					theme.Name = "";
+					theme.Author = "";
+					theme.OwnsMeta = false;
+				}
+			}
+			g_Themes.clear();
+		}
 		inline void ThemeEditor() {
 			if (g_ThemeEditorOpen) {
 				if (ImGui::Begin("Theme editor", &g_ThemeEditorOpen,
@@ -84,7 +100,7 @@ namespace FuncDoodle {
 				}
 			}
 		}
-		static CustomTheme* g_LastLoadedTheme;
+		inline CustomTheme g_LastLoadedTheme;
 		inline CustomTheme* LoadThemeFromFile(const char* path) {
 			using namespace std::string_view_literals;
 
@@ -163,12 +179,14 @@ namespace FuncDoodle {
 						arr.get(3)->as_floating_point()->get());
 			}
 
-			g_LastLoadedTheme = new CustomTheme{
-				name_copy, author_copy, style, UUID::FromString(uuid_copy)};
+			g_LastLoadedTheme = CustomTheme{
+				name_copy, author_copy, style, UUID::FromString(uuid_copy), true};
+			std::free(uuid_copy);
 
-			return g_LastLoadedTheme;
+			return &g_LastLoadedTheme;
 		}
 		inline void LoadThemes(std::filesystem::path path) {
+			ClearThemes();
 			if (std::filesystem::exists(path) &&
 				std::filesystem::is_directory(path)) {
 				for (std::filesystem::directory_entry e :
@@ -183,42 +201,25 @@ namespace FuncDoodle {
 						continue;
 					}
 					std::string pathStr = e.path().string();
-					const char* path = pathStr.c_str();
-					CustomTheme* theme = LoadThemeFromFile(path);
-					if (theme) {
-						g_Themes.emplace(theme->Uuid, *theme);
+						const char* path = pathStr.c_str();
+						CustomTheme* theme = LoadThemeFromFile(path);
+						if (theme) {
+							auto [it, inserted] = g_Themes.emplace(theme->Uuid, *theme);
+							if (!inserted && theme->OwnsMeta) {
+								std::free(const_cast<char*>(theme->Name));
+								std::free(const_cast<char*>(theme->Author));
+								theme->Name = "";
+								theme->Author = "";
+								theme->OwnsMeta = false;
+							}
+						}
 					}
-				}
 			} else {
 				FUNC_FATAL("Failed to load themes -- either the themes/ "
 						   "directory doesn't exist, or it isn't a directory");
 			}
-			// std::sort(g_Themes.begin(), g_Themes.end(), [](const CustomTheme&
-			// a, const CustomTheme& b) { return strcasecmp(a.Name, b.Name) < 0;
-			// });
-			std::vector<std::pair<UUID, CustomTheme>> themeVec(
-				g_Themes.begin(), g_Themes.end());
-
-			// Selection sort (or any other sorting algorithm)
-			size_t n = themeVec.size();
-			for (size_t i = 0; i < n - 1; i++) {
-				size_t minIndex = i;
-				for (size_t j = i + 1; j < n; j++) {
-					if (strcasecmp(themeVec[j].second.Name,
-							themeVec[minIndex].second.Name) < 0) {
-						minIndex = j;
-					}
-				}
-				if (minIndex != i) {
-					std::swap(themeVec[i], themeVec[minIndex]);
-				}
-			}
-
-			// Clear and refill the map in sorted order
-			g_Themes.clear();
-			for (auto& [uuid, theme] : themeVec) {
-				g_Themes.emplace(uuid, theme);
-			}
+			// NOTE: std::map is keyed/sorted by UUID, so name-based sorting is
+			// intentionally omitted here.
 		}
 		inline void SaveCurrentTheme() {
 			if (g_SaveThemeOpen) {
@@ -257,12 +258,14 @@ namespace FuncDoodle {
 						std::ofstream f(savePath);
 						if (!f) {
 							FUNC_ERR("Failed to open file...");
+							std::free(savePath);
 							return;
 						}
 						FUNC_INF(
 							"saving current theme to " << savePath << "...");
 						f << theme;
 						f.close();
+						std::free(savePath);
 						g_SaveThemeOpen = false;
 					} else if (res == NFD_ERROR) {
 						FUNC_ERR("Failed to open save theme dialog: "

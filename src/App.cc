@@ -692,30 +692,39 @@ namespace FuncDoodle {
 				Themes::g_SaveThemeOpen = true;
 			}
 			ImGui::SameLine();
-			if (ImGui::Button("Add temporary from file")) {
-				static Themes::CustomTheme* style;
-				nfdpathset_t pathset;
-				nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
-				if (res == NFD_OKAY) {
-					for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
-						i++) {
-						nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
-						style = Themes::LoadThemeFromFile(path);
-						if (style) {
-							Themes::g_Themes.emplace(style->Uuid, *style);
+				if (ImGui::Button("Add temporary from file")) {
+					static Themes::CustomTheme* style;
+					nfdpathset_t pathset;
+					nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
+					if (res == NFD_OKAY) {
+						for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
+							i++) {
+							nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
+							style = Themes::LoadThemeFromFile(path);
+							if (style) {
+								auto [it, inserted] =
+									Themes::g_Themes.emplace(style->Uuid, *style);
+								if (!inserted && style->OwnsMeta) {
+									std::free(const_cast<char*>(style->Name));
+									std::free(const_cast<char*>(style->Author));
+									style->Name = "";
+									style->Author = "";
+									style->OwnsMeta = false;
+								}
+							}
 						}
+						NFD_PathSet_Free(&pathset);
+					} else if (res == NFD_ERROR) {
+						FUNC_ERR(
+							"Failed to open save theme dialog: " << NFD_GetError());
 					}
-				} else if (res == NFD_ERROR) {
-					FUNC_ERR(
-						"Failed to open save theme dialog: " << NFD_GetError());
 				}
-			}
 			if (ImGui::Button("Open themes directory")) {
 				OPEN_FILE_EXPLORER(m_ThemesPath);
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Refresh")) {
-				Themes::g_Themes.clear();
+				Themes::ClearThemes();
 				Themes::LoadThemes(m_ThemesPath);
 			}
 
@@ -786,6 +795,7 @@ namespace FuncDoodle {
 			if (!keysIn) {
 				FUNC_WARN("Failed to open file keys.txt");
 				ImGui::EndPopup();
+				return;
 			}
 
 			keysIn.seekg(0, std::ios::end);
@@ -797,10 +807,12 @@ namespace FuncDoodle {
 			if (keysIn.read(buf, fileSize)) {
 				buf[fileSize] = '\0';
 				ImGui::Text("%s", buf);
+				delete[] buf;
 			} else {
 				FUNC_WARN("Failed to read file keys.txt");
 				delete[] buf;
 				ImGui::EndPopup();
+				return;
 			}
 
 			ImGui::EndPopup();
