@@ -38,6 +38,8 @@ namespace FuncDoodle {
 
 	// NOTE: this function doesn't support svg because stb_image doesn't support
 	// it
+	//
+	// what was i even thinking with this comment? isn't this obvious?
 	void AssetLoader::RenderImage(const char* name, ImDrawList* drawList,
 		const ImVec2& pos, const ImVec2& size, const ImVec4& tint) {
 		int width, height, channels;

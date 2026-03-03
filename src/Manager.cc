@@ -21,15 +21,13 @@ namespace FuncDoodle {
 		std::shared_ptr<ProjectFile> proj, AssetLoader* assetLoader)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
 		  m_AssetLoader(assetLoader) {
-		m_ToolManager = new ToolManager(assetLoader);
-		m_FrameRenderer = new FrameRenderer(nullptr, m_ToolManager, m_Player);
-		m_TimelineFrameRenderer =
-			new FrameRenderer(nullptr, m_ToolManager, m_Player);
+		m_ToolManager = std::make_unique<ToolManager>(assetLoader);
+		m_FrameRenderer = std::make_unique<FrameRenderer>(
+			nullptr, m_ToolManager.get(), m_Player);
+		m_TimelineFrameRenderer = std::make_unique<FrameRenderer>(
+			nullptr, m_ToolManager.get(), m_Player);
 	}
 	AnimationManager::~AnimationManager() {
-		delete m_ToolManager;
-		delete m_FrameRenderer;
-		delete m_TimelineFrameRenderer;
 		delete m_Player;
 	}
 	void AnimationManager::RenderTimeline(bool prevEnabled) {

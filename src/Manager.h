@@ -30,9 +30,9 @@ namespace FuncDoodle {
 		private:
 			std::shared_ptr<ProjectFile> m_Proj;
 			unsigned long m_SelectedFrame;
-			FrameRenderer* m_FrameRenderer;
-			FrameRenderer* m_TimelineFrameRenderer;
-			ToolManager* m_ToolManager;
+			std::unique_ptr<FrameRenderer> m_FrameRenderer;
+			std::unique_ptr<FrameRenderer> m_TimelineFrameRenderer;
+			std::unique_ptr<ToolManager> m_ToolManager;
 			AnimationPlayer* m_Player;
 			AssetLoader* m_AssetLoader;
 	};
