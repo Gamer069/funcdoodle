@@ -26,8 +26,12 @@ namespace FuncDoodle {
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
 			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
-			inline ProjectFile* CurProj() { return m_CurrentProj; }
-			inline ProjectFile* CacheProj() { return m_CacheProj; }
+			inline std::shared_ptr<ProjectFile> CurProj() {
+				return m_CurrentProj;
+			}
+			inline std::shared_ptr<ProjectFile> CacheProj() {
+				return m_CacheProj;
+			}
 			inline bool ShouldClose() { return m_ShouldClose; }
 			inline UUID Theme() { return m_Theme; }
 			inline void SetTheme(UUID theme) { m_Theme = theme; }
@@ -50,9 +54,9 @@ namespace FuncDoodle {
 		private:
 			std::string m_FilePath;
 			bool m_NewProjOpen = false;
-			ProjectFile* m_CurrentProj;
-			ProjectFile* m_CacheProj;
-			AnimationManager* m_Manager;
+			std::shared_ptr<ProjectFile> m_CurrentProj;
+			std::shared_ptr<ProjectFile> m_CacheProj;
+			std::unique_ptr<AnimationManager> m_Manager;
 			GLFWwindow* m_Window;
 			AssetLoader* m_AssetLoader;
 			int m_ExportFormat = 0;
@@ -65,7 +69,7 @@ namespace FuncDoodle {
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
-			float* m_CacheBGCol;
+			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;
 	};
 }  // namespace FuncDoodle

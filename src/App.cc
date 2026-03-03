@@ -3,6 +3,7 @@
 
 #include "App.h"
 
+#include <array>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
@@ -26,17 +27,10 @@ namespace FuncDoodle {
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
 		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
-		  m_AssetLoader(assetLoader), m_CacheBGCol(new float[3]{255, 255, 255}),
+		  m_AssetLoader(assetLoader), m_CacheBGCol({255, 255, 255}),
 		  m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {}
-	Application::~Application() {
-		delete m_Manager;
-		delete m_CurrentProj;
-		if (m_CacheProj != m_CurrentProj) {
-			delete m_CacheProj;
-		}
-		delete[] m_CacheBGCol;
-	}
+	Application::~Application() {}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		int maxLen = 11 + strlen(key);
 
@@ -258,8 +252,8 @@ namespace FuncDoodle {
 		}
 
 		if (m_CurrentProj == nullptr) {
-			m_CurrentProj = new ProjectFile((char*)"", 1, 1, (char*)"", 0,
-				(char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0});
+			m_CurrentProj = std::make_shared<ProjectFile>((char*)"", 1, 1,
+				(char*)"", 0, (char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0});
 		}
 
 		m_CurrentProj->ReadAndPopulate(m_FilePath.c_str());
@@ -517,7 +511,7 @@ namespace FuncDoodle {
 				author[sizeof(author) - 1] = '\0';
 				fps = 10;
 				strcpy(desc, "Simple test project");
-				m_CacheProj = new ProjectFile(
+				m_CacheProj = std::make_shared<ProjectFile>(
 					name, width, height, author, fps, desc, m_Window, Col());
 			} else {
 				strcpy(name, m_CacheProj->AnimName());
@@ -527,14 +521,12 @@ namespace FuncDoodle {
 				fps = m_CacheProj->AnimFPS();
 				strcpy(desc, m_CacheProj->AnimDesc());
 
-				if (m_CacheBGCol) {
-					float r = (float)(m_CacheProj->BgCol().r) / 255;
-					float g = (float)(m_CacheProj->BgCol().g) / 255;
-					float b = (float)(m_CacheProj->BgCol().b) / 255;
-					m_CacheBGCol[0] = r;
-					m_CacheBGCol[1] = g;
-					m_CacheBGCol[2] = b;
-				}
+				float r = (float)(m_CacheProj->BgCol().r) / 255;
+				float g = (float)(m_CacheProj->BgCol().g) / 255;
+				float b = (float)(m_CacheProj->BgCol().b) / 255;
+				m_CacheBGCol[0] = r;
+				m_CacheBGCol[1] = g;
+				m_CacheBGCol[2] = b;
 			}
 
 			// GUI inputs for project properties
@@ -565,9 +557,9 @@ namespace FuncDoodle {
 			if (ImGui::InputText("Description", desc, sizeof(desc))) {
 				m_CacheProj->SetAnimDesc(desc);
 			}
-			if (ImGui::ColorPicker3("BG", m_CacheBGCol)) {
+			if (ImGui::ColorPicker3("BG", m_CacheBGCol.data())) {
 				if (m_CacheProj)
-					m_CacheProj->SetBgCol(m_CacheBGCol);
+					m_CacheProj->SetBgCol(m_CacheBGCol.data());
 			}
 
 			if (ImGui::Button("Close") ||
@@ -580,8 +572,8 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				delete m_Manager;
-				m_Manager = new AnimationManager(m_CurrentProj, m_AssetLoader);
+				m_Manager = std::make_unique<AnimationManager>(
+					m_CurrentProj, m_AssetLoader);
 				m_NewProjOpen = false;
 			}
 
@@ -609,7 +601,6 @@ namespace FuncDoodle {
 				}
 				if (m_CurrentProj) {
 					if (ImGui::MenuItem("Close")) {
-						delete m_CurrentProj;
 						m_CurrentProj = nullptr;
 						m_Manager->SetProj(nullptr);
 					}
@@ -692,33 +683,33 @@ namespace FuncDoodle {
 				Themes::g_SaveThemeOpen = true;
 			}
 			ImGui::SameLine();
-				if (ImGui::Button("Add temporary from file")) {
-					static Themes::CustomTheme* style;
-					nfdpathset_t pathset;
-					nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
-					if (res == NFD_OKAY) {
-						for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
-							i++) {
-							nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
-							style = Themes::LoadThemeFromFile(path);
-							if (style) {
-								auto [it, inserted] =
-									Themes::g_Themes.emplace(style->Uuid, *style);
-								if (!inserted && style->OwnsMeta) {
-									std::free(const_cast<char*>(style->Name));
-									std::free(const_cast<char*>(style->Author));
-									style->Name = "";
-									style->Author = "";
-									style->OwnsMeta = false;
-								}
+			if (ImGui::Button("Add temporary from file")) {
+				static Themes::CustomTheme* style;
+				nfdpathset_t pathset;
+				nfdresult_t res = NFD_OpenDialogMultiple("toml", "", &pathset);
+				if (res == NFD_OKAY) {
+					for (size_t i = 0; i < NFD_PathSet_GetCount(&pathset);
+						i++) {
+						nfdchar_t* path = NFD_PathSet_GetPath(&pathset, i);
+						style = Themes::LoadThemeFromFile(path);
+						if (style) {
+							auto [it, inserted] =
+								Themes::g_Themes.emplace(style->Uuid, *style);
+							if (!inserted && style->OwnsMeta) {
+								std::free(const_cast<char*>(style->Name));
+								std::free(const_cast<char*>(style->Author));
+								style->Name = "";
+								style->Author = "";
+								style->OwnsMeta = false;
 							}
 						}
-						NFD_PathSet_Free(&pathset);
-					} else if (res == NFD_ERROR) {
-						FUNC_ERR(
-							"Failed to open save theme dialog: " << NFD_GetError());
 					}
+					NFD_PathSet_Free(&pathset);
+				} else if (res == NFD_ERROR) {
+					FUNC_ERR(
+						"Failed to open save theme dialog: " << NFD_GetError());
 				}
+			}
 			if (ImGui::Button("Open themes directory")) {
 				OPEN_FILE_EXPLORER(m_ThemesPath);
 			}

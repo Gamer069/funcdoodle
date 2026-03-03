@@ -179,8 +179,8 @@ namespace FuncDoodle {
 						arr.get(3)->as_floating_point()->get());
 			}
 
-			g_LastLoadedTheme = CustomTheme{
-				name_copy, author_copy, style, UUID::FromString(uuid_copy), true};
+			g_LastLoadedTheme = CustomTheme{name_copy, author_copy, style,
+				UUID::FromString(uuid_copy), true};
 			std::free(uuid_copy);
 
 			return &g_LastLoadedTheme;
@@ -201,19 +201,20 @@ namespace FuncDoodle {
 						continue;
 					}
 					std::string pathStr = e.path().string();
-						const char* path = pathStr.c_str();
-						CustomTheme* theme = LoadThemeFromFile(path);
-						if (theme) {
-							auto [it, inserted] = g_Themes.emplace(theme->Uuid, *theme);
-							if (!inserted && theme->OwnsMeta) {
-								std::free(const_cast<char*>(theme->Name));
-								std::free(const_cast<char*>(theme->Author));
-								theme->Name = "";
-								theme->Author = "";
-								theme->OwnsMeta = false;
-							}
+					const char* path = pathStr.c_str();
+					CustomTheme* theme = LoadThemeFromFile(path);
+					if (theme) {
+						auto [it, inserted] =
+							g_Themes.emplace(theme->Uuid, *theme);
+						if (!inserted && theme->OwnsMeta) {
+							std::free(const_cast<char*>(theme->Name));
+							std::free(const_cast<char*>(theme->Author));
+							theme->Name = "";
+							theme->Author = "";
+							theme->OwnsMeta = false;
 						}
 					}
+				}
 			} else {
 				FUNC_FATAL("Failed to load themes -- either the themes/ "
 						   "directory doesn't exist, or it isn't a directory");

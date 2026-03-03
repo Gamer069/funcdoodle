@@ -43,11 +43,14 @@ namespace FuncDoodle {
 						.b = static_cast<unsigned char>(
 							std::clamp(bgCol[2] * 255, 0.0f, 255.0f))};
 				}
-				m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
+
+				m_Frames =
+					std::make_shared<LongIndexArray>(m_Width, m_Height, m_BG);
+
 				m_Frames->PushBackEmpty();
 			}
 			inline const Col BgCol() { return m_BG; }
-			LongIndexArray* AnimFrames();
+			std::shared_ptr<LongIndexArray> AnimFrames();
 			void Write(const char* filePath);
 			void ReadAndPopulate(const char* filePath);
 			void Export(const char* filePath, int format);
@@ -73,7 +76,7 @@ namespace FuncDoodle {
 			char m_Author[100];	 // 100
 			int m_FPS = 0;
 			char m_Desc[512];  // 512
-			LongIndexArray* m_Frames;
+			std::shared_ptr<LongIndexArray> m_Frames;
 			GLFWwindow* m_Window;
 			std::stack<std::unique_ptr<Action>> m_UndoStack;
 			std::stack<std::unique_ptr<Action>> m_RedoStack;

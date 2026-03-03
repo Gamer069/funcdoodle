@@ -13,13 +13,14 @@
 namespace FuncDoodle {
 	class AnimationManager {
 		public:
-			AnimationManager(ProjectFile* proj, AssetLoader* assetLoader);
+			AnimationManager(
+				std::shared_ptr<ProjectFile> proj, AssetLoader* assetLoader);
 			~AnimationManager();
 			void RenderTimeline(bool prevEnabled);
 			void RenderControls();
 
-			const ProjectFile* Proj() const { return m_Proj; }
-			void SetProj(ProjectFile* proj) {
+			const std::shared_ptr<ProjectFile> Proj() const { return m_Proj; }
+			void SetProj(std::shared_ptr<ProjectFile> proj) {
 				m_Proj = proj;
 				m_Player->SetProj(proj);
 			}
@@ -27,7 +28,7 @@ namespace FuncDoodle {
 			void SetPlayer(AnimationPlayer* player) { m_Player = player; }
 
 		private:
-			ProjectFile* m_Proj;
+			std::shared_ptr<ProjectFile> m_Proj;
 			unsigned long m_SelectedFrame;
 			FrameRenderer* m_FrameRenderer;
 			FrameRenderer* m_TimelineFrameRenderer;

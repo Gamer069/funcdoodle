@@ -5,7 +5,7 @@
 namespace FuncDoodle {
 	class AnimationPlayer {
 		public:
-			AnimationPlayer(ProjectFile* proj);
+			AnimationPlayer(const std::shared_ptr<ProjectFile>& proj);
 			~AnimationPlayer();
 			void Play();
 			void Rewind();
@@ -14,8 +14,12 @@ namespace FuncDoodle {
 				m_Playing = playing;
 			}
 			constexpr inline bool Playing() const { return m_Playing; }
-			constexpr inline void SetProj(ProjectFile* proj) { m_Proj = proj; }
-			constexpr inline ProjectFile* Proj() const { return m_Proj; }
+
+			inline void SetProj(std::shared_ptr<ProjectFile> proj) {
+				m_Proj = proj;
+			}
+			inline std::shared_ptr<ProjectFile> Proj() const { return m_Proj; }
+
 			constexpr inline unsigned long CurFrame() const {
 				return m_CurFrame;
 			}
@@ -25,7 +29,7 @@ namespace FuncDoodle {
 
 		private:
 			bool m_Playing;
-			ProjectFile* m_Proj;
+			std::shared_ptr<ProjectFile> m_Proj;
 			unsigned long m_CurFrame = 0L;
 	};
 }  // namespace FuncDoodle

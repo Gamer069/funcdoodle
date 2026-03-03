@@ -2,9 +2,12 @@
 
 #include "Frame.h"
 
+#include <memory>
 #include <vector>
 
 namespace FuncDoodle {
+	class ProjectFile;
+
 	class Action {
 		public:
 			virtual void Undo() = 0;
@@ -19,7 +22,7 @@ namespace FuncDoodle {
 	class DrawAction : public Action {
 		public:
 			DrawAction(int x, int y, Col prev, Col next, unsigned long frameI,
-				void* proj)
+				const std::shared_ptr<ProjectFile>& proj)
 				: m_X(x), m_Y(y), m_Prev(prev), m_Next(next),
 				  m_FrameIndex(frameI), m_Proj(proj) {};
 			DrawAction(const DrawAction& other)
@@ -35,11 +38,12 @@ namespace FuncDoodle {
 			Col m_Prev;
 			Col m_Next;
 			unsigned long m_FrameIndex;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 	};
 	class FillAction : public Action {
 		public:
-			FillAction(Col prev, Col next, unsigned long frameI, void* proj,
+			FillAction(Col prev, Col next, unsigned long frameI,
+				const std::shared_ptr<ProjectFile>& proj,
 				std::vector<std::pair<int, int>> affected)
 				: m_Prev(prev), m_Next(next), m_FrameIndex(frameI),
 				  m_Proj(proj), m_Pixels(affected) {};
@@ -55,17 +59,19 @@ namespace FuncDoodle {
 			Col m_Prev;
 			Col m_Next;
 			unsigned long m_FrameIndex;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 			std::vector<std::pair<int, int>> m_Pixels;
 	};
 	class DeleteFrameAction : public Action {
 		public:
 			// empty constructor
-			DeleteFrameAction(unsigned long frameI, void* proj)
+			DeleteFrameAction(
+				unsigned long frameI, const std::shared_ptr<ProjectFile>& proj)
 				: m_Proj(proj), m_FrameIndex(frameI), m_Empty(true),
 				  m_Frame(nullptr) {}
 			// good constructor
-			DeleteFrameAction(unsigned long frameI, Frame* frame, void* proj)
+			DeleteFrameAction(unsigned long frameI, Frame* frame,
+				const std::shared_ptr<ProjectFile>& proj)
 				: m_Proj(proj), m_FrameIndex(frameI), m_Frame(frame),
 				  m_Empty(false) {}
 
@@ -76,16 +82,18 @@ namespace FuncDoodle {
 			unsigned long m_FrameIndex;
 			bool m_Empty;
 			Frame* m_Frame;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 	};
 	class InsertFrameAction : public Action {
 		public:
 			// empty constructor
-			InsertFrameAction(unsigned long frameI, void* proj)
+			InsertFrameAction(
+				unsigned long frameI, const std::shared_ptr<ProjectFile>& proj)
 				: m_Proj(proj), m_FrameIndex(frameI), m_Empty(true),
 				  m_Frame(nullptr) {}
 			// good constructor
-			InsertFrameAction(unsigned long frameI, Frame* frame, void* proj)
+			InsertFrameAction(unsigned long frameI, Frame* frame,
+				const std::shared_ptr<ProjectFile>& proj)
 				: m_FrameIndex(frameI), m_Proj(proj), m_Empty(false),
 				  m_Frame(frame) {}
 
@@ -96,28 +104,30 @@ namespace FuncDoodle {
 			unsigned long m_FrameIndex;
 			bool m_Empty;
 			Frame* m_Frame;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 	};
 	class MoveFrameLeftAction : public Action {
 		public:
-			MoveFrameLeftAction(unsigned long frameI, void* proj)
+			MoveFrameLeftAction(
+				unsigned long frameI, const std::shared_ptr<ProjectFile>& proj)
 				: m_Proj(proj), m_FrameIndex(frameI) {}
 			void Undo() override;
 			void Redo() override;
 
 		private:
 			unsigned long m_FrameIndex;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 	};
 	class MoveFrameRightAction : public Action {
 		public:
-			MoveFrameRightAction(unsigned long frameI, void* proj)
+			MoveFrameRightAction(
+				unsigned long frameI, const std::shared_ptr<ProjectFile>& proj)
 				: m_Proj(proj), m_FrameIndex(frameI) {}
 			void Undo() override;
 			void Redo() override;
 
 		private:
 			unsigned long m_FrameIndex;
-			void* m_Proj;
+			std::weak_ptr<ProjectFile> m_Proj;
 	};
 }  // namespace FuncDoodle

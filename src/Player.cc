@@ -7,7 +7,8 @@
 #include "Gui.h"
 
 namespace FuncDoodle {
-	AnimationPlayer::AnimationPlayer(ProjectFile* proj) : m_Proj(proj) {
+	AnimationPlayer::AnimationPlayer(const std::shared_ptr<ProjectFile>& proj)
+		: m_Proj(proj) {
 		m_Playing = false;
 	}
 	AnimationPlayer::~AnimationPlayer() {}

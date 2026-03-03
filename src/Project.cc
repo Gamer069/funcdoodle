@@ -42,15 +42,13 @@ namespace FuncDoodle {
 
 		m_BG = bgCol;
 
-		m_Frames = new LongIndexArray(width, height, bgCol);
+		m_Frames = std::make_unique<LongIndexArray>(width, height, bgCol);
 		m_Frames->PushBackEmpty();
 
 		m_UndoStack = std::stack<std::unique_ptr<Action>>();
 		m_RedoStack = std::stack<std::unique_ptr<Action>>();
 	}
-	ProjectFile::~ProjectFile() {
-		delete m_Frames;
-	}
+	ProjectFile::~ProjectFile() {}
 
 	const char* ProjectFile::AnimName() const {
 		return m_Name;
@@ -62,7 +60,7 @@ namespace FuncDoodle {
 	void ProjectFile::Export(const char* filePath, int format) {
 		FUNC_GRAY("Exporting to " << filePath);
 
-		LongIndexArray* frames = AnimFrames();
+		auto frames = AnimFrames();
 
 		char curFilePath[512];
 
@@ -161,7 +159,7 @@ namespace FuncDoodle {
 	const unsigned long ProjectFile::AnimFrameCount() const {
 		return m_Frames->Size();
 	}
-	LongIndexArray* ProjectFile::AnimFrames() {
+	std::shared_ptr<LongIndexArray> ProjectFile::AnimFrames() {
 		return m_Frames;
 	}
 
@@ -255,7 +253,7 @@ namespace FuncDoodle {
 		outFile << m_BG.b;
 		WRITEB(null);
 
-		LongIndexArray* frameData = AnimFrames();
+		auto frameData = AnimFrames();
 
 		// Use a vector and maintain stable indices
 		std::vector<Col> uniqueColors;
@@ -399,7 +397,7 @@ namespace FuncDoodle {
 			plte.push_back(Col{.r = r, .g = g, .b = b});
 		}
 
-		m_Frames = new LongIndexArray(m_Width, m_Height, m_BG);
+		m_Frames = std::make_shared<LongIndexArray>(m_Width, m_Height, m_BG);
 		if (verMajor >= 0 && verMinor >= 2) {
 			FUNC_DBG((unsigned long)frameCount);
 			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {
