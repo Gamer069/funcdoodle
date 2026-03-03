@@ -32,9 +32,7 @@ namespace FuncDoodle {
 														<< " doesn't exist");
 		}
 	}
-	void AssetLoader::UnloadAssets() {
-		delete m_AudioManager;
-	}
+	void AssetLoader::UnloadAssets() {}
 
 	// NOTE: this function doesn't support svg because stb_image doesn't support
 	// it

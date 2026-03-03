@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Project.h"
+#include "Ptr.h"
 
 namespace FuncDoodle {
 	class AnimationPlayer {
 		public:
-			AnimationPlayer(const std::shared_ptr<ProjectFile>& proj);
+			AnimationPlayer(const SharedPtr<ProjectFile>& proj);
 			~AnimationPlayer();
 			void Play();
 			void Rewind();
@@ -15,10 +16,8 @@ namespace FuncDoodle {
 			}
 			constexpr inline bool Playing() const { return m_Playing; }
 
-			inline void SetProj(std::shared_ptr<ProjectFile> proj) {
-				m_Proj = proj;
-			}
-			inline std::shared_ptr<ProjectFile> Proj() const { return m_Proj; }
+			inline void SetProj(SharedPtr<ProjectFile> proj) { m_Proj = proj; }
+			inline SharedPtr<ProjectFile> Proj() const { return m_Proj; }
 
 			constexpr inline unsigned long CurFrame() const {
 				return m_CurFrame;
@@ -29,7 +28,7 @@ namespace FuncDoodle {
 
 		private:
 			bool m_Playing;
-			std::shared_ptr<ProjectFile> m_Proj;
+			SharedPtr<ProjectFile> m_Proj;
 			unsigned long m_CurFrame = 0L;
 	};
 }  // namespace FuncDoodle

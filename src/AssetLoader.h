@@ -5,6 +5,8 @@
 
 #include "AudioManager.h"
 
+#include "Ptr.h"
+
 namespace FuncDoodle {
 	class AssetLoader {
 		public:
@@ -27,6 +29,6 @@ namespace FuncDoodle {
 
 		private:
 			std::filesystem::path m_AssetsPath;
-			AudioManager* m_AudioManager;
+			UniquePtr<AudioManager> m_AudioManager;
 	};
 }  // namespace FuncDoodle

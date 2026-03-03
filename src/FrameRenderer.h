@@ -7,6 +7,8 @@
 
 #include "Player.h"
 
+#include "Ptr.h"
+
 #include <memory>
 #include <vector>
 
@@ -19,10 +21,7 @@ namespace FuncDoodle {
 				Frame* frame, ToolManager* manager, AnimationPlayer* player)
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
 				  m_Player(player) {}
-			~FrameRenderer() {
-				delete m_Grid;
-				// m_FrameRT will be automatically cleaned up by unique_ptr
-			}
+			~FrameRenderer() {}
 			void RenderFrame(unsigned long frameI, bool prevEnabled);
 			void InitPixels(unsigned long frameI, bool prevEnabled);
 
@@ -55,7 +54,7 @@ namespace FuncDoodle {
 			ToolManager* m_ToolManager;
 			int m_PixelScale = 8;
 			ImVec2 m_LastMousePos = ImVec2(-1, -1);
-			Grid* m_Grid;
+			UniquePtr<Grid> m_Grid;
 			AnimationPlayer* m_Player;
 			ImVec2 m_LastHoverMousePos = ImVec2(-1, -1);
 	};

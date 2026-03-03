@@ -31,7 +31,7 @@ namespace FuncDoodle {
 			inline unsigned long Capacity() const { return m_Capacity; }
 
 		private:
-			Frame* m_Data;
+			std::vector<Frame> m_Data;
 			unsigned long m_Capacity;
 			unsigned long size = 0;
 			int m_Width;

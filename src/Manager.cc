@@ -16,20 +16,20 @@
 
 #include "LoadedAssets.h"
 
+#include "Ptr.h"
+
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(
-		std::shared_ptr<ProjectFile> proj, AssetLoader* assetLoader)
+		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
 		  m_AssetLoader(assetLoader) {
-		m_ToolManager = std::make_unique<ToolManager>(assetLoader);
-		m_FrameRenderer = std::make_unique<FrameRenderer>(
-			nullptr, m_ToolManager.get(), m_Player);
-		m_TimelineFrameRenderer = std::make_unique<FrameRenderer>(
-			nullptr, m_ToolManager.get(), m_Player);
+		m_ToolManager.reset(new ToolManager(assetLoader));
+		m_FrameRenderer.reset(
+			new FrameRenderer(nullptr, m_ToolManager.get(), m_Player.get()));
+		m_TimelineFrameRenderer.reset(
+			new FrameRenderer(nullptr, m_ToolManager.get(), m_Player.get()));
 	}
-	AnimationManager::~AnimationManager() {
-		delete m_Player;
-	}
+	AnimationManager::~AnimationManager() {}
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
 		// Set scrollbar size (thickness)
 		ImGui::GetStyle().ScrollbarSize =

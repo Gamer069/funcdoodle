@@ -192,13 +192,14 @@ int main(int argc, char** argv) {
 
 	FuncDoodle::Themes::LoadThemes(themesPath);
 
-	FuncDoodle::Application* application =
-		new FuncDoodle::Application(win, &assetLoader, themesPath);
+	UniquePtr<FuncDoodle::Application> application;
+	application.reset(
+		new FuncDoodle::Application(win, &assetLoader, themesPath));
 
 	ImGuiSettingsHandler handler;
 	handler.TypeName = "UserData";
 	handler.TypeHash = ImHashStr(handler.TypeName);
-	handler.UserData = application;
+	handler.UserData = application.get();
 	handler.ReadOpenFn = [](ImGuiContext*, ImGuiSettingsHandler* handler,
 							 const char* val) -> void* {
 		if (std::strcmp(val, "Preferences") == 0) {
@@ -313,7 +314,7 @@ int main(int argc, char** argv) {
 
 	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
 
-	glfwSetWindowUserPointer(win, application);
+	glfwSetWindowUserPointer(win, application.get());
 	if (icon != nullptr) {
 		glfwSetWindowIcon(win, 1, icon);
 	}
@@ -329,7 +330,7 @@ int main(int argc, char** argv) {
 	}
 
 	while (!glfwWindowShouldClose(win)) {
-		GlobalAppTick(win, lastFrameTime, application, io);
+		GlobalAppTick(win, lastFrameTime, application.get(), io);
 		if (application->ShouldClose()) {
 			break;
 		}
@@ -351,8 +352,6 @@ int main(int argc, char** argv) {
 
 	glfwDestroyWindow(win);
 	glfwTerminate();
-
-	delete application;
 
 	return 0;
 }

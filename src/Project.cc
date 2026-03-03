@@ -42,11 +42,11 @@ namespace FuncDoodle {
 
 		m_BG = bgCol;
 
-		m_Frames = std::make_unique<LongIndexArray>(width, height, bgCol);
+		m_Frames.reset(new LongIndexArray(width, height, bgCol));
 		m_Frames->PushBackEmpty();
 
-		m_UndoStack = std::stack<std::unique_ptr<Action>>();
-		m_RedoStack = std::stack<std::unique_ptr<Action>>();
+		m_UndoStack = std::stack<UniquePtr<Action>>();
+		m_RedoStack = std::stack<UniquePtr<Action>>();
 	}
 	ProjectFile::~ProjectFile() {}
 
@@ -159,7 +159,7 @@ namespace FuncDoodle {
 	const unsigned long ProjectFile::AnimFrameCount() const {
 		return m_Frames->Size();
 	}
-	std::shared_ptr<LongIndexArray> ProjectFile::AnimFrames() {
+	SharedPtr<LongIndexArray> ProjectFile::AnimFrames() {
 		return m_Frames;
 	}
 
@@ -201,7 +201,7 @@ namespace FuncDoodle {
 
 		m_Saved = false;
 
-		std::unique_ptr<Action> action = std::move(m_UndoStack.top());
+		UniquePtr<Action> action = std::move(m_UndoStack.top());
 		m_UndoStack.pop();
 
 		action->Undo();
@@ -215,7 +215,7 @@ namespace FuncDoodle {
 			return;
 		}
 		m_Saved = false;
-		std::unique_ptr<Action> action = std::move(m_RedoStack.top());
+		UniquePtr<Action> action = std::move(m_RedoStack.top());
 		m_RedoStack.pop();
 
 		action->Redo();
@@ -322,8 +322,8 @@ namespace FuncDoodle {
 			FUNC_FATAL("This isn't a funcdoodle project...");
 		}
 
-		m_UndoStack = std::stack<std::unique_ptr<Action>>();
-		m_RedoStack = std::stack<std::unique_ptr<Action>>();
+		m_UndoStack = std::stack<UniquePtr<Action>>();
+		m_RedoStack = std::stack<UniquePtr<Action>>();
 
 		int verMajor = 0;
 		file.read(reinterpret_cast<char*>(&verMajor), sizeof(verMajor));
@@ -397,7 +397,7 @@ namespace FuncDoodle {
 			plte.push_back(Col{.r = r, .g = g, .b = b});
 		}
 
-		m_Frames = std::make_shared<LongIndexArray>(m_Width, m_Height, m_BG);
+		m_Frames.reset(new LongIndexArray(m_Width, m_Height, m_BG));
 		if (verMajor >= 0 && verMinor >= 2) {
 			FUNC_DBG((unsigned long)frameCount);
 			for (unsigned long i = 0; i < (unsigned long)frameCount; i++) {

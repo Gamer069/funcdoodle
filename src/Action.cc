@@ -40,11 +40,11 @@ namespace FuncDoodle {
 					proj->AnimFrames()->InsertBeforeEmpty(m_FrameIndex);
 				else
 					proj->AnimFrames()->PushBackEmpty();
-			} else {
+			} else if (m_Frame.has_value()) {
 				if (m_FrameIndex > 1)
-					proj->AnimFrames()->InsertBefore(m_FrameIndex, m_Frame);
+					proj->AnimFrames()->InsertBefore(m_FrameIndex, *m_Frame);
 				else
-					proj->AnimFrames()->PushBack(m_Frame);
+					proj->AnimFrames()->PushBack(&(*m_Frame));
 			}
 		}
 	}
@@ -64,11 +64,11 @@ namespace FuncDoodle {
 					proj->AnimFrames()->InsertBeforeEmpty(m_FrameIndex);
 				else
 					proj->AnimFrames()->PushBackEmpty();
-			} else {
+			} else if (m_Frame.has_value()) {
 				if (m_FrameIndex > 1)
-					proj->AnimFrames()->InsertBefore(m_FrameIndex, m_Frame);
+					proj->AnimFrames()->InsertBefore(m_FrameIndex, *m_Frame);
 				else
-					proj->AnimFrames()->PushBack(m_Frame);
+					proj->AnimFrames()->PushBack(&(*m_Frame));
 			}
 		}
 	}

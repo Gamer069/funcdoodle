@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DynArr.h"
+#include "Ptr.h"
 
 #include <stack>
 
@@ -50,7 +51,7 @@ namespace FuncDoodle {
 				m_Frames->PushBackEmpty();
 			}
 			inline const Col BgCol() { return m_BG; }
-			std::shared_ptr<LongIndexArray> AnimFrames();
+			SharedPtr<LongIndexArray> AnimFrames();
 			void Write(const char* filePath);
 			void ReadAndPopulate(const char* filePath);
 			void Export(const char* filePath, int format);
@@ -76,10 +77,10 @@ namespace FuncDoodle {
 			char m_Author[100];	 // 100
 			int m_FPS = 0;
 			char m_Desc[512];  // 512
-			std::shared_ptr<LongIndexArray> m_Frames;
+			SharedPtr<LongIndexArray> m_Frames;
 			GLFWwindow* m_Window;
-			std::stack<std::unique_ptr<Action>> m_UndoStack;
-			std::stack<std::unique_ptr<Action>> m_RedoStack;
+			std::stack<UniquePtr<Action>> m_UndoStack;
+			std::stack<UniquePtr<Action>> m_RedoStack;
 			bool m_Saved = false;
 			Col m_BG;
 	};

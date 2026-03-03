@@ -3,6 +3,7 @@
 #include "AssetLoader.h"
 #include "Manager.h"
 #include "Project.h"
+#include "Ptr.h"
 #include "UUID.h"
 
 #include <functional>
@@ -26,12 +27,8 @@ namespace FuncDoodle {
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
 			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
-			inline std::shared_ptr<ProjectFile> CurProj() {
-				return m_CurrentProj;
-			}
-			inline std::shared_ptr<ProjectFile> CacheProj() {
-				return m_CacheProj;
-			}
+			inline SharedPtr<ProjectFile> CurProj() { return m_CurrentProj; }
+			inline SharedPtr<ProjectFile> CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
 			inline UUID Theme() { return m_Theme; }
 			inline void SetTheme(UUID theme) { m_Theme = theme; }
@@ -54,9 +51,9 @@ namespace FuncDoodle {
 		private:
 			std::string m_FilePath;
 			bool m_NewProjOpen = false;
-			std::shared_ptr<ProjectFile> m_CurrentProj;
-			std::shared_ptr<ProjectFile> m_CacheProj;
-			std::unique_ptr<AnimationManager> m_Manager;
+			SharedPtr<ProjectFile> m_CurrentProj;
+			SharedPtr<ProjectFile> m_CacheProj;
+			UniquePtr<AnimationManager> m_Manager;
 			GLFWwindow* m_Window;
 			AssetLoader* m_AssetLoader;
 			int m_ExportFormat = 0;

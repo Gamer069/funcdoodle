@@ -7,7 +7,7 @@
 #include "Gui.h"
 
 namespace FuncDoodle {
-	AnimationPlayer::AnimationPlayer(const std::shared_ptr<ProjectFile>& proj)
+	AnimationPlayer::AnimationPlayer(const SharedPtr<ProjectFile>& proj)
 		: m_Proj(proj) {
 		m_Playing = false;
 	}

@@ -252,8 +252,8 @@ namespace FuncDoodle {
 		}
 
 		if (m_CurrentProj == nullptr) {
-			m_CurrentProj = std::make_shared<ProjectFile>((char*)"", 1, 1,
-				(char*)"", 0, (char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0});
+			m_CurrentProj.reset(new ProjectFile((char*)"", 1, 1, (char*)"", 0,
+				(char*)"", m_Window, Col{.r = 0, .g = 0, .b = 0}));
 		}
 
 		m_CurrentProj->ReadAndPopulate(m_FilePath.c_str());
@@ -511,8 +511,8 @@ namespace FuncDoodle {
 				author[sizeof(author) - 1] = '\0';
 				fps = 10;
 				strcpy(desc, "Simple test project");
-				m_CacheProj = std::make_shared<ProjectFile>(
-					name, width, height, author, fps, desc, m_Window, Col());
+				m_CacheProj.reset(new ProjectFile(
+					name, width, height, author, fps, desc, m_Window, Col()));
 			} else {
 				strcpy(name, m_CacheProj->AnimName());
 				width = m_CacheProj->AnimWidth();
@@ -572,8 +572,8 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				m_Manager = std::make_unique<AnimationManager>(
-					m_CurrentProj, m_AssetLoader);
+				m_Manager.reset(
+					new AnimationManager(m_CurrentProj, m_AssetLoader));
 				m_NewProjOpen = false;
 			}
 
