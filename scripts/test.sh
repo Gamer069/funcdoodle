@@ -1,11 +1,42 @@
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <playlist> <fps>"
-    exit 1
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+	echo "Usage: $0 [Debug|Release] [clean=true|false]"
+	exit 1
+}
+
+if [[ $# -ne 0 ]] && [[ $# -ne 2 ]]; then
+	usage
 fi
 
-playlist="$1"
-fps="$2"
+mode="${1:-Debug}"
+clean="${2:-false}"
 
-image_display_duration=$(echo "scale=4; 1 / $fps" | bc)
+mode_lower="$(echo "$mode" | tr '[:upper:]' '[:lower:]')"
+if [[ "$mode_lower" != "debug" && "$mode_lower" != "release" ]]; then
+	echo "Mode must be Debug or Release -- got '$mode'"
+	exit 1
+fi
+mode="$(echo "$mode_lower" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')"
 
-mpv --image-display-duration=$image_display_duration --no-correct-pts --keep-open=yes --window-scale=32 --scale=nearest --loop-playlist=inf --fps=$fps $1
+clean_lower="$(echo "$clean" | tr '[:upper:]' '[:lower:]')"
+if [[ "$clean_lower" != "true" && "$clean_lower" != "false" ]]; then
+	echo "clean must be true or false -- got '$clean'"
+	exit 1
+fi
+
+if [[ "$clean_lower" == "true" ]]; then
+	rm -rf bin
+fi
+
+mkdir -p bin
+cd bin
+cmake -DCMAKE_BUILD_TYPE="$mode" -DISTILING=ON -DBUILD_TESTS=ON ..
+make -j4
+cd ..
+
+ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0}" \
+LSAN_OPTIONS="${LSAN_OPTIONS:-detect_leaks=0}" \
+./bin/FuncDoodle

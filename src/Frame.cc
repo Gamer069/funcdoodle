@@ -235,4 +235,10 @@ namespace FuncDoodle {
 		}
 		return *this;
 	}
+	bool Frame::operator==(const Frame& other) const {
+		return m_Pixels.Data() == other.m_Pixels.Data() &&
+			   m_Pixels.Width() == other.m_Pixels.Width() &&
+			   m_Pixels.Height() == other.m_Pixels.Height() &&
+			   m_Pixels.BgCol() == other.m_Pixels.BgCol();
+	}
 }  // namespace FuncDoodle

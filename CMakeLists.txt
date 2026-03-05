@@ -5,7 +5,7 @@ if(UNIX)
 	set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 if(APPLE)
 	project(FuncDoodle C CXX OBJC)
@@ -16,85 +16,47 @@ endif()
 if(UNIX)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
+option(BUILD_TESTS "Build and run tests from test/*.cc" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_COLOR_MAKEFILE ON)
 
-# Prefer colored compiler diagnostics when supported.
 if(NOT MSVC)
 	set(CMAKE_COLOR_DIAGNOSTICS ON)
 endif()
 
-# Set build configurations
-#set(CMAKE_BUILD_TYPE Release)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
-set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS}")
-
-# Glad sources
-set(GLAD_SOURCES
-	lib/glad/src/glad.c
-)
-
-# ImGui sources
-set(IMGUI_SOURCES
-	lib/imgui/imgui.cpp
-	lib/imgui/imgui_draw.cpp
-	lib/imgui/imgui_widgets.cpp
-	lib/imgui/imgui_demo.cpp
-	lib/imgui/imgui_tables.cpp
-	lib/imgui/backends/imgui_impl_glfw.cpp
-	lib/imgui/backends/imgui_impl_opengl3.cpp
-)
-
-if(APPLE)
-	set(NFD_SOURCES lib/nfd/src/nfd_cocoa.m lib/nfd/src/nfd_common.c)
-elseif(WIN32)
-	set(NFD_SOURCES lib/nfd/src/nfd_win.cpp lib/nfd/src/nfd_common.c)
-elseif(UNIX AND NOT APPLE)
-	set(NFD_SOURCES lib/nfd/src/nfd_gtk.c lib/nfd/src/nfd_common.c)
+if(UNIX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
 endif()
 
-set(PORTAUDIO_LIBDIR "" CACHE STRING "required")
-set(PORTAUDIO_INCLDIR "" CACHE STRING "required")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(FuncDoodleSources)
+include(FuncDoodlePlatform)
+include(FuncDoodleBuild)
 
-if(NOT PORTAUDIO_LIBDIR)
-	if(APPLE)
-		set(PORTAUDIO_LIBDIR "/usr/local/opt/portaudio/lib/")
-	elseif(UNIX AND NOT APPLE)
-		set(PORTAUDIO_LIBDIR "/usr/lib/")
-	elseif(WIN32)
-		set(PORTAUDIO_LIBDIR "C:\\portaudio\\lib")
-	endif()
-endif()
-
-if(NOT PORTAUDIO_INCLDIR)
-	if(APPLE)
-		set(PORTAUDIO_INCLDIR "/usr/local/opt/portaudio/include")
-	elseif(UNIX AND NOT APPLE)
-		set(PORTAUDIO_INCLDIR "/usr/local/include")
-	elseif(WIN32)
-		set(PORTAUDIO_INCLDIR "C:\\portaudio\\incl")
-	endif()
-endif()
+funcdoodle_set_nfd_sources(NFD_SOURCES)
+funcdoodle_set_portaudio_defaults()
 
 add_subdirectory(lib/glfw)
-
 file(GLOB SRC "src/*.cc")
 
-# Add executable
 add_executable(FuncDoodle
-	${GLAD_SOURCES}
-	${IMGUI_SOURCES}
+	${FUNCDOODLE_GLAD_SOURCES}
+	${FUNCDOODLE_IMGUI_SOURCES}
 	${NFD_SOURCES}
-	${OPENAL_SOURCES}
 	${SRC}
 )
 
-# Include directories
+if(BUILD_TESTS)
+	file(GLOB TEST_SOURCES "test/*.cc")
+	target_sources(FuncDoodle PRIVATE ${TEST_SOURCES})
+	target_compile_definitions(FuncDoodle PRIVATE FUNCDOODLE_BUILD_TESTS)
+	message(STATUS "BUILD_TESTS enabled -- test sources: ${TEST_SOURCES}")
+endif()
+
 target_include_directories(FuncDoodle PRIVATE
 	lib/glfw/include/
 	${PORTAUDIO_INCLDIR}
@@ -105,78 +67,12 @@ target_include_directories(FuncDoodle PRIVATE
 	lib/stb/
 	lib/
 	lib/toml++/
-	${PORTAUDIO_INCLDIR}
+	src/
+	test/
 )
 
-if(UNIX)
-	target_link_libraries(FuncDoodle
-		glfw
-		${CMAKE_DL_LIBS}
-		m
-		pthread
-		dl
-	)
-elseif(WIN32)
-	target_link_libraries(FuncDoodle
-		glfw
-		${CMAKE_DL_LIBS}
-	)
-endif()
-
-if(UNIX AND NOT APPLE)
-	find_package(PkgConfig REQUIRED)
-	pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-	target_link_libraries(FuncDoodle ${GTK3_LIBRARIES})
-	target_include_directories(FuncDoodle PRIVATE ${GTK3_INCLUDE_DIRS})
-endif()
-
-# Link libraries based on platform
-if(APPLE)
-	target_link_libraries(FuncDoodle
-		${PORTAUDIO_LIBDIR}libportaudio.dylib
-		"-framework OpenGL"
-		"-framework Cocoa"
-		"-framework IOKit"
-		"-framework CoreFoundation"
-		"-framework AppKit"
-	)
-elseif(UNIX AND NOT APPLE)
-	target_link_libraries(FuncDoodle
-		${PORTAUDIO_LIBDIR}libportaudio.so
-	)
-elseif(WIN32)
-	target_link_libraries(FuncDoodle
-		${CMAKE_DL_LIBS}
-		${PORTAUDIO_LIBDIR}portaudio_x64.lib
-	)
-endif()
+funcdoodle_apply_platform_links(FuncDoodle)
 
 add_compile_definitions(__WINE__)
-
 message(STATUS "CMAKE BUILD TYPE ${CMAKE_BUILD_TYPE}")
-# Build options
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	target_compile_definitions(FuncDoodle PRIVATE DEBUG)
-	if(UNIX AND NOT APPLE)
-		if(ISTILING)
-			target_compile_definitions(FuncDoodle PRIVATE TILING)
-		endif()
-	endif()
-	if(NOT WIN32)
-		target_compile_options(FuncDoodle PRIVATE -g -gdwarf-4 -fsanitize=address -fno-omit-frame-pointer)
-		target_link_options(FuncDoodle PRIVATE -fsanitize=address)
-	endif()
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-	if(UNIX AND NOT APPLE)
-		if(ISTILING)
-			target_compile_definitions(FuncDoodle PRIVATE TILING)
-		endif()
-	endif()
-	target_compile_definitions(FuncDoodle PRIVATE NDEBUG)
-	target_compile_options(FuncDoodle PRIVATE -O3)
-endif()
-
-# Extra flags
-if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=deprecated-declarations -Werror")
-endif()
+funcdoodle_apply_build_config(FuncDoodle)

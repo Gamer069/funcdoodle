@@ -44,7 +44,7 @@ fi
 
 mkdir -p bin || exit -1 
 cd bin || exit -1 
-cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) .. || exit -1
+cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) -DBUILD_TESTS=OFF .. || exit -1
 make || exit -1
 cp -r ../assets . || exit -1
 cp -r ../themes . || exit -1

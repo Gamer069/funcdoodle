@@ -28,7 +28,7 @@ namespace FuncDoodle {
 		return !(*this == other);
 	}
 	bool UUID::operator==(const UUID& other) const {
-		return other.ToString() == this->ToString();
+		return m_Bytes == other.m_Bytes;
 	}
 	UUID UUID::Gen() {
 		std::random_device rd;

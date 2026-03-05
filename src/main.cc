@@ -20,6 +20,7 @@
 #include "App.h"
 #include "AssetLoader.h"
 #include "Audio.h"
+#include "Test.h"
 
 #include "LoadedAssets.h"
 
@@ -30,6 +31,10 @@
 #include "exepath.h"
 
 float SAMPLE_RATE = 44100.0;
+
+#ifdef FUNCDOODLE_BUILD_TESTS
+int FuncDoodle_RunTests();
+#endif
 
 void GLFWErrorCallback(int error, const char* desc) {
 	FUNC_ERR("GLFW ERROR (" << error << "): " << desc);
@@ -95,6 +100,14 @@ GLFWimage* GlobalLoadWinImage(const std::filesystem::path& assetsPath) {
 }
 
 int main(int argc, char** argv) {
+#ifdef FUNCDOODLE_BUILD_TESTS
+	(void)argc;
+	(void)argv;
+	FuncDoodle_RunTests();
+	FuncDoodle::TestRegistry::Instance().PrintSummary();
+	return 0;
+#endif
+
 	const char* path = exepath::get();
 	FUNC_DBG("Starting funcdoodle with exe path: " << path);
 	const char* lastSlash = strrchr(path, '/');
