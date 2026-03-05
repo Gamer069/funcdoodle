@@ -1,5 +1,7 @@
 # TODO
+
 - [x] a little bit of refactoring for easier maintainance
+- [x] code separation, neat and organized setup
 - [ ] fix infinite tech debt (wip)
 - [ ] sounds for animations
 - [ ] more shortcuts, more util stuff, helper for moving objects.

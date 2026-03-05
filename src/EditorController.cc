@@ -1,9 +1,16 @@
 #include "EditorController.h"
 
+#include "Grid.h"
 #include "Player.h"
 #include "Project.h"
+#include "Tool.h"
 #include "ToolManager.h"
+#include "imgui.h"
+#include "imgui_internal.h"
 
+#include <algorithm>
+#include <cmath>
+#include <cstring>
 #include <stack>
 
 namespace FuncDoodle {
@@ -18,16 +25,16 @@ namespace FuncDoodle {
 		}
 
 		switch (toolManager->SelectedTool()) {
-			case 0:
+			case ToolType::Pencil:
 				return PaintPencil(frame, frameI, toolManager, player, pixelX,
 					pixelY, mouseDown);
-			case 1:
+			case ToolType::Eraser:
 				return PaintEraser(frame, frameI, toolManager, player, pixelX,
 					pixelY, mouseDown);
-			case 2:
+			case ToolType::Bucket:
 				return PaintBucket(frame, frameI, toolManager, player, pixelX,
 					pixelY, mouseClicked);
-			case 3:
+			case ToolType::Picker:
 				return PaintPicker(frame, toolManager, pixelX, pixelY);
 			default:
 				return false;
@@ -251,4 +258,171 @@ namespace FuncDoodle {
 		m_StrokeChanges.clear();
 		m_StrokeIndexByKey.clear();
 	}
+
+	void EditorController::RenderCanvas(CanvasContext& context) {
+		(void)context.prevEnabled;
+		if (!context.frame || !context.player || !context.player->Proj() ||
+			!context.toolManager || !context.grid || !context.pixelScale ||
+			!context.lastMousePos) {
+			return;
+		}
+		const ImageArray* pixels = context.frame->Pixels();
+		if (!pixels) {
+			return;
+		}
+
+		HandleCanvasInput(context);
+
+		ImVec2 windowPos = ImGui::GetWindowPos();
+		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
+		const float frameWidth = pixels->Width() * (*context.pixelScale);
+		const float frameHeight = pixels->Height() * (*context.pixelScale);
+		const float startX =
+			windowPos.x + (contentRegion.x - frameWidth) * 0.5f + 9;
+		const float startY =
+			windowPos.y + (contentRegion.y - frameHeight) * 0.5f + 41;
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+		ApplyToolAt(context, pixels, startX, startY, frameWidth, frameHeight);
+		DrawCanvas(
+			context, pixels, drawList, startX, startY, frameWidth, frameHeight);
+	}
+
+	void EditorController::HandleCanvasInput(CanvasContext& context) {
+		int& pixelScale = *context.pixelScale;
+		Grid* grid = context.grid;
+
+		if (!ImGui::IsAnyItemActive() && ImGui::IsWindowFocused()) {
+			if (ImGui::IsKeyPressed(ImGuiKey_Equal)) {
+				pixelScale += 1;
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_Minus)) {
+				pixelScale = std::max(1, pixelScale - 1);
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_0)) {
+				pixelScale = 1;
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_T)) {
+				if (grid->GridWidth() > 1)
+					grid->SetGridWidth(grid->GridWidth() - 1);
+				if (grid->GridHeight() > 1)
+					grid->SetGridHeight(grid->GridHeight() - 1);
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_Y)) {
+				grid->SetGridWidth(grid->GridWidth() + 1);
+				grid->SetGridHeight(grid->GridHeight() + 1);
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_G)) {
+				if (grid->GridVisibility())
+					grid->HideGrid();
+				else
+					grid->ShowGrid();
+			}
+		}
+	}
+
+	void EditorController::ApplyToolAt(CanvasContext& context,
+		const ImageArray* pixels, float startX, float startY, float frameWidth,
+		float frameHeight) {
+		const ImVec2 mousePos = ImGui::GetMousePos();
+		const ImVec2 frameMin(startX, startY);
+		const ImVec2 frameMax(startX + frameWidth, startY + frameHeight);
+		const bool shouldDraw = ImGui::IsMouseDown(0);
+
+		if (ImGui::IsMouseHoveringRect(frameMin, frameMax) && shouldDraw) {
+			const ImVec2 currentPixel(
+				(mousePos.x - startX) / (*context.pixelScale),
+				(mousePos.y - startY) / (*context.pixelScale));
+			if (currentPixel.x >= 0 && currentPixel.x < pixels->Width() &&
+				currentPixel.y >= 0 && currentPixel.y < pixels->Height()) {
+				const ToolType selectedTool =
+					context.toolManager->SelectedTool();
+				ImGuiContext* ctx = ImGui::GetCurrentContext();
+				ImGuiWindow* focusedWindow = ctx->NavWindow;
+				const bool isFrameWindowFocused =
+					focusedWindow &&
+					std::strcmp(focusedWindow->Name, "Frame") == 0;
+
+				if (isFrameWindowFocused) {
+					if (context.lastMousePos->x >= 0 &&
+						context.lastMousePos->y >= 0 &&
+						(selectedTool == ToolType::Pencil ||
+							selectedTool == ToolType::Eraser)) {
+						const float dx =
+							currentPixel.x - context.lastMousePos->x;
+						const float dy =
+							currentPixel.y - context.lastMousePos->y;
+						const int steps =
+							std::max(1, std::max(static_cast<int>(std::abs(dx)),
+											static_cast<int>(std::abs(dy))));
+						for (int i = 0; i <= steps; i++) {
+							const float t = static_cast<float>(i) / steps;
+							const ImVec2 interpPixel(
+								context.lastMousePos->x + dx * t,
+								context.lastMousePos->y + dy * t);
+							Paint(context.frame, context.frameI,
+								context.toolManager, context.player,
+								static_cast<int>(interpPixel.x),
+								static_cast<int>(interpPixel.y), true, false);
+						}
+					} else {
+						Paint(context.frame, context.frameI,
+							context.toolManager, context.player,
+							static_cast<int>(currentPixel.x),
+							static_cast<int>(currentPixel.y), shouldDraw,
+							ImGui::IsMouseClicked(0));
+					}
+				}
+				*context.lastMousePos = currentPixel;
+			}
+		} else if (!ImGui::IsMouseDown(0) ||
+				   !ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
+			*context.lastMousePos = ImVec2(-1, -1);
+		}
+
+		if (!ImGui::IsMouseDown(0)) {
+			EndStroke(context.player);
+		}
+	}
+
+	void EditorController::DrawCanvas(CanvasContext& context,
+		const ImageArray* pixels, ImDrawList* drawList, float startX,
+		float startY, float frameWidth, float frameHeight) {
+		for (int y = 0; y < pixels->Height(); y++) {
+			for (int x = 0; x < pixels->Width(); x++) {
+				const Col col = pixels->Get(x, y);
+				const ImVec2 topLeft(startX + x * (*context.pixelScale),
+					startY + y * (*context.pixelScale));
+				const ImVec2 bottomRight(
+					startX + (x + 1) * (*context.pixelScale),
+					startY + (y + 1) * (*context.pixelScale));
+				drawList->AddRectFilled(
+					topLeft, bottomRight, IM_COL32(col.r, col.g, col.b, 255));
+			}
+		}
+
+		if (context.index > 0 && context.previousFrame &&
+			context.previousFrame->Pixels() && !context.player->Playing()) {
+			const ImageArray* prevPixels = context.previousFrame->Pixels();
+			for (int y = 0; y < prevPixels->Height(); y++) {
+				for (int x = 0; x < prevPixels->Width(); x++) {
+					const Col col = prevPixels->Get(x, y);
+					const Col curCol = pixels->Get(x, y);
+					if (curCol.r == 255 && curCol.g == 255 && curCol.b == 255) {
+						const ImVec2 topLeft(startX + x * (*context.pixelScale),
+							startY + y * (*context.pixelScale));
+						const ImVec2 bottomRight(
+							startX + (x + 1) * (*context.pixelScale),
+							startY + (y + 1) * (*context.pixelScale));
+						drawList->AddRectFilled(topLeft, bottomRight,
+							IM_COL32(col.r, col.g, col.b, 128));
+					}
+				}
+			}
+		}
+
+		context.grid->RenderWithDrawList(drawList, ImVec2(startX, startY),
+			ImVec2(startX + frameWidth, startY + frameHeight));
+	}
+
 }  // namespace FuncDoodle

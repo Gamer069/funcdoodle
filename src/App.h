@@ -78,6 +78,13 @@ namespace FuncDoodle {
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
 			bool m_UndoByStroke = false;
+			char* m_NewProjShortcut = nullptr;
+			char* m_OpenShortcut = nullptr;
+			char* m_SaveShortcut = nullptr;
+			char* m_ExportShortcut = nullptr;
+			char* m_QuitShortcut = nullptr;
+			char* m_PrefShortcut = nullptr;
+			char* m_ThemeEditorShortcut = nullptr;
 			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;
 	};

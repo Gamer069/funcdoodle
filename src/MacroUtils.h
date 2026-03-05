@@ -1,6 +1,12 @@
 #pragma once
 
+#include <algorithm>
+#include <cstring>
 #include <iostream>
+#include <sstream>
+#include <vector>
+
+extern std::vector<char*> s_Logs;
 
 #ifdef DEBUG
 #define FUNC_AOV(x)                                                            \
@@ -26,8 +32,7 @@
 #define FUNC_AOV_EX(x, str)                                                    \
 	do {                                                                       \
 		if (!(x)) {                                                            \
-			std::cout << "FUNC_AOV_EX failed with this message: "              \
-					  << std::endl;                                            \
+			std::cout << "VERIFICATION FAILED: " << std::endl;                 \
 			FUNC_INF(str);                                                     \
 		}                                                                      \
 	} while (0)
@@ -55,10 +60,21 @@
 #define FUNC_DASS(x)
 #endif
 
+#define PUSH_LOG(prefix, x)                                                    \
+	do {                                                                       \
+		std::ostringstream _oss;                                               \
+		_oss << prefix << x;                                                   \
+		std::string _str = _oss.str();                                         \
+		char* _buf = new char[_str.size() + 1];                                \
+		std::memcpy(_buf, _str.c_str(), _str.size() + 1);                      \
+		s_Logs.push_back(_buf);                                                \
+	} while (0)
+
 #ifdef DEBUG
 #define FUNC_DBG(x)                                                            \
 	do {                                                                       \
 		std::cout << "\033[36m[Debug]: " << x << "\033[0m" << std::endl;       \
+		PUSH_LOG("[Debug]: ", x);                                              \
 	} while (0)
 #else
 #define FUNC_DBG(x)
@@ -67,26 +83,31 @@
 #define FUNC_INF(x)                                                            \
 	do {                                                                       \
 		std::cout << "\033[34m[Info]: " << x << "\033[0m" << std::endl;        \
+		PUSH_LOG("[Info]: ", x);                                               \
 	} while (0)
 
 #define FUNC_WARN(x)                                                           \
 	do {                                                                       \
 		std::cout << "\033[33m[Warn]: " << x << "\033[0m" << std::endl;        \
+		PUSH_LOG("[Warn]: ", x);                                               \
 	} while (0)
 
 #define FUNC_GRAY(x)                                                           \
 	do {                                                                       \
 		std::cout << "\033[90m[Note]: " << x << "\033[0m" << std::endl;        \
+		PUSH_LOG("[Note]: ", x);                                               \
 	} while (0)
 
 #define FUNC_ERR(x)                                                            \
 	do {                                                                       \
 		std::cout << "\033[1;35m[Error]: " << x << "\033[0m" << std::endl;     \
+		PUSH_LOG("[Error]: ", x);                                              \
 	} while (0)
 
 #define FUNC_FATAL(x)                                                          \
 	do {                                                                       \
 		std::cout << "\033[1;31m[FATAL]: " << x << "\033[0m" << std::endl;     \
+		PUSH_LOG("[FATAL]: ", x);                                              \
 		std::exit(-1);                                                         \
 	} while (0)
 

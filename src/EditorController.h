@@ -3,6 +3,7 @@
 #include "Action.h"
 #include "Frame.h"
 #include "Ptr.h"
+#include "imgui.h"
 
 #include <unordered_map>
 #include <vector>
@@ -10,14 +11,29 @@
 namespace FuncDoodle {
 	class ToolManager;
 	class AnimationPlayer;
+	class Grid;
 
 	class EditorController {
 		public:
+			struct CanvasContext {
+					Frame* frame = nullptr;
+					Frame* previousFrame = nullptr;
+					int index = 0;
+					ToolManager* toolManager = nullptr;
+					AnimationPlayer* player = nullptr;
+					Grid* grid = nullptr;
+					int* pixelScale = nullptr;
+					ImVec2* lastMousePos = nullptr;
+					unsigned long frameI = 0;
+					bool prevEnabled = false;
+			};
+
 			EditorController();
 			bool Paint(Frame* frame, unsigned long frameI,
 				ToolManager* toolManager, AnimationPlayer* player, int pixelX,
 				int pixelY, bool mouseDown, bool mouseClicked);
 			void SetUndoByStroke(bool undoByStroke, AnimationPlayer* player);
+			void RenderCanvas(CanvasContext& context);
 			void EndStroke(AnimationPlayer* player);
 
 		private:
@@ -36,6 +52,13 @@ namespace FuncDoodle {
 				Frame* targetFrame, std::vector<std::pair<int, int>>& changed);
 			void RecordStrokeChange(unsigned long frameI, int x, int y,
 				const Col& prev, const Col& next);
+			void HandleCanvasInput(CanvasContext& context);
+			void ApplyToolAt(CanvasContext& context, const ImageArray* pixels,
+				float startX, float startY, float frameWidth,
+				float frameHeight);
+			void DrawCanvas(CanvasContext& context, const ImageArray* pixels,
+				ImDrawList* drawList, float startX, float startY,
+				float frameWidth, float frameHeight);
 			void FinalizeStroke(AnimationPlayer* player);
 
 			bool m_UndoByStroke = false;

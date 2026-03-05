@@ -22,6 +22,8 @@
 #include "nfd.h"
 
 namespace FuncDoodle {
+	char* GlobalGetShortcut(const char* key, bool shift, bool super);
+
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
 		std::filesystem::path themesPath)
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
@@ -31,8 +33,30 @@ namespace FuncDoodle {
 		  m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
+		m_NewProjShortcut = GlobalGetShortcut("N", false, false);
+		m_OpenShortcut = GlobalGetShortcut("O", false, false);
+		m_SaveShortcut = GlobalGetShortcut("S", false, false);
+		m_ExportShortcut = GlobalGetShortcut("E", false, false);
+		m_QuitShortcut = GlobalGetShortcut("Q", false, false);
+		m_PrefShortcut = GlobalGetShortcut(",", false, false);
+		m_ThemeEditorShortcut = GlobalGetShortcut("T", false, false);
 	}
-	Application::~Application() {}
+
+	Application::~Application() {
+		free(m_NewProjShortcut);
+		free(m_OpenShortcut);
+		free(m_SaveShortcut);
+		free(m_ExportShortcut);
+		free(m_QuitShortcut);
+		free(m_PrefShortcut);
+		free(m_ThemeEditorShortcut);
+
+		for (char* log : s_Logs) {
+			delete[] log;
+		}
+		s_Logs.clear();
+	}
+
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		int maxLen = 11 + strlen(key);
 
@@ -110,15 +134,27 @@ namespace FuncDoodle {
 			return result;
 		};
 
-		// Parse each provided shortcut once
-		Shortcut newProjShortcut = parseShortcut(newProj);
-		Shortcut openShortcut = parseShortcut(open);
-		Shortcut saveShortcut = parseShortcut(save);
-		Shortcut exportShortcutShortcut = parseShortcut(exportShortcut);
-		Shortcut quitShortcut = parseShortcut(quit);
-		Shortcut prefShortcut = parseShortcut(pref);
-		Shortcut themeEditorShortcutShortcut =
-			parseShortcut(themeEditorShortcut);
+		// Cache parsed shortcuts once instead of reparsing each frame.
+		static bool shortcutsInitialized = false;
+		static Shortcut newProjShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut openShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut saveShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut exportShortcutShortcut = {
+			false, false, false, ImGuiKey_None};
+		static Shortcut quitShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut prefShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut themeEditorShortcutShortcut = {
+			false, false, false, ImGuiKey_None};
+		if (!shortcutsInitialized) {
+			newProjShortcut = parseShortcut(newProj);
+			openShortcut = parseShortcut(open);
+			saveShortcut = parseShortcut(save);
+			exportShortcutShortcut = parseShortcut(exportShortcut);
+			quitShortcut = parseShortcut(quit);
+			prefShortcut = parseShortcut(pref);
+			themeEditorShortcutShortcut = parseShortcut(themeEditorShortcut);
+			shortcutsInitialized = true;
+		}
 
 		// Inline lambda to check if a given shortcut is pressed
 		auto isShortcutPressed = [&](const Shortcut& shortcut) {
@@ -164,17 +200,12 @@ namespace FuncDoodle {
 		if (!m_CurrentProj)
 			RenderOptions();
 
-		char* newProjShortcut = GlobalGetShortcut("N", false, false);
-		char* openShortcut = GlobalGetShortcut("O", false, false);
-		char* saveShortcut = GlobalGetShortcut("S", false, false);
-		char* exportShortcut = GlobalGetShortcut("E", false, false);
-		char* quitShortcut = GlobalGetShortcut("Q", false, false);
-		char* prefShortcut = GlobalGetShortcut(",", false, false);
-		char* themeEditorShortcut = GlobalGetShortcut("T", false, false);
-		CheckKeybinds(newProjShortcut, openShortcut, saveShortcut,
-			exportShortcut, quitShortcut, prefShortcut, themeEditorShortcut);
-		RenderMainMenuBar(newProjShortcut, openShortcut, saveShortcut,
-			exportShortcut, quitShortcut, prefShortcut, themeEditorShortcut);
+		CheckKeybinds(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
+			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut,
+			m_ThemeEditorShortcut);
+		RenderMainMenuBar(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
+			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut,
+			m_ThemeEditorShortcut);
 		RenderEditPrefs();
 		SaveChangesDialog();
 		RenderExport();
@@ -189,6 +220,7 @@ namespace FuncDoodle {
 			m_Manager->SetUndoByStroke(m_UndoByStroke);
 			m_Manager->RenderTimeline(m_PrevEnabled);
 			m_Manager->RenderControls();
+			m_Manager->RenderLogs();
 			m_Manager->Player()->Play();
 			m_CurrentProj->DisplayFPS();
 		} else {
@@ -203,14 +235,6 @@ namespace FuncDoodle {
 					"Failed to allocate title -- perhaps you ran out of RAM?");
 			}
 		}
-
-		free(newProjShortcut);
-		free(openShortcut);
-		free(saveShortcut);
-		free(exportShortcut);
-		free(quitShortcut);
-		free(prefShortcut);
-		free(themeEditorShortcut);
 	}
 	void Application::OpenFileDialog(std::function<void()> done) {
 		nfdchar_t* outPath = 0;

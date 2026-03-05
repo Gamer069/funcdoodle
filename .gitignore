@@ -6,7 +6,7 @@ CMakeFiles/
 Makefile
 FuncDoodle
 FuncDoodle.app
-imgui.ini
+# imgui.ini
 pkg_app.sh
 bin/
 dmg/*.dmg
@@ -16,5 +16,5 @@ dmg/*.dmg
 .DS_Store
 ./compile_commands.json
 leaks.supp
-imgui.ini
+# imgui.ini
 something

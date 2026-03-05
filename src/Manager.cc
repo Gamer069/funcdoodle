@@ -1,37 +1,38 @@
 #include "Manager.h"
 
-#include "Gui.h"
-
 #include "Project.h"
 
-#include "DynArr.h"
-
 #include "FrameRenderer.h"
+#include "KeyHandler.h"
 
 #include "ToolManager.h"
 
 #include <cstdint>
-#include <iostream>
+#include <cstring>
+#include <memory>
 #include <string>
 
 #include "LoadedAssets.h"
 
 #include "Ptr.h"
+#include "imgui.h"
 
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(
 		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
-		  m_EditorController(new EditorController()),
-		  m_AssetLoader(assetLoader) {
-		m_ToolManager.reset(new ToolManager(assetLoader));
-		m_FrameRenderer.reset(new FrameRenderer(
-			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController));
+		  m_EditorController(std::make_shared<EditorController>()),
+		  m_AssetLoader(assetLoader),
+		  m_ToolManager(std::make_unique<ToolManager>()) {
+		m_FrameRenderer = std::make_unique<FrameRenderer>(
+			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController);
 		m_TimelineFrameRenderer.reset(new FrameRenderer(
 			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController));
 		m_FrameRenderer->SetUndoByStroke(m_UndoByStroke);
 	}
+
 	AnimationManager::~AnimationManager() {}
+
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
 		// Set scrollbar size (thickness)
 		ImGui::GetStyle().ScrollbarSize =
@@ -70,116 +71,12 @@ namespace FuncDoodle {
 		ImFont* font = ImGui::GetFont();
 		float fontSize = ImGui::GetFontSize();
 
-		if (!ImGui::IsAnyItemActive()) {
-			if (ImGui::IsKeyPressed(ImGuiKey_LeftBracket, true)) {
-				if (m_SelectedFrame > 0) {
-					auto prevFrame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
-					m_SelectedFrame--;
-
-					auto frame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
-					m_FrameRenderer->SetPreviousFrame(prevFrame);
-					m_FrameRenderer->SetFrame(frame);
-				}
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_RightBracket, true)) {
-				if (m_SelectedFrame < m_Proj->AnimFrameCount() - 1) {
-					auto prevFrame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
-					m_SelectedFrame++;
-
-					auto frame = m_Proj->AnimFrames()->Get(m_SelectedFrame);
-					m_FrameRenderer->SetPreviousFrame(prevFrame);
-					m_FrameRenderer->SetFrame(frame);
-				}
-			}
-			const int X1 = 3;
-			const int X2 = 4;
-			if (ImGui::IsKeyPressed(ImGuiKey_E, true) ||
-				ImGui::IsMouseClicked(X1)) {
-				SharedPtr<ProjectFile> proj =
-					m_Player ? m_Player->Proj() : m_Proj;
-				if (proj) {
-					proj->Undo();
-				}
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_R, true) ||
-				ImGui::IsMouseClicked(X2)) {
-				SharedPtr<ProjectFile> proj =
-					m_Player ? m_Player->Proj() : m_Proj;
-				if (proj) {
-					proj->Redo();
-				}
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
-				m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
-				InsertFrameAction action =
-					InsertFrameAction(m_SelectedFrame + 1, m_Proj);
-				m_Proj->PushUndoableInsertFrameAction(action);
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_O, true)) {
-				m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
-				m_SelectedFrame++;
-				InsertFrameAction action =
-					InsertFrameAction(m_SelectedFrame - 1, m_Proj);
-				m_Proj->PushUndoableInsertFrameAction(action);
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_I, true)) {
-				m_Proj->AnimFrames()->MoveForward(m_SelectedFrame);
-				m_SelectedFrame++;
-				MoveFrameRightAction action =
-					MoveFrameRightAction(m_SelectedFrame, m_Proj);
-				m_Proj->PushUndoableMoveFrameRightAction(action);
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_U, true)) {
-				if (m_SelectedFrame != 0) {
-					m_Proj->AnimFrames()->MoveBackward(m_SelectedFrame);
-					MoveFrameLeftAction action =
-						MoveFrameLeftAction(m_SelectedFrame, m_Proj);
-					m_SelectedFrame--;
-					m_Proj->PushUndoableMoveFrameLeftAction(action);
-				}
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_Backslash, true)) {
-				if (m_Proj->AnimFrameCount() != 1) {
-					Frame deletedFrame =
-						*m_Proj->AnimFrames()->Get(m_SelectedFrame);
-					m_Proj->AnimFrames()->Remove(m_SelectedFrame);
-					DeleteFrameAction action = DeleteFrameAction(
-						m_SelectedFrame, &deletedFrame, m_Proj);
-					m_Proj->PushUndoableDeleteFrameAction(action);
-				}
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_Comma, true)) {
-				m_Proj->AnimFrames()->Get(m_SelectedFrame)->CopyToClipboard();
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_Period, true)) {
-				// paste before
-				Frame* frame = Frame::PastedFrame();
-				m_Proj->AnimFrames()->InsertBefore(m_SelectedFrame, frame);
-				m_SelectedFrame++;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_Slash, true)) {
-				// paste after
-				Frame* frame = Frame::PastedFrame();
-				m_Proj->AnimFrames()->InsertAfter(m_SelectedFrame, frame);
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_M, true)) {
-				Frame* frame =
-					new Frame(*m_Proj->AnimFrames()->Get(m_SelectedFrame));
-				m_Proj->AnimFrames()->InsertAfter(m_SelectedFrame, frame);
-				InsertFrameAction action =
-					InsertFrameAction(m_SelectedFrame + 1, m_Proj);
-				m_Proj->PushUndoableInsertFrameAction(action);
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_N, true)) {
-				Frame* frame =
-					new Frame(*m_Proj->AnimFrames()->Get(m_SelectedFrame));
-				m_Proj->AnimFrames()->InsertBefore(m_SelectedFrame, frame);
-				m_SelectedFrame++;
-				InsertFrameAction action =
-					InsertFrameAction(m_SelectedFrame - 1, m_Proj);
-				m_Proj->PushUndoableInsertFrameAction(action);
-			}
-		}
+		TimelineKeyContext keyContext;
+		keyContext.proj = m_Proj;
+		keyContext.player = m_Player.get();
+		keyContext.frameRenderer = m_FrameRenderer.get();
+		keyContext.selectedFrame = &m_SelectedFrame;
+		KeyHandler::HandleTimelineShortcuts(keyContext);
 		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 		}
@@ -335,6 +232,62 @@ namespace FuncDoodle {
 
 	void AnimationManager::RenderLogs() {
 		ImGui::Begin("Logs");
+
+		const auto logColor = [](const char* s) -> ImVec4 {
+			if (!s) {
+				return ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+			}
+			if (std::strstr(s, "[Error]") || std::strstr(s, "[FATAL]")) {
+				return ImVec4(1.0f, 0.35f, 0.35f, 1.0f);
+			}
+			if (std::strstr(s, "[Warn]")) {
+				return ImVec4(1.0f, 0.75f, 0.25f, 1.0f);
+			}
+			if (std::strstr(s, "[Debug]")) {
+				return ImVec4(0.45f, 0.85f, 1.0f, 1.0f);
+			}
+			if (std::strstr(s, "[Info]")) {
+				return ImVec4(0.55f, 0.75f, 1.0f, 1.0f);
+			}
+			if (std::strstr(s, "[Note]")) {
+				return ImVec4(0.7f, 0.7f, 0.7f, 1.0f);
+			}
+			return ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		};
+
+		if (ImGui::Button("Clear")) {
+			for (char* log : s_Logs) {
+				delete[] log;
+			}
+			s_Logs.clear();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Copy")) {
+			ImGui::LogToClipboard();
+
+			for (const char* str : s_Logs) {
+				ImGui::LogText("%s\n", str ? str : "");
+			}
+
+			ImGui::LogFinish();
+		}
+
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::BeginChild("##logscroll", ImVec2(-1, -1), false,
+			ImGuiWindowFlags_HorizontalScrollbar);
+
+		for (const char* str : s_Logs) {
+			ImGui::TextColored(logColor(str), "%s", str ? str : "");
+		}
+
+		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+			ImGui::SetScrollHereY(1.0f);
+
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
+
 		ImGui::End();
 	}
 }  // namespace FuncDoodle

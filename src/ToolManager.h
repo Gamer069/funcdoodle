@@ -6,13 +6,17 @@
 
 #include "MacroUtils.h"
 
+#include "Tool.h"
+
 namespace FuncDoodle {
 	class ToolManager {
 		public:
-			ToolManager(AssetLoader* assetLoader);
+			ToolManager();
 			~ToolManager();
 			void RenderTools();
-			const int SelectedTool() { return m_SelectedTool; }
+			void Buttons();
+			void Widgets();
+			const ToolType SelectedTool() { return m_SelectedTool; }
 			const float* Col() { return m_Col; }
 			void SetCol(struct Col col) {
 				unsigned char colArr[3] = {col.r, col.g, col.b};
@@ -25,10 +29,9 @@ namespace FuncDoodle {
 			const bool PickerSelected() { return m_PickerSelected; }
 
 		private:
-			int m_SelectedTool = 0;
+			ToolType m_SelectedTool = ToolType::Pencil;
 			float m_Col[3] = {0.0f, 0.0f, 0.0f};
 			int m_Size = 1;
-			AssetLoader* m_AssetLoader;
 			bool m_PickerSelected = false;
 	};
 }  // namespace FuncDoodle
