@@ -32,6 +32,26 @@ namespace FuncDoodle {
 			}
 		}
 	}
+	void StrokeAction::Undo() {
+		if (auto proj = m_Proj.lock()) {
+			Frame* frame = proj->AnimFrames()->Get(m_FrameIndex);
+			if (!frame)
+				return;
+			for (auto it = m_Changes.rbegin(); it != m_Changes.rend(); ++it) {
+				frame->SetPixel(it->x, it->y, it->prev);
+			}
+		}
+	}
+	void StrokeAction::Redo() {
+		if (auto proj = m_Proj.lock()) {
+			Frame* frame = proj->AnimFrames()->Get(m_FrameIndex);
+			if (!frame)
+				return;
+			for (const auto& change : m_Changes) {
+				frame->SetPixel(change.x, change.y, change.next);
+			}
+		}
+	}
 
 	void DeleteFrameAction::Undo() {
 		if (auto proj = m_Proj.lock()) {

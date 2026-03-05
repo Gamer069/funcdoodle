@@ -2,6 +2,7 @@
 
 #include "Frame.h"
 
+#include "Action.h"
 #include "Grid.h"
 #include "ToolManager.h"
 
@@ -10,17 +11,17 @@
 #include "Ptr.h"
 
 #include <memory>
-#include <vector>
+
+#include "EditorController.h"
 
 namespace FuncDoodle {
-	inline std::vector<std::pair<int, int>> i_PixelsChangedByBucketTool =
-		std::vector<std::pair<int, int>>();
 	class FrameRenderer {
 		public:
-			FrameRenderer(
-				Frame* frame, ToolManager* manager, AnimationPlayer* player)
+			FrameRenderer(Frame* frame, ToolManager* manager,
+				AnimationPlayer* player,
+				const SharedPtr<EditorController>& editorController)
 				: m_Frame(frame), m_ToolManager(manager), m_Grid(nullptr),
-				  m_Player(player) {}
+				  m_Player(player), m_EditorController(editorController) {}
 			~FrameRenderer() {}
 			void RenderFrame(unsigned long frameI, bool prevEnabled);
 			void InitPixels(unsigned long frameI, bool prevEnabled);
@@ -41,15 +42,18 @@ namespace FuncDoodle {
 			inline void SetPixelScale(int pixelScale) {
 				m_PixelScale = pixelScale;
 			}
-
-			void FloodFill(
-				int x, int y, Col targetCol, Col fillCol, Frame* targetFrame);
+			void SetUndoByStroke(bool undoByStroke) {
+				if (m_EditorController) {
+					m_EditorController->SetUndoByStroke(undoByStroke, m_Player);
+				}
+			}
 			void RenderFramePixels(int startX, int startY, ImDrawList* drawList,
 				bool usePrevPxScale = true, bool renderPreview = true);
 
 		private:
 			Frame* m_Frame;
 			Frame* m_PreviousFrame;
+			SharedPtr<EditorController> m_EditorController;
 			int m_Index;
 			ToolManager* m_ToolManager;
 			int m_PixelScale = 8;

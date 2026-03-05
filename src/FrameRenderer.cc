@@ -17,7 +17,6 @@
 #include "Player.h"
 
 #include <cmath>
-#include <stack>
 
 namespace FuncDoodle {
 	void FrameRenderer::RenderFrame(unsigned long frameI, bool prevEnabled) {
@@ -69,7 +68,8 @@ namespace FuncDoodle {
 	}
 
 	void FrameRenderer::InitPixels(unsigned long frameI, bool prevEnabled) {
-		if (!m_Frame) {
+		(void)prevEnabled;
+		if (!m_Frame || !m_Player || !m_Player->Proj()) {
 			return;
 		}
 		const ImageArray* pixels = m_Frame->Pixels();
@@ -79,7 +79,6 @@ namespace FuncDoodle {
 
 		// Get window dimensions before handling zoom
 		ImVec2 windowPos = ImGui::GetWindowPos();
-		ImVec2 windowSize = ImGui::GetWindowSize();
 		ImVec2 contentRegion = ImGui::GetContentRegionAvail();
 
 		// Handle zoom input with window size constraints
@@ -127,140 +126,6 @@ namespace FuncDoodle {
 		ImVec2 frameMin(startX, startY);
 		ImVec2 frameMax(startX + frameWidth, startY + frameHeight);
 
-		// Define tool functions
-		auto pencil = [&](ImVec2 currentPixel) -> bool {
-			const float* colOld = m_ToolManager->Col();
-			unsigned char colNew[3] = {
-				static_cast<unsigned char>(colOld[0] * 255.0f + 0.5f),
-				static_cast<unsigned char>(colOld[1] * 255.0f + 0.5f),
-				static_cast<unsigned char>(colOld[2] * 255.0f + 0.5f)};
-
-			int size = m_ToolManager->Size();
-			bool actionPerformed = false;
-
-			if (!m_Frame || !m_Frame->Pixels())
-				return false;
-
-			for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-					int newX = static_cast<int>(currentPixel.x) + offsetX;
-					int newY = static_cast<int>(currentPixel.y) + offsetY;
-
-					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
-						newY >= 0 && newY < m_Frame->Pixels()->Height()) {
-
-						Col prevColor = m_Frame->Pixels()->Get(newX, newY);
-						Col newColor = {colNew[0], colNew[1], colNew[2]};
-
-						m_Frame->SetPixel(newX, newY, newColor);
-
-						// Only push undo actions when not in preview mode AND
-						// mouse is down
-						if (!prevEnabled && ImGui::IsMouseDown(0) &&
-							prevColor != newColor) {
-							DrawAction action(newX, newY, prevColor, newColor,
-								frameI, m_Player->Proj());
-							m_Player->Proj()->PushUndoableDrawAction(action);
-							actionPerformed = true;
-						}
-					}
-				}
-			}
-			return actionPerformed;
-		};
-
-		auto eraser = [&](ImVec2 currentPixel) -> bool {
-			int size = m_ToolManager->Size();
-			bool actionPerformed = false;
-			Col bgColor = m_Player->Proj()->BgCol();
-
-			if (!m_Frame || !m_Frame->Pixels())
-				return false;
-
-			for (int offsetY = -size / 2; offsetY <= size / 2; offsetY++) {
-				for (int offsetX = -size / 2; offsetX <= size / 2; offsetX++) {
-					int newX = static_cast<int>(currentPixel.x) + offsetX;
-					int newY = static_cast<int>(currentPixel.y) + offsetY;
-
-					if (newX >= 0 && newX < m_Frame->Pixels()->Width() &&
-						newY >= 0 && newY < m_Frame->Pixels()->Height()) {
-
-						Col prevColor = m_Frame->Pixels()->Get(newX, newY);
-						m_Frame->SetPixel(newX, newY, bgColor);
-
-						// Only push undo actions when not in preview mode AND
-						// mouse is down
-						if (!prevEnabled && ImGui::IsMouseDown(0) &&
-							prevColor != bgColor) {
-							DrawAction action(newX, newY, prevColor, bgColor,
-								frameI, m_Player->Proj());
-							m_Player->Proj()->PushUndoableDrawAction(action);
-							actionPerformed = true;
-						}
-					}
-				}
-			}
-			return actionPerformed;
-		};
-
-		auto bucket = [&](ImVec2 currentPixel) -> bool {
-			const float* colOld = m_ToolManager->Col();
-			unsigned char colResult[3] = {
-				static_cast<unsigned char>(colOld[0] * 255.0f + 0.5f),
-				static_cast<unsigned char>(colOld[1] * 255.0f + 0.5f),
-				static_cast<unsigned char>(colOld[2] * 255.0f + 0.5f)};
-
-			int pixelX = static_cast<int>(std::floor(currentPixel.x));
-			int pixelY = static_cast<int>(std::floor(currentPixel.y));
-
-			if (!m_Frame || !m_Frame->Pixels())
-				return false;
-
-			if (pixelX < 0 || pixelX >= m_Frame->Pixels()->Width() ||
-				pixelY < 0 || pixelY >= m_Frame->Pixels()->Height()) {
-				return false;
-			}
-
-			Col curPixelCol = m_Frame->Pixels()->Get(pixelX, pixelY);
-			Col fillColor = {colResult[0], colResult[1], colResult[2]};
-
-			if (curPixelCol == fillColor) {
-				return false;  // No change needed
-			}
-
-			// Clear the bucket tool change tracking
-			i_PixelsChangedByBucketTool.clear();
-
-			// Perform flood fill
-			FloodFill(pixelX, pixelY, curPixelCol, fillColor, m_Frame);
-
-			// Create fill action if pixels were changed and not in preview mode
-			if (!prevEnabled && !i_PixelsChangedByBucketTool.empty()) {
-				FillAction action(curPixelCol, fillColor, frameI,
-					m_Player->Proj(), i_PixelsChangedByBucketTool);
-				m_Player->Proj()->PushUndoableFillAction(action);
-				return true;
-			}
-			return false;
-		};
-
-		auto picker = [&](ImVec2 currentPixel) -> bool {
-			int pixelX = static_cast<int>(std::floor(currentPixel.x));
-			int pixelY = static_cast<int>(std::floor(currentPixel.y));
-
-			if (!m_Frame || !m_Frame->Pixels())
-				return false;
-
-			if (pixelX < 0 || pixelX >= m_Frame->Pixels()->Width() ||
-				pixelY < 0 || pixelY >= m_Frame->Pixels()->Height()) {
-				return false;
-			}
-
-			Col col = m_Frame->Pixels()->Get(pixelX, pixelY);
-			m_ToolManager->SetCol(col);
-			return true;
-		};
-
 		// Handle drawing conditions
 		bool shouldDraw = ImGui::IsMouseDown(0);
 
@@ -282,7 +147,7 @@ namespace FuncDoodle {
 				bool isFrameWindowFocused =
 					focusedWindow && strcmp(focusedWindow->Name, "Frame") == 0;
 
-				if (isFrameWindowFocused) {
+				if (isFrameWindowFocused && m_EditorController) {
 					// Handle tool interpolation for smooth drawing
 					if (m_LastMousePos.x >= 0 && m_LastMousePos.y >= 0 &&
 						(selectedTool == 0 ||
@@ -298,36 +163,17 @@ namespace FuncDoodle {
 							float t = static_cast<float>(i) / steps;
 							ImVec2 interpPixel(m_LastMousePos.x + dx * t,
 								m_LastMousePos.y + dy * t);
-
-							switch (selectedTool) {
-								case 0:
-									pencil(interpPixel);
-									break;
-								case 1:
-									eraser(interpPixel);
-									break;
-							}
+							m_EditorController->Paint(m_Frame, frameI,
+								m_ToolManager, m_Player,
+								static_cast<int>(interpPixel.x),
+								static_cast<int>(interpPixel.y), true, false);
 						}
 					} else {
-						// Single operation for bucket fill and color picker
-						switch (selectedTool) {
-							case 0:
-								pencil(currentPixel);
-								break;
-							case 1:
-								eraser(currentPixel);
-								break;
-							case 2:
-								if (ImGui::IsMouseClicked(0)) {
-									bucket(currentPixel);
-								}
-								break;
-							case 3:
-								if (ImGui::IsMouseClicked(0)) {
-									picker(currentPixel);
-								}
-								break;
-						}
+						m_EditorController->Paint(m_Frame, frameI,
+							m_ToolManager, m_Player,
+							static_cast<int>(currentPixel.x),
+							static_cast<int>(currentPixel.y), shouldDraw,
+							ImGui::IsMouseClicked(0));
 					}
 				}
 				m_LastMousePos = currentPixel;
@@ -335,6 +181,9 @@ namespace FuncDoodle {
 		} else if (!ImGui::IsMouseDown(0) ||
 				   !ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
 			m_LastMousePos = ImVec2(-1, -1);
+		}
+		if (!ImGui::IsMouseDown(0) && m_EditorController) {
+			m_EditorController->EndStroke(m_Player);
 		}
 
 		RenderFramePixels(startX, startY, drawList);
@@ -366,43 +215,6 @@ namespace FuncDoodle {
 		if (m_Grid) {
 			m_Grid->RenderWithDrawList(drawList, ImVec2(startX, startY),
 				ImVec2(startX + frameWidth, startY + frameHeight));
-		}
-	}
-
-	void FrameRenderer::FloodFill(
-		int x, int y, Col targetCol, Col fillCol, Frame* targetFrame) {
-		if (!targetFrame || !targetFrame->Pixels())
-			return;
-
-		// Use iterative approach to avoid stack overflow
-		std::stack<std::pair<int, int>> pixelStack;
-		pixelStack.push({x, y});
-
-		while (!pixelStack.empty()) {
-			auto [currentX, currentY] = pixelStack.top();
-			pixelStack.pop();
-
-			// Check bounds
-			if (currentX < 0 || currentX >= targetFrame->Pixels()->Width() ||
-				currentY < 0 || currentY >= targetFrame->Pixels()->Height()) {
-				continue;
-			}
-
-			// Check if pixel needs to be filled
-			Col currentCol = targetFrame->Pixels()->Get(currentX, currentY);
-			if (currentCol != targetCol || currentCol == fillCol) {
-				continue;
-			}
-
-			// Fill the pixel
-			i_PixelsChangedByBucketTool.emplace_back(currentX, currentY);
-			targetFrame->SetPixel(currentX, currentY, fillCol);
-
-			// Add neighboring pixels to stack
-			pixelStack.push({currentX + 1, currentY});
-			pixelStack.push({currentX - 1, currentY});
-			pixelStack.push({currentX, currentY + 1});
-			pixelStack.push({currentX, currentY - 1});
 		}
 	}
 

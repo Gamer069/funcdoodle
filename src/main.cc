@@ -231,6 +231,15 @@ int main(int argc, char** argv) {
 			static_cast<FuncDoodle::Application*>(entry)->SetPrevEnabled(
 				prevEnabledBool);
 		}
+		int undoByStroke;
+		if (std::sscanf(line, "UndoByStroke=%d", &undoByStroke) == 1) {
+			bool undoByStrokeBool = false;
+			if (undoByStroke >= 1) {
+				undoByStrokeBool = true;
+			}
+			static_cast<FuncDoodle::Application*>(entry)->SetUndoByStroke(
+				undoByStrokeBool);
+		}
 		FuncDoodle::UUID uuid =
 			static_cast<FuncDoodle::Application*>(entry)->Theme();
 		if (!FuncDoodle::Themes::g_Themes.contains(uuid)) {
@@ -291,6 +300,8 @@ int main(int argc, char** argv) {
 		buf->appendf("Sfx=%d", application->SFXEnabled() ? 1 : 0);
 		buf->append("\n");
 		buf->appendf("Prev=%d", application->PrevEnabled() ? 1 : 0);
+		buf->append("\n");
+		buf->appendf("UndoByStroke=%d", application->UndoByStroke() ? 1 : 0);
 		buf->append("\n");
 	};
 	ImGui::AddSettingsHandler(&handler);

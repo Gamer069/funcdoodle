@@ -29,7 +29,9 @@ namespace FuncDoodle {
 		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
 		  m_AssetLoader(assetLoader), m_CacheBGCol({255, 255, 255}),
 		  m_ThemesPath(themesPath),
-		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {}
+		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {
+		m_Manager->SetUndoByStroke(m_UndoByStroke);
+	}
 	Application::~Application() {}
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		int maxLen = 11 + strlen(key);
@@ -184,6 +186,7 @@ namespace FuncDoodle {
 		Themes::SaveCurrentTheme();
 
 		if (m_CurrentProj) {
+			m_Manager->SetUndoByStroke(m_UndoByStroke);
 			m_Manager->RenderTimeline(m_PrevEnabled);
 			m_Manager->RenderControls();
 			m_Manager->Player()->Play();
@@ -574,6 +577,7 @@ namespace FuncDoodle {
 				m_CurrentProj = m_CacheProj;
 				m_Manager.reset(
 					new AnimationManager(m_CurrentProj, m_AssetLoader));
+				m_Manager->SetUndoByStroke(m_UndoByStroke);
 				m_NewProjOpen = false;
 			}
 
@@ -723,6 +727,7 @@ namespace FuncDoodle {
 			ImGui::SameLine();
 			ImGui::Checkbox("Preview", &m_PrevEnabled);
 			ImGui::SameLine();
+			ImGui::Checkbox("Undo by stroke", &m_UndoByStroke);
 
 			if (ImGui::IsKeyPressed(ImGuiKey_Escape) ||
 				ImGui::IsKeyPressed(ImGuiKey_Enter) ||

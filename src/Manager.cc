@@ -22,12 +22,14 @@ namespace FuncDoodle {
 	AnimationManager::AnimationManager(
 		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
+		  m_EditorController(new EditorController()),
 		  m_AssetLoader(assetLoader) {
 		m_ToolManager.reset(new ToolManager(assetLoader));
-		m_FrameRenderer.reset(
-			new FrameRenderer(nullptr, m_ToolManager.get(), m_Player.get()));
-		m_TimelineFrameRenderer.reset(
-			new FrameRenderer(nullptr, m_ToolManager.get(), m_Player.get()));
+		m_FrameRenderer.reset(new FrameRenderer(
+			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController));
+		m_TimelineFrameRenderer.reset(new FrameRenderer(
+			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController));
+		m_FrameRenderer->SetUndoByStroke(m_UndoByStroke);
 	}
 	AnimationManager::~AnimationManager() {}
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
@@ -93,11 +95,19 @@ namespace FuncDoodle {
 			const int X2 = 4;
 			if (ImGui::IsKeyPressed(ImGuiKey_E, true) ||
 				ImGui::IsMouseClicked(X1)) {
-				m_Proj->Undo();
+				SharedPtr<ProjectFile> proj =
+					m_Player ? m_Player->Proj() : m_Proj;
+				if (proj) {
+					proj->Undo();
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_R, true) ||
 				ImGui::IsMouseClicked(X2)) {
-				m_Proj->Redo();
+				SharedPtr<ProjectFile> proj =
+					m_Player ? m_Player->Proj() : m_Proj;
+				if (proj) {
+					proj->Redo();
+				}
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_P, true)) {
 				m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
@@ -320,6 +330,11 @@ namespace FuncDoodle {
 			m_Player->End();
 		}
 
+		ImGui::End();
+	}
+
+	void AnimationManager::RenderLogs() {
+		ImGui::Begin("Logs");
 		ImGui::End();
 	}
 }  // namespace FuncDoodle

@@ -3,6 +3,7 @@
 #include "Project.h"
 #include "Ptr.h"
 
+#include "EditorController.h"
 #include "FrameRenderer.h"
 
 #include "ToolManager.h"
@@ -21,11 +22,18 @@ namespace FuncDoodle {
 			~AnimationManager();
 			void RenderTimeline(bool prevEnabled);
 			void RenderControls();
+			void RenderLogs();
 
 			const SharedPtr<ProjectFile> Proj() const { return m_Proj; }
 			void SetProj(SharedPtr<ProjectFile> proj) {
 				m_Proj = proj;
 				m_Player->SetProj(proj);
+			}
+			void SetUndoByStroke(bool undoByStroke) {
+				m_UndoByStroke = undoByStroke;
+				if (m_FrameRenderer) {
+					m_FrameRenderer->SetUndoByStroke(undoByStroke);
+				}
 			}
 			AnimationPlayer* Player() const { return m_Player.get(); }
 			void SetPlayer(AnimationPlayer* player) { m_Player.reset(player); }
@@ -37,6 +45,8 @@ namespace FuncDoodle {
 			UniquePtr<FrameRenderer> m_TimelineFrameRenderer;
 			UniquePtr<ToolManager> m_ToolManager;
 			UniquePtr<AnimationPlayer> m_Player;
+			SharedPtr<EditorController> m_EditorController;
 			AssetLoader* m_AssetLoader;
+			bool m_UndoByStroke = false;
 	};
 }  // namespace FuncDoodle

@@ -64,6 +64,27 @@ namespace FuncDoodle {
 			WeakPtr<ProjectFile> m_Proj;
 			std::vector<std::pair<int, int>> m_Pixels;
 	};
+	class StrokeAction : public Action {
+		public:
+			struct PixelChange {
+					int x;
+					int y;
+					Col prev;
+					Col next;
+			};
+			StrokeAction(unsigned long frameI,
+				const SharedPtr<ProjectFile>& proj,
+				std::vector<PixelChange> changes)
+				: m_FrameIndex(frameI), m_Proj(proj),
+				  m_Changes(std::move(changes)) {}
+			void Undo() override;
+			void Redo() override;
+
+		private:
+			unsigned long m_FrameIndex;
+			WeakPtr<ProjectFile> m_Proj;
+			std::vector<PixelChange> m_Changes;
+	};
 	class DeleteFrameAction : public Action {
 		public:
 			// empty constructor

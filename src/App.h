@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AssetLoader.h"
+#include "EditorController.h"
 #include "Manager.h"
 #include "Project.h"
 #include "Ptr.h"
@@ -8,6 +9,8 @@
 
 #include <functional>
 #include <string>
+
+#include "Ptr.h"
 
 namespace FuncDoodle {
 	class Application {
@@ -36,8 +39,15 @@ namespace FuncDoodle {
 			inline void SetPrevEnabled(bool enabled) {
 				m_PrevEnabled = enabled;
 			}
+			inline void SetUndoByStroke(bool enabled) {
+				m_UndoByStroke = enabled;
+				if (m_Manager) {
+					m_Manager->SetUndoByStroke(enabled);
+				}
+			}
 			inline bool PrevEnabled() { return m_PrevEnabled; }
 			inline bool SFXEnabled() { return m_SFXEnabled; }
+			inline bool UndoByStroke() { return m_UndoByStroke; }
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
@@ -56,6 +66,7 @@ namespace FuncDoodle {
 			UniquePtr<AnimationManager> m_Manager;
 			GLFWwindow* m_Window;
 			AssetLoader* m_AssetLoader;
+			SharedPtr<EditorController> m_EditorController;
 			int m_ExportFormat = 0;
 			bool m_EditProjOpen = false;
 			bool m_ExportOpen = false;
@@ -66,6 +77,7 @@ namespace FuncDoodle {
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
+			bool m_UndoByStroke = false;
 			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;
 	};
