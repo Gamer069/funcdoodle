@@ -89,6 +89,34 @@ namespace FuncDoodle {
 			void SetWidth(int width, bool clear = false);
 			void SetHeight(int height, bool clear = false);
 
+			void Rotate(int deg) {
+				float rad = deg * M_PI / 180.0f;
+				float cos_r = cos(rad);
+				float sin_r = sin(rad);
+
+				int w = m_Pixels.Width(), h = m_Pixels.Height();
+				int newW = m_Pixels.Width(), newH = m_Pixels.Height(); // or calculate bounding box
+				std::vector<Col> result(newW * newH);
+
+				float cx = w / 2.0f, cy = h / 2.0f;
+				float ncx = newW / 2.0f, ncy = newH / 2.0f;
+
+				for (int y = 0; y < newH; y++) {
+					for (int x = 0; x < newW; x++) {
+						// Map output pixel to input coordinates
+						float dx = x - ncx, dy = y - ncy;
+						float sx = dx * cos_r + dy * sin_r + cx;
+						float sy = -dx * sin_r + dy * cos_r + cy;
+
+						// Nearest neighbor
+						if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
+							result[y * newW + x] = m_Pixels.Data()[(int)sy * w + (int)sx];
+						}
+					}
+				}
+				m_Pixels.SetData(result);
+			}
+
 			void CopyToClipboard();
 			static Frame* PastedFrame();
 			void Export(const char* filePath);

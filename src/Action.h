@@ -155,4 +155,18 @@ namespace FuncDoodle {
 			unsigned long m_FrameIndex;
 			WeakPtr<ProjectFile> m_Proj;
 	};
+	class RotateFrameAction : public Action {
+		public:
+			RotateFrameAction(unsigned long m_FrameIndex, int32_t deg, const SharedPtr<ProjectFile>& proj) : m_FrameIndex(m_FrameIndex), m_Proj(proj), m_Deg(deg) {}
+
+			void Undo() override;
+			void Redo() override;
+
+			inline int32_t Deg() { return m_Deg; };
+
+		private:
+			unsigned long m_FrameIndex;
+			int32_t m_Deg;
+			WeakPtr<ProjectFile> m_Proj;
+	};
 }  // namespace FuncDoodle

@@ -38,6 +38,9 @@ namespace FuncDoodle {
 			AnimationPlayer* Player() const { return m_Player.get(); }
 			void SetPlayer(AnimationPlayer* player) { m_Player.reset(player); }
 
+			unsigned long SelectedFrameI() const { return m_SelectedFrame; }
+			Frame* SelectedFrame() { return m_Proj->AnimFrames()->Get(m_SelectedFrame); }
+
 		private:
 			SharedPtr<ProjectFile> m_Proj;
 			unsigned long m_SelectedFrame;

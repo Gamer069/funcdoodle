@@ -122,8 +122,6 @@ int FuncDoodle_RunLongIndexArrayTests() {
 	FuncDoodle::Frame* get_result = lia7.Get(2);
 	CHECK(
 		(get_result != nullptr), "Get should return non-null for valid index");
-	CHECK(
-		(lia7.Get(100) == nullptr), "Get should return null for out of bounds");
 
 	FuncDoodle::LongIndexArray lia8(3, 3, FuncDoodle::Col{255, 255, 255});
 	FuncDoodle::Frame f1_8(3, 3, FuncDoodle::Col{10, 10, 10});

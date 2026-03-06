@@ -67,6 +67,7 @@ namespace FuncDoodle {
 			void PushUndoableInsertFrameAction(InsertFrameAction action);
 			void PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action);
 			void PushUndoableMoveFrameRightAction(MoveFrameRightAction action);
+			void PushUndoableRotateFrameAction(RotateFrameAction action);
 
 			void Undo();
 			void Redo();

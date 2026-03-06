@@ -207,6 +207,7 @@ namespace FuncDoodle {
 			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut,
 			m_ThemeEditorShortcut);
 		RenderEditPrefs();
+		RenderRotate();
 		SaveChangesDialog();
 		RenderExport();
 		RenderEditProj();
@@ -648,6 +649,26 @@ namespace FuncDoodle {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Edit", true)) {
+				if (m_CurrentProj) {
+					if (ImGui::BeginMenu("Transform")) {
+						if (ImGui::MenuItem("Rotate 90°")) {
+							m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), 90, m_CurrentProj));
+							m_Manager->SelectedFrame()->Rotate(90);
+						}
+
+						if (ImGui::MenuItem("Rotate -90°")) {
+							m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), -90, m_CurrentProj));
+							m_Manager->SelectedFrame()->Rotate(-90);
+						}
+
+						if (ImGui::MenuItem("Rotate...")) {
+							m_RotateOpen = true;
+						}
+
+						ImGui::EndMenu();
+					}
+				}
+
 				if (ImGui::MenuItem("Preferences", prefShortcut)) {
 					m_EditPrefsOpen = true;
 				}
@@ -757,6 +778,28 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
 				ImGui::Button("OK")) {
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+	void Application::RenderRotate() {
+		if (m_RotateOpen) {
+			ImGui::OpenPopup("Rotate");
+			m_RotateOpen = false;
+		}
+
+		if (ImGui::BeginPopup("Rotate")) {
+			ImGui::DragInt("##Deg", &m_Deg, 1.0f, -360, 360, "%d°");
+
+			if (ImGui::Button("OK")) {
+				m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), m_Deg, m_CurrentProj));
+				m_Manager->SelectedFrame()->Rotate(m_Deg);
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::Button("Cancel")) {
 				ImGui::CloseCurrentPopup();
 			}
 

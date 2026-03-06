@@ -55,11 +55,13 @@ namespace FuncDoodle {
 				char* saveShortcut, char* exportShortcut, char* quitShortcut,
 				char* prefShortcut, char* themeEditorShortcut);
 			void RenderEditPrefs();
+			void RenderRotate();
 			void RenderExport();
 			void RenderKeybinds();
 
 		private:
 			std::string m_FilePath;
+			int m_Deg = 90;
 			bool m_NewProjOpen = false;
 			SharedPtr<ProjectFile> m_CurrentProj;
 			SharedPtr<ProjectFile> m_CacheProj;
@@ -73,6 +75,7 @@ namespace FuncDoodle {
 			bool m_EditPrefsOpen = false;
 			bool m_ShowKeybindsOpen = false;
 			bool m_SaveChangesOpen = false;
+			bool m_RotateOpen = false;
 			UUID m_Theme;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;

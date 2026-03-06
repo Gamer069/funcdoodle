@@ -210,6 +210,12 @@ namespace FuncDoodle {
 			std::make_unique<MoveFrameRightAction>(std::move(action)));
 		m_Saved = false;
 	}
+	void ProjectFile::PushUndoableRotateFrameAction(RotateFrameAction action) {
+		ClearRedoStack(m_RedoStack);
+		m_UndoStack.push(
+			std::make_unique<RotateFrameAction>(std::move(action)));
+		m_Saved = false;
+	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
 			FUNC_INF("Nothing to undo");
