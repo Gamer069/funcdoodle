@@ -28,10 +28,12 @@ namespace FuncDoodle {
 		std::filesystem::path themesPath)
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
-		  m_Manager(new AnimationManager(nullptr, assetLoader)), m_Window(win),
+		  m_EditorController(std::make_shared<EditorController>()),
+		  m_Window(win),
 		  m_AssetLoader(assetLoader), m_CacheBGCol({255, 255, 255}),
 		  m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {
+		m_Manager = std::make_unique<AnimationManager>(nullptr, assetLoader, m_EditorController), 
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
 		m_NewProjShortcut = GlobalGetShortcut("N", false, false);
 		m_OpenShortcut = GlobalGetShortcut("O", false, false);
@@ -601,7 +603,7 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
 				m_Manager.reset(
-					new AnimationManager(m_CurrentProj, m_AssetLoader));
+					new AnimationManager(m_CurrentProj, m_AssetLoader, m_EditorController));
 				m_Manager->SetUndoByStroke(m_UndoByStroke);
 				m_NewProjOpen = false;
 			}
@@ -609,6 +611,16 @@ namespace FuncDoodle {
 			ImGui::EndPopup();
 		}
 	}
+	void Application::Rotate(int32_t deg) {
+		if (!m_EditorController->Sel()) {
+			m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), deg, m_CurrentProj));
+			m_Manager->SelectedFrame()->Rotate(deg);
+		} else {
+			m_CurrentProj->PushUndoableRotateSelectionAction(RotateSelectionAction(m_Manager->SelectedFrameI(), m_EditorController->Sel(), deg, m_CurrentProj));
+			m_Manager->SelectedFrame()->RotateSelection(m_EditorController->Sel().get(), deg);
+		}
+	}
+
 	void Application::RenderMainMenuBar(char* newProjShortcut,
 		char* openShortcut, char* saveShortcut, char* exportShortcut,
 		char* quitShortcut, char* prefShortcut, char* themeEditorShortcut) {
@@ -652,17 +664,11 @@ namespace FuncDoodle {
 				if (m_CurrentProj) {
 					if (ImGui::BeginMenu("Transform")) {
 						if (ImGui::MenuItem("Rotate 90°")) {
-							m_CurrentProj->PushUndoableRotateFrameAction(
-								RotateFrameAction(m_Manager->SelectedFrameI(),
-									90, m_CurrentProj));
-							m_Manager->SelectedFrame()->Rotate(90);
+							Rotate(90);
 						}
 
 						if (ImGui::MenuItem("Rotate -90°")) {
-							m_CurrentProj->PushUndoableRotateFrameAction(
-								RotateFrameAction(m_Manager->SelectedFrameI(),
-									-90, m_CurrentProj));
-							m_Manager->SelectedFrame()->Rotate(-90);
+							Rotate(-90);
 						}
 
 						if (ImGui::MenuItem("Rotate...")) {
@@ -798,9 +804,7 @@ namespace FuncDoodle {
 			ImGui::DragInt("##Deg", &m_Deg, 1.0f, -360, 360, "%d°");
 
 			if (ImGui::Button("OK")) {
-				m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(
-					m_Manager->SelectedFrameI(), m_Deg, m_CurrentProj));
-				m_Manager->SelectedFrame()->Rotate(m_Deg);
+				Rotate(m_Deg);
 				ImGui::CloseCurrentPopup();
 			}
 

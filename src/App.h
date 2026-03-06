@@ -58,6 +58,7 @@ namespace FuncDoodle {
 			void RenderRotate();
 			void RenderExport();
 			void RenderKeybinds();
+			void Rotate(int32_t deg);
 
 		private:
 			std::string m_FilePath;

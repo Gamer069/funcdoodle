@@ -124,4 +124,16 @@ namespace FuncDoodle {
 			proj->AnimFrames()->Get(m_FrameIndex)->Rotate(m_Deg);
 		}
 	}
+
+	void RotateSelectionAction::Undo() {
+		if (auto proj = m_Proj.lock()) {
+			proj->AnimFrames()->Get(m_FrameIndex)->RotateSelection(m_Sel.get(), -m_Deg);
+		}
+	}
+
+	void RotateSelectionAction::Redo() {
+		if (auto proj = m_Proj.lock()) {
+			proj->AnimFrames()->Get(m_FrameIndex)->Rotate(m_Deg);
+		}
+	}
 }  // namespace FuncDoodle

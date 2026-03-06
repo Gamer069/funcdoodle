@@ -36,6 +36,7 @@ namespace FuncDoodle {
 			void SetUndoByStroke(bool undoByStroke, AnimationPlayer* player);
 			void RenderCanvas(CanvasContext& context);
 			void EndStroke(AnimationPlayer* player);
+			SharedPtr<Selection> Sel() { return m_Sel; }
 
 		private:
 			bool PaintPencil(Frame* frame, unsigned long frameI,
@@ -69,7 +70,7 @@ namespace FuncDoodle {
 			unsigned long m_StrokeFrameI = 0;
 			std::vector<StrokeAction::PixelChange> m_StrokeChanges;
 			std::unordered_map<unsigned long long, size_t> m_StrokeIndexByKey;
-			UniquePtr<Selection> m_Sel;
+			SharedPtr<Selection> m_Sel;
 			SquareSelection m_SquareSel;
 	};
 }  // namespace FuncDoodle

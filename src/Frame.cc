@@ -1,5 +1,6 @@
 #include "Frame.h"
 
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -240,5 +241,53 @@ namespace FuncDoodle {
 			   m_Pixels.Width() == other.m_Pixels.Width() &&
 			   m_Pixels.Height() == other.m_Pixels.Height() &&
 			   m_Pixels.BgCol() == other.m_Pixels.BgCol();
+	}
+
+	void Frame::RotateSelection(Selection* sel, int deg) {
+		if (!sel) {
+			return;
+		}
+
+		std::vector<ImVec2i> pixels = sel->All();
+		if (pixels.empty()) {
+			return;
+		}
+
+		int minX = pixels[0].x, maxX = pixels[0].x;
+		int minY = pixels[0].y, maxY = pixels[0].y;
+		for (const auto& p : pixels) {
+			minX = std::min(minX, p.x);
+			maxX = std::max(maxX, p.x);
+			minY = std::min(minY, p.y);
+			maxY = std::max(maxY, p.y);
+		}
+
+		int selW = maxX - minX + 1;
+		int selH = maxY - minY + 1;
+
+		std::vector<Col> temp(selW * selH);
+		for (const auto& p : pixels) {
+			temp[(p.y - minY) * selW + (p.x - minX)] = m_Pixels.Get(p.x, p.y);
+		}
+
+		float rad = deg * M_PI / 180.0f;
+		float cos_r = cos(rad);
+		float sin_r = sin(rad);
+
+		float cx = selW / 2.0f;
+		float cy = selH / 2.0f;
+
+		for (int y = 0; y < selH; y++) {
+			for (int x = 0; x < selW; x++) {
+				float dx = x - cx;
+				float dy = y - cy;
+				int sx = (int)(dx * cos_r + dy * sin_r + cx);
+				int sy = (int)(-dx * sin_r + dy * cos_r + cy);
+
+				if (sx >= 0 && sx < selW && sy >= 0 && sy < selH) {
+					m_Pixels.Set(minX + x, minY + y, temp[sy * selW + sx]);
+				}
+			}
+		}
 	}
 }  // namespace FuncDoodle

@@ -19,9 +19,9 @@
 
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(
-		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader)
+		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
-		  m_EditorController(std::make_shared<EditorController>()),
+		  m_EditorController(editorController),
 		  m_AssetLoader(assetLoader),
 		  m_ToolManager(std::make_unique<ToolManager>()) {
 		m_FrameRenderer = std::make_unique<FrameRenderer>(

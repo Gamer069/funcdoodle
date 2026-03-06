@@ -6,6 +6,8 @@
 
 #include "Gui.h"
 
+#include "Selection.h"
+
 #include "stb_image_write.h"
 
 namespace FuncDoodle {
@@ -118,6 +120,8 @@ namespace FuncDoodle {
 				}
 				m_Pixels.SetData(result);
 			}
+
+			void RotateSelection(Selection* sel, int deg);
 
 			void CopyToClipboard();
 			static Frame* PastedFrame();
