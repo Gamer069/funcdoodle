@@ -3,6 +3,7 @@
 #include "Frame.h"
 
 #include "LoadedAssets.h"
+#include "imgui.h"
 
 #include <functional>
 
@@ -12,12 +13,14 @@ namespace FuncDoodle {
 		Eraser,
 		Bucket,
 		Picker,
+		Select,
 	};
-	constexpr std::array<ToolType, 4> ToolTypes{
+	constexpr std::array<ToolType, 5> ToolTypes{
 		ToolType::Pencil,
 		ToolType::Eraser,
 		ToolType::Bucket,
 		ToolType::Picker,
+		ToolType::Select,
 	};
 	constexpr const char* ToolTypeName(ToolType t) {
 		switch (t) {
@@ -29,6 +32,8 @@ namespace FuncDoodle {
 				return "Bucket";
 			case ToolType::Picker:
 				return "Picker";
+			case ToolType::Select:
+				return "Select";
 		}
 		return "Unknown";
 	}
@@ -42,12 +47,12 @@ namespace FuncDoodle {
 				return s_BucketTexId;
 			case ToolType::Picker:
 				return s_PickerTexId;
-			default:
-				return 0;
-				// case ToolType::Text:
-				// btnTexId = s_TextTexId;
-				// break;
+			case ToolType::Select:
+				return s_SelectTexId;
 		}
+		// case ToolType::Text:
+		// btnTexId = s_TextTexId;
+		// break;
 	}
 
 	// hehe get it - tool, tips
@@ -82,6 +87,13 @@ namespace FuncDoodle {
 					ImGui::EndTooltip();
 				}
 				break;
+			case ToolType::Select:
+				if (ImGui::IsItemHovered()) {
+					ImGui::BeginTooltip();
+					ImGui::Text("Select (5)");
+					ImGui::EndTooltip();
+				}
+				break;
 		}
 	}
 
@@ -98,6 +110,9 @@ namespace FuncDoodle {
 			}
 			if (ImGui::IsKeyPressed(ImGuiKey_4)) {
 				*tool = ToolType::Picker;
+			}
+			if (ImGui::IsKeyPressed(ImGuiKey_5)) {
+				*tool = ToolType::Select;
 			}
 		}
 	}

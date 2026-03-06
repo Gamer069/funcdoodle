@@ -3,6 +3,7 @@
 #include "Action.h"
 #include "Frame.h"
 #include "Ptr.h"
+#include "Selection.h"
 #include "imgui.h"
 
 #include <unordered_map>
@@ -48,6 +49,8 @@ namespace FuncDoodle {
 				int pixelY, bool mouseClicked);
 			bool PaintPicker(
 				Frame* frame, ToolManager* toolManager, int pixelX, int pixelY);
+			bool PaintSelect(
+				Frame* frame, ToolManager* toolManager, int pixelX, int pixelY);
 			void FloodFill(int x, int y, Col targetCol, Col fillCol,
 				Frame* targetFrame, std::vector<std::pair<int, int>>& changed);
 			void RecordStrokeChange(unsigned long frameI, int x, int y,
@@ -66,5 +69,7 @@ namespace FuncDoodle {
 			unsigned long m_StrokeFrameI = 0;
 			std::vector<StrokeAction::PixelChange> m_StrokeChanges;
 			std::unordered_map<unsigned long long, size_t> m_StrokeIndexByKey;
+			UniquePtr<Selection> m_Sel;
+			SquareSelection m_SquareSel;
 	};
 }  // namespace FuncDoodle

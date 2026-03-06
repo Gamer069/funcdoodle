@@ -652,12 +652,16 @@ namespace FuncDoodle {
 				if (m_CurrentProj) {
 					if (ImGui::BeginMenu("Transform")) {
 						if (ImGui::MenuItem("Rotate 90°")) {
-							m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), 90, m_CurrentProj));
+							m_CurrentProj->PushUndoableRotateFrameAction(
+								RotateFrameAction(m_Manager->SelectedFrameI(),
+									90, m_CurrentProj));
 							m_Manager->SelectedFrame()->Rotate(90);
 						}
 
 						if (ImGui::MenuItem("Rotate -90°")) {
-							m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), -90, m_CurrentProj));
+							m_CurrentProj->PushUndoableRotateFrameAction(
+								RotateFrameAction(m_Manager->SelectedFrameI(),
+									-90, m_CurrentProj));
 							m_Manager->SelectedFrame()->Rotate(-90);
 						}
 
@@ -794,7 +798,8 @@ namespace FuncDoodle {
 			ImGui::DragInt("##Deg", &m_Deg, 1.0f, -360, 360, "%d°");
 
 			if (ImGui::Button("OK")) {
-				m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), m_Deg, m_CurrentProj));
+				m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(
+					m_Manager->SelectedFrameI(), m_Deg, m_CurrentProj));
 				m_Manager->SelectedFrame()->Rotate(m_Deg);
 				ImGui::CloseCurrentPopup();
 			}
@@ -850,6 +855,9 @@ namespace FuncDoodle {
 		if (m_ShowKeybindsOpen) {
 			ImGui::OpenPopup("Keybinds");
 		}
+
+		// TODO: actually have this a customizable keybinds thing, not just some
+		// text
 		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
 				ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =

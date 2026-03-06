@@ -95,7 +95,8 @@ namespace FuncDoodle {
 				float sin_r = sin(rad);
 
 				int w = m_Pixels.Width(), h = m_Pixels.Height();
-				int newW = m_Pixels.Width(), newH = m_Pixels.Height(); // or calculate bounding box
+				int newW = m_Pixels.Width(),
+					newH = m_Pixels.Height();  // or calculate bounding box
 				std::vector<Col> result(newW * newH);
 
 				float cx = w / 2.0f, cy = h / 2.0f;
@@ -110,7 +111,8 @@ namespace FuncDoodle {
 
 						// Nearest neighbor
 						if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
-							result[y * newW + x] = m_Pixels.Data()[(int)sy * w + (int)sx];
+							result[y * newW + x] =
+								m_Pixels.Data()[(int)sy * w + (int)sx];
 						}
 					}
 				}

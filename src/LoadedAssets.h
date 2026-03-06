@@ -19,6 +19,7 @@ namespace FuncDoodle {
 	extern uint32_t s_TextTexId;
 	extern uint32_t s_AddTexId;
 	extern uint32_t s_OpenTexId;
+	extern uint32_t s_SelectTexId;
 	extern AudioData s_ProjCreateSound;
 	extern AudioData s_ProjSaveSound;
 	extern AudioData s_ExportSound;

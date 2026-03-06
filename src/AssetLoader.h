@@ -24,7 +24,7 @@ namespace FuncDoodle {
 				const ImVec2& pos, const ImVec2& size,
 				const ImVec4& tint = ImVec4(1, 1, 1, 1));
 			uint32_t LoadImage(const char* name);
-			AudioData ParseSound(std::filesystem::path soundName);
+			AudioData LoadSound(std::filesystem::path soundName);
 			void PlaySound(AudioData data);
 
 		private:

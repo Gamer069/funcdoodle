@@ -89,7 +89,7 @@ namespace FuncDoodle {
 
 		return textureID;
 	}
-	AudioData AssetLoader::ParseSound(std::filesystem::path soundName) {
+	AudioData AssetLoader::LoadSound(std::filesystem::path soundName) {
 		if (std::filesystem::exists(m_AssetsPath / soundName)) {
 			return m_AudioManager->ParseWav(m_AssetsPath / soundName);
 		} else {

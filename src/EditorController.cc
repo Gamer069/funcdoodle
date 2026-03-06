@@ -2,7 +2,6 @@
 
 #include "Grid.h"
 #include "Player.h"
-#include "Project.h"
 #include "Tool.h"
 #include "ToolManager.h"
 #include "imgui.h"
@@ -36,6 +35,8 @@ namespace FuncDoodle {
 					pixelY, mouseClicked);
 			case ToolType::Picker:
 				return PaintPicker(frame, toolManager, pixelX, pixelY);
+			case ToolType::Select:
+				return PaintSelect(frame, toolManager, pixelX, pixelY);
 			default:
 				return false;
 		}
@@ -181,6 +182,27 @@ namespace FuncDoodle {
 		}
 
 		toolManager->SetCol(frame->Pixels()->Get(pixelX, pixelY));
+		return true;
+	}
+
+	bool EditorController::PaintSelect(
+		Frame* frame, ToolManager* toolManager, int pixelX, int pixelY) {
+		if (ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+			// im a squaresel
+			// m_SquareSel
+			m_SquareSel.Active = true;
+			m_SquareSel.Min = ImVec2i(pixelX, pixelY);
+			m_SquareSel.Max = m_SquareSel.Min;
+		}
+
+		if (m_SquareSel.Active) {
+			m_SquareSel.Max = ImVec2i(pixelX, pixelY);
+
+			// if (m_SquareSel.Min.x == m_SquareSel.Max.x && m_SquareSel.Min.y
+			// == m_SquareSel.Max.y) { m_Sel = nullptr;
+			// }
+		}
+
 		return true;
 	}
 
@@ -365,6 +387,12 @@ namespace FuncDoodle {
 								static_cast<int>(interpPixel.x),
 								static_cast<int>(interpPixel.y), true, false);
 						}
+					} else if (selectedTool == ToolType::Select) {
+						Paint(context.frame, context.frameI,
+							context.toolManager, context.player,
+							static_cast<int>(currentPixel.x),
+							static_cast<int>(currentPixel.y), shouldDraw,
+							ImGui::IsMouseClicked(0));
 					} else {
 						Paint(context.frame, context.frameI,
 							context.toolManager, context.player,
@@ -378,6 +406,22 @@ namespace FuncDoodle {
 		} else if (!ImGui::IsMouseDown(0) ||
 				   !ImGui::IsMouseHoveringRect(frameMin, frameMax)) {
 			*context.lastMousePos = ImVec2(-1, -1);
+		}
+
+		if (context.toolManager->SelectedTool() == ToolType::Select &&
+			m_SquareSel.Active &&
+			ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
+			m_SquareSel.Active = false;
+			if (m_SquareSel.Min.x == m_SquareSel.Max.x &&
+				m_SquareSel.Min.y == m_SquareSel.Max.y) {
+				m_Sel.reset();
+			} else {
+				m_Sel = std::make_unique<SquareSelection>(m_SquareSel);
+			}
+			FUNC_INF("m_SquareSel min: " << m_SquareSel.Min.x << ","
+										 << m_SquareSel.Min.y
+										 << "; max: " << m_SquareSel.Max.x
+										 << "," << m_SquareSel.Max.y);
 		}
 
 		if (!ImGui::IsMouseDown(0)) {
@@ -421,8 +465,43 @@ namespace FuncDoodle {
 			}
 		}
 
+		if (!m_Sel && !m_SquareSel.Active) {
+			return;
+		}
+
 		context.grid->RenderWithDrawList(drawList, ImVec2(startX, startY),
 			ImVec2(startX + frameWidth, startY + frameHeight));
+
+		float t = ImGui::GetTime();
+		float dash = 6.0f;
+		float gap = 6.0f;
+		float offset = fmod(t * 60.0f, dash + gap);
+
+		int pixelScale = *context.pixelScale;
+		float screenMinX = startX + m_SquareSel.Min.x * pixelScale;
+		float screenMinY = startY + m_SquareSel.Min.y * pixelScale;
+		float screenMaxX = startX + (m_SquareSel.Max.x + 1) * pixelScale;
+		float screenMaxY = startY + (m_SquareSel.Max.y + 1) * pixelScale;
+
+		for (float x = screenMinX - offset; x < screenMaxX; x += dash + gap)
+			drawList->AddLine({x, screenMinY},
+				{ImMin(x + dash, screenMaxX), screenMinY},
+				IM_COL32(150, 150, 150, 255));
+
+		for (float x = screenMinX - offset; x < screenMaxX; x += dash + gap)
+			drawList->AddLine({x, screenMaxY},
+				{ImMin(x + dash, screenMaxX), screenMaxY},
+				IM_COL32(150, 150, 150, 255));
+
+		for (float y = screenMinY - offset; y < screenMaxY; y += dash + gap)
+			drawList->AddLine({screenMinX, y},
+				{screenMinX, ImMin(y + dash, screenMaxY)},
+				IM_COL32(150, 150, 150, 255));
+
+		for (float y = screenMinY - offset; y < screenMaxY; y += dash + gap)
+			drawList->AddLine({screenMaxX, y},
+				{screenMaxX, ImMin(y + dash, screenMaxY)},
+				IM_COL32(150, 150, 150, 255));
 	}
 
 }  // namespace FuncDoodle

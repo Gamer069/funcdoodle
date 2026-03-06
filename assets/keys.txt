@@ -2,6 +2,7 @@
 2 -- change tool to eraser
 3 -- change tool to bucket
 4 -- change tool to picker
+5 -- change tool to select
 ; -- decrease tool size
 ' -- increase tool size
 - -- zoom out

@@ -11,6 +11,7 @@ namespace FuncDoodle {
 	uint32_t s_PickerTexId = 0;
 	uint32_t s_EraserTexId = 0;
 	uint32_t s_BucketTexId = 0;
+	uint32_t s_SelectTexId = 0;
 	uint32_t s_TextTexId = 0;
 	uint32_t s_AddTexId = 0;
 	uint32_t s_OpenTexId = 0;
@@ -31,11 +32,12 @@ namespace FuncDoodle {
 		s_TextTexId = assetLoader->LoadImage("text.png");
 		s_AddTexId = assetLoader->LoadImage("add.png");
 		s_OpenTexId = assetLoader->LoadImage("folder.png");
+		s_SelectTexId = assetLoader->LoadImage("select.png");
 
 		// audio
-		s_ProjCreateSound = assetLoader->ParseSound("create.wav");
-		s_ProjSaveSound = assetLoader->ParseSound("save.wav");
-		s_ExportSound = assetLoader->ParseSound("export.wav");
-		s_ProjSaveEndSound = assetLoader->ParseSound("saveend.wav");
+		s_ProjCreateSound = assetLoader->LoadSound("create.wav");
+		s_ProjSaveSound = assetLoader->LoadSound("save.wav");
+		s_ExportSound = assetLoader->LoadSound("export.wav");
+		s_ProjSaveEndSound = assetLoader->LoadSound("saveend.wav");
 	}
 }  // namespace FuncDoodle
