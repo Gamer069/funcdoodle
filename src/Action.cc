@@ -127,13 +127,35 @@ namespace FuncDoodle {
 
 	void RotateSelectionAction::Undo() {
 		if (auto proj = m_Proj.lock()) {
-			proj->AnimFrames()->Get(m_FrameIndex)->RotateSelection(m_Sel.get(), -m_Deg);
+			proj->AnimFrames()
+				->Get(m_FrameIndex)
+				->RotateSelection(m_Sel.get(), -m_Deg);
 		}
 	}
 
 	void RotateSelectionAction::Redo() {
 		if (auto proj = m_Proj.lock()) {
 			proj->AnimFrames()->Get(m_FrameIndex)->Rotate(m_Deg);
+		}
+	}
+
+	void DeleteSelectionAction::Undo() {
+		if (auto proj = m_Proj.lock()) {
+			Frame* frame = proj->AnimFrames()->Get(m_FrameIndex);
+			if (!frame)
+				return;
+			auto pixels = m_Sel->All();
+			for (size_t i = 0; i < pixels.size(); i++) {
+				frame->SetPixel(pixels[i].x, pixels[i].y, m_PrevPixels[i]);
+			}
+		}
+	}
+
+	void DeleteSelectionAction::Redo() {
+		if (auto proj = m_Proj.lock()) {
+			proj->AnimFrames()
+				->Get(m_FrameIndex)
+				->DeleteSelection(m_Sel.get(), Col{});
 		}
 	}
 }  // namespace FuncDoodle

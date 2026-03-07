@@ -192,4 +192,24 @@ namespace FuncDoodle {
 			int32_t m_Deg;
 			WeakPtr<ProjectFile> m_Proj;
 	};
+
+	class DeleteSelectionAction : public Action {
+		public:
+			DeleteSelectionAction(unsigned long m_FrameIndex,
+				SharedPtr<Selection> sel, std::vector<Col> prevPixels,
+				const SharedPtr<ProjectFile>& proj)
+				: m_FrameIndex(m_FrameIndex), m_Sel(std::move(sel)),
+				  m_PrevPixels(std::move(prevPixels)), m_Proj(proj) {}
+
+			void Undo() override;
+			void Redo() override;
+
+			inline Selection* Sel() { return m_Sel.get(); };
+
+		private:
+			unsigned long m_FrameIndex;
+			SharedPtr<Selection> m_Sel;
+			std::vector<Col> m_PrevPixels;
+			WeakPtr<ProjectFile> m_Proj;
+	};
 }  // namespace FuncDoodle

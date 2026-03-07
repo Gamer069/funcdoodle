@@ -2,6 +2,7 @@
 
 #include "Frame.h"
 
+#include <memory>
 #include <string.h>
 
 #include <fstream>
@@ -220,6 +221,12 @@ namespace FuncDoodle {
 		ClearRedoStack(m_RedoStack);
 		m_UndoStack.push(
 			std::make_unique<RotateSelectionAction>(std::move(action)));
+		m_Saved = false;
+	}
+	void ProjectFile::PushUndoableDeleteSelectionAction(DeleteSelectionAction action) {
+		ClearRedoStack(m_RedoStack);
+		m_UndoStack.push(
+			std::make_unique<DeleteSelectionAction>(std::move(action)));
 		m_Saved = false;
 	}
 	void ProjectFile::Undo() {

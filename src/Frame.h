@@ -122,6 +122,7 @@ namespace FuncDoodle {
 			}
 
 			void RotateSelection(Selection* sel, int deg);
+			void DeleteSelection(Selection* sel, Col bg);
 
 			void CopyToClipboard();
 			static Frame* PastedFrame();

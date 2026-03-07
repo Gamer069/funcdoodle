@@ -24,7 +24,7 @@ namespace FuncDoodle {
 			void ReadProjectFile();
 			void SaveProjectFile();
 			void CheckKeybinds(char* newProj, char* open, char* save,
-				char* exportShortcut, char* quit, char* pref,
+				char* exportShortcut, char* quit, char* pref, char* del,
 				char* themeEditorShortcut);
 			void RenderOptions();
 			void SaveChangesDialog();
@@ -53,7 +53,7 @@ namespace FuncDoodle {
 			void RenderNewProj();
 			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut,
 				char* saveShortcut, char* exportShortcut, char* quitShortcut,
-				char* prefShortcut, char* themeEditorShortcut);
+				char* prefShortcut, char* delShortcut, char* themeEditorShortcut);
 			void RenderEditPrefs();
 			void RenderRotate();
 			void RenderExport();
@@ -88,6 +88,7 @@ namespace FuncDoodle {
 			char* m_ExportShortcut = nullptr;
 			char* m_QuitShortcut = nullptr;
 			char* m_PrefShortcut = nullptr;
+			char* m_DelShortcut = nullptr;
 			char* m_ThemeEditorShortcut = nullptr;
 			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;

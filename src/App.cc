@@ -1,6 +1,8 @@
 #include "Gui.h"
 #include "Manager.h"
 
+#include "Action.h"
+
 #include "App.h"
 
 #include <array>
@@ -29,11 +31,11 @@ namespace FuncDoodle {
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
 		  m_EditorController(std::make_shared<EditorController>()),
-		  m_Window(win),
-		  m_AssetLoader(assetLoader), m_CacheBGCol({255, 255, 255}),
-		  m_ThemesPath(themesPath),
+		  m_Window(win), m_AssetLoader(assetLoader),
+		  m_CacheBGCol({255, 255, 255}), m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {
-		m_Manager = std::make_unique<AnimationManager>(nullptr, assetLoader, m_EditorController), 
+		m_Manager = std::make_unique<AnimationManager>(
+			nullptr, assetLoader, m_EditorController),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
 		m_NewProjShortcut = GlobalGetShortcut("N", false, false);
 		m_OpenShortcut = GlobalGetShortcut("O", false, false);
@@ -85,7 +87,7 @@ namespace FuncDoodle {
 	}
 
 	void Application::CheckKeybinds(char* newProj, char* open, char* save,
-		char* exportShortcut, char* quit, char* pref,
+		char* exportShortcut, char* quit, char* pref, char* del,
 		char* themeEditorShortcut) {
 		ImGuiIO& io = ImGui::GetIO();
 
@@ -145,6 +147,7 @@ namespace FuncDoodle {
 			false, false, false, ImGuiKey_None};
 		static Shortcut quitShortcut = {false, false, false, ImGuiKey_None};
 		static Shortcut prefShortcut = {false, false, false, ImGuiKey_None};
+		static Shortcut delShortcut = {false, false, false, ImGuiKey_Delete};
 		static Shortcut themeEditorShortcutShortcut = {
 			false, false, false, ImGuiKey_None};
 		if (!shortcutsInitialized) {
@@ -191,6 +194,22 @@ namespace FuncDoodle {
 		if (isShortcutPressed(themeEditorShortcutShortcut)) {
 			Themes::g_ThemeEditorOpen = true;
 		}
+		if (isShortcutPressed(delShortcut)) {
+			if (m_EditorController->Sel() && m_CurrentProj) {
+				auto selPixels = m_EditorController->Sel()->All();
+				std::vector<Col> prevPixels;
+				prevPixels.reserve(selPixels.size());
+				for (auto& p : selPixels) {
+					prevPixels.push_back(
+						m_Manager->SelectedFrame()->Pixels()->Get(p.x, p.y));
+				}
+				m_CurrentProj->PushUndoableDeleteSelectionAction(
+					DeleteSelectionAction(m_Manager->SelectedFrameI(),
+						m_EditorController->Sel(), prevPixels, m_CurrentProj));
+				m_Manager->SelectedFrame()->DeleteSelection(
+					m_EditorController->Sel().get(), m_CurrentProj->BgCol());
+			}
+		}
 		if (m_CurrentProj) {
 			if (isShortcutPressed(exportShortcutShortcut)) {
 				m_ExportOpen = true;
@@ -203,10 +222,10 @@ namespace FuncDoodle {
 			RenderOptions();
 
 		CheckKeybinds(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
-			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut,
+			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut, m_DelShortcut,
 			m_ThemeEditorShortcut);
 		RenderMainMenuBar(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
-			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut,
+			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut, m_DelShortcut,
 			m_ThemeEditorShortcut);
 		RenderEditPrefs();
 		RenderRotate();
@@ -602,8 +621,8 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				m_Manager.reset(
-					new AnimationManager(m_CurrentProj, m_AssetLoader, m_EditorController));
+				m_Manager.reset(new AnimationManager(
+					m_CurrentProj, m_AssetLoader, m_EditorController));
 				m_Manager->SetUndoByStroke(m_UndoByStroke);
 				m_NewProjOpen = false;
 			}
@@ -613,17 +632,22 @@ namespace FuncDoodle {
 	}
 	void Application::Rotate(int32_t deg) {
 		if (!m_EditorController->Sel()) {
-			m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(m_Manager->SelectedFrameI(), deg, m_CurrentProj));
+			m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(
+				m_Manager->SelectedFrameI(), deg, m_CurrentProj));
 			m_Manager->SelectedFrame()->Rotate(deg);
 		} else {
-			m_CurrentProj->PushUndoableRotateSelectionAction(RotateSelectionAction(m_Manager->SelectedFrameI(), m_EditorController->Sel(), deg, m_CurrentProj));
-			m_Manager->SelectedFrame()->RotateSelection(m_EditorController->Sel().get(), deg);
+			m_CurrentProj->PushUndoableRotateSelectionAction(
+				RotateSelectionAction(m_Manager->SelectedFrameI(),
+					m_EditorController->Sel(), deg, m_CurrentProj));
+			m_Manager->SelectedFrame()->RotateSelection(
+				m_EditorController->Sel().get(), deg);
 		}
 	}
 
 	void Application::RenderMainMenuBar(char* newProjShortcut,
 		char* openShortcut, char* saveShortcut, char* exportShortcut,
-		char* quitShortcut, char* prefShortcut, char* themeEditorShortcut) {
+		char* quitShortcut, char* prefShortcut, char* delShortcut,
+		char* themeEditorShortcut) {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
 				if (ImGui::MenuItem("New project", newProjShortcut)) {
@@ -676,6 +700,23 @@ namespace FuncDoodle {
 						}
 
 						ImGui::EndMenu();
+					}
+
+					if (ImGui::MenuItem("Delete", delShortcut)) {
+						if (m_EditorController->Sel()) {
+							auto selPixels = m_EditorController->Sel()->All();
+							std::vector<Col> prevPixels;
+							prevPixels.reserve(selPixels.size());
+							for (auto& p : selPixels) {
+								prevPixels.push_back(
+										m_Manager->SelectedFrame()->Pixels()->Get(p.x, p.y));
+							}
+							m_CurrentProj->PushUndoableDeleteSelectionAction(
+									DeleteSelectionAction(m_Manager->SelectedFrameI(),
+										m_EditorController->Sel(), prevPixels, m_CurrentProj));
+							m_Manager->SelectedFrame()->DeleteSelection(
+									m_EditorController->Sel().get(), m_CurrentProj->BgCol());
+						}
 					}
 				}
 
