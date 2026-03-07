@@ -9,12 +9,12 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <imgui.h>
 #include <iostream>
 #include <stdint.h>
 #include <string.h>
-
-#include <fstream>
+#include <string>
 
 #include "LoadedAssets.h"
 
@@ -23,9 +23,9 @@
 #include "Themes.h"
 #include "nfd.h"
 
-namespace FuncDoodle {
-	char* GlobalGetShortcut(const char* key, bool shift, bool super);
+#include "Keybinds.h"
 
+namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
 		std::filesystem::path themesPath)
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
@@ -33,28 +33,26 @@ namespace FuncDoodle {
 		  m_EditorController(std::make_shared<EditorController>()),
 		  m_Window(win), m_AssetLoader(assetLoader),
 		  m_CacheBGCol({255, 255, 255}), m_ThemesPath(themesPath),
-		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")) {
+		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")),
+		  m_Keybinds(std::make_unique<KeybindsRegistry>()) {
 		m_Manager = std::make_unique<AnimationManager>(
 			nullptr, assetLoader, m_EditorController),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
-		m_NewProjShortcut = GlobalGetShortcut("N", false, false);
-		m_OpenShortcut = GlobalGetShortcut("O", false, false);
-		m_SaveShortcut = GlobalGetShortcut("S", false, false);
-		m_ExportShortcut = GlobalGetShortcut("E", false, false);
-		m_QuitShortcut = GlobalGetShortcut("Q", false, false);
-		m_PrefShortcut = GlobalGetShortcut(",", false, false);
-		m_ThemeEditorShortcut = GlobalGetShortcut("T", false, false);
+
+		// nose
+		m_Keybinds->Register("new", {true, false, false, ImGuiKey_N});
+		m_Keybinds->Register("open", {true, false, false, ImGuiKey_O});
+		m_Keybinds->Register("save", {true, false, false, ImGuiKey_S});
+		m_Keybinds->Register("export", {true, false, false, ImGuiKey_E});
+
+		m_Keybinds->Register("quit", {true, false, false, ImGuiKey_Q});
+		m_Keybinds->Register("pref", {true, false, false, ImGuiKey_Comma});
+		m_Keybinds->Register("theme", {true, false, false, ImGuiKey_T});
+
+		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
 	}
 
 	Application::~Application() {
-		free(m_NewProjShortcut);
-		free(m_OpenShortcut);
-		free(m_SaveShortcut);
-		free(m_ExportShortcut);
-		free(m_QuitShortcut);
-		free(m_PrefShortcut);
-		free(m_ThemeEditorShortcut);
-
 		for (char* log : s_Logs) {
 			delete[] log;
 		}
@@ -86,115 +84,35 @@ namespace FuncDoodle {
 		return shortcut;
 	}
 
-	void Application::CheckKeybinds(char* newProj, char* open, char* save,
-		char* exportShortcut, char* quit, char* pref, char* del,
-		char* themeEditorShortcut) {
+	void Application::CheckKeybinds() {
 		ImGuiIO& io = ImGui::GetIO();
 
-		struct Shortcut {
-				bool requiresCtrl;
-				bool requiresShift;
-				bool requiresSuper;
-				ImGuiKey key;
-		};
-
-		auto parseShortcut = [](const char* shortcut) -> Shortcut {
-			Shortcut result = {false, false, false, ImGuiKey_None};
-
-			// Determine platform-specific "Ctrl" vs "Cmd" modifier
-#if defined(_WIN32) || defined(__linux__)
-			result.requiresCtrl = std::strstr(shortcut, "Ctrl") != nullptr;
-#else
-			result.requiresCtrl = std::strstr(shortcut, "Cmd") != nullptr;
-#endif
-			result.requiresShift = std::strstr(shortcut, "Shift") != nullptr;
-			result.requiresSuper = std::strstr(shortcut, "Super") != nullptr;
-
-			// Find the key portion after the last '+'
-			const char* key = std::strrchr(shortcut, '+');
-			if (key) {
-				key++;	// Skip the '+'
-			} else {
-				key = shortcut;	 // No '+', assume it's just a single key
-			}
-
-			// Map of string keys to ImGuiKey values
-			if (std::strcmp(key, "N") == 0)
-				result.key = ImGuiKey_N;
-			else if (std::strcmp(key, "O") == 0)
-				result.key = ImGuiKey_O;
-			else if (std::strcmp(key, "S") == 0)
-				result.key = ImGuiKey_S;
-			else if (std::strcmp(key, "E") == 0)
-				result.key = ImGuiKey_E;
-			else if (std::strcmp(key, "Q") == 0)
-				result.key = ImGuiKey_Q;
-			else if (std::strcmp(key, "T") == 0)
-				result.key = ImGuiKey_T;
-			else if (std::strcmp(key, ",") == 0)
-				result.key = ImGuiKey_Comma;
-			// Add more key mappings as needed
-
-			return result;
-		};
-
-		// Cache parsed shortcuts once instead of reparsing each frame.
-		static bool shortcutsInitialized = false;
-		static Shortcut newProjShortcut = {false, false, false, ImGuiKey_None};
-		static Shortcut openShortcut = {false, false, false, ImGuiKey_None};
-		static Shortcut saveShortcut = {false, false, false, ImGuiKey_None};
-		static Shortcut exportShortcutShortcut = {
-			false, false, false, ImGuiKey_None};
-		static Shortcut quitShortcut = {false, false, false, ImGuiKey_None};
-		static Shortcut prefShortcut = {false, false, false, ImGuiKey_None};
-		static Shortcut delShortcut = {false, false, false, ImGuiKey_Delete};
-		static Shortcut themeEditorShortcutShortcut = {
-			false, false, false, ImGuiKey_None};
-		if (!shortcutsInitialized) {
-			newProjShortcut = parseShortcut(newProj);
-			openShortcut = parseShortcut(open);
-			saveShortcut = parseShortcut(save);
-			exportShortcutShortcut = parseShortcut(exportShortcut);
-			quitShortcut = parseShortcut(quit);
-			prefShortcut = parseShortcut(pref);
-			themeEditorShortcutShortcut = parseShortcut(themeEditorShortcut);
-			shortcutsInitialized = true;
-		}
-
-		// Inline lambda to check if a given shortcut is pressed
-		auto isShortcutPressed = [&](const Shortcut& shortcut) {
-			return (shortcut.requiresCtrl == io.KeyCtrl) &&
-				   (shortcut.requiresShift == io.KeyShift) &&
-				   (shortcut.requiresSuper == io.KeySuper) &&
-				   ImGui::IsKeyPressed(shortcut.key);
-		};
-
 		// Check if each shortcut is pressed and perform the appropriate action
-		if (isShortcutPressed(newProjShortcut)) {
+		if (m_Keybinds->Get("new").IsPressed()) {
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjCreateSound);
 			m_NewProjOpen = true;
 		}
-		if (isShortcutPressed(openShortcut)) {
+		if (m_Keybinds->Get("open").IsPressed()) {
 			OpenFileDialog([&]() { this->ReadProjectFile(); });
 		}
-		if (isShortcutPressed(saveShortcut)) {
+		if (m_Keybinds->Get("save").IsPressed()) {
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjSaveSound);
 			SaveFileDialog([&]() { this->SaveProjectFile(); });
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjSaveEndSound);
 		}
-		if (isShortcutPressed(quitShortcut)) {
+		if (m_Keybinds->Get("quit").IsPressed()) {
 			glfwSetWindowShouldClose(m_Window, true);
 		}
-		if (isShortcutPressed(prefShortcut)) {
+		if (m_Keybinds->Get("pref").IsPressed()) {
 			m_EditPrefsOpen = true;
 		}
-		if (isShortcutPressed(themeEditorShortcutShortcut)) {
+		if (m_Keybinds->Get("theme").IsPressed()) {
 			Themes::g_ThemeEditorOpen = true;
 		}
-		if (isShortcutPressed(delShortcut)) {
+		if (m_Keybinds->Get("del").IsPressed()) {
 			if (m_EditorController->Sel() && m_CurrentProj) {
 				auto selPixels = m_EditorController->Sel()->All();
 				std::vector<Col> prevPixels;
@@ -211,7 +129,7 @@ namespace FuncDoodle {
 			}
 		}
 		if (m_CurrentProj) {
-			if (isShortcutPressed(exportShortcutShortcut)) {
+			if (m_Keybinds->Get("export").IsPressed()) {
 				m_ExportOpen = true;
 			}
 		}
@@ -221,12 +139,8 @@ namespace FuncDoodle {
 		if (!m_CurrentProj)
 			RenderOptions();
 
-		CheckKeybinds(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
-			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut, m_DelShortcut,
-			m_ThemeEditorShortcut);
-		RenderMainMenuBar(m_NewProjShortcut, m_OpenShortcut, m_SaveShortcut,
-			m_ExportShortcut, m_QuitShortcut, m_PrefShortcut, m_DelShortcut,
-			m_ThemeEditorShortcut);
+		CheckKeybinds();
+		RenderMainMenuBar();
 		RenderEditPrefs();
 		RenderRotate();
 		SaveChangesDialog();
@@ -644,22 +558,19 @@ namespace FuncDoodle {
 		}
 	}
 
-	void Application::RenderMainMenuBar(char* newProjShortcut,
-		char* openShortcut, char* saveShortcut, char* exportShortcut,
-		char* quitShortcut, char* prefShortcut, char* delShortcut,
-		char* themeEditorShortcut) {
+	void Application::RenderMainMenuBar() {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
-				if (ImGui::MenuItem("New project", newProjShortcut)) {
+				if (ImGui::MenuItem("New project", m_Keybinds->Get("new"))) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_NewProjOpen = true;
 				}
 
-				if (ImGui::MenuItem("Open", openShortcut)) {
+				if (ImGui::MenuItem("Open", m_Keybinds->Get("open"))) {
 					this->OpenFileDialog([&]() { this->ReadProjectFile(); });
 				}
-				if (ImGui::MenuItem("Save", saveShortcut)) {
+				if (ImGui::MenuItem("Save", m_Keybinds->Get("save"))) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjSaveSound);
 					this->SaveFileDialog([&]() { this->SaveProjectFile(); });
@@ -672,11 +583,11 @@ namespace FuncDoodle {
 					if (ImGui::MenuItem("Edit project")) {
 						m_EditProjOpen = true;
 					}
-					if (ImGui::MenuItem("Export", exportShortcut)) {
+					if (ImGui::MenuItem("Export", m_Keybinds->Get("export"))) {
 						m_ExportOpen = true;
 					}
 				}
-				if (ImGui::MenuItem("Exit", quitShortcut)) {
+				if (ImGui::MenuItem("Exit", m_Keybinds->Get("quit"))) {
 					m_EditProjOpen = false;
 					m_ExportOpen = false;
 					m_NewProjOpen = false;
@@ -702,28 +613,32 @@ namespace FuncDoodle {
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Delete", delShortcut)) {
+					if (ImGui::MenuItem("Delete", m_Keybinds->Get("del"))) {
 						if (m_EditorController->Sel()) {
 							auto selPixels = m_EditorController->Sel()->All();
 							std::vector<Col> prevPixels;
 							prevPixels.reserve(selPixels.size());
 							for (auto& p : selPixels) {
 								prevPixels.push_back(
-										m_Manager->SelectedFrame()->Pixels()->Get(p.x, p.y));
+									m_Manager->SelectedFrame()->Pixels()->Get(
+										p.x, p.y));
 							}
 							m_CurrentProj->PushUndoableDeleteSelectionAction(
-									DeleteSelectionAction(m_Manager->SelectedFrameI(),
-										m_EditorController->Sel(), prevPixels, m_CurrentProj));
+								DeleteSelectionAction(
+									m_Manager->SelectedFrameI(),
+									m_EditorController->Sel(), prevPixels,
+									m_CurrentProj));
 							m_Manager->SelectedFrame()->DeleteSelection(
-									m_EditorController->Sel().get(), m_CurrentProj->BgCol());
+								m_EditorController->Sel().get(),
+								m_CurrentProj->BgCol());
 						}
 					}
 				}
 
-				if (ImGui::MenuItem("Preferences", prefShortcut)) {
+				if (ImGui::MenuItem("Preferences", m_Keybinds->Get("pref"))) {
 					m_EditPrefsOpen = true;
 				}
-				if (ImGui::MenuItem("Theme editor", themeEditorShortcut)) {
+				if (ImGui::MenuItem("Theme editor", m_Keybinds->Get("theme"))) {
 					Themes::g_ThemeEditorOpen = true;
 				}
 				ImGui::EndMenu();

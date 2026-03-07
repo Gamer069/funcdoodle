@@ -2,6 +2,7 @@
 
 #include "AssetLoader.h"
 #include "EditorController.h"
+#include "Keybinds.h"
 #include "Manager.h"
 #include "Project.h"
 #include "Ptr.h"
@@ -23,9 +24,7 @@ namespace FuncDoodle {
 			void SaveFileDialog(std::function<void()> done);
 			void ReadProjectFile();
 			void SaveProjectFile();
-			void CheckKeybinds(char* newProj, char* open, char* save,
-				char* exportShortcut, char* quit, char* pref, char* del,
-				char* themeEditorShortcut);
+			void CheckKeybinds();
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
@@ -51,9 +50,7 @@ namespace FuncDoodle {
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
-			void RenderMainMenuBar(char* newProjShortcut, char* openShortcut,
-				char* saveShortcut, char* exportShortcut, char* quitShortcut,
-				char* prefShortcut, char* delShortcut, char* themeEditorShortcut);
+			void RenderMainMenuBar();
 			void RenderEditPrefs();
 			void RenderRotate();
 			void RenderExport();
@@ -64,6 +61,8 @@ namespace FuncDoodle {
 			std::string m_FilePath;
 			int m_Deg = 90;
 			bool m_NewProjOpen = false;
+			UniquePtr<KeybindsRegistry> m_Keybinds =
+				std::make_unique<KeybindsRegistry>();
 			SharedPtr<ProjectFile> m_CurrentProj;
 			SharedPtr<ProjectFile> m_CacheProj;
 			UniquePtr<AnimationManager> m_Manager;
@@ -82,14 +81,6 @@ namespace FuncDoodle {
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
 			bool m_UndoByStroke = false;
-			char* m_NewProjShortcut = nullptr;
-			char* m_OpenShortcut = nullptr;
-			char* m_SaveShortcut = nullptr;
-			char* m_ExportShortcut = nullptr;
-			char* m_QuitShortcut = nullptr;
-			char* m_PrefShortcut = nullptr;
-			char* m_DelShortcut = nullptr;
-			char* m_ThemeEditorShortcut = nullptr;
 			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;
 	};
