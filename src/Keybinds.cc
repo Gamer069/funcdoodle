@@ -199,7 +199,14 @@ namespace FuncDoodle {
 				continue;
 			}
 			
-			m_Reg[k.str().data()] = ShortcutWithUser(v.as_string()->get().c_str(), std::nullopt);
+			auto sv = k.str();
+			for (auto& pair : m_Reg) {
+				if (sv == pair.first) {
+					pair.second.User = v.as_string()->get().c_str();
+					FUNC_INF("setting up, setting user: " << v.as_string()->get().c_str() << "...");
+					break;
+				}
+			}
 		}
 	}
 
