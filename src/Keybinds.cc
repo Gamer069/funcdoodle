@@ -175,7 +175,7 @@ namespace FuncDoodle {
 
 		if (!std::filesystem::exists(keybindsPath)) return;
 
-		toml::parse_result res = toml::parse_file(keybindsPath.u8string());
+		toml::parse_result res = toml::parse_file(keybindsPath.string());
 		toml::table* keybinds = res.get("keybinds")->as_table();
 		for (const auto& [k, v] : *keybinds) {
 			if (!v.is_string()) {
