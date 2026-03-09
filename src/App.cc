@@ -49,6 +49,8 @@ namespace FuncDoodle {
 		m_Keybinds->Register("pref", {true, false, false, ImGuiKey_Comma});
 		m_Keybinds->Register("theme", {true, false, false, ImGuiKey_T});
 
+		m_Keybinds->Register("keybinds", {true, false, false, ImGuiKey_H});
+
 		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
 
 		m_Keybinds->End();
@@ -129,6 +131,9 @@ namespace FuncDoodle {
 				m_Manager->SelectedFrame()->DeleteSelection(
 					m_EditorController->Sel().get(), m_CurrentProj->BgCol());
 			}
+		}
+		if (m_Keybinds->Get("keybinds").IsPressed()) {
+			m_ShowKeybindsOpen = true;
 		}
 		if (m_CurrentProj) {
 			if (m_Keybinds->Get("export").IsPressed()) {
@@ -646,7 +651,7 @@ namespace FuncDoodle {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Help", true)) {
-				if (ImGui::MenuItem("Show keybinds")) {
+				if (ImGui::MenuItem("Show keybinds", m_Keybinds->Get("keybinds"))) {
 					m_ShowKeybindsOpen = true;
 				}
 				ImGui::EndMenu();

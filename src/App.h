@@ -75,6 +75,7 @@ namespace FuncDoodle {
 			bool m_ShowKeybindsOpen = false;
 			bool m_SaveChangesOpen = false;
 			bool m_RotateOpen = false;
+			bool m_ShortcutsOpen = false;
 			UUID m_Theme;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;

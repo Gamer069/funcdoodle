@@ -190,6 +190,8 @@ namespace FuncDoodle {
 	void KeybindsRegistry::Write() {
 		std::filesystem::path keybindsPath = m_RootPath / "keybinds.toml";
 
+		if (std::filesystem::exists(keybindsPath)) return;
+
 		toml::table root;
 		toml::table keybinds;
 
