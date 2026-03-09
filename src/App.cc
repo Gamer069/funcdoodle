@@ -27,14 +27,14 @@
 
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
-		std::filesystem::path themesPath)
+		std::filesystem::path themesPath, std::filesystem::path rootPath)
 		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
 		  m_CacheProj(nullptr),
 		  m_EditorController(std::make_shared<EditorController>()),
 		  m_Window(win), m_AssetLoader(assetLoader),
 		  m_CacheBGCol({255, 255, 255}), m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")),
-		  m_Keybinds(std::make_unique<KeybindsRegistry>()) {
+		  m_Keybinds(std::make_unique<KeybindsRegistry>(rootPath)) {
 		m_Manager = std::make_unique<AnimationManager>(
 			nullptr, assetLoader, m_EditorController),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
@@ -50,6 +50,8 @@ namespace FuncDoodle {
 		m_Keybinds->Register("theme", {true, false, false, ImGuiKey_T});
 
 		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
+
+		m_Keybinds->End();
 	}
 
 	Application::~Application() {

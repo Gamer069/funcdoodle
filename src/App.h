@@ -16,8 +16,7 @@
 namespace FuncDoodle {
 	class Application {
 		public:
-			Application(GLFWwindow* win, AssetLoader* assetLoader,
-				std::filesystem::path themesPath);
+			Application(GLFWwindow* win, AssetLoader* assetLoader, std::filesystem::path themesPath, std::filesystem::path rootPath);
 			~Application();
 			void RenderImGui();
 			void OpenFileDialog(std::function<void()> done);

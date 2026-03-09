@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <memory>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <filesystem>
@@ -130,8 +131,11 @@ int main(int argc, char** argv) {
 	std::filesystem::path themesPath(dirPath);
 	themesPath /= "themes";
 
+	std::filesystem::path rootPath(dirPath);
+
 	// glfwSetErrorCallback(GLFWErrorCallback);
 
+	// fix some leak regarding libdecor
 	glfwInitHint(GLFW_WAYLAND_LIBDECOR, GLFW_WAYLAND_DISABLE_LIBDECOR);
 
 	if (!glfwInit()) {
@@ -205,9 +209,7 @@ int main(int argc, char** argv) {
 
 	FuncDoodle::Themes::LoadThemes(themesPath);
 
-	UniquePtr<FuncDoodle::Application> application;
-	application.reset(
-		new FuncDoodle::Application(win, &assetLoader, themesPath));
+	UniquePtr<FuncDoodle::Application> application = std::make_unique<FuncDoodle::Application>(win, &assetLoader, themesPath, rootPath);
 
 	ImGuiSettingsHandler handler;
 	handler.TypeName = "UserData";
