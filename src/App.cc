@@ -21,6 +21,7 @@
 #include "MacroUtils.h"
 
 #include "Themes.h"
+#include "Tool.h"
 #include "nfd.h"
 
 #include "Keybinds.h"
@@ -36,7 +37,7 @@ namespace FuncDoodle {
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")),
 		  m_Keybinds(std::make_unique<KeybindsRegistry>(rootPath)) {
 		m_Manager = std::make_unique<AnimationManager>(
-			nullptr, assetLoader, m_EditorController),
+			nullptr, assetLoader, m_EditorController, m_Keybinds),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
 
 		// nose
@@ -52,6 +53,9 @@ namespace FuncDoodle {
 		m_Keybinds->Register("keybinds", {true, false, false, ImGuiKey_H});
 
 		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
+
+
+		ToolKeybindsRegister(m_Keybinds);
 
 		m_Keybinds->End();
 	}
@@ -542,8 +546,9 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				m_Manager.reset(new AnimationManager(
-					m_CurrentProj, m_AssetLoader, m_EditorController));
+				m_Manager = std::make_unique<AnimationManager>(
+					m_CurrentProj, m_AssetLoader, m_EditorController, m_Keybinds
+				);
 				m_Manager->SetUndoByStroke(m_UndoByStroke);
 				m_NewProjOpen = false;
 			}
@@ -838,6 +843,9 @@ namespace FuncDoodle {
 
 			keysIn.seekg(0, std::ios::end);
 			std::streamsize fileSize = keysIn.tellg();
+
+			// hehe
+			// BEG, ios, BEG!! BEG FOR YOUR LIFE
 			keysIn.seekg(0, std::ios::beg);
 
 			char* buf = new char[fileSize + 1];

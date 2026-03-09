@@ -60,8 +60,8 @@ namespace FuncDoodle {
 			std::string m_FilePath;
 			int m_Deg = 90;
 			bool m_NewProjOpen = false;
-			UniquePtr<KeybindsRegistry> m_Keybinds =
-				std::make_unique<KeybindsRegistry>();
+			SharedPtr<KeybindsRegistry> m_Keybinds =
+				std::make_shared<KeybindsRegistry>();
 			SharedPtr<ProjectFile> m_CurrentProj;
 			SharedPtr<ProjectFile> m_CacheProj;
 			UniquePtr<AnimationManager> m_Manager;

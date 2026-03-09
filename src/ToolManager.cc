@@ -1,11 +1,12 @@
 #include "ToolManager.h"
 
+#include "Keybinds.h"
 #include "Tool.h"
 
 #include "MacroUtils.h"
 
 namespace FuncDoodle {
-	ToolManager::ToolManager() : m_SelectedTool(ToolType::Pencil) {}
+	ToolManager::ToolManager(SharedPtr<KeybindsRegistry> keybinds) : m_SelectedTool(ToolType::Pencil), m_Keybinds(keybinds) {}
 
 	ToolManager::~ToolManager() {}
 
@@ -50,7 +51,7 @@ namespace FuncDoodle {
 	void ToolManager::RenderTools() {
 		ImGui::Begin("Tools");
 
-		ToolKeybinds(&m_SelectedTool);
+		ToolKeybinds(&m_SelectedTool, m_Keybinds);
 		Buttons();
 		Widgets();
 

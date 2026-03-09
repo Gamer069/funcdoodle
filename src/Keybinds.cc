@@ -26,11 +26,17 @@ namespace FuncDoodle {
 	}
 
 	bool KeyMask::IsPressed() const {
-		for (int k = ImGuiKey_NamedKey_BEGIN; k < ImGuiKey_NamedKey_END; k++) {
-			int bucket = k / 64;
-			if (m_Keys[bucket] & (1ull << (k % 64))) {
-				if (ImGui::IsKeyPressed((ImGuiKey)k))
-					return true;
+		for (int i = 0; i < KEY_MASK_SIZE; i++) {
+			if (m_Keys[i] == 0)
+				continue;
+			for (int j = 0; j < 64; j++) {
+				if (m_Keys[i] & (1ull << j)) {
+					ImGuiKey key = (ImGuiKey)(i * 64 + j);
+
+					if (ImGui::IsKeyPressed(key)) {
+						return true;
+					}
+				}
 			}
 		}
 		return false;
@@ -90,6 +96,9 @@ namespace FuncDoodle {
 			};
 
 			auto keyFromName = [](const std::string& name) -> ImGuiKey {
+				if (name.length() == 1 && name[0] >= '0' && name[0] <= '9') {
+					return (ImGuiKey)(ImGuiKey_0 + (name[0] - '0'));
+				}
 				for (int k = ImGuiKey_NamedKey_BEGIN; k < ImGuiKey_NamedKey_END; k++) {
 					const char* keyName = ImGui::GetKeyName((ImGuiKey)k);
 					if (keyName && name == keyName)
@@ -161,11 +170,17 @@ namespace FuncDoodle {
 		return buf;
 	}
 
-	bool Shortcut::IsPressed() {
+	bool Shortcut::IsPressed() const {
 		ImGuiIO& io = ImGui::GetIO();
 
-		return (RequiresCtrl == io.KeyCtrl) && (RequiresShift == io.KeyShift) &&
-			(RequiresSuper == io.KeySuper) && Key.IsPressed();
+		if (RequiresCtrl && !io.KeyCtrl)
+			return false;
+		if (RequiresShift && !io.KeyShift)
+			return false;
+		if (RequiresSuper && !io.KeySuper)
+			return false;
+
+		return Key.IsPressed();
 	}
 
 	KeybindsRegistry::KeybindsRegistry(std::filesystem::path rootPath) : m_Reg({}), m_RootPath(rootPath) {}

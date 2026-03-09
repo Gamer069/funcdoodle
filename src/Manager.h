@@ -18,7 +18,7 @@ namespace FuncDoodle {
 	class AnimationManager {
 		public:
 			AnimationManager(
-				SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorControlled);
+				SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController, SharedPtr<KeybindsRegistry> keybinds);
 			~AnimationManager();
 			void RenderTimeline(bool prevEnabled);
 			void RenderControls();
@@ -51,6 +51,7 @@ namespace FuncDoodle {
 			UniquePtr<ToolManager> m_ToolManager;
 			UniquePtr<AnimationPlayer> m_Player;
 			SharedPtr<EditorController> m_EditorController;
+			SharedPtr<KeybindsRegistry> m_Keybinds;
 			AssetLoader* m_AssetLoader;
 			bool m_UndoByStroke = false;
 	};

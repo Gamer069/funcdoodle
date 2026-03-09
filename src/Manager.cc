@@ -1,5 +1,6 @@
 #include "Manager.h"
 
+#include "Keybinds.h"
 #include "Project.h"
 
 #include "FrameRenderer.h"
@@ -19,11 +20,12 @@
 
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(
-		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController)
+		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController, SharedPtr<KeybindsRegistry> keybinds)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
 		  m_EditorController(editorController),
 		  m_AssetLoader(assetLoader),
-		  m_ToolManager(std::make_unique<ToolManager>()) {
+		  m_Keybinds(keybinds),
+		  m_ToolManager(std::make_unique<ToolManager>(keybinds)) {
 		m_FrameRenderer = std::make_unique<FrameRenderer>(
 			nullptr, m_ToolManager.get(), m_Player.get(), m_EditorController);
 		m_TimelineFrameRenderer.reset(new FrameRenderer(

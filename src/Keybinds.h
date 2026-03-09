@@ -35,7 +35,7 @@ namespace FuncDoodle {
 		KeyMask Key;
 
 		operator char*() const;
-		bool IsPressed();
+		bool IsPressed() const;
 	};
 
 	struct ShortcutWithUser {

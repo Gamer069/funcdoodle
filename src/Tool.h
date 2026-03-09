@@ -2,8 +2,11 @@
 
 #include "Frame.h"
 
+#include "Keybinds.h"
 #include "LoadedAssets.h"
 #include "imgui.h"
+
+#include "MacroUtils.h"
 
 #include <functional>
 
@@ -97,23 +100,32 @@ namespace FuncDoodle {
 		}
 	}
 
-	static void ToolKeybinds(ToolType* tool) {
-		if (!ImGui::IsAnyItemActive()) {
-			if (ImGui::IsKeyPressed(ImGuiKey_1)) {
-				*tool = ToolType::Pencil;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_2)) {
-				*tool = ToolType::Eraser;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_3)) {
-				*tool = ToolType::Bucket;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_4)) {
-				*tool = ToolType::Picker;
-			}
-			if (ImGui::IsKeyPressed(ImGuiKey_5)) {
-				*tool = ToolType::Select;
-			}
+	static void ToolKeybindsRegister(SharedPtr<KeybindsRegistry> keybinds) {
+		keybinds->Register("pencil", { false, false, false, ImGuiKey_1 });
+		keybinds->Register("eraser", { false, false, false, ImGuiKey_2 });
+		keybinds->Register("bucket", { false, false, false, ImGuiKey_3 });
+		keybinds->Register("picker", { false, false, false, ImGuiKey_4 });
+		keybinds->Register("select", { false, false, false, ImGuiKey_5 });
+	}
+
+	static void ToolKeybinds(ToolType* tool, SharedPtr<KeybindsRegistry> keybinds) {
+		// if (!ImGui::IsAnyItemActive()) {
+		if (keybinds->Get("pencil").IsPressed()) {
+			FUNC_INF("pencil");
+			*tool = ToolType::Pencil;
 		}
+		if (keybinds->Get("eraser").IsPressed()) {
+			*tool = ToolType::Eraser;
+		}
+		if (keybinds->Get("bucket").IsPressed()) {
+			*tool = ToolType::Bucket;
+		}
+		if (keybinds->Get("picker").IsPressed()) {
+			*tool = ToolType::Picker;
+		}
+		if (keybinds->Get("select").IsPressed()) {
+			*tool = ToolType::Select;
+		}
+		// }
 	}
 }  // namespace FuncDoodle

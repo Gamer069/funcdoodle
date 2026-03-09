@@ -4,6 +4,7 @@
 
 #include "AssetLoader.h"
 
+#include "Keybinds.h"
 #include "MacroUtils.h"
 
 #include "Tool.h"
@@ -11,7 +12,7 @@
 namespace FuncDoodle {
 	class ToolManager {
 		public:
-			ToolManager();
+			ToolManager(SharedPtr<KeybindsRegistry> keybinds);
 			~ToolManager();
 			void RenderTools();
 			void Buttons();
@@ -33,5 +34,6 @@ namespace FuncDoodle {
 			float m_Col[3] = {0.0f, 0.0f, 0.0f};
 			int m_Size = 1;
 			bool m_PickerSelected = false;
+			SharedPtr<KeybindsRegistry> m_Keybinds;
 	};
 }  // namespace FuncDoodle
