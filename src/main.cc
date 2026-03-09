@@ -6,6 +6,7 @@
 #include <cstring>
 #include <memory>
 #define GLFW_INCLUDE_NONE
+#define TOML_EXCEPTIONS 0
 #include <GLFW/glfw3.h>
 #include <filesystem>
 #include <glad/glad.h>

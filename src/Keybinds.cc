@@ -1,6 +1,7 @@
 #include "Keybinds.h"
 #include "exepath.h"
 #include "imgui.h"
+#define TOML_EXCEPTIONS 0
 #include "toml++.h"
 #include <cstring>
 #include <map>
@@ -36,16 +37,25 @@ namespace FuncDoodle {
 	}
 
 	KeyMask::operator char*() const {
-		static char buf[256] = {};
+		static char buf[1024] = {};
 		buf[0] = '\0';
+		int offset = 0;
 		bool first = true;
 		for (int k = ImGuiKey_NamedKey_BEGIN; k < ImGuiKey_NamedKey_END; k++) {
 			int bucket = k / 64;
 			if (m_Keys[bucket] & (1ull << (k % 64))) {
+				const char* keyName = ImGui::GetKeyName((ImGuiKey)k);
+				if (!keyName) continue;
+
+				if (offset >= sizeof(buf)) break;
+
 				if (!first) {
-					std::strcat(buf, " | ");
+					offset += snprintf(buf + offset, sizeof(buf) - offset, " | ");
 				}
-				std::strcat(buf, ImGui::GetKeyName((ImGuiKey)k));
+
+				if (offset >= sizeof(buf)) break;
+
+				offset += snprintf(buf + offset, sizeof(buf) - offset, "%s", keyName);
 				first = false;
 			}
 		}
@@ -137,12 +147,17 @@ namespace FuncDoodle {
 		}
 
 	Shortcut::operator char*() const {
-		static char buf[64] = {};
-		buf[0] = '\0';
-		std::strcat(buf, RequiresCtrl ? "Ctrl + " : "");
-		std::strcat(buf, RequiresShift ? "Shift + " : "");
-		std::strcat(buf, RequiresSuper ? "Cmd + " : "");
-		std::strcat(buf, Key);
+		static char buf[256] = {};
+		
+		const char* key_str = (const char*)Key;
+
+		snprintf(buf, sizeof(buf), "%s%s%s%s",
+			RequiresCtrl ? "Ctrl + " : "",
+			RequiresShift ? "Shift + " : "",
+			RequiresSuper ? "Cmd + " : "",
+			key_str ? key_str : ""
+		);
+		
 		return buf;
 	}
 
@@ -175,8 +190,9 @@ namespace FuncDoodle {
 
 		if (!std::filesystem::exists(keybindsPath)) return;
 
-		toml::parse_result res = toml::parse_file(keybindsPath.string());
-		toml::table* keybinds = res.get("keybinds")->as_table();
+		auto keybindsPathStd = keybindsPath.string();
+		toml::v3::noex::parse_result res = toml::v3::noex::parse_file(keybindsPathStd);
+		toml::table* keybinds = res.table().get("keybinds")->as_table();
 		for (const auto& [k, v] : *keybinds) {
 			if (!v.is_string()) {
 				FUNC_WARN("keybind not a string - setting to default...");
