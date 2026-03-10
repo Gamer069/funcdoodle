@@ -12,8 +12,9 @@
 namespace FuncDoodle {
 	class ToolManager {
 		public:
-			ToolManager(SharedPtr<KeybindsRegistry> keybinds);
+			ToolManager(KeybindsRegistry& keybinds);
 			~ToolManager();
+			void RegisterKeybinds();
 			void RenderTools();
 			void Buttons();
 			void Widgets();
@@ -34,6 +35,6 @@ namespace FuncDoodle {
 			float m_Col[3] = {0.0f, 0.0f, 0.0f};
 			int m_Size = 1;
 			bool m_PickerSelected = false;
-			SharedPtr<KeybindsRegistry> m_Keybinds;
+			KeybindsRegistry& m_Keybinds;
 	};
 }  // namespace FuncDoodle

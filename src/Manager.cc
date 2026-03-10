@@ -21,7 +21,7 @@
 namespace FuncDoodle {
 	AnimationManager::AnimationManager(SharedPtr<ProjectFile> proj,
 		AssetLoader* assetLoader, SharedPtr<EditorController> editorController,
-		SharedPtr<KeybindsRegistry> keybinds)
+		KeybindsRegistry& keybinds)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
 		  m_EditorController(editorController), m_AssetLoader(assetLoader),
 		  m_Keybinds(keybinds),
@@ -34,6 +34,13 @@ namespace FuncDoodle {
 	}
 
 	AnimationManager::~AnimationManager() {}
+
+	void AnimationManager::RegisterKeybinds() {
+		m_Keybinds.Register("rewind", { false, false, false, ImGuiKey_J });
+		m_Keybinds.Register("play", { false, false, false, ImGuiKey_K });
+		m_Keybinds.Register("end", { false, false, false, ImGuiKey_J });
+		m_ToolManager->RegisterKeybinds();
+	}
 
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
 		// Set scrollbar size (thickness)
@@ -78,7 +85,7 @@ namespace FuncDoodle {
 		keyContext.player = m_Player.get();
 		keyContext.frameRenderer = m_FrameRenderer.get();
 		keyContext.selectedFrame = &m_SelectedFrame;
-		KeyHandler::HandleTimelineShortcuts(keyContext);
+		KeyHandler::HandleTimelineShortcuts(keyContext, m_Keybinds);
 		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 		}
@@ -202,7 +209,7 @@ namespace FuncDoodle {
 
 		if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
 				ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_J, true) &&
+			(m_Keybinds.Get("rewind").IsPressed() &&
 				!ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = 0;
 			m_Player->Rewind();
@@ -214,7 +221,7 @@ namespace FuncDoodle {
 				m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
 									: (ImTextureID)(intptr_t)s_PlayTexId,
 				ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_K, true) &&
+			(m_Keybinds.Get("play").IsPressed() &&
 				!ImGui::IsAnyItemActive())) {
 			m_Player->SetPlaying(!m_Player->Playing());
 		}
@@ -223,7 +230,7 @@ namespace FuncDoodle {
 
 		if (ImGui::ImageButton(
 				"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
-			(ImGui::IsKeyPressed(ImGuiKey_L, true) &&
+			(m_Keybinds.Get("end").IsPressed() &&
 				!ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 			m_Player->End();

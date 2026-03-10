@@ -100,32 +100,31 @@ namespace FuncDoodle {
 		}
 	}
 
-	static void ToolKeybindsRegister(SharedPtr<KeybindsRegistry> keybinds) {
-		keybinds->Register("pencil", {false, false, false, ImGuiKey_1});
-		keybinds->Register("eraser", {false, false, false, ImGuiKey_2});
-		keybinds->Register("bucket", {false, false, false, ImGuiKey_3});
-		keybinds->Register("picker", {false, false, false, ImGuiKey_4});
-		keybinds->Register("select", {false, false, false, ImGuiKey_5});
+	static void ToolKeybindsRegister(KeybindsRegistry& keybinds) {
+		keybinds.Register("pencil", {false, false, false, ImGuiKey_1});
+		keybinds.Register("eraser", {false, false, false, ImGuiKey_2});
+		keybinds.Register("bucket", {false, false, false, ImGuiKey_3});
+		keybinds.Register("picker", {false, false, false, ImGuiKey_4});
+		keybinds.Register("select", {false, false, false, ImGuiKey_5});
 	}
 
-	static void ToolKeybinds(
-		ToolType* tool, SharedPtr<KeybindsRegistry> keybinds) {
+	static void ToolKeybinds(ToolType* tool, KeybindsRegistry& keybinds) {
 		// if (!ImGui::IsAnyItemActive()) {
-		auto pencil = keybinds->Get("pencil");
-		auto eraser = keybinds->Get("eraser");
+		auto pencil = keybinds.Get("pencil");
+		auto eraser = keybinds.Get("eraser");
 		if (pencil.IsPressed()) {
 			*tool = ToolType::Pencil;
 		}
 		if (eraser.IsPressed()) {
 			*tool = ToolType::Eraser;
 		}
-		if (keybinds->Get("bucket").IsPressed()) {
+		if (keybinds.Get("bucket").IsPressed()) {
 			*tool = ToolType::Bucket;
 		}
-		if (keybinds->Get("picker").IsPressed()) {
+		if (keybinds.Get("picker").IsPressed()) {
 			*tool = ToolType::Picker;
 		}
-		if (keybinds->Get("select").IsPressed()) {
+		if (keybinds.Get("select").IsPressed()) {
 			*tool = ToolType::Select;
 		}
 		// }

@@ -1,4 +1,5 @@
 #include "Gui.h"
+#include "KeyHandler.h"
 #include "Manager.h"
 
 #include "Action.h"
@@ -29,34 +30,48 @@
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
 		std::filesystem::path themesPath, std::filesystem::path rootPath)
-		: m_FilePath(""), m_NewProjOpen(false), m_CurrentProj(nullptr),
-		  m_CacheProj(nullptr),
+		: m_FilePath(""), m_CurrentProj(nullptr), m_CacheProj(nullptr),
 		  m_EditorController(std::make_shared<EditorController>()),
 		  m_Window(win), m_AssetLoader(assetLoader),
 		  m_CacheBGCol({255, 255, 255}), m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")),
-		  m_Keybinds(std::make_unique<KeybindsRegistry>(rootPath)) {
-		m_Manager = std::make_unique<AnimationManager>(
-			nullptr, assetLoader, m_EditorController, m_Keybinds),
+		  m_Keybinds(rootPath) {
+		m_Manager = std::make_unique<AnimationManager>(nullptr, assetLoader, m_EditorController, m_Keybinds),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
 
+		RegisterKeybinds();
+	}
+
+	void Application::RegisterKeybinds() {
 		// nose
-		m_Keybinds->Register("new", {true, false, false, ImGuiKey_N});
-		m_Keybinds->Register("open", {true, false, false, ImGuiKey_O});
-		m_Keybinds->Register("save", {true, false, false, ImGuiKey_S});
-		m_Keybinds->Register("export", {true, false, false, ImGuiKey_E});
+		m_Keybinds.Register("new", {true, false, false, ImGuiKey_N});
+		m_Keybinds.Register("open", {true, false, false, ImGuiKey_O});
+		m_Keybinds.Register("save", {true, false, false, ImGuiKey_S});
+		m_Keybinds.Register("export", {true, false, false, ImGuiKey_E});
 
-		m_Keybinds->Register("quit", {true, false, false, ImGuiKey_Q});
-		m_Keybinds->Register("pref", {true, false, false, ImGuiKey_Comma});
-		m_Keybinds->Register("theme", {true, false, false, ImGuiKey_T});
+		m_Keybinds.Register("quit", {true, false, false, ImGuiKey_Q});
+		m_Keybinds.Register("pref", {true, false, false, ImGuiKey_Comma});
+		m_Keybinds.Register("theme", {true, false, false, ImGuiKey_T});
 
-		m_Keybinds->Register("keybinds", {true, false, false, ImGuiKey_H});
+		m_Keybinds.Register("keybinds", {true, false, false, ImGuiKey_H});
 
-		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
+		m_Keybinds.Register("del", {false, false, false, ImGuiKey_Delete});
 
 		ToolKeybindsRegister(m_Keybinds);
+		KeyHandler::RegisterKeybinds(m_Keybinds);
+		m_Manager->RegisterKeybinds();
 
-		m_Keybinds->End();
+		m_Keybinds.End();
+	}
+
+	void Application::RegisterPopups() {
+		m_Popups.Register("edit_proj");
+		m_Popups.Register("export");
+		m_Popups.Register("keybinds");
+		m_Popups.Register("new");
+		m_Popups.Register("pref");
+		m_Popups.Register("rotate");
+		m_Popups.Register("save_changes");
 	}
 
 	Application::~Application() {
@@ -95,31 +110,31 @@ namespace FuncDoodle {
 		ImGuiIO& io = ImGui::GetIO();
 
 		// Check if each shortcut is pressed and perform the appropriate action
-		if (m_Keybinds->Get("new").IsPressed()) {
+		if (m_Keybinds.Get("new").IsPressed()) {
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjCreateSound);
-			m_NewProjOpen = true;
+			m_Popups.Open("new");
 		}
-		if (m_Keybinds->Get("open").IsPressed()) {
+		if (m_Keybinds.Get("open").IsPressed()) {
 			OpenFileDialog([&]() { this->ReadProjectFile(); });
 		}
-		if (m_Keybinds->Get("save").IsPressed()) {
+		if (m_Keybinds.Get("save").IsPressed()) {
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjSaveSound);
 			SaveFileDialog([&]() { this->SaveProjectFile(); });
 			if (m_SFXEnabled)
 				m_AssetLoader->PlaySound(s_ProjSaveEndSound);
 		}
-		if (m_Keybinds->Get("quit").IsPressed()) {
+		if (m_Keybinds.Get("quit").IsPressed()) {
 			glfwSetWindowShouldClose(m_Window, true);
 		}
-		if (m_Keybinds->Get("pref").IsPressed()) {
-			m_EditPrefsOpen = true;
+		if (m_Keybinds.Get("pref").IsPressed()) {
+			m_Popups.Open("pref");
 		}
-		if (m_Keybinds->Get("theme").IsPressed()) {
+		if (m_Keybinds.Get("theme").IsPressed()) {
 			Themes::g_ThemeEditorOpen = true;
 		}
-		if (m_Keybinds->Get("del").IsPressed()) {
+		if (m_Keybinds.Get("del").IsPressed()) {
 			if (m_EditorController->Sel() && m_CurrentProj) {
 				auto selPixels = m_EditorController->Sel()->All();
 				std::vector<Col> prevPixels;
@@ -135,12 +150,12 @@ namespace FuncDoodle {
 					m_EditorController->Sel().get(), m_CurrentProj->BgCol());
 			}
 		}
-		if (m_Keybinds->Get("keybinds").IsPressed()) {
-			m_ShowKeybindsOpen = true;
+		if (m_Keybinds.Get("keybinds").IsPressed()) {
+			m_Popups.Open("keybinds");
 		}
 		if (m_CurrentProj) {
-			if (m_Keybinds->Get("export").IsPressed()) {
-				m_ExportOpen = true;
+			if (m_Keybinds.Get("export").IsPressed()) {
+				m_Popups.Open("export");
 			}
 		}
 	}
@@ -291,7 +306,7 @@ namespace FuncDoodle {
 				if (ImGui::IsMouseReleased(ImGuiMouseButton_Left)) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjCreateSound);
-					m_NewProjOpen = true;
+					m_Popups.Open("new");
 				}
 			}
 
@@ -319,12 +334,11 @@ namespace FuncDoodle {
 			ImGui::ColorConvertFloat4ToU32(tintOpen));
 	}
 	void Application::SaveChangesDialog() {
-		if (m_SaveChangesOpen) {
-			ImGui::OpenPopup("SaveChanges");
-			m_SaveChangesOpen = false;
+		if (m_Popups.IsOpen("save_changes")) {
+			ImGui::OpenPopup("Save Changes");
 		}
 
-		if (ImGui::BeginPopupModal("SaveChanges")) {
+		if (ImGui::BeginPopupModal("Save Changes", m_Popups.Get("save_changes"))) {
 			ImGui::Text("Save changes?");
 			if (ImGui::Button("Yes")) {
 				SaveFileDialog([&] { SaveProjectFile(); });
@@ -348,9 +362,9 @@ namespace FuncDoodle {
 	}
 	void Application::OpenSaveChangesDialog() {
 		FUNC_DBG("Saved?: " << m_CurrentProj->Saved());
-		FUNC_DBG("m_SaveChangesOpen is getting set to true");
-		m_SaveChangesOpen = true;
-		FUNC_DBG("set m_SaveChangesOpen");
+		FUNC_DBG("m_Popups.Open(save_changes) being called");
+		m_Popups.Open("save_changes");
+		FUNC_DBG("called m_Popups.Open(save_changes)");
 	}
 	void Application::DropCallback(
 		GLFWwindow* win, int count, const char** paths) {
@@ -364,7 +378,7 @@ namespace FuncDoodle {
 		this->ReadProjectFile();
 	}
 	void Application::RenderEditProj() {
-		if (m_EditProjOpen) {
+		if (m_Popups.IsOpen("edit_proj")) {
 			ImGui::OpenPopup("EditProj");
 		}
 
@@ -373,7 +387,7 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowPos(ImVec2(485, 384), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(309, 312), ImGuiCond_FirstUseEver);
 		}
-		if (ImGui::BeginPopupModal("EditProj", &m_EditProjOpen,
+		if (ImGui::BeginPopupModal("EditProj", m_Popups.Get("edit_proj"),
 				ImGuiWindowFlags_AlwaysAutoResize) &&
 			m_CurrentProj) {
 			char name[256];
@@ -434,7 +448,7 @@ namespace FuncDoodle {
 
 			if (ImGui::Button("Close") ||
 				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_EditProjOpen = false;
+				m_Popups.Close("edit_proj");
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -442,23 +456,24 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				m_EditProjOpen = false;
+				m_Popups.Close("edit_proj");
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
 		}
 	}
 	void Application::RenderNewProj() {
-		if (m_NewProjOpen) {
+		if (m_Popups.IsOpen("new")) {
 			ImGui::OpenPopup("NewProj");
 		}
+
 		if (ImGui::IsPopupOpen("NewProj")) {
 			ImGui::SetNextWindowFocus();
 			ImGui::SetNextWindowPos(ImVec2(376, 436), ImGuiCond_FirstUseEver);
 			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
 		}
-		if (ImGui::BeginPopupModal(
-				"NewProj", &m_NewProjOpen, ImGuiWindowFlags_AlwaysAutoResize)) {
+
+		if (ImGui::BeginPopupModal("NewProj", m_Popups.Get("new"), ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256] = "";
 			int width = 32;
 			int height = 32;
@@ -537,7 +552,7 @@ namespace FuncDoodle {
 
 			if (ImGui::Button("Close") ||
 				ImGui::IsKeyPressed(ImGuiKey_Escape, false)) {
-				m_NewProjOpen = false;
+				m_Popups.Close("new");
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::SameLine();
@@ -548,7 +563,7 @@ namespace FuncDoodle {
 				m_Manager = std::make_unique<AnimationManager>(m_CurrentProj,
 					m_AssetLoader, m_EditorController, m_Keybinds);
 				m_Manager->SetUndoByStroke(m_UndoByStroke);
-				m_NewProjOpen = false;
+				m_Popups.Close("new");
 			}
 
 			ImGui::EndPopup();
@@ -571,16 +586,16 @@ namespace FuncDoodle {
 	void Application::RenderMainMenuBar() {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
-				if (ImGui::MenuItem("New project", m_Keybinds->Get("new"))) {
+				if (ImGui::MenuItem("New project", m_Keybinds.Get("new"))) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjCreateSound);
-					m_NewProjOpen = true;
+					m_Popups.Open("new");
 				}
 
-				if (ImGui::MenuItem("Open", m_Keybinds->Get("open"))) {
+				if (ImGui::MenuItem("Open", m_Keybinds.Get("open"))) {
 					this->OpenFileDialog([&]() { this->ReadProjectFile(); });
 				}
-				if (ImGui::MenuItem("Save", m_Keybinds->Get("save"))) {
+				if (ImGui::MenuItem("Save", m_Keybinds.Get("save"))) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjSaveSound);
 					this->SaveFileDialog([&]() { this->SaveProjectFile(); });
@@ -591,16 +606,14 @@ namespace FuncDoodle {
 						m_Manager->SetProj(nullptr);
 					}
 					if (ImGui::MenuItem("Edit project")) {
-						m_EditProjOpen = true;
+						m_Popups.Open("edit_proj");
 					}
-					if (ImGui::MenuItem("Export", m_Keybinds->Get("export"))) {
-						m_ExportOpen = true;
+					if (ImGui::MenuItem("Export", m_Keybinds.Get("export"))) {
+						m_Popups.Open("export");
 					}
 				}
-				if (ImGui::MenuItem("Exit", m_Keybinds->Get("quit"))) {
-					m_EditProjOpen = false;
-					m_ExportOpen = false;
-					m_NewProjOpen = false;
+				if (ImGui::MenuItem("Exit", m_Keybinds.Get("quit"))) {
+					m_Popups.CloseAllExcept("save_changes");
 					glfwSetWindowShouldClose(m_Window, true);
 				}
 				ImGui::EndMenu();
@@ -617,13 +630,13 @@ namespace FuncDoodle {
 						}
 
 						if (ImGui::MenuItem("Rotate...")) {
-							m_RotateOpen = true;
+							m_Popups.Open("rotate");
 						}
 
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Delete", m_Keybinds->Get("del"))) {
+					if (ImGui::MenuItem("Delete", m_Keybinds.Get("del"))) {
 						if (m_EditorController->Sel()) {
 							auto selPixels = m_EditorController->Sel()->All();
 							std::vector<Col> prevPixels;
@@ -645,18 +658,18 @@ namespace FuncDoodle {
 					}
 				}
 
-				if (ImGui::MenuItem("Preferences", m_Keybinds->Get("pref"))) {
-					m_EditPrefsOpen = true;
+				if (ImGui::MenuItem("Preferences", m_Keybinds.Get("pref"))) {
+					m_Popups.Open("pref");
 				}
-				if (ImGui::MenuItem("Theme editor", m_Keybinds->Get("theme"))) {
+				if (ImGui::MenuItem("Theme editor", m_Keybinds.Get("theme"))) {
 					Themes::g_ThemeEditorOpen = true;
 				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Help", true)) {
 				if (ImGui::MenuItem(
-						"Show keybinds", m_Keybinds->Get("keybinds"))) {
-					m_ShowKeybindsOpen = true;
+						"Show keybinds", m_Keybinds.Get("keybinds"))) {
+					m_Popups.Open("keybinds");
 				}
 				ImGui::EndMenu();
 			}
@@ -664,10 +677,9 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderEditPrefs() {
-		if (m_EditPrefsOpen) {
+		if (m_Popups.IsOpen("pref")) {
 			ImGui::OpenPopup("EditPrefs");
-			m_EditPrefsOpen =
-				false;	// Reset flag since OpenPopup only sets visibility
+			m_Popups.Close("pref");
 		}
 		if (ImGui::BeginPopup("EditPrefs")) {
 			if (ImGui::BeginCombo("Theme", Themes::g_Themes[m_Theme].Name)) {
@@ -762,9 +774,9 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderRotate() {
-		if (m_RotateOpen) {
+		if (m_Popups.IsOpen("rotate")) {
 			ImGui::OpenPopup("Rotate");
-			m_RotateOpen = false;
+			m_Popups.Close("rotate");
 		}
 
 		if (ImGui::BeginPopup("Rotate")) {
@@ -783,9 +795,9 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderExport() {
-		if (m_ExportOpen) {
+		if (m_Popups.IsOpen("export")) {
 			ImGui::OpenPopup("Export##export");
-			m_ExportOpen = false;
+			m_Popups.Close("export");
 		}
 
 		if (ImGui::BeginPopup("Export##export")) {
@@ -823,13 +835,13 @@ namespace FuncDoodle {
 		}
 	}
 	void Application::RenderKeybinds() {
-		if (m_ShowKeybindsOpen) {
+		if (m_Popups.IsOpen("keybinds")) {
 			ImGui::OpenPopup("Keybinds");
 		}
 
 		// TODO: actually have this a customizable keybinds thing, not just some
 		// text
-		if (ImGui::BeginPopupModal("Keybinds", &m_ShowKeybindsOpen,
+		if (ImGui::BeginPopupModal("Keybinds", m_Popups.Get("keybinds"),
 				ImGuiWindowFlags_AlwaysAutoResize)) {
 			std::filesystem::path keysPath =
 				m_AssetLoader->GetPath() / "keys.txt";

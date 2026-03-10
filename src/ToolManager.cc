@@ -6,7 +6,7 @@
 #include "MacroUtils.h"
 
 namespace FuncDoodle {
-	ToolManager::ToolManager(SharedPtr<KeybindsRegistry> keybinds)
+	ToolManager::ToolManager(KeybindsRegistry& keybinds)
 		: m_SelectedTool(ToolType::Pencil), m_Keybinds(keybinds) {}
 
 	ToolManager::~ToolManager() {}
@@ -26,6 +26,11 @@ namespace FuncDoodle {
 		}
 	}
 
+	void ToolManager::RegisterKeybinds() {
+		m_Keybinds.Register("decrease_tool_size", { false, false, false, ImGuiKey_Semicolon });
+		m_Keybinds.Register("increase_tool_size", { false, false, false, ImGuiKey_Apostrophe });
+	}
+
 	void ToolManager::Widgets() {
 		if (m_SelectedTool == ToolType::Pencil ||
 			m_SelectedTool == ToolType::Eraser) {
@@ -42,9 +47,9 @@ namespace FuncDoodle {
 		if (m_Size < 1)
 			m_Size = 1;
 
-		if (ImGui::IsKeyPressed(ImGuiKey_Semicolon, true)) {
+		if (m_Keybinds.Get("decrease_tool_size").IsPressed()) {
 			m_Size--;
-		} else if (ImGui::IsKeyPressed(ImGuiKey_Apostrophe, true)) {
+		} else if (m_Keybinds.Get("increase_tool_size").IsPressed()) {
 			m_Size++;
 		}
 	}

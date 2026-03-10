@@ -4,6 +4,7 @@
 #include "EditorController.h"
 #include "Keybinds.h"
 #include "Manager.h"
+#include "PopupRegistry.h"
 #include "Project.h"
 #include "Ptr.h"
 #include "UUID.h"
@@ -25,11 +26,15 @@ namespace FuncDoodle {
 			void SaveFileDialog(std::function<void()> done);
 			void ReadProjectFile();
 			void SaveProjectFile();
+			void RegisterKeybinds();
+			void RegisterPopups();
 			void CheckKeybinds();
 			void RenderOptions();
 			void SaveChangesDialog();
 			void OpenSaveChangesDialog();
-			bool SaveChangesDialogOpen() { return m_SaveChangesOpen; }
+			bool SaveChangesDialogOpen() {
+				return m_Popups.IsOpen("save_changes");
+			}
 			inline SharedPtr<ProjectFile> CurProj() { return m_CurrentProj; }
 			inline SharedPtr<ProjectFile> CacheProj() { return m_CacheProj; }
 			inline bool ShouldClose() { return m_ShouldClose; }
@@ -61,9 +66,8 @@ namespace FuncDoodle {
 		private:
 			std::string m_FilePath;
 			int m_Deg = 90;
-			bool m_NewProjOpen = false;
-			SharedPtr<KeybindsRegistry> m_Keybinds =
-				std::make_shared<KeybindsRegistry>();
+			PopupRegistry m_Popups;
+			KeybindsRegistry m_Keybinds;
 			SharedPtr<ProjectFile> m_CurrentProj;
 			SharedPtr<ProjectFile> m_CacheProj;
 			UniquePtr<AnimationManager> m_Manager;
@@ -71,13 +75,6 @@ namespace FuncDoodle {
 			AssetLoader* m_AssetLoader;
 			SharedPtr<EditorController> m_EditorController;
 			int m_ExportFormat = 0;
-			bool m_EditProjOpen = false;
-			bool m_ExportOpen = false;
-			bool m_EditPrefsOpen = false;
-			bool m_ShowKeybindsOpen = false;
-			bool m_SaveChangesOpen = false;
-			bool m_RotateOpen = false;
-			bool m_ShortcutsOpen = false;
 			UUID m_Theme;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;

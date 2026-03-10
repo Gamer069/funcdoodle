@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Keybinds.h"
 #include "Project.h"
 #include "Ptr.h"
 
@@ -20,8 +21,9 @@ namespace FuncDoodle {
 			AnimationManager(SharedPtr<ProjectFile> proj,
 				AssetLoader* assetLoader,
 				SharedPtr<EditorController> editorController,
-				SharedPtr<KeybindsRegistry> keybinds);
+				KeybindsRegistry& keybinds);
 			~AnimationManager();
+			void RegisterKeybinds();
 			void RenderTimeline(bool prevEnabled);
 			void RenderControls();
 			void RenderLogs();
@@ -53,7 +55,7 @@ namespace FuncDoodle {
 			UniquePtr<ToolManager> m_ToolManager;
 			UniquePtr<AnimationPlayer> m_Player;
 			SharedPtr<EditorController> m_EditorController;
-			SharedPtr<KeybindsRegistry> m_Keybinds;
+			KeybindsRegistry& m_Keybinds;
 			AssetLoader* m_AssetLoader;
 			bool m_UndoByStroke = false;
 	};

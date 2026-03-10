@@ -178,14 +178,9 @@ namespace FuncDoodle {
 	bool Shortcut::IsPressed() const {
 		ImGuiIO& io = ImGui::GetIO();
 
-		if (RequiresCtrl && !io.KeyCtrl)
-			return false;
-		if (RequiresShift && !io.KeyShift)
-			return false;
-		if (RequiresSuper && !io.KeySuper)
-			return false;
-
-		return Key.IsPressed();
+		return RequiresCtrl == io.KeyCtrl &&
+			RequiresShift == io.KeyShift &&
+			RequiresSuper == io.KeySuper && Key.IsPressed();
 	}
 
 	KeybindsRegistry::KeybindsRegistry(std::filesystem::path rootPath)
