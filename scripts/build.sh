@@ -7,6 +7,8 @@ if [[ $# -ne 0 ]] && [[ $# -ne 4 ]]; then
 	usage
 fi
 
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 arg1=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 arg3=$(echo "$3" | tr '[:upper:]' '[:lower:]')
@@ -39,16 +41,17 @@ fi
 arg1=$(echo "$arg1" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
 if [ "$arg3" == "true" ]; then
-	rm -rf bin
+	rm -rf "$root_dir/bin/linux"
 fi
 
-mkdir -p bin || exit -1 
-cd bin || exit -1 
-cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) -DBUILD_TESTS=OFF .. || exit -1
-make || exit -1
-cp -r ../assets . || exit -1
-cp -r ../themes . || exit -1
-cd ..
+mkdir -p "$root_dir/bin/linux" || exit -1
+pushd "$root_dir/bin/linux" >/dev/null || exit -1
+cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) -DBUILD_TESTS=OFF "$root_dir" || exit -1
+jobs=$(( ($(nproc) + 2) / 3 ))
+make -j"$jobs" || exit -1
+cp -r "$root_dir/assets" . || exit -1
+cp -r "$root_dir/themes" . || exit -1
+popd >/dev/null || exit -1
 if [[ "$arg4" == "true" ]]; then
-	./bin/FuncDoodle || exit -1
+	"$root_dir/bin/linux/FuncDoodle" || exit -1
 fi

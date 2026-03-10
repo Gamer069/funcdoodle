@@ -7,7 +7,7 @@ endif()
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-if(APPLE)
+if(APPLE AND NOT CMAKE_CROSSCOMPILING)
 	project(FuncDoodle C CXX OBJC)
 else()
 	project(FuncDoodle C CXX)
@@ -50,7 +50,7 @@ add_executable(FuncDoodle
 	${SRC}
 )
 
-if(BUILD_TESTS)
+if(BUILD_TESTS AND NOT CMAKE_CROSSCOMPILING)
 	file(GLOB TEST_SOURCES "test/*.cc")
 	target_sources(FuncDoodle PRIVATE ${TEST_SOURCES})
 	target_compile_definitions(FuncDoodle PRIVATE FUNCDOODLE_BUILD_TESTS)

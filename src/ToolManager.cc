@@ -27,8 +27,10 @@ namespace FuncDoodle {
 	}
 
 	void ToolManager::RegisterKeybinds() {
-		m_Keybinds.Register("decrease_tool_size", { false, false, false, ImGuiKey_Semicolon });
-		m_Keybinds.Register("increase_tool_size", { false, false, false, ImGuiKey_Apostrophe });
+		m_Keybinds.Register(
+			"decrease_tool_size", {false, false, false, ImGuiKey_Semicolon});
+		m_Keybinds.Register(
+			"increase_tool_size", {false, false, false, ImGuiKey_Apostrophe});
 	}
 
 	void ToolManager::Widgets() {

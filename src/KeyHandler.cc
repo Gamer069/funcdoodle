@@ -5,23 +5,31 @@
 
 namespace FuncDoodle {
 	void KeyHandler::RegisterKeybinds(KeybindsRegistry& keybinds) {
-		keybinds.Register("prev_frame", { false, false, false, ImGuiKey_LeftBracket });
-		keybinds.Register("next_frame", { false, false, false, ImGuiKey_RightBracket });
-		keybinds.Register("undo", { false, false, false, ImGuiKey_E });
-		keybinds.Register("redo", { false, false, false, ImGuiKey_R });
-		keybinds.Register("insert_after", { false, false, false, ImGuiKey_P });
-		keybinds.Register("insert_before", { false, false, false, ImGuiKey_O });
-		keybinds.Register("move_forward", { false, false, false, ImGuiKey_I });
-		keybinds.Register("move_backward", { false, false, false, ImGuiKey_U });
-		keybinds.Register("delete_frame", { false, false, false, ImGuiKey_Backslash });
-		keybinds.Register("copy_frame", { false, false, false, ImGuiKey_Comma });
-		keybinds.Register("paste_frame_before", { false, false, false, ImGuiKey_Period });
-		keybinds.Register("paste_frame_after", { false, false, false, ImGuiKey_Slash });
-		keybinds.Register("duplicate_frame_after", { false, false, false, ImGuiKey_M });
-		keybinds.Register("duplicate_frame_before", { false, false, false, ImGuiKey_N });
+		keybinds.Register(
+			"prev_frame", {false, false, false, ImGuiKey_LeftBracket});
+		keybinds.Register(
+			"next_frame", {false, false, false, ImGuiKey_RightBracket});
+		keybinds.Register("undo", {false, false, false, ImGuiKey_E});
+		keybinds.Register("redo", {false, false, false, ImGuiKey_R});
+		keybinds.Register("insert_after", {false, false, false, ImGuiKey_P});
+		keybinds.Register("insert_before", {false, false, false, ImGuiKey_O});
+		keybinds.Register("move_forward", {false, false, false, ImGuiKey_I});
+		keybinds.Register("move_backward", {false, false, false, ImGuiKey_U});
+		keybinds.Register(
+			"delete_frame", {false, false, false, ImGuiKey_Backslash});
+		keybinds.Register("copy_frame", {false, false, false, ImGuiKey_Comma});
+		keybinds.Register(
+			"paste_frame_before", {false, false, false, ImGuiKey_Period});
+		keybinds.Register(
+			"paste_frame_after", {false, false, false, ImGuiKey_Slash});
+		keybinds.Register(
+			"duplicate_frame_after", {false, false, false, ImGuiKey_M});
+		keybinds.Register(
+			"duplicate_frame_before", {false, false, false, ImGuiKey_N});
 	}
 
-	void KeyHandler::HandleTimelineShortcuts(TimelineKeyContext& context, KeybindsRegistry& keybinds) {
+	void KeyHandler::HandleTimelineShortcuts(
+		TimelineKeyContext& context, KeybindsRegistry& keybinds) {
 		if (!context.proj || !context.selectedFrame) {
 			return;
 		}

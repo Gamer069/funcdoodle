@@ -4,11 +4,12 @@ set -e
 # ========================
 # Configuration
 # ========================
-APP_NAME="FuncDoodle"
-BINARY="bin/FuncDoodle"
+APP_NAME="${3:-FuncDoodle}"
+BIN_DIR="${1:-bin/macos}"
 ASSETS_DIR="assets"
 THEMES_DIR="themes"
-OUTPUT_DIR="appbin"
+OUTPUT_DIR="${2:-appbin}"
+BINARY="$BIN_DIR/FuncDoodle"
 APP_DIR="$OUTPUT_DIR/$APP_NAME.app"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
@@ -23,6 +24,10 @@ mkdir -p "$RESOURCES_DIR"
 # ========================
 # Copy binary
 # ========================
+if [ ! -f "$BINARY" ]; then
+	echo "Binary not found: $BINARY"
+	exit 1
+fi
 cp "$BINARY" "$MACOS_DIR/$APP_NAME"
 chmod +x "$MACOS_DIR/$APP_NAME"
 
@@ -65,4 +70,4 @@ cat > "$APP_DIR/Contents/Info.plist" <<EOF
 </plist>
 EOF
 
-echo "✅ App bundle created at $APP_DIR"
+echo "App bundle created at $APP_DIR"

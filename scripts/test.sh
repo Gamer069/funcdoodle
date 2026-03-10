@@ -27,16 +27,19 @@ if [[ "$clean_lower" != "true" && "$clean_lower" != "false" ]]; then
 	exit 1
 fi
 
+root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 if [[ "$clean_lower" == "true" ]]; then
-	rm -rf bin
+	rm -rf "$root_dir/bin/linux"
 fi
 
-mkdir -p bin
-cd bin
-cmake -DCMAKE_BUILD_TYPE="$mode" -DISTILING=ON -DBUILD_TESTS=ON ..
-make -j4
-cd ..
+mkdir -p "$root_dir/bin/linux"
+pushd "$root_dir/bin/linux" >/dev/null
+cmake -DCMAKE_BUILD_TYPE="$mode" -DISTILING=ON -DBUILD_TESTS=ON "$root_dir"
+jobs=$(( ($(nproc) + 2) / 3 ))
+make -j"$jobs"
+popd >/dev/null
 
 ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0}" \
 LSAN_OPTIONS="${LSAN_OPTIONS:-detect_leaks=0}" \
-./bin/FuncDoodle
+"$root_dir/bin/linux/FuncDoodle"

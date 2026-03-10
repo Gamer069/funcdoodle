@@ -36,7 +36,8 @@ namespace FuncDoodle {
 		  m_CacheBGCol({255, 255, 255}), m_ThemesPath(themesPath),
 		  m_Theme(UUID::FromString("d0c1a009-d09c-4fe6-84f8-eddcb2da38f9")),
 		  m_Keybinds(rootPath) {
-		m_Manager = std::make_unique<AnimationManager>(nullptr, assetLoader, m_EditorController, m_Keybinds),
+		m_Manager = std::make_unique<AnimationManager>(
+			nullptr, assetLoader, m_EditorController, m_Keybinds),
 		m_Manager->SetUndoByStroke(m_UndoByStroke);
 
 		RegisterKeybinds();
@@ -338,7 +339,8 @@ namespace FuncDoodle {
 			ImGui::OpenPopup("Save Changes");
 		}
 
-		if (ImGui::BeginPopupModal("Save Changes", m_Popups.Get("save_changes"))) {
+		if (ImGui::BeginPopupModal(
+				"Save Changes", m_Popups.Get("save_changes"))) {
 			ImGui::Text("Save changes?");
 			if (ImGui::Button("Yes")) {
 				SaveFileDialog([&] { SaveProjectFile(); });
@@ -473,7 +475,8 @@ namespace FuncDoodle {
 			ImGui::SetNextWindowSize(ImVec2(350, 336), ImGuiCond_FirstUseEver);
 		}
 
-		if (ImGui::BeginPopupModal("NewProj", m_Popups.Get("new"), ImGuiWindowFlags_AlwaysAutoResize)) {
+		if (ImGui::BeginPopupModal("NewProj", m_Popups.Get("new"),
+				ImGuiWindowFlags_AlwaysAutoResize)) {
 			char name[256] = "";
 			int width = 32;
 			int height = 32;

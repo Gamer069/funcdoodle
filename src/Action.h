@@ -177,8 +177,8 @@ namespace FuncDoodle {
 			RotateSelectionAction(unsigned long frameIndex,
 				SharedPtr<Selection> sel, int32_t deg,
 				const SharedPtr<ProjectFile>& proj)
-				: m_FrameIndex(frameIndex), m_Sel(std::move(sel)),
-				  m_Proj(proj), m_Deg(deg) {}
+				: m_FrameIndex(frameIndex), m_Sel(std::move(sel)), m_Proj(proj),
+				  m_Deg(deg) {}
 
 			void Undo() override;
 			void Redo() override;

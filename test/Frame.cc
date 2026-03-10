@@ -122,8 +122,8 @@ int FuncDoodle_RunFrameTests() {
 		"Rotate(90) should move (0,0)->(2,0)");
 	CHECK((rot_frame.Pixels()->Get(0, 1) == H),
 		"Rotate(90) should move (1,2)->(0,1)");
-	CHECK((rot_frame.Pixels()->Get(1, 1) == E),
-		"Rotate(90) should keep center");
+	CHECK(
+		(rot_frame.Pixels()->Get(1, 1) == E), "Rotate(90) should keep center");
 	CHECK((rot_frame.Pixels()->Get(2, 1) == B),
 		"Rotate(90) should move (1,0)->(2,1)");
 	CHECK((rot_frame.Pixels()->Get(0, 2) == I),

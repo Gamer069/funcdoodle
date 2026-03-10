@@ -36,9 +36,9 @@ namespace FuncDoodle {
 	AnimationManager::~AnimationManager() {}
 
 	void AnimationManager::RegisterKeybinds() {
-		m_Keybinds.Register("rewind", { false, false, false, ImGuiKey_J });
-		m_Keybinds.Register("play", { false, false, false, ImGuiKey_K });
-		m_Keybinds.Register("end", { false, false, false, ImGuiKey_J });
+		m_Keybinds.Register("rewind", {false, false, false, ImGuiKey_J});
+		m_Keybinds.Register("play", {false, false, false, ImGuiKey_K});
+		m_Keybinds.Register("end", {false, false, false, ImGuiKey_J});
 		m_ToolManager->RegisterKeybinds();
 	}
 
@@ -221,8 +221,7 @@ namespace FuncDoodle {
 				m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
 									: (ImTextureID)(intptr_t)s_PlayTexId,
 				ImVec2(20, 20)) ||
-			(m_Keybinds.Get("play").IsPressed() &&
-				!ImGui::IsAnyItemActive())) {
+			(m_Keybinds.Get("play").IsPressed() && !ImGui::IsAnyItemActive())) {
 			m_Player->SetPlaying(!m_Player->Playing());
 		}
 
@@ -230,8 +229,7 @@ namespace FuncDoodle {
 
 		if (ImGui::ImageButton(
 				"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
-			(m_Keybinds.Get("end").IsPressed() &&
-				!ImGui::IsAnyItemActive())) {
+			(m_Keybinds.Get("end").IsPressed() && !ImGui::IsAnyItemActive())) {
 			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 			m_Player->End();
 		}

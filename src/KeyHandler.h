@@ -16,7 +16,8 @@ namespace FuncDoodle {
 
 	class KeyHandler {
 		public:
-			static void HandleTimelineShortcuts(TimelineKeyContext& context, KeybindsRegistry& keybinds);
+			static void HandleTimelineShortcuts(
+				TimelineKeyContext& context, KeybindsRegistry& keybinds);
 			static void RegisterKeybinds(KeybindsRegistry& keybinds);
 	};
 }  // namespace FuncDoodle
