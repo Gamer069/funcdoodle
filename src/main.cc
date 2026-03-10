@@ -210,7 +210,9 @@ int main(int argc, char** argv) {
 
 	FuncDoodle::Themes::LoadThemes(themesPath);
 
-	UniquePtr<FuncDoodle::Application> application = std::make_unique<FuncDoodle::Application>(win, &assetLoader, themesPath, rootPath);
+	UniquePtr<FuncDoodle::Application> application =
+		std::make_unique<FuncDoodle::Application>(
+			win, &assetLoader, themesPath, rootPath);
 
 	ImGuiSettingsHandler handler;
 	handler.TypeName = "UserData";

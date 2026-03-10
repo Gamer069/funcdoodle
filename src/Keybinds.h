@@ -9,6 +9,12 @@
 namespace FuncDoodle {
 	constexpr int KEY_MASK_SIZE = (ImGuiKey_NamedKey_END + 63) / 64;
 
+	struct StrCmp {
+			bool operator()(const char* a, const char* b) const {
+				return std::strcmp(a, b) < 0;
+			}
+	};
+
 	class KeyMask {
 		public:
 			KeyMask();
@@ -25,22 +31,23 @@ namespace FuncDoodle {
 	};
 
 	struct Shortcut {
-		Shortcut();
-		Shortcut(const char* str);
-		Shortcut(bool requiresCtrl, bool requiresShift, bool requiresSuper, KeyMask key);
+			Shortcut();
+			Shortcut(const char* str);
+			Shortcut(bool requiresCtrl, bool requiresShift, bool requiresSuper,
+				KeyMask key);
 
-		bool RequiresCtrl;
-		bool RequiresShift;
-		bool RequiresSuper;
-		KeyMask Key;
+			bool RequiresCtrl;
+			bool RequiresShift;
+			bool RequiresSuper;
+			KeyMask Key;
 
-		operator char*() const;
-		bool IsPressed() const;
+			operator char*() const;
+			bool IsPressed() const;
 	};
 
 	struct ShortcutWithUser {
-		Shortcut Default;
-		std::optional<Shortcut> User;
+			Shortcut Default;
+			std::optional<Shortcut> User;
 	};
 
 	class KeybindsRegistry {
@@ -52,7 +59,7 @@ namespace FuncDoodle {
 			void End();
 
 		private:
-			std::map<const char*, ShortcutWithUser> m_Reg;
+			std::map<const char*, ShortcutWithUser, StrCmp> m_Reg;
 			std::filesystem::path m_RootPath;
 
 		private:

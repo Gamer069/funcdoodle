@@ -290,9 +290,10 @@ namespace FuncDoodle {
 			}
 		}
 	}
-	
+
 	void Frame::DeleteSelection(Selection* sel, Col bg) {
-		if (!sel) return;
+		if (!sel)
+			return;
 
 		for (ImVec2i px : sel->All()) {
 			m_Pixels.Set(px.x, px.y, bg);

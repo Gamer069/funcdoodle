@@ -6,7 +6,8 @@
 #include "MacroUtils.h"
 
 namespace FuncDoodle {
-	ToolManager::ToolManager(SharedPtr<KeybindsRegistry> keybinds) : m_SelectedTool(ToolType::Pencil), m_Keybinds(keybinds) {}
+	ToolManager::ToolManager(SharedPtr<KeybindsRegistry> keybinds)
+		: m_SelectedTool(ToolType::Pencil), m_Keybinds(keybinds) {}
 
 	ToolManager::~ToolManager() {}
 

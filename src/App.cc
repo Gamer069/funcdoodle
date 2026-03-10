@@ -54,7 +54,6 @@ namespace FuncDoodle {
 
 		m_Keybinds->Register("del", {false, false, false, ImGuiKey_Delete});
 
-
 		ToolKeybindsRegister(m_Keybinds);
 
 		m_Keybinds->End();
@@ -546,9 +545,8 @@ namespace FuncDoodle {
 				ImGui::IsKeyPressed(ImGuiKey_Enter, false) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter, false)) {
 				m_CurrentProj = m_CacheProj;
-				m_Manager = std::make_unique<AnimationManager>(
-					m_CurrentProj, m_AssetLoader, m_EditorController, m_Keybinds
-				);
+				m_Manager = std::make_unique<AnimationManager>(m_CurrentProj,
+					m_AssetLoader, m_EditorController, m_Keybinds);
 				m_Manager->SetUndoByStroke(m_UndoByStroke);
 				m_NewProjOpen = false;
 			}
@@ -656,7 +654,8 @@ namespace FuncDoodle {
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Help", true)) {
-				if (ImGui::MenuItem("Show keybinds", m_Keybinds->Get("keybinds"))) {
+				if (ImGui::MenuItem(
+						"Show keybinds", m_Keybinds->Get("keybinds"))) {
 					m_ShowKeybindsOpen = true;
 				}
 				ImGui::EndMenu();

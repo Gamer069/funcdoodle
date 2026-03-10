@@ -17,8 +17,10 @@
 namespace FuncDoodle {
 	class AnimationManager {
 		public:
-			AnimationManager(
-				SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController, SharedPtr<KeybindsRegistry> keybinds);
+			AnimationManager(SharedPtr<ProjectFile> proj,
+				AssetLoader* assetLoader,
+				SharedPtr<EditorController> editorController,
+				SharedPtr<KeybindsRegistry> keybinds);
 			~AnimationManager();
 			void RenderTimeline(bool prevEnabled);
 			void RenderControls();

@@ -19,11 +19,11 @@
 #include "imgui.h"
 
 namespace FuncDoodle {
-	AnimationManager::AnimationManager(
-		SharedPtr<ProjectFile> proj, AssetLoader* assetLoader, SharedPtr<EditorController> editorController, SharedPtr<KeybindsRegistry> keybinds)
+	AnimationManager::AnimationManager(SharedPtr<ProjectFile> proj,
+		AssetLoader* assetLoader, SharedPtr<EditorController> editorController,
+		SharedPtr<KeybindsRegistry> keybinds)
 		: m_Proj(proj), m_SelectedFrame(0), m_Player(new AnimationPlayer(proj)),
-		  m_EditorController(editorController),
-		  m_AssetLoader(assetLoader),
+		  m_EditorController(editorController), m_AssetLoader(assetLoader),
 		  m_Keybinds(keybinds),
 		  m_ToolManager(std::make_unique<ToolManager>(keybinds)) {
 		m_FrameRenderer = std::make_unique<FrameRenderer>(

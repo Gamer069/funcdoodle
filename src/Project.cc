@@ -217,13 +217,15 @@ namespace FuncDoodle {
 			std::make_unique<RotateFrameAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableRotateSelectionAction(RotateSelectionAction action) {
+	void ProjectFile::PushUndoableRotateSelectionAction(
+		RotateSelectionAction action) {
 		ClearRedoStack(m_RedoStack);
 		m_UndoStack.push(
 			std::make_unique<RotateSelectionAction>(std::move(action)));
 		m_Saved = false;
 	}
-	void ProjectFile::PushUndoableDeleteSelectionAction(DeleteSelectionAction action) {
+	void ProjectFile::PushUndoableDeleteSelectionAction(
+		DeleteSelectionAction action) {
 		ClearRedoStack(m_RedoStack);
 		m_UndoStack.push(
 			std::make_unique<DeleteSelectionAction>(std::move(action)));
