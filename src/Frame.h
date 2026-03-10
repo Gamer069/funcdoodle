@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -101,8 +102,8 @@ namespace FuncDoodle {
 					newH = m_Pixels.Height();  // or calculate bounding box
 				std::vector<Col> result(newW * newH);
 
-				float cx = w / 2.0f, cy = h / 2.0f;
-				float ncx = newW / 2.0f, ncy = newH / 2.0f;
+				float cx = (w - 1) / 2.0f, cy = (h - 1) / 2.0f;
+				float ncx = (newW - 1) / 2.0f, ncy = (newH - 1) / 2.0f;
 
 				for (int y = 0; y < newH; y++) {
 					for (int x = 0; x < newW; x++) {
@@ -112,9 +113,11 @@ namespace FuncDoodle {
 						float sy = -dx * sin_r + dy * cos_r + cy;
 
 						// Nearest neighbor
-						if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
+						int isx = static_cast<int>(std::lround(sx));
+						int isy = static_cast<int>(std::lround(sy));
+						if (isx >= 0 && isx < w && isy >= 0 && isy < h) {
 							result[y * newW + x] =
-								m_Pixels.Data()[(int)sy * w + (int)sx];
+								m_Pixels.Data()[isy * w + isx];
 						}
 					}
 				}

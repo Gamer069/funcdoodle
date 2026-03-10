@@ -135,7 +135,9 @@ namespace FuncDoodle {
 
 	void RotateSelectionAction::Redo() {
 		if (auto proj = m_Proj.lock()) {
-			proj->AnimFrames()->Get(m_FrameIndex)->Rotate(m_Deg);
+			proj->AnimFrames()
+				->Get(m_FrameIndex)
+				->RotateSelection(m_Sel.get(), m_Deg);
 		}
 	}
 

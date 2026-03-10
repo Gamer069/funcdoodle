@@ -8,11 +8,13 @@ int FuncDoodle_RunFrameTests();
 int FuncDoodle_RunUUIDTests();
 int FuncDoodle_RunLongIndexArrayTests();
 int FuncDoodle_RunExepathTests();
+int FuncDoodle_RunActionTests();
 
 int FuncDoodle_RunTests() {
 	FuncDoodle_RunColTests();
 	FuncDoodle_RunImageArrayTests();
 	FuncDoodle_RunFrameTests();
+	FuncDoodle_RunActionTests();
 	FuncDoodle_RunUUIDTests();
 	FuncDoodle_RunLongIndexArrayTests();
 	FuncDoodle_RunExepathTests();

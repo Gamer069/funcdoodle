@@ -274,15 +274,17 @@ namespace FuncDoodle {
 		float cos_r = cos(rad);
 		float sin_r = sin(rad);
 
-		float cx = selW / 2.0f;
-		float cy = selH / 2.0f;
+		float cx = (selW - 1) / 2.0f;
+		float cy = (selH - 1) / 2.0f;
 
 		for (int y = 0; y < selH; y++) {
 			for (int x = 0; x < selW; x++) {
 				float dx = x - cx;
 				float dy = y - cy;
-				int sx = (int)(dx * cos_r + dy * sin_r + cx);
-				int sy = (int)(-dx * sin_r + dy * cos_r + cy);
+				int sx =
+					static_cast<int>(std::lround(dx * cos_r + dy * sin_r + cx));
+				int sy = static_cast<int>(
+					std::lround(-dx * sin_r + dy * cos_r + cy));
 
 				if (sx >= 0 && sx < selW && sy >= 0 && sy < selH) {
 					m_Pixels.Set(minX + x, minY + y, temp[sy * selW + sx]);

@@ -89,5 +89,86 @@ int FuncDoodle_RunFrameTests() {
 	CHECK((frame_mut.Pixels()->BgCol() == FuncDoodle::Col{255, 255, 255}),
 		"PixelsMut should allow mutation");
 
+	// Frame rotation (clockwise)
+	FuncDoodle::Frame rot_frame(3, 3, FuncDoodle::Col{255, 255, 255});
+	FuncDoodle::Col A{255, 0, 0};
+	FuncDoodle::Col B{0, 255, 0};
+	FuncDoodle::Col C{0, 0, 255};
+	FuncDoodle::Col D{255, 255, 0};
+	FuncDoodle::Col E{255, 0, 255};
+	FuncDoodle::Col F{0, 255, 255};
+	FuncDoodle::Col G{128, 128, 128};
+	FuncDoodle::Col H{64, 64, 64};
+	FuncDoodle::Col I{32, 32, 32};
+
+	rot_frame.SetPixel(0, 0, A);
+	rot_frame.SetPixel(1, 0, B);
+	rot_frame.SetPixel(2, 0, C);
+	rot_frame.SetPixel(0, 1, D);
+	rot_frame.SetPixel(1, 1, E);
+	rot_frame.SetPixel(2, 1, F);
+	rot_frame.SetPixel(0, 2, G);
+	rot_frame.SetPixel(1, 2, H);
+	rot_frame.SetPixel(2, 2, I);
+
+	FuncDoodle::Frame rot_original = rot_frame;
+	rot_frame.Rotate(90);
+
+	CHECK((rot_frame.Pixels()->Get(0, 0) == G),
+		"Rotate(90) should move (0,2)->(0,0)");
+	CHECK((rot_frame.Pixels()->Get(1, 0) == D),
+		"Rotate(90) should move (0,1)->(1,0)");
+	CHECK((rot_frame.Pixels()->Get(2, 0) == A),
+		"Rotate(90) should move (0,0)->(2,0)");
+	CHECK((rot_frame.Pixels()->Get(0, 1) == H),
+		"Rotate(90) should move (1,2)->(0,1)");
+	CHECK((rot_frame.Pixels()->Get(1, 1) == E),
+		"Rotate(90) should keep center");
+	CHECK((rot_frame.Pixels()->Get(2, 1) == B),
+		"Rotate(90) should move (1,0)->(2,1)");
+	CHECK((rot_frame.Pixels()->Get(0, 2) == I),
+		"Rotate(90) should move (2,2)->(0,2)");
+	CHECK((rot_frame.Pixels()->Get(1, 2) == F),
+		"Rotate(90) should move (2,1)->(1,2)");
+	CHECK((rot_frame.Pixels()->Get(2, 2) == C),
+		"Rotate(90) should move (2,0)->(2,2)");
+
+	rot_frame.Rotate(-90);
+	CHECK((rot_frame == rot_original),
+		"Rotate(90) then Rotate(-90) should restore the original frame");
+
+	// Selection rotation
+	FuncDoodle::Frame sel_frame(4, 4, FuncDoodle::Col{255, 255, 255});
+	FuncDoodle::SquareSelection sel;
+	sel.Active = false;
+	sel.Min = ImVec2i(1, 1);
+	sel.Max = ImVec2i(2, 2);
+
+	FuncDoodle::Col SA{10, 20, 30};
+	FuncDoodle::Col SB{40, 50, 60};
+	FuncDoodle::Col SC{70, 80, 90};
+	FuncDoodle::Col SD{100, 110, 120};
+
+	sel_frame.SetPixel(1, 1, SA);
+	sel_frame.SetPixel(2, 1, SB);
+	sel_frame.SetPixel(1, 2, SC);
+	sel_frame.SetPixel(2, 2, SD);
+
+	FuncDoodle::Frame sel_original = sel_frame;
+	sel_frame.RotateSelection(&sel, 90);
+
+	CHECK((sel_frame.Pixels()->Get(1, 1) == SC),
+		"RotateSelection(90) should rotate within selection");
+	CHECK((sel_frame.Pixels()->Get(2, 1) == SA),
+		"RotateSelection(90) should rotate within selection");
+	CHECK((sel_frame.Pixels()->Get(1, 2) == SD),
+		"RotateSelection(90) should rotate within selection");
+	CHECK((sel_frame.Pixels()->Get(2, 2) == SB),
+		"RotateSelection(90) should rotate within selection");
+
+	sel_frame.RotateSelection(&sel, -90);
+	CHECK((sel_frame == sel_original),
+		"RotateSelection(90) then RotateSelection(-90) should restore");
+
 	return 0;
 }

@@ -137,8 +137,11 @@ namespace FuncDoodle {
 							std::string line = "  • " + r.condition;
 							if (!r.message.empty())
 								line += ": " + r.message;
+							size_t pad = line.length() < 60
+								? (60 - line.length())
+								: 0;
 							std::cout << "║    " << line
-									  << std::string(60 - line.length(), ' ')
+									  << std::string(pad, ' ')
 									  << " ║\n";
 						}
 					}

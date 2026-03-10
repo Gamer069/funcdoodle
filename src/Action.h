@@ -158,9 +158,9 @@ namespace FuncDoodle {
 	};
 	class RotateFrameAction : public Action {
 		public:
-			RotateFrameAction(unsigned long m_FrameIndex, int32_t deg,
+			RotateFrameAction(unsigned long frameIndex, int32_t deg,
 				const SharedPtr<ProjectFile>& proj)
-				: m_FrameIndex(m_FrameIndex), m_Proj(proj), m_Deg(deg) {}
+				: m_FrameIndex(frameIndex), m_Proj(proj), m_Deg(deg) {}
 
 			void Undo() override;
 			void Redo() override;
@@ -174,10 +174,10 @@ namespace FuncDoodle {
 	};
 	class RotateSelectionAction : public Action {
 		public:
-			RotateSelectionAction(unsigned long m_FrameIndex,
+			RotateSelectionAction(unsigned long frameIndex,
 				SharedPtr<Selection> sel, int32_t deg,
 				const SharedPtr<ProjectFile>& proj)
-				: m_FrameIndex(m_FrameIndex), m_Sel(std::move(sel)),
+				: m_FrameIndex(frameIndex), m_Sel(std::move(sel)),
 				  m_Proj(proj), m_Deg(deg) {}
 
 			void Undo() override;
@@ -195,10 +195,10 @@ namespace FuncDoodle {
 
 	class DeleteSelectionAction : public Action {
 		public:
-			DeleteSelectionAction(unsigned long m_FrameIndex,
+			DeleteSelectionAction(unsigned long frameIndex,
 				SharedPtr<Selection> sel, std::vector<Col> prevPixels,
 				const SharedPtr<ProjectFile>& proj)
-				: m_FrameIndex(m_FrameIndex), m_Sel(std::move(sel)),
+				: m_FrameIndex(frameIndex), m_Sel(std::move(sel)),
 				  m_PrevPixels(std::move(prevPixels)), m_Proj(proj) {}
 
 			void Undo() override;
