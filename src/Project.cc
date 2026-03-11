@@ -3,6 +3,7 @@
 #include "Frame.h"
 
 #include <memory>
+#include <cstdio>
 #include <string.h>
 
 #include <fstream>
@@ -67,9 +68,9 @@ namespace FuncDoodle {
 
 		for (unsigned long i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
-			sprintf(curFilePath, "%s/frame_%ld.png", filePath, i);
+			snprintf(curFilePath, sizeof(curFilePath), "%s/frame_%lu.png", filePath, i);
 #else
-			sprintf(curFilePath, "%s\\frame_%ld.png", filePath, i);
+			snprintf(curFilePath, sizeof(curFilePath), "%s\\frame_%lu.png", filePath, i);
 #endif
 			frames->Get(i)->Export(curFilePath);
 		}
@@ -93,12 +94,12 @@ namespace FuncDoodle {
 			// see you until then
 			char cmd[1024];
 #ifndef _WIN32
-			sprintf(cmd,
+			snprintf(cmd, sizeof(cmd),
 				"ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" "
 				"-c:v libx264 -pix_fmt yuv420p %s/result.mp4 -y",
 				m_FPS, filePath, filePath);
 #else
-			sprintf(cmd,
+			snprintf(cmd, sizeof(cmd),
 				"ffmpeg.exe -framerate %d -pattern-type glob -i "
 				"\"%s/frame_*.png\" "
 				"-c:v libx264 -pix_fmt yuv420p %s\\result.mp4 -y",
@@ -521,7 +522,7 @@ namespace FuncDoodle {
 
 	void ProjectFile::DisplayFPS() {
 		char* title = (char*)malloc(1024);
-		sprintf(title, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
+		snprintf(title, 1024, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
 			!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
 		glfwSetWindowTitle(m_Window, title);
 		free(title);

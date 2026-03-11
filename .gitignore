@@ -17,4 +17,4 @@ dmg/*.dmg
 ./compile_commands.json
 leaks.supp
 # imgui.ini
-something
+release/

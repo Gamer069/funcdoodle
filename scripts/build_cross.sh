@@ -101,7 +101,7 @@ if [[ -n "$mac_pa_incl" && -n "$mac_pa_lib_x86" && -n "$mac_pa_lib_arm" ]]; then
 		cp -r "$root_dir/assets" . || exit -1
 		cp -r "$root_dir/themes" . || exit -1
 		if [[ "$arg3" == "true" && "$(uname -s)" == "Darwin" ]]; then
-			./FuncDoodle || exit -1
+			LSAN_OPTIONS="suppressions=leaks.supp:print_suppressions=false" ./FuncDoodle || exit -1
 		fi
 		popd >/dev/null || exit -1
 	}

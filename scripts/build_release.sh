@@ -47,10 +47,20 @@ package_dir "funcdoodle-linux" "$root_dir/bin/linux"
 package_dir "funcdoodle-linux-tiling" "$root_dir/bin/linux-tiling"
 
 if [[ -d "$root_dir/bin/macos" ]]; then
-	"$root_dir/scripts/build_app.sh" "$root_dir/bin/macos" "$release_dir" "FuncDoodle"
+	"$root_dir/scripts/build_app.sh" \
+		"$root_dir/bin/macos" \
+		"$release_dir" \
+		"FuncDoodle" \
+		"$4" \
+		"x86_64"
 fi
 if [[ -d "$root_dir/bin/macos-arm64" ]]; then
-	"$root_dir/scripts/build_app.sh" "$root_dir/bin/macos-arm64" "$release_dir" "FuncDoodle-arm64"
+	"$root_dir/scripts/build_app.sh" \
+		"$root_dir/bin/macos-arm64" \
+		"$release_dir" \
+		"FuncDoodle-arm64" \
+		"$5" \
+		"arm64"
 fi
 
 echo "Generated:"

@@ -29,17 +29,34 @@ fi
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-if [[ "$clean_lower" == "true" ]]; then
-	rm -rf "$root_dir/bin/linux"
+detect_platform() {
+	case "$(uname -s)" in
+		Linux*)  echo "linux" ;;
+		Darwin*) echo "macos" ;;
+		CYGWIN*|MINGW*|MSYS*) echo "microslop" ;;
+		*)       echo "unknown" ;;
+	esac
+}
+
+platform="$(detect_platform)"
+bin_dir="$root_dir/bin/$platform"
+
+if [[ "$platform" == "unknown" ]]; then
+	echo "Unsupported platform: $(uname -s)"
+	exit 1
 fi
 
-mkdir -p "$root_dir/bin/linux"
-pushd "$root_dir/bin/linux" >/dev/null
+if [[ "$clean_lower" == "true" ]]; then
+	rm -rf "$bin_dir"
+fi
+
+mkdir -p "$bin_dir"
+pushd "$bin_dir" >/dev/null
 cmake -DCMAKE_BUILD_TYPE="$mode" -DISTILING=ON -DBUILD_TESTS=ON "$root_dir"
 jobs=$(( ($(nproc) + 2) / 3 ))
 make -j"$jobs"
 popd >/dev/null
 
 ASAN_OPTIONS="${ASAN_OPTIONS:-detect_leaks=0}" \
-LSAN_OPTIONS="${LSAN_OPTIONS:-detect_leaks=0}" \
-"$root_dir/bin/linux/FuncDoodle"
+LSAN_OPTIONS="suppressions=leaks.supp:print_suppressions=false" \
+"$bin_dir/FuncDoodle"

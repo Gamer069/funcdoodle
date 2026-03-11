@@ -14,6 +14,23 @@ arg2=$(echo "$2" | tr '[:upper:]' '[:lower:]')
 arg3=$(echo "$3" | tr '[:upper:]' '[:lower:]')
 arg4=$(echo "$4" | tr '[:upper:]' '[:lower:]')
 
+detect_platform() {
+	case "$(uname -s)" in
+		Linux*)  echo "linux" ;;
+		Darwin*) echo "macos" ;;
+		CYGWIN*|MINGW*|MSYS*) echo "microslop" ;;
+		*)       echo "unknown" ;;
+	esac
+}
+
+platform="$(detect_platform)"
+bin_dir="$root_dir/bin/$platform"
+
+if [[ "$platform" == "unknown" ]]; then
+	echo "Unsupported platform: $(uname -s)"
+	exit -1
+fi
+
 if [[ $# -eq 0 ]]; then
 	arg1="debug"
 	arg2="true"
@@ -41,11 +58,11 @@ fi
 arg1=$(echo "$arg1" | awk '{print toupper(substr($0,1,1)) substr($0,2)}')
 
 if [ "$arg3" == "true" ]; then
-	rm -rf "$root_dir/bin/linux"
+	rm -rf "$bin_dir"
 fi
 
-mkdir -p "$root_dir/bin/linux" || exit -1
-pushd "$root_dir/bin/linux" >/dev/null || exit -1
+mkdir -p "$bin_dir" || exit -1
+pushd "$bin_dir" >/dev/null || exit -1
 cmake -DCMAKE_BUILD_TYPE=$arg1 -DISTILING=$( (( arg2 == "true" )) && echo "ON" || echo "OFF" ) -DBUILD_TESTS=OFF "$root_dir" || exit -1
 jobs=$(( ($(nproc) + 2) / 3 ))
 make -j"$jobs" || exit -1
@@ -53,5 +70,5 @@ cp -r "$root_dir/assets" . || exit -1
 cp -r "$root_dir/themes" . || exit -1
 popd >/dev/null || exit -1
 if [[ "$arg4" == "true" ]]; then
-	"$root_dir/bin/linux/FuncDoodle" || exit -1
+	LSAN_OPTIONS="suppressions=leaks.supp:print_suppressions=false" "$bin_dir/FuncDoodle" || exit -1
 fi

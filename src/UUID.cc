@@ -1,5 +1,6 @@
 #include "UUID.h"
 
+#include <cstdio>
 #include <cstring>
 
 #include <random>
@@ -16,7 +17,7 @@ namespace FuncDoodle {
 		str[0] = '\0';
 		char temp[3];
 		for (int i = 0; i < 16; i++) {
-			sprintf(temp, "%02x", m_Bytes[i]);
+			snprintf(temp, sizeof(temp), "%02x", m_Bytes[i]);
 			if (i == 4 || i == 6 || i == 8 || i == 10) {
 				strcat(str, "-");
 			}

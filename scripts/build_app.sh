@@ -6,6 +6,8 @@ set -e
 # ========================
 APP_NAME="${3:-FuncDoodle}"
 BIN_DIR="${1:-bin/macos}"
+PORTAUDIO_DYLIB="${4:-}"
+MACOS_ARCH="${5:-x86_64}"
 ASSETS_DIR="assets"
 THEMES_DIR="themes"
 OUTPUT_DIR="${2:-appbin}"
@@ -13,6 +15,7 @@ BINARY="$BIN_DIR/FuncDoodle"
 APP_DIR="$OUTPUT_DIR/$APP_NAME.app"
 MACOS_DIR="$APP_DIR/Contents/MacOS"
 RESOURCES_DIR="$APP_DIR/Contents/Resources"
+FRAMEWORKS_DIR="$APP_DIR/Contents/Frameworks"
 
 # ========================
 # Clean previous build
@@ -20,6 +23,7 @@ RESOURCES_DIR="$APP_DIR/Contents/Resources"
 rm -rf "$APP_DIR"
 mkdir -p "$MACOS_DIR"
 mkdir -p "$RESOURCES_DIR"
+mkdir -p "$FRAMEWORKS_DIR"
 
 # ========================
 # Copy binary
@@ -30,6 +34,35 @@ if [ ! -f "$BINARY" ]; then
 fi
 cp "$BINARY" "$MACOS_DIR/$APP_NAME"
 chmod +x "$MACOS_DIR/$APP_NAME"
+
+if [ -n "$PORTAUDIO_DYLIB" ]; then
+    if [ ! -f "$PORTAUDIO_DYLIB" ]; then
+        echo "PortAudio dylib not found: $PORTAUDIO_DYLIB"
+        exit 1
+    fi
+
+    pa_dir="$(dirname "$PORTAUDIO_DYLIB")"
+    pa_base="$(basename "$PORTAUDIO_DYLIB")"
+    if [[ "$pa_base" == "libportaudio.dylib" ]] && [ -f "$pa_dir/libportaudio.2.dylib" ]; then
+        PORTAUDIO_DYLIB="$pa_dir/libportaudio.2.dylib"
+    fi
+
+    dylib_name="$(basename "$PORTAUDIO_DYLIB")"
+    cp "$PORTAUDIO_DYLIB" "$FRAMEWORKS_DIR/$dylib_name"
+
+    osxcross_bin="${OSXCROSS_BIN:-/home/illia/proj/third-party/osxcross/target/bin}"
+    install_name_tool="$osxcross_bin/${MACOS_ARCH}-apple-darwin25.1-install_name_tool"
+    if [ ! -x "$install_name_tool" ]; then
+        echo "install_name_tool not found for arch $MACOS_ARCH: $install_name_tool"
+        exit 1
+    fi
+
+    "$install_name_tool" -id "@rpath/$dylib_name" "$FRAMEWORKS_DIR/$dylib_name"
+    "$install_name_tool" -change "$PORTAUDIO_DYLIB" "@rpath/$dylib_name" "$MACOS_DIR/$APP_NAME"
+    "$install_name_tool" -change "$pa_dir/libportaudio.dylib" "@rpath/$dylib_name" "$MACOS_DIR/$APP_NAME" || true
+    "$install_name_tool" -change "$pa_dir/libportaudio.2.dylib" "@rpath/$dylib_name" "$MACOS_DIR/$APP_NAME" || true
+    "$install_name_tool" -add_rpath "@executable_path/../Frameworks" "$MACOS_DIR/$APP_NAME" || true
+fi
 
 # ==============================
 # Copy assets into MacOS folder
