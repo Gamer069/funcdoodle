@@ -2,8 +2,8 @@
 
 #include "Frame.h"
 
-#include <memory>
 #include <cstdio>
+#include <memory>
 #include <string.h>
 
 #include <fstream>
@@ -68,9 +68,11 @@ namespace FuncDoodle {
 
 		for (unsigned long i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
-			snprintf(curFilePath, sizeof(curFilePath), "%s/frame_%lu.png", filePath, i);
+			snprintf(curFilePath, sizeof(curFilePath), "%s/frame_%lu.png",
+				filePath, i);
 #else
-			snprintf(curFilePath, sizeof(curFilePath), "%s\\frame_%lu.png", filePath, i);
+			snprintf(curFilePath, sizeof(curFilePath), "%s\\frame_%lu.png",
+				filePath, i);
 #endif
 			frames->Get(i)->Export(curFilePath);
 		}
@@ -520,10 +522,11 @@ namespace FuncDoodle {
 		file.close();
 	}
 
-	void ProjectFile::DisplayFPS() {
+	void ProjectFile::DisplayFPS(double fps) {
 		char* title = (char*)malloc(1024);
-		snprintf(title, 1024, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER, AnimName(),
-			!m_Saved ? "*" : "", (int)ImGui::GetIO().Framerate);
+		snprintf(title, 1024, "FuncDoodle %s: %s%s (%d FPS)", FUNCVER,
+			AnimName(), !m_Saved ? "*" : "",
+			(int)(fps > 0.0 ? fps : ImGui::GetIO().Framerate));
 		glfwSetWindowTitle(m_Window, title);
 		free(title);
 	}

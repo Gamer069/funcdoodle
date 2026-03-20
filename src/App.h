@@ -50,9 +50,15 @@ namespace FuncDoodle {
 					m_Manager->SetUndoByStroke(enabled);
 				}
 			}
+			inline void SetFrameLimit(double frameLimit) {
+				m_FrameLimit = frameLimit;
+			}
 			inline bool PrevEnabled() { return m_PrevEnabled; }
 			inline bool SFXEnabled() { return m_SFXEnabled; }
 			inline bool UndoByStroke() { return m_UndoByStroke; }
+			inline double FrameTime() { return 1.0 / m_FrameLimit; }
+			inline double FrameLimit() { return m_FrameLimit; }
+			void UpdateFPS(double deltaTime);
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
 			void RenderNewProj();
@@ -81,6 +87,9 @@ namespace FuncDoodle {
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
 			bool m_UndoByStroke = false;
+			double m_FrameLimit = 1000.0;
+			double m_LastFrameTime = 0.0;
+			double m_FPS = 0.0;
 			std::array<float, 3> m_CacheBGCol;
 			std::filesystem::path m_ThemesPath;
 	};

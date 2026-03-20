@@ -84,6 +84,17 @@ namespace FuncDoodle {
 		s_Logs.clear();
 	}
 
+	void Application::UpdateFPS(double deltaTime) {
+		constexpr double minDelta = 1.0 / 1000.0;
+		constexpr double maxDelta = 1.0;
+		if (deltaTime >= minDelta && deltaTime <= maxDelta) {
+			m_FPS = 1.0 / deltaTime;
+		} else if (deltaTime > maxDelta) {
+			m_FPS = 1.0 / maxDelta;
+		}
+		m_LastFrameTime = deltaTime;
+	}
+
 	char* GlobalGetShortcut(const char* key, bool shift, bool super) {
 		int maxLen = 11 + strlen(key);
 
@@ -190,12 +201,12 @@ namespace FuncDoodle {
 			m_Manager->RenderControls();
 			m_Manager->RenderLogs();
 			m_Manager->Player()->Play();
-			m_CurrentProj->DisplayFPS();
+			m_CurrentProj->DisplayFPS(m_FPS);
 		} else {
 			char* title = (char*)malloc(35);
 			if (title != 0) {
-				snprintf(title, 35, "FuncDoodle -- %s -- %d FPS", FUNCVER,
-					(int)ImGui::GetIO().Framerate);
+				snprintf(
+					title, 35, "FuncDoodle %s, %d FPS", FUNCVER, (int)m_FPS);
 				glfwSetWindowTitle(m_Window, title);
 				free(title);
 			} else {
@@ -607,11 +618,13 @@ namespace FuncDoodle {
 					this->OpenFileDialog([&]() { this->ReadProjectFile(); });
 				}
 				if (m_CurrentProj) {
-					if (ImGui::MenuItem("Save",
-								m_WaitingForKey ? nullptr : m_Keybinds.Get("save"))) {
+					if (ImGui::MenuItem("Save", m_WaitingForKey
+													? nullptr
+													: m_Keybinds.Get("save"))) {
 						if (m_SFXEnabled)
 							m_AssetLoader->PlaySound(s_ProjSaveSound);
-						this->SaveFileDialog([&]() { this->SaveProjectFile(); });
+						this->SaveFileDialog(
+							[&]() { this->SaveProjectFile(); });
 					}
 
 					if (ImGui::MenuItem("Close")) {
@@ -784,6 +797,8 @@ namespace FuncDoodle {
 			ImGui::SameLine();
 			ImGui::Checkbox("Undo by stroke", &m_UndoByStroke);
 
+			ImGui::InputDouble("FPS limit", &m_FrameLimit);
+
 			if (ImGui::IsKeyPressed(ImGuiKey_Escape) ||
 				ImGui::IsKeyPressed(ImGuiKey_Enter) ||
 				ImGui::IsKeyPressed(ImGuiKey_KeypadEnter) ||
@@ -890,9 +905,12 @@ namespace FuncDoodle {
 
 					ImGuiKey key = ImUtil::GetAnyReleasedKey();
 
-					if (m_WaitingForKey != nullptr && strcmp(m_WaitingForKey, k) == 0 && key != ImGuiKey_None) {
+					if (m_WaitingForKey != nullptr &&
+						strcmp(m_WaitingForKey, k) == 0 &&
+						key != ImGuiKey_None) {
 						ImGuiIO& io = ImGui::GetIO();
-						v.User = Shortcut(io.KeyCtrl, io.KeyShift, io.KeySuper, key);
+						v.User =
+							Shortcut(io.KeyCtrl, io.KeyShift, io.KeySuper, key);
 						m_WaitingForKey = nullptr;
 						io.KeysData[key].Down = false;
 						io.KeyCtrl = false;

@@ -147,9 +147,9 @@ extern std::vector<char*> s_Logs;
 // now its just semver + an optional '-dev' suffixa for debug builds
 
 #ifdef DEBUG
-#define FUNCVER "0.1.1-dev"
+#define FUNCVER "0.1.2-dev"
 #else
-#define FUNCVER "0.1.1"
+#define FUNCVER "0.1.2"
 #endif
 
 // .fdp version

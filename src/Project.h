@@ -57,7 +57,7 @@ namespace FuncDoodle {
 			void Export(const char* filePath, int format);
 			constexpr inline GLFWwindow* Window() const { return m_Window; }
 			inline bool Saved() { return m_Saved; }
-			void DisplayFPS();
+			void DisplayFPS(double fps);
 
 			// Undo management
 			void PushUndoableDrawAction(DrawAction action);

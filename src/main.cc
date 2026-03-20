@@ -42,14 +42,14 @@ void GLFWErrorCallback(int error, const char* desc) {
 	FUNC_ERR("GLFW ERROR (" << error << "): " << desc);
 }
 
-void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
+void GlobalAppTick(GLFWwindow* win,
+	std::chrono::high_resolution_clock::time_point& lastFrameTime,
 	FuncDoodle::Application* application, ImGuiIO& io) {
 	auto currentFrameTime = std::chrono::high_resolution_clock::now();
 	auto deltaTime =
 		std::chrono::duration<double>(currentFrameTime - lastFrameTime).count();
-	constexpr double FRAME_TIME = 1.0 / 1000.0;
 
-	if (deltaTime >= FRAME_TIME) {
+	if (deltaTime >= application->FrameTime()) {
 		lastFrameTime = currentFrameTime;
 		glfwPollEvents();
 
@@ -78,6 +78,8 @@ void GlobalAppTick(GLFWwindow* win, auto lastFrameTime,
 			ImGui::RenderPlatformWindowsDefault();
 			glfwMakeContextCurrent(backup);
 		}
+
+		application->UpdateFPS(deltaTime);
 
 		glfwSwapBuffers(win);
 	}
@@ -258,6 +260,13 @@ int main(int argc, char** argv) {
 			static_cast<FuncDoodle::Application*>(entry)->SetUndoByStroke(
 				undoByStrokeBool);
 		}
+
+		double frameLimit;
+		if (std::sscanf(line, "FrameLimit=%lf", &frameLimit) == 1) {
+			static_cast<FuncDoodle::Application*>(entry)->SetFrameLimit(
+				frameLimit);
+		}
+
 		FuncDoodle::UUID uuid =
 			static_cast<FuncDoodle::Application*>(entry)->Theme();
 		if (!FuncDoodle::Themes::g_Themes.contains(uuid)) {
@@ -320,6 +329,8 @@ int main(int argc, char** argv) {
 		buf->appendf("Prev=%d", application->PrevEnabled() ? 1 : 0);
 		buf->append("\n");
 		buf->appendf("UndoByStroke=%d", application->UndoByStroke() ? 1 : 0);
+		buf->append("\n");
+		buf->appendf("FrameLimit=%lf", application->FrameLimit());
 		buf->append("\n");
 	};
 	ImGui::AddSettingsHandler(&handler);
