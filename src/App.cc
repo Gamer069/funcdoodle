@@ -21,8 +21,10 @@
 
 #include "MacroUtils.h"
 
+#include "ImUtil.h"
 #include "Themes.h"
 #include "Tool.h"
+
 #include "nfd.h"
 
 #include "Keybinds.h"
@@ -108,6 +110,9 @@ namespace FuncDoodle {
 	}
 
 	void Application::CheckKeybinds() {
+		if (m_WaitingForKey != nullptr)
+			return;
+
 		ImGuiIO& io = ImGui::GetIO();
 
 		// Check if each shortcut is pressed and perform the appropriate action
@@ -118,13 +123,6 @@ namespace FuncDoodle {
 		}
 		if (m_Keybinds.Get("open").IsPressed()) {
 			OpenFileDialog([&]() { this->ReadProjectFile(); });
-		}
-		if (m_Keybinds.Get("save").IsPressed()) {
-			if (m_SFXEnabled)
-				m_AssetLoader->PlaySound(s_ProjSaveSound);
-			SaveFileDialog([&]() { this->SaveProjectFile(); });
-			if (m_SFXEnabled)
-				m_AssetLoader->PlaySound(s_ProjSaveEndSound);
 		}
 		if (m_Keybinds.Get("quit").IsPressed()) {
 			glfwSetWindowShouldClose(m_Window, true);
@@ -155,6 +153,14 @@ namespace FuncDoodle {
 			m_Popups.Open("keybinds");
 		}
 		if (m_CurrentProj) {
+			if (m_CurrentProj && m_Keybinds.Get("save").IsPressed()) {
+				if (m_SFXEnabled)
+					m_AssetLoader->PlaySound(s_ProjSaveSound);
+				SaveFileDialog([&]() { this->SaveProjectFile(); });
+				if (m_SFXEnabled)
+					m_AssetLoader->PlaySound(s_ProjSaveEndSound);
+			}
+
 			if (m_Keybinds.Get("export").IsPressed()) {
 				m_Popups.Open("export");
 			}
@@ -589,21 +595,25 @@ namespace FuncDoodle {
 	void Application::RenderMainMenuBar() {
 		if (ImGui::BeginMainMenuBar()) {
 			if (ImGui::BeginMenu("File", true)) {
-				if (ImGui::MenuItem("New project", m_Keybinds.Get("new"))) {
+				if (ImGui::MenuItem("New project",
+						m_WaitingForKey ? nullptr : m_Keybinds.Get("new"))) {
 					if (m_SFXEnabled)
 						m_AssetLoader->PlaySound(s_ProjCreateSound);
 					m_Popups.Open("new");
 				}
 
-				if (ImGui::MenuItem("Open", m_Keybinds.Get("open"))) {
+				if (ImGui::MenuItem("Open",
+						m_WaitingForKey ? nullptr : m_Keybinds.Get("open"))) {
 					this->OpenFileDialog([&]() { this->ReadProjectFile(); });
 				}
-				if (ImGui::MenuItem("Save", m_Keybinds.Get("save"))) {
-					if (m_SFXEnabled)
-						m_AssetLoader->PlaySound(s_ProjSaveSound);
-					this->SaveFileDialog([&]() { this->SaveProjectFile(); });
-				}
 				if (m_CurrentProj) {
+					if (ImGui::MenuItem("Save",
+								m_WaitingForKey ? nullptr : m_Keybinds.Get("save"))) {
+						if (m_SFXEnabled)
+							m_AssetLoader->PlaySound(s_ProjSaveSound);
+						this->SaveFileDialog([&]() { this->SaveProjectFile(); });
+					}
+
 					if (ImGui::MenuItem("Close")) {
 						m_CurrentProj = nullptr;
 						m_Manager->SetProj(nullptr);
@@ -611,11 +621,14 @@ namespace FuncDoodle {
 					if (ImGui::MenuItem("Edit project")) {
 						m_Popups.Open("edit_proj");
 					}
-					if (ImGui::MenuItem("Export", m_Keybinds.Get("export"))) {
+					if (ImGui::MenuItem("Export",
+							m_WaitingForKey ? nullptr
+											: m_Keybinds.Get("export"))) {
 						m_Popups.Open("export");
 					}
 				}
-				if (ImGui::MenuItem("Exit", m_Keybinds.Get("quit"))) {
+				if (ImGui::MenuItem("Exit",
+						m_WaitingForKey ? nullptr : m_Keybinds.Get("quit"))) {
 					m_Popups.CloseAllExcept("save_changes");
 					glfwSetWindowShouldClose(m_Window, true);
 				}
@@ -639,7 +652,9 @@ namespace FuncDoodle {
 						ImGui::EndMenu();
 					}
 
-					if (ImGui::MenuItem("Delete", m_Keybinds.Get("del"))) {
+					if (ImGui::MenuItem("Delete",
+							m_WaitingForKey ? nullptr
+											: m_Keybinds.Get("del"))) {
 						if (m_EditorController->Sel()) {
 							auto selPixels = m_EditorController->Sel()->All();
 							std::vector<Col> prevPixels;
@@ -661,17 +676,20 @@ namespace FuncDoodle {
 					}
 				}
 
-				if (ImGui::MenuItem("Preferences", m_Keybinds.Get("pref"))) {
+				if (ImGui::MenuItem("Preferences",
+						m_WaitingForKey ? nullptr : m_Keybinds.Get("pref"))) {
 					m_Popups.Open("pref");
 				}
-				if (ImGui::MenuItem("Theme editor", m_Keybinds.Get("theme"))) {
+				if (ImGui::MenuItem("Theme editor",
+						m_WaitingForKey ? nullptr : m_Keybinds.Get("theme"))) {
 					Themes::g_ThemeEditorOpen = true;
 				}
 				ImGui::EndMenu();
 			}
 			if (ImGui::BeginMenu("Help", true)) {
-				if (ImGui::MenuItem(
-						"Show keybinds", m_Keybinds.Get("keybinds"))) {
+				if (ImGui::MenuItem("Show keybinds",
+						m_WaitingForKey ? nullptr
+										: m_Keybinds.Get("keybinds"))) {
 					m_Popups.Open("keybinds");
 				}
 				ImGui::EndMenu();
@@ -842,40 +860,72 @@ namespace FuncDoodle {
 			ImGui::OpenPopup("Keybinds");
 		}
 
-		// TODO: actually have this a customizable keybinds thing, not just some
-		// text
 		if (ImGui::BeginPopupModal("Keybinds", m_Popups.Get("keybinds"),
 				ImGuiWindowFlags_AlwaysAutoResize)) {
-			std::filesystem::path keysPath =
-				m_AssetLoader->GetPath() / "keys.txt";
-			std::ifstream keysIn(keysPath);
-			if (!keysIn) {
-				FUNC_WARN("Failed to open file keys.txt");
-				ImGui::EndPopup();
-				return;
-			}
+			if (ImGui::BeginTable(
+					"keybinds", 3, ImGuiTableFlags_BordersInnerH)) {
+				ImGui::TableSetupColumn("Action");
+				ImGui::TableSetupColumn("Keybind");
+				ImGui::TableSetupColumn("Reset");
+				ImGui::TableHeadersRow();
 
-			keysIn.seekg(0, std::ios::end);
-			std::streamsize fileSize = keysIn.tellg();
+				for (auto& [k, v] : m_Keybinds.GetAll()) {
+					ImGui::TableNextRow();
+					ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg,
+						ImGui::GetColorU32(ImGuiCol_FrameBg));
 
-			// hehe
-			// BEG, ios, BEG!! BEG FOR YOUR LIFE
-			keysIn.seekg(0, std::ios::beg);
+					ImGui::TableSetColumnIndex(0);
+					ImGui::TextUnformatted(k);
 
-			char* buf = new char[fileSize + 1];
+					ImGui::TableSetColumnIndex(1);
 
-			if (keysIn.read(buf, fileSize)) {
-				buf[fileSize] = '\0';
-				ImGui::Text("%s", buf);
-				delete[] buf;
-			} else {
-				FUNC_WARN("Failed to read file keys.txt");
-				delete[] buf;
-				ImGui::EndPopup();
-				return;
+					ImGui::PushID(k);
+					const char* label = "...";
+					if (!m_WaitingForKey || strcmp(m_WaitingForKey, k) != 0) {
+						label = v.User.value_or(v.Default);
+					}
+					if (ImGui::Button(label)) {
+						m_WaitingForKey = k;
+					}
+
+					ImGuiKey key = ImUtil::GetAnyReleasedKey();
+
+					if (m_WaitingForKey != nullptr && strcmp(m_WaitingForKey, k) == 0 && key != ImGuiKey_None) {
+						ImGuiIO& io = ImGui::GetIO();
+						v.User = Shortcut(io.KeyCtrl, io.KeyShift, io.KeySuper, key);
+						m_WaitingForKey = nullptr;
+						io.KeysData[key].Down = false;
+						io.KeyCtrl = false;
+						io.KeyShift = false;
+						io.KeySuper = false;
+						m_Keybinds.Write();
+					}
+
+					ImGui::PopID();
+
+					ImGui::TableSetColumnIndex(2);
+					if (!v.User.has_value() || v.User.value() == v.Default) {
+						ImGui::BeginDisabled(true);
+					} else {
+						ImGui::BeginDisabled(false);
+					}
+
+					ImGui::PushID(k);
+					if (ImGui::Button("Reset")) {
+						v.User = std::nullopt;
+					}
+					ImGui::PopID();
+
+					ImGui::EndDisabled();
+				}
+				ImGui::EndTable();
 			}
 
 			ImGui::EndPopup();
+		} else {
+			if (m_WaitingForKey != nullptr) {
+				m_WaitingForKey = nullptr;
+			}
 		}
 	}
 }  // namespace FuncDoodle

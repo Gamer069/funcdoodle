@@ -1,19 +1,16 @@
 #pragma once
 
+#include <vector>
+
 #include <cstring>
 #include <filesystem>
 #include <imgui.h>
 #include <map>
 #include <optional>
+#include <vector>
 
 namespace FuncDoodle {
 	constexpr int KEY_MASK_SIZE = (ImGuiKey_NamedKey_END + 63) / 64;
-
-	struct StrCmp {
-			bool operator()(const char* a, const char* b) const {
-				return std::strcmp(a, b) < 0;
-			}
-	};
 
 	class KeyMask {
 		public:
@@ -24,7 +21,35 @@ namespace FuncDoodle {
 			bool IsPressed() const;
 			operator char*() const;
 
+			void Reset() {
+				for (int i = 0; i < KEY_MASK_SIZE; i++) {
+					m_Keys[i] = 0;
+				}
+			}
+
+			std::vector<ImGuiKey> All() const {
+				std::vector<ImGuiKey> keys;
+				for (int i = 0; i < KEY_MASK_SIZE; i++) {
+					if (m_Keys[i] == 0)
+						continue;
+					for (int j = 0; j < 64; j++) {
+						if (m_Keys[i] & (1ull << j)) {
+							ImGuiKey key = (ImGuiKey)(i * 64 + j);
+							keys.push_back(key);
+						}
+					}
+				}
+				return keys;
+			}
+
 			KeyMask operator|(const KeyMask& other) const;
+			bool operator==(const KeyMask& other) const {
+				for (int i = 0; i < KEY_MASK_SIZE; i++) {
+					if (m_Keys[i] != other.m_Keys[i])
+						return false;
+				}
+				return true;
+			}
 
 		private:
 			unsigned long long m_Keys[KEY_MASK_SIZE];
@@ -43,6 +68,11 @@ namespace FuncDoodle {
 
 			operator char*() const;
 			bool IsPressed() const;
+			bool operator==(const Shortcut& other) const {
+				return RequiresCtrl == other.RequiresCtrl &&
+					   RequiresShift == other.RequiresShift &&
+					   RequiresSuper == other.RequiresSuper && Key == other.Key;
+			}
 	};
 
 	struct ShortcutWithUser {
@@ -57,12 +87,11 @@ namespace FuncDoodle {
 			Shortcut Get(const char* id);
 			void Register(const char* id, Shortcut shortcut);
 			void End();
-
-		private:
-			std::map<const char*, ShortcutWithUser, StrCmp> m_Reg;
-			std::filesystem::path m_RootPath;
-
-		private:
 			void Write();
+			std::vector<std::pair<const char*, ShortcutWithUser>>& GetAll();
+
+		private:
+			std::vector<std::pair<const char*, ShortcutWithUser>> m_Reg;
+			std::filesystem::path m_RootPath;
 	};
 }  // namespace FuncDoodle

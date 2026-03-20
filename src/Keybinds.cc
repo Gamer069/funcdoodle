@@ -1,6 +1,7 @@
 #include "Keybinds.h"
 #include "exepath.h"
 #include "imgui.h"
+#include <iterator>
 #define TOML_EXCEPTIONS 0
 #include "toml++.h"
 #include <cstring>
@@ -189,7 +190,8 @@ namespace FuncDoodle {
 	}
 
 	Shortcut KeybindsRegistry::Get(const char* id) {
-		auto it = m_Reg.find(id);
+		auto it = std::find_if(m_Reg.begin(), m_Reg.end(),
+			[id](const auto& pair) { return pair.first == id; });
 		if (it != m_Reg.end()) {
 			return it->second.User.value_or(it->second.Default);
 		}
@@ -197,7 +199,8 @@ namespace FuncDoodle {
 	}
 
 	void KeybindsRegistry::Register(const char* id, Shortcut shortcut) {
-		m_Reg[id] = {.Default = shortcut, .User = std::nullopt};
+		m_Reg.emplace_back(
+			id, ShortcutWithUser{.Default = shortcut, .User = std::nullopt});
 	}
 
 	void KeybindsRegistry::End() {
@@ -221,8 +224,8 @@ namespace FuncDoodle {
 			for (auto& pair : m_Reg) {
 				if (std::string_view(sv) == std::string_view(pair.first)) {
 					pair.second.User = v.as_string()->get().c_str();
-					FUNC_DBG("setting up, setting user: "
-							 << v.as_string()->get().c_str() << "...");
+					// FUNC_DBG("setting up, setting user: "
+					// << v.as_string()->get().c_str() << "...");
 					break;
 				}
 			}
@@ -231,9 +234,6 @@ namespace FuncDoodle {
 
 	void KeybindsRegistry::Write() {
 		std::filesystem::path keybindsPath = m_RootPath / "keybinds.toml";
-
-		if (std::filesystem::exists(keybindsPath))
-			return;
 
 		toml::table root;
 		toml::table keybinds;
@@ -244,9 +244,16 @@ namespace FuncDoodle {
 			keybinds.insert(id, str);
 		}
 
+		if (keybinds.empty())
+			return;
+
 		root.insert("keybinds", keybinds);
 
 		std::ofstream out(keybindsPath);
 		out << root;
+	}
+
+	std::vector<std::pair<const char*, ShortcutWithUser>>& KeybindsRegistry::GetAll() {
+		return m_Reg;
 	}
 }  // namespace FuncDoodle

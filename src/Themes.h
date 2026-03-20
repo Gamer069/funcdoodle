@@ -260,6 +260,8 @@ namespace FuncDoodle {
 						if (!f) {
 							FUNC_ERR("Failed to open file...");
 							std::free(savePath);
+							g_SaveThemeOpen = false;
+							ImGui::End();
 							return;
 						}
 						FUNC_INF(

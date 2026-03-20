@@ -48,7 +48,7 @@ mkdir -p CMakeFiles/FuncDoodle.dir/src \
 	CMakeFiles/FuncDoodle.dir/lib/imgui \
 	CMakeFiles/FuncDoodle.dir/lib/imgui/backends \
 	CMakeFiles/FuncDoodle.dir/lib/nfd/src || exit -1
-jobs=$(( ($(nproc) + 2) / 3 ))
+jobs=$(( ($(nproc) + 2) / 2 ))
 cmake --build . -j"$jobs" || exit -1
 cp -r "$root_dir/assets" . || exit -1
 cp -r "$root_dir/themes" . || exit -1

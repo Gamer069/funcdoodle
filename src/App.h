@@ -76,6 +76,7 @@ namespace FuncDoodle {
 			SharedPtr<EditorController> m_EditorController;
 			int m_ExportFormat = 0;
 			UUID m_Theme;
+			const char* m_WaitingForKey = nullptr;
 			bool m_ShouldClose = false;
 			bool m_SFXEnabled = true;
 			bool m_PrevEnabled = false;
