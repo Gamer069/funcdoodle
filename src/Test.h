@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+#include "imgui_te_engine.h"
+#include "imgui_te_ui.h"
+#endif
+
 #include <atomic>
 #include <cstring>
 #include <iostream>
@@ -12,8 +17,11 @@
 #define CURRENT_FUNC __func__
 #endif
 
-namespace FuncDoodle {
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+static ImGuiTestEngine* s_TestEngine;
+#endif
 
+namespace FuncDoodle {
 	inline std::string repeat(std::string_view s, size_t n) {
 		std::string out;
 		out.reserve(s.size() * n);
@@ -23,9 +31,9 @@ namespace FuncDoodle {
 	}
 
 	struct TestResult {
-			std::string condition;
-			std::string message;
-			bool passed;
+		std::string condition;
+		std::string message;
+		bool passed;
 	};
 
 	class TestRegistry {
@@ -178,7 +186,7 @@ namespace FuncDoodle {
 #define CHECK_LE(a, b, msg) _test_scope.Check((a) <= (b), #a " <= " #b, msg)
 #define CHECK_GT(a, b, msg) _test_scope.Check((a) > (b), #a " > " #b, msg)
 #define CHECK_GE(a, b, msg) _test_scope.Check((a) >= (b), #a " >= " #b, msg)
-#define CHECK_NULL(ptr, msg)                                                   \
+#define CHECK_NULL(ptr, msg) \
 	_test_scope.Check((ptr) == nullptr, #ptr " == nullptr", msg)
-#define CHECK_NOT_NULL(ptr, msg)                                               \
+#define CHECK_NOT_NULL(ptr, msg) \
 	_test_scope.Check((ptr) != nullptr, #ptr " != nullptr", msg)

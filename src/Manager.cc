@@ -154,7 +154,7 @@ namespace FuncDoodle {
 						m_Proj->AnimFrames()->Remove(m_SelectedFrame);
 						DeleteFrameAction action = DeleteFrameAction(
 							m_SelectedFrame, &deletedFrame, m_Proj);
-						m_Proj->PushUndoableDeleteFrameAction(action);
+						m_Proj->PushUndoable(action);
 						m_Proj->AnimFrames()->Remove(i);
 					}
 				}
@@ -163,13 +163,13 @@ namespace FuncDoodle {
 					m_SelectedFrame++;
 					InsertFrameAction action =
 						InsertFrameAction(m_SelectedFrame - 1, m_Proj);
-					m_Proj->PushUndoableInsertFrameAction(action);
+					m_Proj->PushUndoable(action);
 				}
 				if (ImGui::MenuItem("Insert after", "P")) {
 					m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
 					InsertFrameAction action =
 						InsertFrameAction(m_SelectedFrame + 1, m_Proj);
-					m_Proj->PushUndoableInsertFrameAction(action);
+					m_Proj->PushUndoable(action);
 				}
 				if (ImGui::MenuItem("Move forward", "I")) {
 					m_Proj->AnimFrames()->MoveForward(i);

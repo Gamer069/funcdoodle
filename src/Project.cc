@@ -1,5 +1,6 @@
 #include "Project.h"
 
+#include "Action.h"
 #include "Frame.h"
 
 #include <cstdio>
@@ -26,9 +27,9 @@
 
 #include <stdlib.h>
 
-#define WRITEB(b)                                                              \
-	do {                                                                       \
-		outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b)));       \
+#define WRITEB(b)                                                        \
+	do {                                                                 \
+		outFile.write(reinterpret_cast<const char*>(&(b)), sizeof((b))); \
 	} while (0)
 
 namespace FuncDoodle {
@@ -167,73 +168,6 @@ namespace FuncDoodle {
 		return m_Frames;
 	}
 
-	static void ClearRedoStack(std::stack<UniquePtr<Action>>& redoStack) {
-		while (!redoStack.empty()) {
-			redoStack.pop();
-		}
-	}
-
-	void ProjectFile::PushUndoableDrawAction(DrawAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(std::make_unique<DrawAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableFillAction(FillAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(std::make_unique<FillAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableStrokeAction(StrokeAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(std::make_unique<StrokeAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableDeleteFrameAction(DeleteFrameAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<DeleteFrameAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableInsertFrameAction(InsertFrameAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<InsertFrameAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableMoveFrameLeftAction(
-		MoveFrameLeftAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<MoveFrameLeftAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableMoveFrameRightAction(
-		MoveFrameRightAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<MoveFrameRightAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableRotateFrameAction(RotateFrameAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<RotateFrameAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableRotateSelectionAction(
-		RotateSelectionAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<RotateSelectionAction>(std::move(action)));
-		m_Saved = false;
-	}
-	void ProjectFile::PushUndoableDeleteSelectionAction(
-		DeleteSelectionAction action) {
-		ClearRedoStack(m_RedoStack);
-		m_UndoStack.push(
-			std::make_unique<DeleteSelectionAction>(std::move(action)));
-		m_Saved = false;
-	}
 	void ProjectFile::Undo() {
 		if (m_UndoStack.empty()) {
 			FUNC_INF("Nothing to undo");

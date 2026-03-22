@@ -4,6 +4,7 @@ PointerAlignment: Left
 AlignConsecutiveDeclarations: false
 BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: Inline  # Use Inline to keep short functions on the same line
+AlignEscapedNewlines: Left
 IndentWidth: 4
 UseTab: Always
 TabWidth: 4

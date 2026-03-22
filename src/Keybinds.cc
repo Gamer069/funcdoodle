@@ -253,7 +253,8 @@ namespace FuncDoodle {
 		out << root;
 	}
 
-	std::vector<std::pair<const char*, ShortcutWithUser>>& KeybindsRegistry::GetAll() {
+	std::vector<std::pair<const char*, ShortcutWithUser>>&
+	KeybindsRegistry::GetAll() {
 		return m_Reg;
 	}
 }  // namespace FuncDoodle

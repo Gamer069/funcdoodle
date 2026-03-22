@@ -38,6 +38,10 @@ float SAMPLE_RATE = 44100.0;
 int FuncDoodle_RunTests();
 #endif
 
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+int FuncDoodle_RegisterImTests();
+#endif
+
 void GLFWErrorCallback(int error, const char* desc) {
 	FUNC_ERR("GLFW ERROR (" << error << "): " << desc);
 }
@@ -82,6 +86,10 @@ void GlobalAppTick(GLFWwindow* win,
 		application->UpdateFPS(deltaTime);
 
 		glfwSwapBuffers(win);
+
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+		ImGuiTestEngine_PostSwap(s_TestEngine);
+#endif
 	}
 }
 
@@ -109,6 +117,7 @@ int main(int argc, char** argv) {
 	(void)argv;
 	FuncDoodle_RunTests();
 	FuncDoodle::TestRegistry::Instance().PrintSummary();
+
 	return 0;
 #endif
 
@@ -128,15 +137,17 @@ int main(int argc, char** argv) {
 		dirPath[sizeof(dirPath) - 1] = '\0';
 	}
 
-	std::filesystem::path assetsPath(dirPath);
-	assetsPath /= "assets";
-
-	std::filesystem::path themesPath(dirPath);
-	themesPath /= "themes";
-
 	std::filesystem::path rootPath(dirPath);
 
-	// glfwSetErrorCallback(GLFWErrorCallback);
+	std::filesystem::path assetsPath(rootPath);
+	assetsPath /= "assets";
+
+	std::filesystem::path themesPath(rootPath);
+	themesPath /= "themes";
+
+#ifdef DEBUG
+	glfwSetErrorCallback(GLFWErrorCallback);
+#endif
 
 	// fix some leak regarding libdecor
 	glfwInitHint(GLFW_WAYLAND_LIBDECOR, GLFW_WAYLAND_DISABLE_LIBDECOR);
@@ -181,6 +192,20 @@ int main(int argc, char** argv) {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+	s_TestEngine = ImGuiTestEngine_CreateContext();
+
+	ImGuiTestEngineIO& test_io = ImGuiTestEngine_GetIO(s_TestEngine);
+
+	test_io.ConfigVerboseLevel = ImGuiTestVerboseLevel_Info;
+	test_io.ConfigVerboseLevelOnError = ImGuiTestVerboseLevel_Debug;
+
+	FuncDoodle_RegisterImTests();
+
+	ImGuiTestEngine_Start(s_TestEngine, ImGui::GetCurrentContext());
+#endif
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 #ifndef TILING
@@ -388,7 +413,16 @@ int main(int argc, char** argv) {
 	// cleanup code
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
+
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+	ImGuiTestEngine_Stop(s_TestEngine);
+#endif
+
 	ImGui::DestroyContext();
+
+#ifdef FUNCDOODLE_BUILD_IMTESTS
+	ImGuiTestEngine_DestroyContext(s_TestEngine);
+#endif
 
 	glfwDestroyWindow(win);
 	glfwTerminate();

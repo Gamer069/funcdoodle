@@ -86,21 +86,21 @@ namespace FuncDoodle {
 			context.proj->AnimFrames()->InsertAfterEmpty(selectedFrame);
 			InsertFrameAction action =
 				InsertFrameAction(selectedFrame + 1, context.proj);
-			context.proj->PushUndoableInsertFrameAction(action);
+			context.proj->PushUndoable(action);
 		}
 		if (keybinds.Get("insert_before").IsPressed()) {
 			context.proj->AnimFrames()->InsertBeforeEmpty(selectedFrame);
 			selectedFrame++;
 			InsertFrameAction action =
 				InsertFrameAction(selectedFrame - 1, context.proj);
-			context.proj->PushUndoableInsertFrameAction(action);
+			context.proj->PushUndoable(action);
 		}
 		if (keybinds.Get("move_forward").IsPressed()) {
 			context.proj->AnimFrames()->MoveForward(selectedFrame);
 			selectedFrame++;
 			MoveFrameRightAction action =
 				MoveFrameRightAction(selectedFrame, context.proj);
-			context.proj->PushUndoableMoveFrameRightAction(action);
+			context.proj->PushUndoable(action);
 		}
 		if (keybinds.Get("move_backward").IsPressed()) {
 			if (selectedFrame != 0) {
@@ -108,7 +108,7 @@ namespace FuncDoodle {
 				MoveFrameLeftAction action =
 					MoveFrameLeftAction(selectedFrame, context.proj);
 				selectedFrame--;
-				context.proj->PushUndoableMoveFrameLeftAction(action);
+				context.proj->PushUndoable(action);
 			}
 		}
 		if (keybinds.Get("delete_frame").IsPressed()) {
@@ -118,7 +118,7 @@ namespace FuncDoodle {
 				context.proj->AnimFrames()->Remove(selectedFrame);
 				DeleteFrameAction action = DeleteFrameAction(
 					selectedFrame, &deletedFrame, context.proj);
-				context.proj->PushUndoableDeleteFrameAction(action);
+				context.proj->PushUndoable(action);
 			}
 		}
 		if (keybinds.Get("copy_frame").IsPressed()) {
@@ -139,7 +139,7 @@ namespace FuncDoodle {
 			context.proj->AnimFrames()->InsertAfter(selectedFrame, frame);
 			InsertFrameAction action =
 				InsertFrameAction(selectedFrame + 1, context.proj);
-			context.proj->PushUndoableInsertFrameAction(action);
+			context.proj->PushUndoable(action);
 		}
 		if (keybinds.Get("duplicate_frame_before").IsPressed()) {
 			Frame* frame =
@@ -148,7 +148,7 @@ namespace FuncDoodle {
 			selectedFrame++;
 			InsertFrameAction action =
 				InsertFrameAction(selectedFrame - 1, context.proj);
-			context.proj->PushUndoableInsertFrameAction(action);
+			context.proj->PushUndoable(action);
 		}
 	}
 }  // namespace FuncDoodle

@@ -16,7 +16,9 @@ endif()
 if(UNIX)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
+
 option(BUILD_TESTS "Build and run tests from test/*.cc" OFF)
+option(BUILD_IMTESTS "Build and run tests from imtest/*.cc" OFF)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -43,9 +45,14 @@ funcdoodle_set_portaudio_defaults()
 add_subdirectory(lib/glfw)
 file(GLOB SRC "src/*.cc")
 
+file(GLOB IMGUI_TEST_ENGINE_SOURCES
+	"lib/imgui_test_engine/imgui_test_engine/*.cpp"
+)
+
 add_executable(FuncDoodle
 	${FUNCDOODLE_GLAD_SOURCES}
 	${FUNCDOODLE_IMGUI_SOURCES}
+	${IMGUI_TEST_ENGINE_SOURCES}
 	${NFD_SOURCES}
 	${SRC}
 )
@@ -57,11 +64,20 @@ if(BUILD_TESTS AND NOT CMAKE_CROSSCOMPILING)
 	message(STATUS "BUILD_TESTS enabled -- test sources: ${TEST_SOURCES}")
 endif()
 
+if(BUILD_IMTESTS AND NOT CMAKE_CROSSCOMPILING)
+	file(GLOB IMTEST_SOURCES "imtest/*.cc")
+	target_sources(FuncDoodle PRIVATE ${IMTEST_SOURCES})
+	target_compile_definitions(FuncDoodle PRIVATE FUNCDOODLE_BUILD_IMTESTS)
+	message(STATUS "BUILD_IMTESTS enabled -- imtest sources: ${IMTEST_SOURCES}")
+endif()
+
 target_include_directories(FuncDoodle PRIVATE
 	lib/glfw/include/
 	${PORTAUDIO_INCLDIR}
 	lib/imgui
 	lib/imgui/backends
+	lib/imgui_test_engine
+	lib/imgui_test_engine/imgui_test_engine
 	lib/glad/include
 	lib/nfd/src/include
 	lib/stb/

@@ -9,106 +9,106 @@
 extern std::vector<char*> s_Logs;
 
 #ifdef DEBUG
-#define FUNC_AOV(x)                                                            \
-	do {                                                                       \
-		if (!(x)) {                                                            \
-			std::cout << "ASSERTION FAILED(DEBUG) at line" << __LINE__         \
-					  << " in file " << __FILE__ << std::endl;                 \
-		}                                                                      \
+#define FUNC_AOV(x)                                                    \
+	do {                                                               \
+		if (!(x)) {                                                    \
+			std::cout << "ASSERTION FAILED(DEBUG) at line" << __LINE__ \
+					  << " in file " << __FILE__ << std::endl;         \
+		}                                                              \
 	} while (0)
 #else
 #ifdef NDEBUG
-#define FUNC_AOV(x)                                                            \
-	do {                                                                       \
-		if (!(x)) {                                                            \
-			std::cout << "VERIFICATION FAILED at line" << __LINE__             \
-					  << " in file " << __FILE__ << std::endl;                 \
-		}                                                                      \
+#define FUNC_AOV(x)                                                \
+	do {                                                           \
+		if (!(x)) {                                                \
+			std::cout << "VERIFICATION FAILED at line" << __LINE__ \
+					  << " in file " << __FILE__ << std::endl;     \
+		}                                                          \
 	} while (0)
 #endif
 #endif
 
 #ifdef DEBUG
-#define FUNC_AOV_EX(x, str)                                                    \
-	do {                                                                       \
-		if (!(x)) {                                                            \
-			std::cout << "VERIFICATION FAILED: " << std::endl;                 \
-			FUNC_INF(str);                                                     \
-		}                                                                      \
+#define FUNC_AOV_EX(x, str)                                    \
+	do {                                                       \
+		if (!(x)) {                                            \
+			std::cout << "VERIFICATION FAILED: " << std::endl; \
+			FUNC_INF(str);                                     \
+		}                                                      \
 	} while (0)
 #else
 #ifdef NDEBUG
-#define FUNC_AOV_EX(x, str)                                                    \
-	do {                                                                       \
-		if (!(x)) {                                                            \
-			FUNC_FATAL("VERIFICATION FAILED, description:");                   \
-			FUNC_INF(str);                                                     \
-		}                                                                      \
+#define FUNC_AOV_EX(x, str)                                  \
+	do {                                                     \
+		if (!(x)) {                                          \
+			FUNC_FATAL("VERIFICATION FAILED, description:"); \
+			FUNC_INF(str);                                   \
+		}                                                    \
 	} while (0)
 #endif
 #endif
 
 #ifdef DEBUG
-#define FUNC_DASS(x)                                                           \
-	do {                                                                       \
-		if (!(x)) {                                                            \
-			std::cout << "STRIPPED ASSERTION FAILED at line" << __LINE__       \
-					  << " in file " << __FILE__ << std::endl;                 \
-		}                                                                      \
+#define FUNC_DASS(x)                                                     \
+	do {                                                                 \
+		if (!(x)) {                                                      \
+			std::cout << "STRIPPED ASSERTION FAILED at line" << __LINE__ \
+					  << " in file " << __FILE__ << std::endl;           \
+		}                                                                \
 	} while (0)
 #else
 #define FUNC_DASS(x)
 #endif
 
-#define PUSH_LOG(prefix, x)                                                    \
-	do {                                                                       \
-		std::ostringstream _oss;                                               \
-		_oss << prefix << x;                                                   \
-		std::string _str = _oss.str();                                         \
-		char* _buf = new char[_str.size() + 1];                                \
-		std::memcpy(_buf, _str.c_str(), _str.size() + 1);                      \
-		s_Logs.push_back(_buf);                                                \
+#define PUSH_LOG(prefix, x)                               \
+	do {                                                  \
+		std::ostringstream _oss;                          \
+		_oss << prefix << x;                              \
+		std::string _str = _oss.str();                    \
+		char* _buf = new char[_str.size() + 1];           \
+		std::memcpy(_buf, _str.c_str(), _str.size() + 1); \
+		s_Logs.push_back(_buf);                           \
 	} while (0)
 
 #ifdef DEBUG
-#define FUNC_DBG(x)                                                            \
-	do {                                                                       \
-		std::cout << "\033[36m[Debug]: " << x << "\033[0m" << std::endl;       \
-		PUSH_LOG("[Debug]: ", x);                                              \
+#define FUNC_DBG(x)                                                      \
+	do {                                                                 \
+		std::cout << "\033[36m[Debug]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[Debug]: ", x);                                        \
 	} while (0)
 #else
 #define FUNC_DBG(x)
 #endif
 
-#define FUNC_INF(x)                                                            \
-	do {                                                                       \
-		std::cout << "\033[34m[Info]: " << x << "\033[0m" << std::endl;        \
-		PUSH_LOG("[Info]: ", x);                                               \
+#define FUNC_INF(x)                                                     \
+	do {                                                                \
+		std::cout << "\033[34m[Info]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[Info]: ", x);                                        \
 	} while (0)
 
-#define FUNC_WARN(x)                                                           \
-	do {                                                                       \
-		std::cout << "\033[33m[Warn]: " << x << "\033[0m" << std::endl;        \
-		PUSH_LOG("[Warn]: ", x);                                               \
+#define FUNC_WARN(x)                                                    \
+	do {                                                                \
+		std::cout << "\033[33m[Warn]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[Warn]: ", x);                                        \
 	} while (0)
 
-#define FUNC_GRAY(x)                                                           \
-	do {                                                                       \
-		std::cout << "\033[90m[Note]: " << x << "\033[0m" << std::endl;        \
-		PUSH_LOG("[Note]: ", x);                                               \
+#define FUNC_GRAY(x)                                                    \
+	do {                                                                \
+		std::cout << "\033[90m[Note]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[Note]: ", x);                                        \
 	} while (0)
 
-#define FUNC_ERR(x)                                                            \
-	do {                                                                       \
-		std::cout << "\033[1;35m[Error]: " << x << "\033[0m" << std::endl;     \
-		PUSH_LOG("[Error]: ", x);                                              \
+#define FUNC_ERR(x)                                                        \
+	do {                                                                   \
+		std::cout << "\033[1;35m[Error]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[Error]: ", x);                                          \
 	} while (0)
 
-#define FUNC_FATAL(x)                                                          \
-	do {                                                                       \
-		std::cout << "\033[1;31m[FATAL]: " << x << "\033[0m" << std::endl;     \
-		PUSH_LOG("[FATAL]: ", x);                                              \
-		std::exit(-1);                                                         \
+#define FUNC_FATAL(x)                                                      \
+	do {                                                                   \
+		std::cout << "\033[1;31m[FATAL]: " << x << "\033[0m" << std::endl; \
+		PUSH_LOG("[FATAL]: ", x);                                          \
+		std::exit(-1);                                                     \
 	} while (0)
 
 #include "Gui.h"
@@ -117,8 +117,8 @@ extern std::vector<char*> s_Logs;
 
 #ifdef _WIN32
 #include <windows.h>
-#define OPEN_FILE_EXPLORER(path)                                               \
-	ShellExecuteA(                                                             \
+#define OPEN_FILE_EXPLORER(path) \
+	ShellExecuteA(               \
 		nullptr, "explore", path.string().c_str(), nullptr, nullptr, SW_SHOW)
 #undef LoadImage
 #undef PlaySound
@@ -126,25 +126,19 @@ extern std::vector<char*> s_Logs;
 #define strcasecmp _stricmp
 #elif __APPLE__
 #include <cstdlib>
-#define OPEN_FILE_EXPLORER(path)                                               \
+#define OPEN_FILE_EXPLORER(path) \
 	std::system(("open " + path.string() + " &").c_str())
 #elif __linux__
 #include <cstdlib>
-#define OPEN_FILE_EXPLORER(path)                                               \
+#define OPEN_FILE_EXPLORER(path) \
 	std::system(("xdg-open " + path.string() + " &").c_str())
 #else
-#define OPEN_FILE_EXPLORER(path)                                               \
+#define OPEN_FILE_EXPLORER(path) \
 	std::cerr << "Unsupported platform!" << std::endl
 #endif
 
-// VERSION SCHEME -- major, minor, patch, modifier -- minor/&debug ||
-// (m)ajor/&debug
-//
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-// old version system, funcdoodle now uses a semver-style version
-// system
-
-// now its just semver + an optional '-dev' suffixa for debug builds
+// funcdoodle now uses a semver-style version system
+// its just semver + an optional '-dev' suffix for debug builds
 
 #ifdef DEBUG
 #define FUNCVER "0.1.2-dev"

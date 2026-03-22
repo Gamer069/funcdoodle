@@ -1,4 +1,6 @@
 function(funcdoodle_apply_build_config target)
+	target_compile_definitions(${target} PRIVATE IMGUI_ENABLE_TEST_ENGINE IMGUI_TEST_ENGINE_ENABLE_COROUTINE_STDTHREAD_IMPL=1)
+
 	if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 		target_compile_definitions(${target} PRIVATE DEBUG)
 		if(UNIX AND NOT APPLE AND ISTILING)

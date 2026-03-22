@@ -93,7 +93,7 @@ namespace FuncDoodle {
 				} else {
 					DrawAction action(newX, newY, prevColor, newColor, frameI,
 						player->Proj());
-					player->Proj()->PushUndoableDrawAction(std::move(action));
+					player->Proj()->PushUndoable(action);
 				}
 				actionPerformed = true;
 			}
@@ -133,7 +133,7 @@ namespace FuncDoodle {
 				} else {
 					DrawAction action(
 						newX, newY, prevColor, bgColor, frameI, player->Proj());
-					player->Proj()->PushUndoableDrawAction(std::move(action));
+					player->Proj()->PushUndoable(action);
 				}
 				actionPerformed = true;
 			}
@@ -169,7 +169,7 @@ namespace FuncDoodle {
 
 		FillAction action(curPixelCol, fillColor, frameI, player->Proj(),
 			pixelsChangedByBucketTool);
-		player->Proj()->PushUndoableFillAction(std::move(action));
+		player->Proj()->PushUndoable(action);
 		return true;
 	}
 
@@ -275,7 +275,7 @@ namespace FuncDoodle {
 		if (!m_StrokeChanges.empty() && player && player->Proj()) {
 			StrokeAction action(
 				m_StrokeFrameI, player->Proj(), std::move(m_StrokeChanges));
-			player->Proj()->PushUndoableStrokeAction(std::move(action));
+			player->Proj()->PushUndoable(action);
 		}
 		m_StrokeChanges.clear();
 		m_StrokeIndexByKey.clear();

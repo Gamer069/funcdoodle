@@ -25,9 +25,12 @@
 #include "Themes.h"
 #include "Tool.h"
 
+#include "imgui_te_ui.h"
 #include "nfd.h"
 
 #include "Keybinds.h"
+
+#include "Test.h"
 
 namespace FuncDoodle {
 	Application::Application(GLFWwindow* win, AssetLoader* assetLoader,
@@ -153,7 +156,7 @@ namespace FuncDoodle {
 					prevPixels.push_back(
 						m_Manager->SelectedFrame()->Pixels()->Get(p.x, p.y));
 				}
-				m_CurrentProj->PushUndoableDeleteSelectionAction(
+				m_CurrentProj->PushUndoable(
 					DeleteSelectionAction(m_Manager->SelectedFrameI(),
 						m_EditorController->Sel(), prevPixels, m_CurrentProj));
 				m_Manager->SelectedFrame()->DeleteSelection(
@@ -179,6 +182,11 @@ namespace FuncDoodle {
 	}
 
 	void Application::RenderImGui() {
+		#ifdef FUNCDOODLE_BUILD_IMTESTS
+			ImGuiTestEngine_ShowTestEngineWindows(s_TestEngine, &m_ShowTests);
+		#endif
+
+
 		if (!m_CurrentProj)
 			RenderOptions();
 
@@ -591,13 +599,14 @@ namespace FuncDoodle {
 	}
 	void Application::Rotate(int32_t deg) {
 		if (!m_EditorController->Sel()) {
-			m_CurrentProj->PushUndoableRotateFrameAction(RotateFrameAction(
+			m_CurrentProj->PushUndoable(RotateFrameAction(
 				m_Manager->SelectedFrameI(), deg, m_CurrentProj));
 			m_Manager->SelectedFrame()->Rotate(deg);
 		} else {
-			m_CurrentProj->PushUndoableRotateSelectionAction(
+			m_CurrentProj->PushUndoable(
 				RotateSelectionAction(m_Manager->SelectedFrameI(),
 					m_EditorController->Sel(), deg, m_CurrentProj));
+
 			m_Manager->SelectedFrame()->RotateSelection(
 				m_EditorController->Sel().get(), deg);
 		}
@@ -677,11 +686,10 @@ namespace FuncDoodle {
 									m_Manager->SelectedFrame()->Pixels()->Get(
 										p.x, p.y));
 							}
-							m_CurrentProj->PushUndoableDeleteSelectionAction(
-								DeleteSelectionAction(
-									m_Manager->SelectedFrameI(),
-									m_EditorController->Sel(), prevPixels,
-									m_CurrentProj));
+							m_CurrentProj->PushUndoable(DeleteSelectionAction(
+								m_Manager->SelectedFrameI(),
+								m_EditorController->Sel(), prevPixels,
+								m_CurrentProj));
 							m_Manager->SelectedFrame()->DeleteSelection(
 								m_EditorController->Sel().get(),
 								m_CurrentProj->BgCol());

@@ -3,6 +3,7 @@
 #include "DynArr.h"
 #include "Ptr.h"
 
+#include <concepts>
 #include <stack>
 
 #include "Action.h"
@@ -60,21 +61,24 @@ namespace FuncDoodle {
 			void DisplayFPS(double fps);
 
 			// Undo management
-			void PushUndoableDrawAction(DrawAction action);
-			void PushUndoableFillAction(FillAction action);
-			void PushUndoableStrokeAction(StrokeAction action);
-			void PushUndoableDeleteFrameAction(DeleteFrameAction action);
-			void PushUndoableInsertFrameAction(InsertFrameAction action);
-			void PushUndoableMoveFrameLeftAction(MoveFrameLeftAction action);
-			void PushUndoableMoveFrameRightAction(MoveFrameRightAction action);
-			void PushUndoableRotateFrameAction(RotateFrameAction action);
-			void PushUndoableRotateSelectionAction(
-				RotateSelectionAction action);
-			void PushUndoableDeleteSelectionAction(
-				DeleteSelectionAction action);
+			template <typename T>
+				requires std::derived_from<std::remove_cvref_t<T>, Action>
+			void PushUndoable(T&& action) {
+				using U = std::remove_cvref_t<T>;
+
+				ClearRedoStack();
+				m_UndoStack.push(std::make_unique<U>(std::forward<T>(action)));
+				m_Saved = false;
+			}
 
 			void Undo();
 			void Redo();
+
+			void ClearRedoStack() {
+				while (!m_RedoStack.empty()) {
+					m_RedoStack.pop();
+				}
+			}
 
 		private:
 			char m_Name[256];  // 256
