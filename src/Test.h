@@ -18,7 +18,7 @@
 #endif
 
 #ifdef FUNCDOODLE_BUILD_IMTESTS
-static ImGuiTestEngine* s_TestEngine;
+extern ImGuiTestEngine* s_TestEngine;
 #endif
 
 namespace FuncDoodle {
@@ -31,9 +31,9 @@ namespace FuncDoodle {
 	}
 
 	struct TestResult {
-		std::string condition;
-		std::string message;
-		bool passed;
+			std::string condition;
+			std::string message;
+			bool passed;
 	};
 
 	class TestRegistry {

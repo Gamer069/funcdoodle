@@ -40,6 +40,7 @@ int FuncDoodle_RunTests();
 
 #ifdef FUNCDOODLE_BUILD_IMTESTS
 int FuncDoodle_RegisterImTests();
+ImGuiTestEngine* s_TestEngine;
 #endif
 
 void GLFWErrorCallback(int error, const char* desc) {
