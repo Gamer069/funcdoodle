@@ -208,6 +208,7 @@ int main(int argc, char** argv) {
 #endif
 
 	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigErrorRecoveryEnableAssert = false;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 #ifndef TILING
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
@@ -381,6 +382,8 @@ int main(int argc, char** argv) {
 	GLFWimage* icon = GlobalLoadWinImage(assetsPath);
 
 	glfwSetWindowUserPointer(win, application.get());
+	// idk why it doesn't work if you dont set it twice
+	io.UserData = application.get();
 	if (icon != nullptr) {
 		glfwSetWindowIcon(win, 1, icon);
 	}

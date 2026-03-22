@@ -58,6 +58,7 @@ namespace FuncDoodle {
 			inline bool UndoByStroke() { return m_UndoByStroke; }
 			inline double FrameTime() { return 1.0 / m_FrameLimit; }
 			inline double FrameLimit() { return m_FrameLimit; }
+			inline PopupRegistry* Popups() { return &m_Popups; }
 			void UpdateFPS(double deltaTime);
 			void DropCallback(GLFWwindow* win, int count, const char** paths);
 			void RenderEditProj();
