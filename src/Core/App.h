@@ -72,6 +72,12 @@ namespace FuncDoodle {
 		 * @brief Renders one ImGui frame.
 		 */
 		void RenderImGui();
+
+		/**
+		 * @fn RenderFrame
+		 * @brief Renders the current framebuffer.
+		 */
+		void RenderFrame(double dt);
 		/**
 		 * @fn OpenFileDialog
 		 * @brief Opens the project open dialog.
@@ -161,6 +167,15 @@ namespace FuncDoodle {
 			}
 		}
 
+
+		/**
+		 * @fn GetLastFrame
+		 * @brief Returns the last frame time.
+		 *
+		 * @return How long ago last frame was rendered.
+		 */
+		std::chrono::time_point<std::chrono::high_resolution_clock> GetLastFrame() { return m_LastFrame; }
+
 		/**
 		 * @fn GetCurProj
 		 * @brief Returns the currently open project.
@@ -168,6 +183,7 @@ namespace FuncDoodle {
 		 * @return Shared pointer to the active project.
 		 */
 		SharedPtr<ProjectFile> GetCurProj() { return m_CurrentProj; }
+
 		/**
 		 * @fn SetCurProj
 		 * @brief Sets the currently open project.
@@ -374,6 +390,16 @@ namespace FuncDoodle {
 		 * @brief Renders the rotate-project UI.
 		 */
 		void RenderRotate();
+
+		/**
+		 * @fn GetDt
+		 * @brief Get deltaTime.
+		 * @return The current deltaTime.
+		 */
+		inline double GetDt() {
+			return m_DeltaTime;
+		}
+
 		/**
 		 * @fn Rotate
 		 * @brief Rotates the active frame or selection by degrees.
@@ -440,6 +466,7 @@ namespace FuncDoodle {
 		double m_FPS = 0.0;
 		std::array<float, 3> m_CacheBGCol;
 		std::filesystem::path m_ThemesPath;
+		double m_DeltaTime;
 		static Application* s_Instance;
 	};
 }  // namespace FuncDoodle

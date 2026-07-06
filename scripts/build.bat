@@ -2,7 +2,7 @@
 setlocal EnableExtensions
 
 set "root_dir=%~dp0.."
-set "root_dir=%root_dir:\=%"
+REM set "root_dir=%root_dir:\=%"
 
 if "%~1"=="" (
     if not "%~2"=="" goto usage
@@ -27,7 +27,7 @@ if /I "%arg1%"=="debug" (
     if /I "%arg1%"=="release" (
         set "arg1=Release"
     ) else (
-        echo Mode must be either debug or release -- %arg1% is invalid
+        echo mode argument must be either debug or release -- %arg1% is invalid
         exit /b -1
     )
 )
@@ -56,8 +56,7 @@ if "%arg3%"=="true" (
     if exist "%bin_dir%" rmdir /S /Q "%bin_dir%"
 )
 
-mkdir "%bin_dir%"
-if errorlevel 1 exit /b -1
+if not exist "%bin_dir%" mkdir "%bin_dir%"
 
 cd "%bin_dir%"
 if errorlevel 1 exit /b -1
@@ -72,7 +71,7 @@ if not defined use_bundled (
     )
 )
 
-set "cmake_args=-DCMAKE_BUILD_TYPE=%arg1% -DISTILING=%tiling_flag% -DBUILD_TESTS=OFF -DBUILD_IMTESTS=OFF"
+set "cmake_args=-DCMAKE_BUILD_TYPE=%arg1% -DISTILING=%tiling_flag% -DBUILD_TESTS=OFF -DBUILD_IMTESTS=OFF -G Ninja"
 
 if "%use_bundled%"=="ON" (
     set "cmake_args=%cmake_args% -DFUNCDOODLE_USE_BUNDLED_PORTAUDIO=ON"

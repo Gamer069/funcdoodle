@@ -2,6 +2,8 @@
 
 #include "Core/App.h"
 
+#include "UI/ImUtil.h"
+
 #include <filesystem>
 #include <imgui.h>
 
@@ -21,68 +23,67 @@ namespace FuncDoodle {
 		Application* app = Application::Get();
 		KeybindsRegistry& keys = app->GetKeybinds();
 
-		ImGui::Begin("Frame", nullptr,
-			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		if (ImBegin("Frame", nullptr,
+			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse, app)) {
+			if (!m_Ctx.Frame || !m_Ctx.ToolManager) {
+				ImEnd();
+				return;
+			}
 
-		if (!m_Ctx.Frame || !m_Ctx.ToolManager) {
-			ImGui::End();
-			return;
+			if (!m_Ctx.Grid) {
+				m_Ctx.Grid = std::make_unique<Grid>(m_Ctx.Frame->Width(),
+					m_Ctx.Frame->Height(), m_Ctx.Player->Proj()->BgCol());
+			}
+
+			if (ImGui::BeginPopupContextWindow()) {
+				Shortcut zoomOut = keys.Get("zoom_out");
+				Shortcut resetZoom = keys.Get("reset_zoom");
+				Shortcut zoomIn = keys.Get("zoom_in");
+				Shortcut toggleGrid = keys.Get("toggle_grid");
+				Shortcut decreaseGrid = keys.Get("decrease_grid");
+				Shortcut increaseGrid = keys.Get("increase_grid");
+				Shortcut exportFrame = keys.Get("export_frame");
+
+				if (ImGui::MenuItem("Zoom out", zoomOut)) {
+					m_Ctx.PixelScale = std::max(1, m_Ctx.PixelScale - 1);
+				}
+				if (ImGui::MenuItem("Reset zoom", resetZoom)) {
+					m_Ctx.PixelScale = 1;
+				}
+				if (ImGui::MenuItem("Zoom in", zoomIn)) {
+					m_Ctx.PixelScale++;
+				}
+				if (ImGui::MenuItem("Toggle Grid", toggleGrid)) {
+					if (m_Ctx.Grid->GridVisibility())
+						m_Ctx.Grid->HideGrid();
+					else
+						m_Ctx.Grid->ShowGrid();
+				}
+				if (ImGui::MenuItem("Increase grid size", increaseGrid)) {
+					m_Ctx.Grid->SetGridWidth(m_Ctx.Grid->GridWidth() + 1);
+					m_Ctx.Grid->SetGridHeight(m_Ctx.Grid->GridHeight() + 1);
+				}
+				if (ImGui::MenuItem("Decrease grid size", decreaseGrid)) {
+					if (m_Ctx.Grid->GridWidth() > 1)
+						m_Ctx.Grid->SetGridWidth(m_Ctx.Grid->GridWidth() - 1);
+					if (m_Ctx.Grid->GridHeight() > 1)
+						m_Ctx.Grid->SetGridHeight(m_Ctx.Grid->GridHeight() - 1);
+				}
+				if (ImGui::MenuItem("Export", exportFrame)) {
+					FileDialog diag(g_SupportedExtensionsForImporting);
+
+					std::filesystem::path path = diag.Save();
+
+					m_Ctx.Frame->Export(path.string().c_str());
+				}
+
+				ImGui::EndPopup();
+			}
+			InitPixels();
+
+			RenderStatusBar();
 		}
-
-		if (!m_Ctx.Grid) {
-			m_Ctx.Grid = std::make_unique<Grid>(m_Ctx.Frame->Width(),
-				m_Ctx.Frame->Height(), m_Ctx.Player->Proj()->BgCol());
-		}
-
-		if (ImGui::BeginPopupContextWindow()) {
-			Shortcut zoomOut = keys.Get("zoom_out");
-			Shortcut resetZoom = keys.Get("reset_zoom");
-			Shortcut zoomIn = keys.Get("zoom_in");
-			Shortcut toggleGrid = keys.Get("toggle_grid");
-			Shortcut decreaseGrid = keys.Get("decrease_grid");
-			Shortcut increaseGrid = keys.Get("increase_grid");
-			Shortcut exportFrame = keys.Get("export_frame");
-
-			if (ImGui::MenuItem("Zoom out", zoomOut)) {
-				m_Ctx.PixelScale = std::max(1, m_Ctx.PixelScale - 1);
-			}
-			if (ImGui::MenuItem("Reset zoom", resetZoom)) {
-				m_Ctx.PixelScale = 1;
-			}
-			if (ImGui::MenuItem("Zoom in", zoomIn)) {
-				m_Ctx.PixelScale++;
-			}
-			if (ImGui::MenuItem("Toggle Grid", toggleGrid)) {
-				if (m_Ctx.Grid->GridVisibility())
-					m_Ctx.Grid->HideGrid();
-				else
-					m_Ctx.Grid->ShowGrid();
-			}
-			if (ImGui::MenuItem("Increase grid size", increaseGrid)) {
-				m_Ctx.Grid->SetGridWidth(m_Ctx.Grid->GridWidth() + 1);
-				m_Ctx.Grid->SetGridHeight(m_Ctx.Grid->GridHeight() + 1);
-			}
-			if (ImGui::MenuItem("Decrease grid size", decreaseGrid)) {
-				if (m_Ctx.Grid->GridWidth() > 1)
-					m_Ctx.Grid->SetGridWidth(m_Ctx.Grid->GridWidth() - 1);
-				if (m_Ctx.Grid->GridHeight() > 1)
-					m_Ctx.Grid->SetGridHeight(m_Ctx.Grid->GridHeight() - 1);
-			}
-			if (ImGui::MenuItem("Export", exportFrame)) {
-				FileDialog diag(g_SupportedExtensionsForImporting);
-
-				std::filesystem::path path = diag.Save();
-
-				m_Ctx.Frame->Export(path.c_str());
-			}
-
-			ImGui::EndPopup();
-		}
-		InitPixels();
-
-		RenderStatusBar();
-
-		ImGui::End();
+		ImEnd();
 	}
 
 	void FrameRenderer::RenderStatusBar() const {

@@ -19,10 +19,51 @@
 
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string_view>
+#include <functional>
+
+#include "UI/Gui.h"
 
 namespace FuncDoodle {
+	/**
+	 * @struct PopupEntry
+	 * @brief Struct to store popup state like animation progress and if its open
+	 *
+	 * @see PopupRegistry
+	 */
+	struct PopupEntry {
+		/**
+		 * @var AnimationProgress
+		 * @brief Progress of opening/closing animations, -1 if none is present.
+		 */
+		double AnimationProgress = -1;
+		
+		/**
+		 * @var IsOpen
+		 * @brief Whether or not the popup is open.
+		 */
+		bool IsOpen = false;
+
+		/**
+		 * @var SizeReady
+		 * @brief Whether or not size is ready to get.
+		 */
+		bool SizeReady = false;
+
+		/**
+		 * @var FullSize
+		 * @brief Full size of the popup, (-1, -1) if none.
+		 */
+		ImVec2 FullSize = {-1, -1};
+
+		/**
+		 * @var Pos
+		 * @brief Position of popup, (-1, -1) if none.
+		 */
+		ImVec2 Pos = {-1, -1};
+	};
+
 	/**
 	 * @class PopupRegistry
 	 * @brief Stores all popups used in FuncDoodle
@@ -59,6 +100,30 @@ namespace FuncDoodle {
 		void Close(std::string_view id);
 
 		/**
+		 * @fn Popup
+		 * @brief Renders a popup using a lambda.
+		 *
+		 * @param humanReadable The part before #.
+		 * @param id The part after #.
+		 * @param dt The current deltaTime.
+		 * @param popup The lambda to render with.
+		 */
+		void Popup(std::string_view humanReadable, std::string_view id, double dt, std::function<void()> popup);
+
+		/**
+		 * @fn Modal
+		 * @brief Renders a popup MODAL using a lambda.
+		 *
+		 * @see Popup
+		 *
+		 * @param humanReadable The part before #.
+		 * @param id The part after #.
+		 * @param dt The current deltaTime.
+		 * @param popup The lambda to render with.
+		 */
+		void Modal(std::string_view humanReadable, std::string_view id, double dt, std::function<void()> popup);
+
+		/**
 		 * @fn IsOpen
 		 * @brief Returns whether a popup is currently open.
 		 *
@@ -89,6 +154,6 @@ namespace FuncDoodle {
 		void CloseAllExcept(std::string_view exception);
 
 		private:
-		std::map<std::string_view, bool, std::less<>> m_Popups;
+		std::unordered_map<std::string_view, PopupEntry> m_Popups;
 	};
 }  // namespace FuncDoodle

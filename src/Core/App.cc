@@ -1,4 +1,5 @@
 #include "Conf/FuncPCH.h"
+#include "Conf/FuncDoodle.h"
 
 #include "App.h"
 
@@ -70,6 +71,15 @@ namespace FuncDoodle {
 
 		m_AssetLoader->LoadAssets();
 
+		// -1 cos we dont care and neither does glfw
+		if (!g_NoWindowLimits) {
+			m_Window.SetLimits(900, 800, -1, -1);
+		} else {
+			// make sure there are absolutely no window limits
+			m_Window.SetLimits(-1, -1, -1, -1);
+			FUNC_INF("launching with no window limits (--no-limits)");
+		}
+
 		m_Window.SetDropCallback(
 			[](Platform::Window*, int count, const char** paths) {
 				Get()->DropCallback(count, paths);
@@ -77,11 +87,20 @@ namespace FuncDoodle {
 
 		m_Window.SetCloseCallback([](Platform::Window* win) {
 			win->SetShouldClose(false);
-			if (Get()->GetCurProj()) {
+			if (Get()->GetCurProj() && Get()->GetCurProj()->Saved()) {
 				Get()->OpenSaveChangesDialog();
 			} else {
 				win->SetShouldClose(true);
 			}
+		});
+
+		m_Window.SetRefreshCallback([](Platform::Window* win) {
+			using namespace std::chrono;
+
+			auto now = high_resolution_clock::now();
+			double dt = duration<double>(now - Get()->GetLastFrame()).count();
+
+			Get()->RenderFrame(dt);
 		});
 
 #ifdef DEBUG
@@ -197,49 +216,57 @@ namespace FuncDoodle {
 			m_LastFrame = currentFrameTime;
 			m_Window.PollEvents();
 
-			// Start the ImGui frame
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
+			RenderFrame(deltaTime);
+		}
+	}
 
-			ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
+	void Application::RenderFrame(double deltaTime) {
+		ImGuiIO& io = ImGui::GetIO();
+
+		// Start the ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
 				ImGuiDockNodeFlags_PassthruCentralNode);
 
-			RenderImGui();
+		RenderImGui();
 
-			// Rendering
-			int display_w;
-			int display_h;
-			m_Window.GetFramebufferSize(&display_w, &display_h);
-			glViewport(0, 0, display_w, display_h);
-			glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
-			glClear(GL_COLOR_BUFFER_BIT);
+		// Rendering
+		int display_w;
+		int display_h;
+		m_Window.GetFramebufferSize(&display_w, &display_h);
+		glViewport(0, 0, display_w, display_h);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.00f);
+		glClear(GL_COLOR_BUFFER_BIT);
 
-			ImGui::Render();
+		ImGui::Render();
 
-			m_Manager->GetFrameRenderer()
-				->GetCtx()
-				->ToolManager->UpdateCursor();
+		m_DeltaTime = deltaTime;
 
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		m_Manager->GetFrameRenderer()
+			->GetCtx()
+			->ToolManager->UpdateCursor();
 
-			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-				GLFWwindow* backup = glfwGetCurrentContext();
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-				glfwMakeContextCurrent(backup);
-			}
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-			UpdateFPS(deltaTime);
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+			GLFWwindow* backup = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup);
+		}
 
-			m_Window.SwapBuffers();
+		UpdateFPS(deltaTime);
+
+		m_Window.SwapBuffers();
 
 #ifdef FUNCDOODLE_BUILD_IMTESTS
-			if (s_TestEngine) {
-				ImGuiTestEngine_PostSwap(s_TestEngine);
-			}
-#endif
+		if (s_TestEngine) {
+			ImGuiTestEngine_PostSwap(s_TestEngine);
 		}
+#endif
 	}
 
 	void Application::RegisterKeybinds() {
@@ -551,7 +578,7 @@ namespace FuncDoodle {
 
 		// data is R G B R G B R G B etc. because we're doing 3 channels
 		unsigned char* data =
-			stbi_load(path.c_str(), &width, &height, &channels, 3);
+			stbi_load(path.string().c_str(), &width, &height, &channels, 3);
 
 		if (width != m_CurrentProj->AnimWidth() ||
 			height != m_CurrentProj->AnimHeight()) {

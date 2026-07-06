@@ -46,5 +46,9 @@
  */
 
 namespace FuncDoodle {
-	// Documentation-only namespace declaration
+	/**
+	 * @var g_NoWindowLimits
+	 * @brief Disables window size limits for the current session (--no-limits)
+	 */
+	extern bool g_NoWindowLimits;
 }

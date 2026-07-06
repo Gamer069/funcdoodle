@@ -354,12 +354,13 @@ namespace FuncDoodle {
 	void EditorController::HandleCanvasInput(CanvasContext& context) {
 		Application* app = Application::Get();
 		KeybindsRegistry& keys = app->GetKeybinds();
+		ImGuiIO& io = ImGui::GetIO();
 
 		if (!ImGui::IsAnyItemActive() && ImGui::IsWindowFocused()) {
-			if (keys.Get("zoom_in").IsPressed()) {
+			if (keys.Get("zoom_in").IsPressed() || io.MouseWheel > 0.0f) {
 				context.PixelScale += 1;
 			}
-			if (keys.Get("zoom_out").IsPressed()) {
+			if (keys.Get("zoom_out").IsPressed() || io.MouseWheel < 0.0f) {
 				context.PixelScale = std::max(1, context.PixelScale - 1);
 			}
 			if (keys.Get("reset_zoom").IsPressed()) {
@@ -386,7 +387,7 @@ namespace FuncDoodle {
 
 				std::filesystem::path path = diag.Save();
 
-				context.Frame->Export(path.c_str());
+				context.Frame->Export(path.string().c_str());
 			}
 		}
 	}

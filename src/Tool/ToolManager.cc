@@ -7,6 +7,8 @@
 #include "Keybinds/Keybinds.h"
 #include "Tool/Tool.h"
 
+#include "UI/ImUtil.h"
+
 #include "Conf/FuncPCH.h"
 
 #include "UI/Gui.h"
@@ -63,6 +65,8 @@ namespace FuncDoodle {
 	}
 
 	void ToolManager::Widgets() {
+		Application* app = Application::Get();
+
 		bool showColorPredicate = m_SelectedTool != ToolType::Eraser &&
 								  m_SelectedTool != ToolType::Select;
 
@@ -100,12 +104,14 @@ namespace FuncDoodle {
 		float* col = GetCol();
 		float* secondaryCol = GetSecCol();
 
+		PopupRegistry& registry = app->GetUiManager().GetPopups();
+
 		if (showColorPredicate) {
-			auto drawColorButton = [](const char* id, const float* color,
+			auto drawColorButton = [&](const char* id, const float* color,
 									   const char* popupName) {
 				if (ImGui::ColorButton(
 						id, ImVec4(color[0], color[1], color[2], 1.0f))) {
-					ImGui::OpenPopup(popupName);
+					registry.Open(popupName);
 				}
 			};
 
@@ -114,7 +120,7 @@ namespace FuncDoodle {
 			drawColorButton(
 				firstIsPrimary ? "##first_color" : "##secondary_color",
 				firstIsPrimary ? col : secondaryCol,
-				firstIsPrimary ? "ColorPickerFirst" : "ColorPickerSecondary");
+				firstIsPrimary ? "color_first" : "color_second");
 
 			ImGui::SameLine();
 
@@ -123,7 +129,7 @@ namespace FuncDoodle {
 			drawColorButton(
 				firstIsPrimary ? "##secondary_color" : "##first_color",
 				firstIsPrimary ? secondaryCol : col,
-				firstIsPrimary ? "ColorPickerSecondary" : "ColorPickerFirst");
+				firstIsPrimary ? "color_second" : "color_first");
 
 			ImGui::SetCursorPosX(prevCurX - 23);
 
@@ -138,37 +144,35 @@ namespace FuncDoodle {
 			}
 		}
 
-		if (ImGui::BeginPopup("ColorPickerFirst")) {
+		registry.Popup("ColorPickerFirst", "color_first", app->GetDt(), [&]() {
 			ImGui::PushItemWidth(250);
 			ImGui::ColorPicker3(
 				"##color", col, ImGuiColorEditFlags_NoSidePreview);
 			ImGui::PopItemWidth();
+		});
 
-			ImGui::EndPopup();
-		}
 
-		if (ImGui::BeginPopup("ColorPickerSecondary")) {
+		registry.Popup("ColorPickerSecondary", "color_second", app->GetDt(), [&]() {
 			ImGui::PushItemWidth(250);
-			ImGui::ColorPicker3("##secondary_color", secondaryCol,
+			ImGui::ColorPicker3("##secondary_color", secondaryCol, 
 				ImGuiColorEditFlags_NoSidePreview);
 			ImGui::PopItemWidth();
-
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void ToolManager::RenderTools() {
-		ImGui::Begin("Tools");
+		Application* app = Application::Get();
 
-		ToolKeybinds(&m_SelectedTool, m_Keybinds);
-		Buttons();
+		if (ImBegin("Tools", nullptr, 0, app)) {
+			ToolKeybinds(&m_SelectedTool, m_Keybinds);
+			Buttons();
 
-		ImGui::Separator();
-		Widgets();
+			ImGui::Separator();
+			Widgets();
 
-		Cursor();
-
-		ImGui::End();
+			Cursor();
+		}
+		ImEnd();
 	}
 
 	void ToolManager::UpdateCursor() {

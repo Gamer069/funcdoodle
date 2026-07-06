@@ -42,6 +42,10 @@ function(funcdoodle_sources)
 		${SRC}
 	)
 
+	if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  		target_link_libraries(FuncDoodle PRIVATE stdc++exp) # std:: print, println, ...
+	endif()
+
 	target_precompile_headers(FuncDoodle PRIVATE
 		"$<$<COMPILE_LANGUAGE:CXX>:Conf/FuncPCH.h>"
 	)

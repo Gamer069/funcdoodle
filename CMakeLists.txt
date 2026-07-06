@@ -17,6 +17,7 @@ if(UNIX)
 	option(ISTILING "Is using a tiling window manager?" ON)
 endif()
 
+
 option(BUILD_TESTS "Build and run tests from test/*.cc" OFF)
 option(BUILD_IMTESTS "Build and run tests from imtest/*.cc" OFF)
 

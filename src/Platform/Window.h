@@ -75,6 +75,18 @@ namespace FuncDoodle::Platform {
 		void SetTitle(const char* title);
 
 		/**
+		 * @brief Sets the window size limits (minimum window size and maximum window size).
+		 *
+		 * Use -1 to indicate that you don't care.
+		 *
+		 * @param minW Minimum width.
+		 * @param minH Minimum height.
+		 * @param maxW Maximum width.
+		 * @param maxH Maximum height.
+		 */
+		void SetLimits(int minW, int minH, int maxW, int maxH);
+
+		/**
 		 * @brief Sets the window icon from a file path.
 		 */
 		void SetIcon(std::filesystem::path icon);
@@ -100,6 +112,20 @@ namespace FuncDoodle::Platform {
 		 * @brief Sets GLFW error callback.
 		 */
 		static void SetErrorCallback(ErrorCallback cb);
+
+
+		/**
+		 * @typedef RefreshCallback
+		 * @brief Callback type invoked when the window is refreshed.
+		 */
+		using RefreshCallback = std::function<void(Window*)>;
+
+		/**
+		 * @brief Sets GLFW refresh callback.
+		 */
+		void SetRefreshCallback(RefreshCallback cb);
+
+
 
 		/**
 		 * @typedef CloseCallback
@@ -162,10 +188,12 @@ namespace FuncDoodle::Platform {
 		static void GlfwDropTrampoline(
 			GLFWwindow* glfwWin, int count, const char** paths);
 		static void GlfwCloseTrampoline(GLFWwindow* glfwWin);
+		static void GlfwRefreshTrampoline(GLFWwindow* glfwWin);
 
 		protected:
-		DropCallback mp_DropCallback;	 ///< Stored file-drop callback.
-		CloseCallback mp_CloseCallback;	 ///< Stored close callback.
+		DropCallback mp_DropCallback;	    ///< Stored file-drop callback.
+		CloseCallback mp_CloseCallback;	    ///< Stored close callback.
+		RefreshCallback	mp_RefreshCallback; /// < Stored refresh callback.
 
 		private:
 		GLFWwindow* m_Handle;

@@ -1,3 +1,4 @@
+
 #include "UI/UIManager.h"
 #include "Asset/LoadedAssets.h"
 #include "Conf/Constants.h"
@@ -50,6 +51,7 @@ namespace FuncDoodle {
 
 		size.y -= menuBarHeight;
 		ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+		ImGui::SetNextWindowPos(nextWindowPos, ImGuiCond_Always);
 		ImGui::SetNextWindowViewport(vp->ID);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0);
@@ -171,12 +173,7 @@ namespace FuncDoodle {
 	void UIManager::Rotate() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("rotate")) {
-			ImGui::OpenPopup("Rotate");
-			m_Popups.Close("rotate");
-		}
-
-		if (ImGui::BeginPopup("Rotate")) {
+		m_Popups.Popup("Rotate", "rotate", app->GetDt(), [&]() {
 			ImGui::DragInt("##Deg", &m_Deg, 1.0f, -g_MaxRotationDeg,
 				g_MaxRotationDeg, "%d°");
 
@@ -188,19 +185,13 @@ namespace FuncDoodle {
 			if (choice == ImUtil::ButtonRowResult::Secondary) {
 				ImGui::CloseCurrentPopup();
 			}
-
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::EditPrefs() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("pref")) {
-			ImGui::OpenPopup("Preferences");
-			m_Popups.Close("pref");
-		}
-		if (ImGui::BeginPopup("Preferences")) {
+		m_Popups.Popup("Preferences", "pref", app->GetDt(), [&]() {
 			ImGui::SeparatorText("Themes");
 
 			if (ImGui::BeginCombo(
@@ -294,33 +285,27 @@ namespace FuncDoodle {
 				ImUtil::OkButton()) {
 				ImGui::CloseCurrentPopup();
 			}
-
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::SaveChanges() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("save_changes")) {
-			ImGui::OpenPopup("Save Changes");
-		}
-
-		if (ImGui::BeginPopupModal(
-				"Save Changes", m_Popups.Get("save_changes"))) {
+		m_Popups.Modal("Save changes", "save_changes", app->GetDt(), [&]() {
 			ImGui::Text("Save changes?");
 			ImUtil::ButtonRowResult choice = ImUtil::YesNoCancelButtons();
 			if (choice == ImUtil::ButtonRowResult::Primary) {
 				app->Save(true);
 			} else if (choice == ImUtil::ButtonRowResult::Secondary) {
 				app->SetShouldClose(true);
+				m_Popups.Close("save_changes");
 				ImGui::CloseCurrentPopup();
 			} else if (choice == ImUtil::ButtonRowResult::Tertiary) {
 				app->SetShouldClose(false);
+				m_Popups.Close("save_changes");
 				ImGui::CloseCurrentPopup();
 			}
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::MainMenuBar() {
@@ -538,12 +523,7 @@ namespace FuncDoodle {
 	void UIManager::Keybinds() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("keybinds")) {
-			ImGui::OpenPopup("Keybinds");
-		}
-
-		if (ImGui::BeginPopupModal("Keybinds", m_Popups.Get("keybinds"),
-				ImGuiWindowFlags_AlwaysAutoResize)) {
+		m_Popups.Modal("Keybinds", "keybinds", app->GetDt(), [&]() {
 			const ImGuiStyle& style = ImGui::GetStyle();
 			const float keyboardWidth = 860.0f;
 			const float keyHeight = ImGui::GetFrameHeight() * 1.25f;
@@ -668,7 +648,7 @@ namespace FuncDoodle {
 
 					if (ImGui::BeginPopup("assign_keys_to")) {
 						ImGui::InputTextWithHint("##search",
-							"Search actions...", m_SearchQuery, 256);
+							"Search for actions...", m_SearchQuery, 256);
 
 						// if string isnt empty
 						if (strcmp(m_SearchQuery, "") != 0) {
@@ -763,24 +743,20 @@ namespace FuncDoodle {
 				ImGui::CloseCurrentPopup();
 				m_Popups.Close("keybinds");
 			}
-			ImGui::EndPopup();
-		} else {
-			if (m_WaitingForKey != nullptr) {
-				m_WaitingForKey = nullptr;
-			}
+		});
+
+		if (!m_Popups.IsOpen("keybinds") && m_WaitingForKey != nullptr) {
+			m_WaitingForKey = nullptr;
 		}
 	}
 
 	void UIManager::EditProj() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("edit_proj")) {
-			ImGui::OpenPopup("Edit Project");
-		}
+		if (!app->GetCurProj())
+			return;
 
-		if (ImGui::BeginPopupModal("Edit Project", m_Popups.Get("edit_proj"),
-				ImGuiWindowFlags_AlwaysAutoResize) &&
-			app->GetCurProj()) {
+		m_Popups.Modal("Edit project...", "edit_proj", app->GetDt(), [&]() {
 			SharedPtr<ProjectFile> proj = app->GetCurProj();
 			SharedPtr<ProjectFile> cacheProj = app->GetCacheProj();
 
@@ -837,19 +813,13 @@ namespace FuncDoodle {
 				m_Popups.Close("edit_proj");
 				ImGui::CloseCurrentPopup();
 			}
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::NewProj() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("new")) {
-			ImGui::OpenPopup("New project");
-		}
-
-		if (ImGui::BeginPopupModal("New project", m_Popups.Get("new"),
-				ImGuiWindowFlags_AlwaysAutoResize)) {
+		m_Popups.Modal("New project", "new", app->GetDt(), [&]() {
 			ImGui::SeparatorText("Project");
 
 			bool justOpened = ImGui::IsWindowAppearing();
@@ -954,20 +924,13 @@ namespace FuncDoodle {
 
 				m_Popups.Close("new");
 			}
-
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::ExportProj() {
 		Application* app = Application::Get();
 
-		if (m_Popups.IsOpen("export")) {
-			ImGui::OpenPopup("Export##export");
-			m_Popups.Close("export");
-		}
-
-		if (ImGui::BeginPopup("Export##export")) {
+		m_Popups.Popup("Export", "export", app->GetDt(), [&]() {
 			const char* formats[] = {"PNGs", "MP4"};
 			ImGui::Combo("Export Format", &app->GetExportFormatPtr(), formats,
 				IM_ARRAYSIZE(formats));
@@ -991,8 +954,7 @@ namespace FuncDoodle {
 				ImUtil::EscPressed()) {
 				ImGui::CloseCurrentPopup();
 			}
-			ImGui::EndPopup();
-		}
+		});
 	}
 
 	void UIManager::CheckKeybinds() {

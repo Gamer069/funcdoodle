@@ -14,10 +14,56 @@
 
 #pragma once
 
-#include "UI/Gui.h"
+#include "UI/Gui.h" 
+#include "Core/App.h" 
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+
+#include <unordered_map>
+#include "Anim/Anim.h"
+
+namespace FuncDoodle {
+	/**
+	 * @fn ImBegin
+	 * @brief Begins an ImGui window with a tasteful fade-in transition.
+	 *
+	 * @param name The window identifier/title string.
+	 * @param p_open Pointer to the boolean tracking window visibility.
+	 * @param flags ImGui configuration window flags.
+	 * @param app Pointer to the Application instance containing delta time.
+	 * @return True if the window is open and content should be rendered.
+	 */
+	inline bool ImBegin(const char* name, bool* p_open, ImGuiWindowFlags flags, Application* app) {
+		if (!app->GetCurProj())
+			return ImGui::Begin(name, p_open, flags);
+
+		static std::unordered_map<ImGuiID, double> timers;
+
+		ImGuiID id = ImGui::GetID(name);
+		double& t = timers[id];
+
+		double dt = app->GetDt();
+
+		bool isOpen = (p_open == nullptr) ? true : *p_open;
+		double alpha = std::max(Anim::Animate(isOpen, 1.0, t, dt, Anim::OutCubic), 0.3);
+
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, (float)alpha);
+		bool result = ImGui::Begin(name, p_open, flags);
+		ImGui::PopStyleVar();
+
+		return result;
+	}
+
+	/**
+	 * @fn ImEnd
+	 * @brief Clean wrapper to close the window layout context.
+	 */
+	inline void ImEnd() {
+		ImGui::End();
+	}
+
+}
 
 /**
  * @namespace ImUtil
@@ -282,5 +328,4 @@ namespace FuncDoodle::ImUtil {
 			return a.x == b.x && a.y == b.y;
 		}
 	};
-
 }  // namespace FuncDoodle::ImUtil

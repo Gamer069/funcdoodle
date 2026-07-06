@@ -1,6 +1,7 @@
 #include "Manager.h"
 
 #include "Core/AppSettings.h"
+#include "Core/App.h"
 
 #include "Conf/Constants.h"
 
@@ -15,6 +16,8 @@
 #include "Tool/ToolManager.h"
 
 #include "UI/Gui.h"
+#include "UI/ImUtil.h"
+
 #include "Util/Ptr.h"
 #include "imgui.h"
 
@@ -91,6 +94,8 @@ namespace FuncDoodle {
 	}
 
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
+		Application* app = Application::Get();
+
 		if (!m_Proj)
 			return;
 
@@ -99,298 +104,303 @@ namespace FuncDoodle {
 			20.0f;	// Increase the thickness of the scrollbars
 
 		// Begin the window with horizontal scrollbar enabled
-		ImGui::Begin("Timeline", nullptr,
+		if (ImBegin("Timeline", nullptr,
 			ImGuiWindowFlags_HorizontalScrollbar |
-				ImGuiWindowFlags_NoBackground);
-		auto frameWidth = (float)m_Proj->AnimWidth();
-		auto frameHeight = (float)m_Proj->AnimHeight();
-		float padding = 25.0f;
+			ImGuiWindowFlags_NoBackground,
+			app)) {
+			auto frameWidth = (float)m_Proj->AnimWidth();
+			auto frameHeight = (float)m_Proj->AnimHeight();
+			float padding = 25.0f;
 
-		// Calculate total width required for all frames
-		float totalWidth = m_Proj->AnimFrameCount() * (frameWidth + padding);
+			// Calculate total width required for all frames
+			float totalWidth = m_Proj->AnimFrameCount() * (frameWidth + padding);
 
-		// Create a scrollable region
-		ImGuiStyle& style = ImGui::GetStyle();
-		float childHeight = ImGui::GetWindowHeight() - ImGui::GetCursorPosY() -
-							style.WindowPadding.y - 30.0f;
-		childHeight = std::max(childHeight, 0.0f);
+			// Create a scrollable region
+			ImGuiStyle& style = ImGui::GetStyle();
+			float childHeight = ImGui::GetWindowHeight() - ImGui::GetCursorPosY() -
+								style.WindowPadding.y - 30.0f;
+			childHeight = std::max(childHeight, 0.0f);
 
-		ImGui::BeginChild("FrameScrollRegion",
-			ImVec2(ImGui::GetContentRegionAvail().x, childHeight), false,
-			ImGuiWindowFlags_HorizontalScrollbar);
+			ImGui::BeginChild("FrameScrollRegion",
+				ImVec2(ImGui::GetContentRegionAvail().x, childHeight), false,
+				ImGuiWindowFlags_HorizontalScrollbar);
 
-		ImDrawList* drawList = ImGui::GetWindowDrawList();
+			ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-		// Get the initial top-left position
-		ImVec2 topLeft = ImGui::GetCursorScreenPos();
-		ImVec2 bottomRight =
-			ImVec2(topLeft.x + frameWidth, topLeft.y + frameHeight);
+			// Get the initial top-left position
+			ImVec2 topLeft = ImGui::GetCursorScreenPos();
+			ImVec2 bottomRight =
+				ImVec2(topLeft.x + frameWidth, topLeft.y + frameHeight);
 
-		ImFont* font = ImGui::GetFont();
-		float fontSize = ImGui::GetFontSize();
+			ImFont* font = ImGui::GetFont();
+			float fontSize = ImGui::GetFontSize();
 
-		TimelineKeyContext keyContext;
-		keyContext.Proj = m_Proj;
-		keyContext.Player = m_Player.get();
-		keyContext.FrameRenderer = m_FrameRenderer.get();
-		keyContext.SelectedFrame = &m_SelectedFrame;
-		KeyHandler::HandleTimelineShortcuts(keyContext, m_Keybinds);
-		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
-			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
-		}
-
-		// Render frames
-		for (uint64_t i = 0; i < m_Proj->AnimFrameCount(); i++) {
-			drawList->AddText(font, fontSize,
-				m_SelectedFrame == i
-					? ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y + 10)
-					: ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y),
-				IM_COL32(g_MaxColorValue, g_MaxColorValue, g_MaxColorValue,
-					g_AlphaOpaque),
-				std::to_string(i).c_str());
-
-			if (m_TimelineFrameRenderer->GetCtx()->Frame !=
-				m_Proj->AnimFrames()->Get(i)) {
-				m_TimelineFrameRenderer->GetCtx()->Frame =
-					m_Proj->AnimFrames()->Get(i);
+			TimelineKeyContext keyContext;
+			keyContext.Proj = m_Proj;
+			keyContext.Player = m_Player.get();
+			keyContext.FrameRenderer = m_FrameRenderer.get();
+			keyContext.SelectedFrame = &m_SelectedFrame;
+			KeyHandler::HandleTimelineShortcuts(keyContext, m_Keybinds);
+			if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
+				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 			}
 
-			float width = bottomRight.x - topLeft.x;
-			float height = bottomRight.y - topLeft.y;
-			float scaleX = width / frameWidth;
-			float scaleY = width / frameHeight;
+			// Render frames
+			for (uint64_t i = 0; i < m_Proj->AnimFrameCount(); i++) {
+				drawList->AddText(font, fontSize,
+					m_SelectedFrame == i
+						? ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y + 10)
+						: ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y),
+					IM_COL32(g_MaxColorValue, g_MaxColorValue, g_MaxColorValue,
+						g_AlphaOpaque),
+					std::to_string(i).c_str());
 
-			m_TimelineFrameRenderer->GetCtx()->PixelScale =
-				std::min<float>(scaleX, scaleY);
-
-			m_TimelineFrameRenderer->RenderFramePixels(
-				topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
-
-			if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
-				(!m_Player->Playing() && m_SelectedFrame == i)) {
-
-				const auto frames = m_Proj->AnimFrames();
-				if (m_FrameRenderer->GetCtx()->Frame != frames->Get(i))
-					m_FrameRenderer->GetCtx()->Frame = frames->Get(i);
-
-				m_FrameRenderer->GetCtx()->Index = i;
-
-				if (i > 0) {
-					m_FrameRenderer->GetCtx()->PreviousFrame =
-						frames->Get(i - 1);
+				if (m_TimelineFrameRenderer->GetCtx()->Frame !=
+					m_Proj->AnimFrames()->Get(i)) {
+					m_TimelineFrameRenderer->GetCtx()->Frame =
+						m_Proj->AnimFrames()->Get(i);
 				}
-				m_FrameRenderer->RenderFrame();
-				drawList->AddRect(topLeft, ImVec2(bottomRight.x, bottomRight.y),
-					IM_COL32(255, 0, 0, 255),  // Red color
-					0.0f,					   // rounding
-					0,						   // flags
-					3.0f  // thickness - increased to make it much thicker
-				);
-			}
-			ImVec2 mousePos = ImGui::GetMousePos();
-			bool isHovered =
-				(mousePos.x >= topLeft.x && mousePos.x <= bottomRight.x &&
-					mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
 
-			char menuName[32];	// Make buffer big enough for "frame" + numbers
-								// + "menu" + null terminator
-			snprintf(menuName, 31, "##frame%ldmenu", i);
-			char* menuNamePtr = menuName;
+				float width = bottomRight.x - topLeft.x;
+				float height = bottomRight.y - topLeft.y;
+				float scaleX = width / frameWidth;
+				float scaleY = width / frameHeight;
 
-			// Create unique ID for this popup
-			if (isHovered && ImGui::IsMouseClicked(1)) {
-				ImGui::OpenPopup(menuNamePtr);
-			} else if (isHovered && ImGui::IsMouseClicked(0)) {
-				m_SelectedFrame = i;
-			}
+				m_TimelineFrameRenderer->GetCtx()->PixelScale =
+					std::min<float>(scaleX, scaleY);
 
-			if (ImGui::BeginPopup(menuNamePtr)) {
-				Shortcut deleteKey = m_Keybinds.Get("delete_frame");
-				Shortcut insertBeforeKey = m_Keybinds.Get("insert_before");
-				Shortcut insertAfterKey = m_Keybinds.Get("insert_after");
-				Shortcut moveForwardKey = m_Keybinds.Get("move_forward");
-				Shortcut moveBackwardKey = m_Keybinds.Get("move_backward");
-				Shortcut copyKey = m_Keybinds.Get("copy_frame");
-				Shortcut pasteBeforeKey = m_Keybinds.Get("paste_before");
-				Shortcut pasteAfterKey = m_Keybinds.Get("paste_after");
+				m_TimelineFrameRenderer->RenderFramePixels(
+					topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
-				// deletion
-				if (ImGui::MenuItem("Delete", deleteKey)) {
-					if (m_Proj->AnimFrameCount() != 1) {
-						Frame deletedFrame =
-							*m_Proj->AnimFrames()->Get(m_SelectedFrame);
+				if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
+					(!m_Player->Playing() && m_SelectedFrame == i)) {
 
-						m_Proj->AnimFrames()->Remove(m_SelectedFrame);
+					const auto frames = m_Proj->AnimFrames();
+					if (m_FrameRenderer->GetCtx()->Frame != frames->Get(i))
+						m_FrameRenderer->GetCtx()->Frame = frames->Get(i);
 
-						DeleteFrameAction action(
-							m_SelectedFrame, &deletedFrame, m_Proj);
+					m_FrameRenderer->GetCtx()->Index = i;
 
-						m_Proj->PushUndoable(action);
-						m_Proj->AnimFrames()->Remove(i);
+					if (i > 0) {
+						m_FrameRenderer->GetCtx()->PreviousFrame =
+							frames->Get(i - 1);
 					}
+					m_FrameRenderer->RenderFrame();
+					drawList->AddRect(topLeft, ImVec2(bottomRight.x, bottomRight.y),
+						IM_COL32(255, 0, 0, 255),  // Red color
+						0.0f,					   // rounding
+						0,						   // flags
+						3.0f  // thickness - increased to make it much thicker
+					);
+				}
+				ImVec2 mousePos = ImGui::GetMousePos();
+				bool isHovered =
+					(mousePos.x >= topLeft.x && mousePos.x <= bottomRight.x &&
+						mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
+
+				char menuName[32];	// Make buffer big enough for "frame" + numbers
+									// + "menu" + null terminator
+				snprintf(menuName, 31, "#frame%ldmenu", i);
+				char* menuNamePtr = menuName;
+
+				// Create unique ID for this popup
+				if (isHovered && ImGui::IsMouseClicked(1)) {
+					ImGui::OpenPopup(menuNamePtr);
+				} else if (isHovered && ImGui::IsMouseClicked(0)) {
+					m_SelectedFrame = i;
 				}
 
-				// insertion
-				if (ImGui::MenuItem("Insert before", insertBeforeKey)) {
-					m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
-					m_SelectedFrame++;
-					InsertFrameAction action(m_SelectedFrame - 1, m_Proj);
-					m_Proj->PushUndoable(action);
+				if (ImGui::BeginPopup(menuNamePtr)) {
+					Shortcut deleteKey = m_Keybinds.Get("delete_frame");
+					Shortcut insertBeforeKey = m_Keybinds.Get("insert_before");
+					Shortcut insertAfterKey = m_Keybinds.Get("insert_after");
+					Shortcut moveForwardKey = m_Keybinds.Get("move_forward");
+					Shortcut moveBackwardKey = m_Keybinds.Get("move_backward");
+					Shortcut copyKey = m_Keybinds.Get("copy_frame");
+					Shortcut pasteBeforeKey = m_Keybinds.Get("paste_before");
+					Shortcut pasteAfterKey = m_Keybinds.Get("paste_after");
+
+					// deletion
+					if (ImGui::MenuItem("Delete", deleteKey)) {
+						if (m_Proj->AnimFrameCount() != 1) {
+							Frame deletedFrame =
+								*m_Proj->AnimFrames()->Get(m_SelectedFrame);
+
+							m_Proj->AnimFrames()->Remove(m_SelectedFrame);
+
+							DeleteFrameAction action(
+								m_SelectedFrame, &deletedFrame, m_Proj);
+
+							m_Proj->PushUndoable(action);
+							m_Proj->AnimFrames()->Remove(i);
+						}
+					}
+
+					// insertion
+					if (ImGui::MenuItem("Insert before", insertBeforeKey)) {
+						m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
+						m_SelectedFrame++;
+						InsertFrameAction action(m_SelectedFrame - 1, m_Proj);
+						m_Proj->PushUndoable(action);
+					}
+					if (ImGui::MenuItem("Insert after", insertAfterKey)) {
+						m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
+						InsertFrameAction action(m_SelectedFrame + 1, m_Proj);
+						m_Proj->PushUndoable(action);
+					}
+
+					// moving
+					if (ImGui::MenuItem("Move forward", moveForwardKey)) {
+						m_Proj->AnimFrames()->MoveForward(i);
+					}
+					if (ImGui::MenuItem("Move backward", moveBackwardKey)) {
+						m_Proj->AnimFrames()->MoveBackward(i);
+					}
+
+					// copy
+					if (ImGui::MenuItem("Copy", copyKey)) {
+						m_Proj->AnimFrames()->Get(i)->CopyToClipboard();
+					}
+
+					// paste
+					if (ImGui::MenuItem("Paste before", pasteBeforeKey)) {
+						Frame* frame = Frame::PastedFrame();
+						m_Proj->AnimFrames()->InsertBefore(i, frame);
+					}
+					if (ImGui::MenuItem("Paste after", pasteAfterKey)) {
+						Frame* frame = Frame::PastedFrame();
+						m_Proj->AnimFrames()->InsertAfter(i, frame);
+					}
+
+					ImGui::EndPopup();
 				}
-				if (ImGui::MenuItem("Insert after", insertAfterKey)) {
+
+				topLeft.x += frameWidth + padding;
+				bottomRight.x += frameWidth + padding;
+			}
+
+			// Ensure the scroll region size is based on total width of all frames
+			ImGui::Dummy(ImVec2(totalWidth - 25, frameHeight));
+
+			{
+				const ImVec2 addButtonSize(20, 20);
+				ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
+				ImGui::SetCursorPos(ImVec2(ImGui::GetScrollX() + contentMax.x - 40 -
+											   ImGui::GetStyle().FramePadding.x,
+					ImGui::GetScrollY() + contentMax.y - 40 -
+						ImGui::GetStyle().FramePadding.y));
+
+				if (ImGui::ImageButton("##add", (ImTextureID)(intptr_t)s_AddTexId,
+						addButtonSize)) {
 					m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
 					InsertFrameAction action(m_SelectedFrame + 1, m_Proj);
 					m_Proj->PushUndoable(action);
 				}
-
-				// moving
-				if (ImGui::MenuItem("Move forward", moveForwardKey)) {
-					m_Proj->AnimFrames()->MoveForward(i);
-				}
-				if (ImGui::MenuItem("Move backward", moveBackwardKey)) {
-					m_Proj->AnimFrames()->MoveBackward(i);
-				}
-
-				// copy
-				if (ImGui::MenuItem("Copy", copyKey)) {
-					m_Proj->AnimFrames()->Get(i)->CopyToClipboard();
-				}
-
-				// paste
-				if (ImGui::MenuItem("Paste before", pasteBeforeKey)) {
-					Frame* frame = Frame::PastedFrame();
-					m_Proj->AnimFrames()->InsertBefore(i, frame);
-				}
-				if (ImGui::MenuItem("Paste after", pasteAfterKey)) {
-					Frame* frame = Frame::PastedFrame();
-					m_Proj->AnimFrames()->InsertAfter(i, frame);
-				}
-
-				ImGui::EndPopup();
 			}
 
-			topLeft.x += frameWidth + padding;
-			bottomRight.x += frameWidth + padding;
+			ImGui::EndChild();
 		}
-
-		// Ensure the scroll region size is based on total width of all frames
-		ImGui::Dummy(ImVec2(totalWidth - 25, frameHeight));
-
-		{
-			const ImVec2 addButtonSize(20, 20);
-			ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
-			ImGui::SetCursorPos(ImVec2(ImGui::GetScrollX() + contentMax.x - 40 -
-										   ImGui::GetStyle().FramePadding.x,
-				ImGui::GetScrollY() + contentMax.y - 40 -
-					ImGui::GetStyle().FramePadding.y));
-
-			if (ImGui::ImageButton("##add", (ImTextureID)(intptr_t)s_AddTexId,
-					addButtonSize)) {
-				m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
-				InsertFrameAction action(m_SelectedFrame + 1, m_Proj);
-				m_Proj->PushUndoable(action);
-			}
-		}
-
-		ImGui::EndChild();
-
-		ImGui::End();
+		ImEnd();
 
 		m_ToolManager->RenderTools();
 	}
 
 	void AnimationManager::RenderControls() {
-		ImGui::Begin("Controls");
+		Application* app = Application::Get();
 
-		if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
-				ImVec2(20, 20)) ||
-			(m_Keybinds.Get("rewind").IsPressed() &&
-				!ImGui::IsAnyItemActive())) {
-			m_SelectedFrame = 0;
-			m_Player->Rewind();
+		if (ImBegin("Controls", nullptr, 0, app)) {
+			if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
+					ImVec2(20, 20)) ||
+				(m_Keybinds.Get("rewind").IsPressed() &&
+					!ImGui::IsAnyItemActive())) {
+				m_SelectedFrame = 0;
+				m_Player->Rewind();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::ImageButton("togglePlay",
+					m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
+										: (ImTextureID)(intptr_t)s_PlayTexId,
+					ImVec2(20, 20)) ||
+				(m_Keybinds.Get("play").IsPressed() && !ImGui::IsAnyItemActive())) {
+				m_Player->SetPlaying(!m_Player->Playing());
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::ImageButton(
+					"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
+				(m_Keybinds.Get("end").IsPressed() && !ImGui::IsAnyItemActive())) {
+				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
+				m_Player->End();
+			}
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::ImageButton("togglePlay",
-				m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
-									: (ImTextureID)(intptr_t)s_PlayTexId,
-				ImVec2(20, 20)) ||
-			(m_Keybinds.Get("play").IsPressed() && !ImGui::IsAnyItemActive())) {
-			m_Player->SetPlaying(!m_Player->Playing());
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::ImageButton(
-				"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
-			(m_Keybinds.Get("end").IsPressed() && !ImGui::IsAnyItemActive())) {
-			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
-			m_Player->End();
-		}
-
-		ImGui::End();
+		ImEnd();
 	}
 
 	void AnimationManager::RenderLogs() {
-		ImGui::Begin("Logs");
+		Application* app = Application::Get();
 
-		const auto logColor = [](const char* s) -> ImVec4 {
-			if (!s) {
+		if (ImBegin("Logs", nullptr, 0, app)) {
+			const auto logColor = [](const char* s) -> ImVec4 {
+				if (!s) {
+					return {1.0f, 1.0f, 1.0f, 1.0f};
+				}
+				if (std::strstr(s, "[Error]") || std::strstr(s, "[FATAL]")) {
+					return {1.0f, 0.35f, 0.35f, 1.0f};
+				}
+				if (std::strstr(s, "[Warn]")) {
+					return {1.0f, 0.75f, 0.25f, 1.0f};
+				}
+				if (std::strstr(s, "[Debug]")) {
+					return {0.45f, 0.85f, 1.0f, 1.0f};
+				}
+				if (std::strstr(s, "[Info]")) {
+					return {0.55f, 0.75f, 1.0f, 1.0f};
+				}
+				if (std::strstr(s, "[Note]")) {
+					return {0.7f, 0.7f, 0.7f, 1.0f};
+				}
 				return {1.0f, 1.0f, 1.0f, 1.0f};
-			}
-			if (std::strstr(s, "[Error]") || std::strstr(s, "[FATAL]")) {
-				return {1.0f, 0.35f, 0.35f, 1.0f};
-			}
-			if (std::strstr(s, "[Warn]")) {
-				return {1.0f, 0.75f, 0.25f, 1.0f};
-			}
-			if (std::strstr(s, "[Debug]")) {
-				return {0.45f, 0.85f, 1.0f, 1.0f};
-			}
-			if (std::strstr(s, "[Info]")) {
-				return {0.55f, 0.75f, 1.0f, 1.0f};
-			}
-			if (std::strstr(s, "[Note]")) {
-				return {0.7f, 0.7f, 0.7f, 1.0f};
-			}
-			return {1.0f, 1.0f, 1.0f, 1.0f};
-		};
+			};
 
-		if (ImGui::Button("Clear")) {
-			s_Logs.clear();
-		}
+			if (ImGui::Button("Clear")) {
+				s_Logs.clear();
+			}
 
-		ImGui::SameLine();
+			ImGui::SameLine();
 
-		if (ImGui::Button("Copy")) {
-			ImGui::LogToClipboard();
+			if (ImGui::Button("Copy")) {
+				ImGui::LogToClipboard();
 
-			// don't really like that i have to use std::string for logs, but i
-			// think thats necessary
+				// don't really like that i have to use std::string for logs, but i
+				// think thats necessary
+				for (const std::string& str : s_Logs) {
+					ImGui::LogText("%s\n", str.c_str() ? str.c_str() : "");
+				}
+
+				ImGui::LogFinish();
+			}
+
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+
+			ImGui::BeginChild("##logscroll", ImVec2(-1, -1), false,
+				ImGuiWindowFlags_HorizontalScrollbar);
+
 			for (const std::string& str : s_Logs) {
-				ImGui::LogText("%s\n", str.c_str() ? str.c_str() : "");
+				ImGui::TextColored(
+					logColor(str.c_str()), "%s", str.c_str() ? str.c_str() : "");
 			}
 
-			ImGui::LogFinish();
+			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+				ImGui::SetScrollHereY(1.0f);
+
+			ImGui::EndChild();
+			ImGui::PopStyleColor();
 		}
 
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-
-		ImGui::BeginChild("##logscroll", ImVec2(-1, -1), false,
-			ImGuiWindowFlags_HorizontalScrollbar);
-
-		for (const std::string& str : s_Logs) {
-			ImGui::TextColored(
-				logColor(str.c_str()), "%s", str.c_str() ? str.c_str() : "");
-		}
-
-		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-			ImGui::SetScrollHereY(1.0f);
-
-		ImGui::EndChild();
-		ImGui::PopStyleColor();
-
-		ImGui::End();
+		ImEnd();
 	}
 }  // namespace FuncDoodle

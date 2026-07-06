@@ -47,8 +47,8 @@ namespace FuncDoodle::Platform {
 #endif
 
 		// makes window floating by default on tiling compositors such as
-		// hyprland
-		glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+		// hyprland (commented out because this doesnt make the window float - it makes the window stay on top, which we do not want)
+		// glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
 
 		glfwWindowHintString(GLFW_X11_CLASS_NAME, "FuncDoodle");
 		glfwWindowHintString(GLFW_WAYLAND_APP_ID, "funcdoodle");
@@ -79,6 +79,7 @@ namespace FuncDoodle::Platform {
 
 		glfwSetDropCallback(m_Handle, GlfwDropTrampoline);
 		glfwSetWindowCloseCallback(m_Handle, GlfwCloseTrampoline);
+		glfwSetWindowRefreshCallback(m_Handle, GlfwRefreshTrampoline);
 
 		PaError err = Pa_Initialize();
 		if (err != paNoError) {
@@ -109,6 +110,16 @@ namespace FuncDoodle::Platform {
 		if (self->mp_CloseCallback)
 			self->mp_CloseCallback(self);
 	}
+	
+	void Window::GlfwRefreshTrampoline(GLFWwindow* glfwWin) {
+		auto* self = static_cast<Window*>(glfwGetWindowUserPointer(glfwWin));
+
+		if (!self)
+			return;
+
+		if (self->mp_RefreshCallback)
+			self->mp_RefreshCallback(self);
+	}
 
 	void Window::SetDropCallback(DropCallback cb) {
 		mp_DropCallback = cb;
@@ -116,6 +127,10 @@ namespace FuncDoodle::Platform {
 
 	void Window::SetErrorCallback(ErrorCallback cb) {
 		glfwSetErrorCallback(cb);
+	}
+
+	void Window::SetRefreshCallback(RefreshCallback cb) {
+		mp_RefreshCallback = cb;
 	}
 
 	void Window::SetCloseCallback(CloseCallback cb) {
@@ -146,6 +161,15 @@ namespace FuncDoodle::Platform {
 		} else {
 			FUNC_WARN("Failed to read image data from window icon");
 		}
+	}
+
+	void Window::SetLimits(int minW, int minH, int maxW, int maxH) {
+		int rminW = minW == -1 ? GLFW_DONT_CARE : minW;
+		int rminH = minH == -1 ? GLFW_DONT_CARE : minH;
+		int rmaxW = maxW == -1 ? GLFW_DONT_CARE : maxW;
+		int rmaxH = maxH == -1 ? GLFW_DONT_CARE : maxH;
+
+		glfwSetWindowSizeLimits(m_Handle, rminW, rminH, rmaxW, rmaxH);
 	}
 
 	void Window::SetShouldClose(bool shouldClose) {

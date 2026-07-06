@@ -20,9 +20,11 @@
 - [x] improve keybinds popup to use a key-to-action mapping rather than the opposite
 - [x] consistent first/secondary color swapping
 - [x] add bucket tool tolerance
-- [x] replace .fdp unsigned long frame indices with uint64_t for more consistency across various systems
+- [x] replace .fdp unsigned long frame indices with uint64_t for moge consistency across various systems
 - [x] implement selection invertion
+- [x] mouse scroll = canvas zoom
 - [ ] qol stuff
+- [ ] use a mime image protocol for copy & pastnig frames rather than an arbitrary made-up format that's slow and unusual
 - [ ] i18n
 - [ ] fix infinite tech debt (wip)
 - [ ] sounds for animations
@@ -30,7 +32,7 @@
 - [ ] add text functionality
 - [ ] bug fixing
 - [ ] gzip compression for .fdp
-- [ ] implement animations project-wide with ImAnim
+- [ ] implement animations application-wide
 - [ ] shader system where you can select some frames, right click, click add shader, then literally **type out a GLSL shader** and AS you update it, the shader system will literally compile **what you're typing** and provide *real-time* ***imgui sliders and or imgui inputs***
 - [ ] non-destructive moving of selections (currently deemed too difficult due to the current overall project architecture)
 - [ ] copy & pasting selections (depends on moving)

@@ -208,8 +208,11 @@ extern std::vector<std::string> s_Logs;
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
-#include <shellapi.h>
 #include <windows.h>
+#include <shellapi.h>
+#include <shlwapi.h>
+#define strcasestr StrStrIA
+
 
 #undef LoadImage
 #undef PlaySound
