@@ -137,8 +137,7 @@ namespace FuncDoodle {
 			// Create a scrollable region
 			ImGuiStyle& style = ImGui::GetStyle();
 			float childHeight = ImGui::GetWindowHeight() -
-								ImGui::GetCursorPosY() - style.WindowPadding.y -
-								30.0f;
+								ImGui::GetCursorPosY() - style.WindowPadding.y;
 			childHeight = std::max(childHeight, 0.0f);
 
 			ImGui::BeginChild("FrameScrollRegion",
@@ -150,8 +149,8 @@ namespace FuncDoodle {
 			// Get the initial top-left position
 			ImVec2 topLeft = ImGui::GetCursorScreenPos();
 
-			topLeft.y += 10.0f;
-			topLeft.x += 10.0f;
+			topLeft.x += style.WindowPadding.x;
+			topLeft.y += style.WindowPadding.y;
 
 			ImVec2 bottomRight =
 				ImVec2(topLeft.x + frameWidth, topLeft.y + frameHeight);
@@ -295,8 +294,7 @@ namespace FuncDoodle {
 				bottomRight.x += frameWidth + padding;
 			}
 
-			// Ensure the scroll region size is based on total width of all
-			// frames
+			// ensure the scroll region size is based on total width of all frames
 			ImGui::Dummy(ImVec2(totalWidth - 25, frameHeight));
 
 			{
