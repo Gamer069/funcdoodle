@@ -1,5 +1,5 @@
-#include "Conf/FuncPCH.h"
 #include "Conf/FuncDoodle.h"
+#include "Conf/FuncPCH.h"
 
 #include "App.h"
 
@@ -229,7 +229,7 @@ namespace FuncDoodle {
 		ImGui::NewFrame();
 
 		ImGui::DockSpaceOverViewport(0U, ImGui::GetMainViewport(),
-				ImGuiDockNodeFlags_PassthruCentralNode);
+			ImGuiDockNodeFlags_PassthruCentralNode);
 
 		RenderImGui();
 
@@ -245,9 +245,7 @@ namespace FuncDoodle {
 
 		m_DeltaTime = deltaTime;
 
-		m_Manager->GetFrameRenderer()
-			->GetCtx()
-			->ToolManager->UpdateCursor();
+		m_Manager->GetFrameRenderer()->GetCtx()->ToolManager->UpdateCursor();
 
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

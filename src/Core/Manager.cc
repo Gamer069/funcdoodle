@@ -1,7 +1,7 @@
 #include "Manager.h"
 
-#include "Core/AppSettings.h"
 #include "Core/App.h"
+#include "Core/AppSettings.h"
 
 #include "Conf/Constants.h"
 
@@ -103,22 +103,47 @@ namespace FuncDoodle {
 		ImGui::GetStyle().ScrollbarSize =
 			20.0f;	// Increase the thickness of the scrollbars
 
-		// Begin the window with horizontal scrollbar enabled
+		// --- Frame rendering (independent of Timeline visibility) ---
+		{
+			if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
+				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
+			}
+
+			uint64_t curFrameIdx = m_Player->Playing()
+				? m_Player->CurFrame()
+				: m_SelectedFrame;
+
+			const auto frames = m_Proj->AnimFrames();
+			if (m_FrameRenderer->GetCtx()->Frame != frames->Get(curFrameIdx))
+				m_FrameRenderer->GetCtx()->Frame = frames->Get(curFrameIdx);
+
+			m_FrameRenderer->GetCtx()->Index = curFrameIdx;
+
+			if (curFrameIdx > 0) {
+				m_FrameRenderer->GetCtx()->PreviousFrame =
+					frames->Get(curFrameIdx - 1);
+			}
+			m_FrameRenderer->RenderFrame();
+		}
+
+		// --- Timeline window ---
 		if (ImBegin("Timeline", nullptr,
-			ImGuiWindowFlags_HorizontalScrollbar |
-			ImGuiWindowFlags_NoBackground,
-			app)) {
+				ImGuiWindowFlags_HorizontalScrollbar |
+				ImGuiWindowFlags_NoBackground,
+				app)) {
 			auto frameWidth = (float)m_Proj->AnimWidth();
 			auto frameHeight = (float)m_Proj->AnimHeight();
 			float padding = 25.0f;
 
 			// Calculate total width required for all frames
-			float totalWidth = m_Proj->AnimFrameCount() * (frameWidth + padding);
+			float totalWidth =
+				m_Proj->AnimFrameCount() * (frameWidth + padding);
 
 			// Create a scrollable region
 			ImGuiStyle& style = ImGui::GetStyle();
-			float childHeight = ImGui::GetWindowHeight() - ImGui::GetCursorPosY() -
-								style.WindowPadding.y - 30.0f;
+			float childHeight = ImGui::GetWindowHeight() -
+								ImGui::GetCursorPosY() - style.WindowPadding.y -
+								30.0f;
 			childHeight = std::max(childHeight, 0.0f);
 
 			ImGui::BeginChild("FrameScrollRegion",
@@ -141,15 +166,13 @@ namespace FuncDoodle {
 			keyContext.FrameRenderer = m_FrameRenderer.get();
 			keyContext.SelectedFrame = &m_SelectedFrame;
 			KeyHandler::HandleTimelineShortcuts(keyContext, m_Keybinds);
-			if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
-				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
-			}
 
 			// Render frames
 			for (uint64_t i = 0; i < m_Proj->AnimFrameCount(); i++) {
 				drawList->AddText(font, fontSize,
 					m_SelectedFrame == i
-						? ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y + 10)
+						? ImVec2(
+							  topLeft.x + (frameWidth / 2), bottomRight.y + 10)
 						: ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y),
 					IM_COL32(g_MaxColorValue, g_MaxColorValue, g_MaxColorValue,
 						g_AlphaOpaque),
@@ -174,19 +197,8 @@ namespace FuncDoodle {
 
 				if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
 					(!m_Player->Playing() && m_SelectedFrame == i)) {
-
-					const auto frames = m_Proj->AnimFrames();
-					if (m_FrameRenderer->GetCtx()->Frame != frames->Get(i))
-						m_FrameRenderer->GetCtx()->Frame = frames->Get(i);
-
-					m_FrameRenderer->GetCtx()->Index = i;
-
-					if (i > 0) {
-						m_FrameRenderer->GetCtx()->PreviousFrame =
-							frames->Get(i - 1);
-					}
-					m_FrameRenderer->RenderFrame();
-					drawList->AddRect(topLeft, ImVec2(bottomRight.x, bottomRight.y),
+					drawList->AddRect(
+						topLeft, ImVec2(bottomRight.x, bottomRight.y),
 						IM_COL32(255, 0, 0, 255),  // Red color
 						0.0f,					   // rounding
 						0,						   // flags
@@ -198,7 +210,8 @@ namespace FuncDoodle {
 					(mousePos.x >= topLeft.x && mousePos.x <= bottomRight.x &&
 						mousePos.y >= topLeft.y && mousePos.y <= bottomRight.y);
 
-				char menuName[32];	// Make buffer big enough for "frame" + numbers
+				char menuName[32];	// Make buffer big enough for "frame" +
+									// numbers
 									// + "menu" + null terminator
 				snprintf(menuName, 31, "#frame%ldmenu", i);
 				char* menuNamePtr = menuName;
@@ -238,7 +251,8 @@ namespace FuncDoodle {
 
 					// insertion
 					if (ImGui::MenuItem("Insert before", insertBeforeKey)) {
-						m_Proj->AnimFrames()->InsertBeforeEmpty(m_SelectedFrame);
+						m_Proj->AnimFrames()->InsertBeforeEmpty(
+							m_SelectedFrame);
 						m_SelectedFrame++;
 						InsertFrameAction action(m_SelectedFrame - 1, m_Proj);
 						m_Proj->PushUndoable(action);
@@ -279,19 +293,21 @@ namespace FuncDoodle {
 				bottomRight.x += frameWidth + padding;
 			}
 
-			// Ensure the scroll region size is based on total width of all frames
+			// Ensure the scroll region size is based on total width of all
+			// frames
 			ImGui::Dummy(ImVec2(totalWidth - 25, frameHeight));
 
 			{
 				const ImVec2 addButtonSize(20, 20);
 				ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
-				ImGui::SetCursorPos(ImVec2(ImGui::GetScrollX() + contentMax.x - 40 -
-											   ImGui::GetStyle().FramePadding.x,
-					ImGui::GetScrollY() + contentMax.y - 40 -
-						ImGui::GetStyle().FramePadding.y));
+				ImGui::SetCursorPos(
+					ImVec2(ImGui::GetScrollX() + contentMax.x - 40 -
+							   ImGui::GetStyle().FramePadding.x,
+						ImGui::GetScrollY() + contentMax.y - 40 -
+							ImGui::GetStyle().FramePadding.y));
 
-				if (ImGui::ImageButton("##add", (ImTextureID)(intptr_t)s_AddTexId,
-						addButtonSize)) {
+				if (ImGui::ImageButton("##add",
+						(ImTextureID)(intptr_t)s_AddTexId, addButtonSize)) {
 					m_Proj->AnimFrames()->InsertAfterEmpty(m_SelectedFrame);
 					InsertFrameAction action(m_SelectedFrame + 1, m_Proj);
 					m_Proj->PushUndoable(action);
@@ -309,8 +325,8 @@ namespace FuncDoodle {
 		Application* app = Application::Get();
 
 		if (ImBegin("Controls", nullptr, 0, app)) {
-			if (ImGui::ImageButton("rewind", (ImTextureID)(intptr_t)s_RewindTexId,
-					ImVec2(20, 20)) ||
+			if (ImGui::ImageButton("rewind",
+					(ImTextureID)(intptr_t)s_RewindTexId, ImVec2(20, 20)) ||
 				(m_Keybinds.Get("rewind").IsPressed() &&
 					!ImGui::IsAnyItemActive())) {
 				m_SelectedFrame = 0;
@@ -323,7 +339,8 @@ namespace FuncDoodle {
 					m_Player->Playing() ? (ImTextureID)(intptr_t)s_PauseTexId
 										: (ImTextureID)(intptr_t)s_PlayTexId,
 					ImVec2(20, 20)) ||
-				(m_Keybinds.Get("play").IsPressed() && !ImGui::IsAnyItemActive())) {
+				(m_Keybinds.Get("play").IsPressed() &&
+					!ImGui::IsAnyItemActive())) {
 				m_Player->SetPlaying(!m_Player->Playing());
 			}
 
@@ -331,7 +348,8 @@ namespace FuncDoodle {
 
 			if (ImGui::ImageButton(
 					"end", (ImTextureID)(intptr_t)s_EndTexId, ImVec2(20, 20)) ||
-				(m_Keybinds.Get("end").IsPressed() && !ImGui::IsAnyItemActive())) {
+				(m_Keybinds.Get("end").IsPressed() &&
+					!ImGui::IsAnyItemActive())) {
 				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
 				m_Player->End();
 			}
@@ -375,8 +393,8 @@ namespace FuncDoodle {
 			if (ImGui::Button("Copy")) {
 				ImGui::LogToClipboard();
 
-				// don't really like that i have to use std::string for logs, but i
-				// think thats necessary
+				// don't really like that i have to use std::string for logs,
+				// but i think thats necessary
 				for (const std::string& str : s_Logs) {
 					ImGui::LogText("%s\n", str.c_str() ? str.c_str() : "");
 				}
@@ -384,14 +402,15 @@ namespace FuncDoodle {
 				ImGui::LogFinish();
 			}
 
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+			ImGui::PushStyleColor(
+				ImGuiCol_ChildBg, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 
 			ImGui::BeginChild("##logscroll", ImVec2(-1, -1), false,
 				ImGuiWindowFlags_HorizontalScrollbar);
 
 			for (const std::string& str : s_Logs) {
-				ImGui::TextColored(
-					logColor(str.c_str()), "%s", str.c_str() ? str.c_str() : "");
+				ImGui::TextColored(logColor(str.c_str()), "%s",
+					str.c_str() ? str.c_str() : "");
 			}
 
 			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())

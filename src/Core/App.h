@@ -167,14 +167,16 @@ namespace FuncDoodle {
 			}
 		}
 
-
 		/**
 		 * @fn GetLastFrame
 		 * @brief Returns the last frame time.
 		 *
 		 * @return How long ago last frame was rendered.
 		 */
-		std::chrono::time_point<std::chrono::high_resolution_clock> GetLastFrame() { return m_LastFrame; }
+		std::chrono::time_point<std::chrono::high_resolution_clock>
+		GetLastFrame() {
+			return m_LastFrame;
+		}
 
 		/**
 		 * @fn GetCurProj
@@ -396,9 +398,7 @@ namespace FuncDoodle {
 		 * @brief Get deltaTime.
 		 * @return The current deltaTime.
 		 */
-		inline double GetDt() {
-			return m_DeltaTime;
-		}
+		inline double GetDt() { return m_DeltaTime; }
 
 		/**
 		 * @fn Rotate

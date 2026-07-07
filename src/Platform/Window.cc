@@ -47,7 +47,8 @@ namespace FuncDoodle::Platform {
 #endif
 
 		// makes window floating by default on tiling compositors such as
-		// hyprland (commented out because this doesnt make the window float - it makes the window stay on top, which we do not want)
+		// hyprland (commented out because this doesnt make the window float -
+		// it makes the window stay on top, which we do not want)
 		// glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
 
 		glfwWindowHintString(GLFW_X11_CLASS_NAME, "FuncDoodle");
@@ -110,7 +111,7 @@ namespace FuncDoodle::Platform {
 		if (self->mp_CloseCallback)
 			self->mp_CloseCallback(self);
 	}
-	
+
 	void Window::GlfwRefreshTrampoline(GLFWwindow* glfwWin) {
 		auto* self = static_cast<Window*>(glfwGetWindowUserPointer(glfwWin));
 

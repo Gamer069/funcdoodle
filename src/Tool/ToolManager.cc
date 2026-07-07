@@ -151,13 +151,13 @@ namespace FuncDoodle {
 			ImGui::PopItemWidth();
 		});
 
-
-		registry.Popup("ColorPickerSecondary", "color_second", app->GetDt(), [&]() {
-			ImGui::PushItemWidth(250);
-			ImGui::ColorPicker3("##secondary_color", secondaryCol, 
-				ImGuiColorEditFlags_NoSidePreview);
-			ImGui::PopItemWidth();
-		});
+		registry.Popup(
+			"ColorPickerSecondary", "color_second", app->GetDt(), [&]() {
+				ImGui::PushItemWidth(250);
+				ImGui::ColorPicker3("##secondary_color", secondaryCol,
+					ImGuiColorEditFlags_NoSidePreview);
+				ImGui::PopItemWidth();
+			});
 	}
 
 	void ToolManager::RenderTools() {

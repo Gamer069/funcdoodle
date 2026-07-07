@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include "UI/Gui.h" 
-#include "Core/App.h" 
+#include "Core/App.h"
+#include "UI/Gui.h"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
 
-#include <unordered_map>
 #include "Anim/Anim.h"
+#include <unordered_map>
 
 namespace FuncDoodle {
 	/**
@@ -34,7 +34,8 @@ namespace FuncDoodle {
 	 * @param app Pointer to the Application instance containing delta time.
 	 * @return True if the window is open and content should be rendered.
 	 */
-	inline bool ImBegin(const char* name, bool* p_open, ImGuiWindowFlags flags, Application* app) {
+	inline bool ImBegin(const char* name, bool* p_open, ImGuiWindowFlags flags,
+		Application* app) {
 		if (!app->GetCurProj())
 			return ImGui::Begin(name, p_open, flags);
 
@@ -50,7 +51,6 @@ namespace FuncDoodle {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, (float)alpha);
 		bool result = ImGui::Begin(name, p_open, flags);
-		ImGui::PopStyleVar();
 
 		return result;
 	}
@@ -61,9 +61,10 @@ namespace FuncDoodle {
 	 */
 	inline void ImEnd() {
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
-}
+}  // namespace FuncDoodle
 
 /**
  * @namespace ImUtil

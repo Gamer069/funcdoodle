@@ -24,7 +24,9 @@ namespace FuncDoodle {
 		KeybindsRegistry& keys = app->GetKeybinds();
 
 		if (ImBegin("Frame", nullptr,
-			ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse, app)) {
+				ImGuiWindowFlags_NoScrollbar |
+					ImGuiWindowFlags_NoScrollWithMouse,
+				app)) {
 			if (!m_Ctx.Frame || !m_Ctx.ToolManager) {
 				ImEnd();
 				return;

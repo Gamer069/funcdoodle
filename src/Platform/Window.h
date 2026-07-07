@@ -75,7 +75,8 @@ namespace FuncDoodle::Platform {
 		void SetTitle(const char* title);
 
 		/**
-		 * @brief Sets the window size limits (minimum window size and maximum window size).
+		 * @brief Sets the window size limits (minimum window size and maximum
+		 * window size).
 		 *
 		 * Use -1 to indicate that you don't care.
 		 *
@@ -113,7 +114,6 @@ namespace FuncDoodle::Platform {
 		 */
 		static void SetErrorCallback(ErrorCallback cb);
 
-
 		/**
 		 * @typedef RefreshCallback
 		 * @brief Callback type invoked when the window is refreshed.
@@ -124,8 +124,6 @@ namespace FuncDoodle::Platform {
 		 * @brief Sets GLFW refresh callback.
 		 */
 		void SetRefreshCallback(RefreshCallback cb);
-
-
 
 		/**
 		 * @typedef CloseCallback
@@ -191,9 +189,9 @@ namespace FuncDoodle::Platform {
 		static void GlfwRefreshTrampoline(GLFWwindow* glfwWin);
 
 		protected:
-		DropCallback mp_DropCallback;	    ///< Stored file-drop callback.
-		CloseCallback mp_CloseCallback;	    ///< Stored close callback.
-		RefreshCallback	mp_RefreshCallback; /// < Stored refresh callback.
+		DropCallback mp_DropCallback;		 ///< Stored file-drop callback.
+		CloseCallback mp_CloseCallback;		 ///< Stored close callback.
+		RefreshCallback mp_RefreshCallback;	 /// < Stored refresh callback.
 
 		private:
 		GLFWwindow* m_Handle;

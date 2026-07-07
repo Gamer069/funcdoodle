@@ -19,16 +19,17 @@
 
 #pragma once
 
-#include <unordered_map>
-#include <string_view>
 #include <functional>
+#include <string_view>
+#include <unordered_map>
 
 #include "UI/Gui.h"
 
 namespace FuncDoodle {
 	/**
 	 * @struct PopupEntry
-	 * @brief Struct to store popup state like animation progress and if its open
+	 * @brief Struct to store popup state like animation progress and if its
+	 * open
 	 *
 	 * @see PopupRegistry
 	 */
@@ -38,7 +39,7 @@ namespace FuncDoodle {
 		 * @brief Progress of opening/closing animations, -1 if none is present.
 		 */
 		double AnimationProgress = -1;
-		
+
 		/**
 		 * @var IsOpen
 		 * @brief Whether or not the popup is open.
@@ -108,7 +109,8 @@ namespace FuncDoodle {
 		 * @param dt The current deltaTime.
 		 * @param popup The lambda to render with.
 		 */
-		void Popup(std::string_view humanReadable, std::string_view id, double dt, std::function<void()> popup);
+		void Popup(std::string_view humanReadable, std::string_view id,
+			double dt, std::function<void()> popup);
 
 		/**
 		 * @fn Modal
@@ -121,7 +123,8 @@ namespace FuncDoodle {
 		 * @param dt The current deltaTime.
 		 * @param popup The lambda to render with.
 		 */
-		void Modal(std::string_view humanReadable, std::string_view id, double dt, std::function<void()> popup);
+		void Modal(std::string_view humanReadable, std::string_view id,
+			double dt, std::function<void()> popup);
 
 		/**
 		 * @fn IsOpen

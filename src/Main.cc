@@ -1,5 +1,5 @@
-#include "Core/App.h"
 #include "Conf/FuncDoodle.h"
+#include "Core/App.h"
 
 #include <cstring>
 
