@@ -23,6 +23,7 @@
 - [x] replace .fdp unsigned long frame indices with uint64_t for moge consistency across various systems
 - [x] implement selection invertion
 - [x] mouse scroll = canvas zoom
+- [x] implement animations application-wide
 - [ ] qol stuff
 - [ ] use a mime image protocol for copy & pastnig frames rather than an arbitrary made-up format that's slow and unusual
 - [ ] i18n
@@ -32,7 +33,6 @@
 - [ ] add text functionality
 - [ ] bug fixing
 - [ ] gzip compression for .fdp
-- [ ] implement animations application-wide
 - [ ] shader system where you can select some frames, right click, click add shader, then literally **type out a GLSL shader** and AS you update it, the shader system will literally compile **what you're typing** and provide *real-time* ***imgui sliders and or imgui inputs***
 - [ ] non-destructive moving of selections (currently deemed too difficult due to the current overall project architecture)
 - [ ] copy & pasting selections (depends on moving)

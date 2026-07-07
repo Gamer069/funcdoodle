@@ -23,6 +23,15 @@
 #include <unordered_map>
 
 namespace FuncDoodle {
+	inline std::unordered_map<ImGuiID, double>& GetAnimTimers() {
+		static std::unordered_map<ImGuiID, double> timers;
+		return timers;
+	}
+
+	inline void ClearAnimTimers() {
+		GetAnimTimers().clear();
+	}
+
 	/**
 	 * @fn ImBegin
 	 * @brief Begins an ImGui window with a tasteful fade-in transition.
@@ -39,16 +48,14 @@ namespace FuncDoodle {
 		if (!app->GetCurProj())
 			return ImGui::Begin(name, p_open, flags);
 
-		static std::unordered_map<ImGuiID, double> timers;
-
 		ImGuiID id = ImGui::GetID(name);
-		double& t = timers[id];
+		double& t = GetAnimTimers()[id];
 
 		double dt = app->GetDt();
 
 		bool isOpen = (p_open == nullptr) ? true : *p_open;
 		double alpha =
-			std::max(Anim::Animate(isOpen, 1.0, t, dt, Anim::OutCubic), 0.3);
+			std::max(Anim::Animate(isOpen, 2.0, t, dt, Anim::OutCubic), 0.3);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, (float)alpha);
 		bool result = ImGui::Begin(name, p_open, flags);

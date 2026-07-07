@@ -13,6 +13,7 @@
 #include "Test/Test.h"
 #include "Tool/Tool.h"
 #include "UI/Gui.h"
+#include "UI/ImUtil.h"
 #include "UI/Themes.h"
 #include "Util/ExePath.h"
 
@@ -499,6 +500,7 @@ namespace FuncDoodle {
 	}
 
 	void Application::CloseCurrentProject() {
+		ClearAnimTimers();
 		m_FilePath.clear();
 		m_CacheProj.reset();
 		m_CurrentProj.reset();
