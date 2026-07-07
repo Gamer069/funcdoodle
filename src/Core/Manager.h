@@ -98,6 +98,11 @@ namespace FuncDoodle {
 		 */
 		void RenderTimeline(bool prevEnabled);
 		/**
+		 * @fn RenderFrame
+		 * @brief Renders the frame UI.
+		 */
+		void RenderFrame();
+		/**
 		 * @fn RenderControls
 		 * @brief Renders playback and frame-management controls.
 		 */

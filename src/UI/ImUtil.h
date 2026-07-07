@@ -15,7 +15,6 @@
 #pragma once
 
 #include "Core/App.h"
-#include "UI/Gui.h"
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
@@ -36,6 +35,7 @@ namespace FuncDoodle {
 	 */
 	inline bool ImBegin(const char* name, bool* p_open, ImGuiWindowFlags flags,
 		Application* app) {
+
 		if (!app->GetCurProj())
 			return ImGui::Begin(name, p_open, flags);
 
@@ -47,7 +47,8 @@ namespace FuncDoodle {
 		double dt = app->GetDt();
 
 		bool isOpen = (p_open == nullptr) ? true : *p_open;
-		double alpha = std::max(Anim::Animate(isOpen, 1.0, t, dt, Anim::OutCubic), 0.3);
+		double alpha =
+			std::max(Anim::Animate(isOpen, 1.0, t, dt, Anim::OutCubic), 0.3);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, (float)alpha);
 		bool result = ImGui::Begin(name, p_open, flags);

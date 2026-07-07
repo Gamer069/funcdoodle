@@ -93,43 +93,38 @@ namespace FuncDoodle {
 		m_ToolManager->RegisterKeybinds();
 	}
 
+	void AnimationManager::RenderFrame() {
+		if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
+			m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
+		}
+
+		uint64_t curFrameIdx =
+			m_Player->Playing() ? m_Player->CurFrame() : m_SelectedFrame;
+
+		const auto frames = m_Proj->AnimFrames();
+		if (m_FrameRenderer->GetCtx()->Frame != frames->Get(curFrameIdx))
+			m_FrameRenderer->GetCtx()->Frame = frames->Get(curFrameIdx);
+
+		m_FrameRenderer->GetCtx()->Index = curFrameIdx;
+
+		if (curFrameIdx > 0) {
+			m_FrameRenderer->GetCtx()->PreviousFrame =
+				frames->Get(curFrameIdx - 1);
+		}
+		m_FrameRenderer->RenderFrame();
+	}
+
 	void AnimationManager::RenderTimeline(bool prevEnabled) {
 		Application* app = Application::Get();
 
 		if (!m_Proj)
 			return;
 
-		// Set scrollbar size (thickness)
-		ImGui::GetStyle().ScrollbarSize =
-			20.0f;	// Increase the thickness of the scrollbars
+		RenderFrame();
 
-		// --- Frame rendering (independent of Timeline visibility) ---
-		{
-			if (m_SelectedFrame >= m_Proj->AnimFrameCount()) {
-				m_SelectedFrame = m_Proj->AnimFrameCount() - 1;
-			}
-
-			uint64_t curFrameIdx = m_Player->Playing()
-				? m_Player->CurFrame()
-				: m_SelectedFrame;
-
-			const auto frames = m_Proj->AnimFrames();
-			if (m_FrameRenderer->GetCtx()->Frame != frames->Get(curFrameIdx))
-				m_FrameRenderer->GetCtx()->Frame = frames->Get(curFrameIdx);
-
-			m_FrameRenderer->GetCtx()->Index = curFrameIdx;
-
-			if (curFrameIdx > 0) {
-				m_FrameRenderer->GetCtx()->PreviousFrame =
-					frames->Get(curFrameIdx - 1);
-			}
-			m_FrameRenderer->RenderFrame();
-		}
-
-		// --- Timeline window ---
 		if (ImBegin("Timeline", nullptr,
 				ImGuiWindowFlags_HorizontalScrollbar |
-				ImGuiWindowFlags_NoBackground,
+					ImGuiWindowFlags_NoBackground,
 				app)) {
 			auto frameWidth = (float)m_Proj->AnimWidth();
 			auto frameHeight = (float)m_Proj->AnimHeight();
@@ -154,11 +149,12 @@ namespace FuncDoodle {
 
 			// Get the initial top-left position
 			ImVec2 topLeft = ImGui::GetCursorScreenPos();
+
+			topLeft.y += 10.0f;
+			topLeft.x += 10.0f;
+
 			ImVec2 bottomRight =
 				ImVec2(topLeft.x + frameWidth, topLeft.y + frameHeight);
-
-			ImFont* font = ImGui::GetFont();
-			float fontSize = ImGui::GetFontSize();
 
 			TimelineKeyContext keyContext;
 			keyContext.Proj = m_Proj;
@@ -169,41 +165,47 @@ namespace FuncDoodle {
 
 			// Render frames
 			for (uint64_t i = 0; i < m_Proj->AnimFrameCount(); i++) {
-				drawList->AddText(font, fontSize,
-					m_SelectedFrame == i
-						? ImVec2(
-							  topLeft.x + (frameWidth / 2), bottomRight.y + 10)
-						: ImVec2(topLeft.x + (frameWidth / 2), bottomRight.y),
-					IM_COL32(g_MaxColorValue, g_MaxColorValue, g_MaxColorValue,
-						g_AlphaOpaque),
-					std::to_string(i).c_str());
+				ImFont* font = ImGui::GetFont();
+				bool selected = (m_Player->Playing() && m_Player->CurFrame() == i) ||
+					(!m_Player->Playing() && m_SelectedFrame == i);
+				float fontSize = selected ? ImGui::GetFontSize() + 4 : ImGui::GetFontSize();
 
-				if (m_TimelineFrameRenderer->GetCtx()->Frame !=
-					m_Proj->AnimFrames()->Get(i)) {
-					m_TimelineFrameRenderer->GetCtx()->Frame =
-						m_Proj->AnimFrames()->Get(i);
-				}
+
+				char frameStr[32];
+				snprintf(frameStr, sizeof(frameStr), "%lu", i);
+
+				ImVec2 textSize = ImGui::CalcTextSize(frameStr);
+
+
+				drawList->AddText(font, fontSize,
+					selected
+						? ImVec2(topLeft.x + (frameWidth / 2) - (textSize.x / 2), bottomRight.y + 7)
+						: ImVec2(topLeft.x + (frameWidth / 2) - (textSize.x / 2), bottomRight.y + 3),
+					// constant hell
+					IM_COL32(g_MaxColorValue, g_MaxColorValue, g_MaxColorValue, g_AlphaOpaque),
+					frameStr);
+
+				EditorController::CanvasContext* ctx = m_TimelineFrameRenderer->GetCtx();
+				SharedPtr<LongIndexArray> frames = m_Proj->AnimFrames();
+
+				ctx->Frame = frames->Get(i);
+
 
 				float width = bottomRight.x - topLeft.x;
 				float height = bottomRight.y - topLeft.y;
 				float scaleX = width / frameWidth;
 				float scaleY = width / frameHeight;
 
-				m_TimelineFrameRenderer->GetCtx()->PixelScale =
-					std::min<float>(scaleX, scaleY);
+				m_TimelineFrameRenderer->GetCtx()->PixelScale = std::min<float>(scaleX, scaleY);
 
 				m_TimelineFrameRenderer->RenderFramePixels(
 					topLeft.x, topLeft.y, ImGui::GetWindowDrawList(), true);
 
-				if ((m_Player->Playing() && m_Player->CurFrame() == i) ||
-					(!m_Player->Playing() && m_SelectedFrame == i)) {
-					drawList->AddRect(
-						topLeft, ImVec2(bottomRight.x, bottomRight.y),
-						IM_COL32(255, 0, 0, 255),  // Red color
-						0.0f,					   // rounding
-						0,						   // flags
-						3.0f  // thickness - increased to make it much thicker
-					);
+				if (selected) {
+					drawList->AddRect(topLeft,
+						ImVec2(bottomRight.x, bottomRight.y),
+						ImGui::ColorConvertFloat4ToU32(ImGui::GetStyleColorVec4(ImGuiCol_TextSelectedBg)),
+						0.0f, 0, 3.0f);
 				}
 				ImVec2 mousePos = ImGui::GetMousePos();
 				bool isHovered =
