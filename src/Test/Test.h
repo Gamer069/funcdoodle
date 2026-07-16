@@ -123,7 +123,10 @@ namespace FuncDoodle {
 									: 0.0;
 
 			std::string percent_str = std::to_string(percentage);
-			percent_str = percent_str.substr(0, percent_str.find('.') + 2);
+
+			std::cout << total_passed << ' '
+				<< total_tests << ' '
+				<< percentage << '\n';
 
 			std::cout << "\n";
 			std::cout << "╔" << Repeat("═", 62) << "╗\n";
