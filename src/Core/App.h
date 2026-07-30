@@ -18,6 +18,7 @@
  */
 
 #include "Asset/AssetLoader.h"
+#include "Conf/Constants.h"
 #include "Core/AppSettings.h"
 #include "Core/Manager.h"
 #include "Drawing/EditorController.h"
@@ -286,7 +287,7 @@ namespace FuncDoodle {
 		 *
 		 * @return Export format value.
 		 */
-		int GetExportFormat() const { return m_ExportFormat; }
+		ExportFormat GetExportFormat() const { return m_ExportFormat; }
 		/**
 		 * @fn GetUiManager
 		 * @brief Returns the top-level UI manager.
@@ -300,7 +301,7 @@ namespace FuncDoodle {
 		 *
 		 * @return Export format reference.
 		 */
-		int& GetExportFormatPtr() { return m_ExportFormat; }
+		ExportFormat& GetExportFormatPtr() { return m_ExportFormat; }
 		/**
 		 * @fn GetThemesPath
 		 * @brief Returns the directory used for theme files.
@@ -321,7 +322,7 @@ namespace FuncDoodle {
 		 *
 		 * @param format Export format value.
 		 */
-		void SetExportFormat(int format) { m_ExportFormat = format; }
+		void SetExportFormat(ExportFormat format) { m_ExportFormat = format; }
 
 		/**
 		 * @fn GetManager
@@ -456,7 +457,7 @@ namespace FuncDoodle {
 		Platform::Window m_Window;
 		UniquePtr<AssetLoader> m_AssetLoader;
 		SharedPtr<EditorController> m_EditorController;
-		int m_ExportFormat = 0;
+		ExportFormat m_ExportFormat = ExportFormat::MP4;
 		UUID m_Theme;
 		bool m_ShouldClose = false;
 		bool m_ShowTests = true;

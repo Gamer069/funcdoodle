@@ -1,133 +1,81 @@
-#include "Core/App.h"
-#include "GLFW/glfw3.h"
-#include "Test/Test.h"
-#include "imgui_internal.h"
-#include "imgui_te_context.h"
-#include "imgui_te_ui.h"
-#include "imgui_te_utils.h"
+#include "Test/ImTest.h"
 
-static FuncDoodle::Application* GetApp() {
-	auto* app =
-		static_cast<FuncDoodle::Application*>(ImGui::GetIO().UserData);
-	if (!app) {
-		app = FuncDoodle::Application::Get();
-	}
-	return app;
-}
+static void RegisterTests_FuncDoodle() {
+	ImTest("menu_open_close", [](ImTestCtx& tc) {
+		tc.Popups.Open("new");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("New project##new"));
+		tc.Popups.Close("new");
+		tc.Ctx->Yield();
+		IM_CHECK(!ImGui::IsPopupOpen("New project##new"));
+	});
 
-static void RegisterTests_FuncDoodle(ImGuiTestEngine* e) {
-	ImGuiTest* t = nullptr;
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "menu_open_close");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("new");
-		ImGui::OpenPopup("New project");
-		ctx->Yield();
+	ImTest("menu_show_keybinds", [](ImTestCtx& tc) {
+		tc.Popups.Open("keybinds");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("Keybinds##keybinds"));
+		tc.Popups.Close("keybinds");
+		tc.Ctx->Yield();
+	});
 
-		IM_CHECK(ImGui::IsPopupOpen("New project"));
-		app->GetUiManager().GetPopups().Close("new");
-		ctx->Yield();
 
-		IM_CHECK(!ImGui::IsPopupOpen("New project"));
-	};
+	ImTest("menu_open_preferences", [](ImTestCtx& tc) {
+		tc.Popups.Open("pref");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("Preferences##pref"));
+		tc.Popups.Close("pref");
+		tc.Ctx->Yield();
+	});
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "menu_show_keybinds");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("keybinds");
-		ImGui::OpenPopup("Keybinds");
-		ctx->Yield();
 
-		IM_CHECK(ImGui::IsPopupOpen("Keybinds"));
-		app->GetUiManager().GetPopups().Close("keybinds");
-		ctx->Yield();
-	};
+	ImTest("keybinds_table_headers", [](ImTestCtx& tc) {
+		tc.Popups.Open("keybinds");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("Keybinds##keybinds"));
+		tc.Popups.Close("keybinds");
+		tc.Ctx->Yield();
+	});
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "menu_open_preferences");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("pref");
-		ImGui::OpenPopup("Preferences");
-		ctx->Yield();
 
-		IM_CHECK(ImGui::IsPopupOpen("Preferences"));
-		app->GetUiManager().GetPopups().Close("pref");
-		ctx->Yield();
-	};
+	ImTest("new_project_dialog_inputs", [](ImTestCtx& tc) {
+		tc.Popups.Open("new");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("New project##new"));
+		tc.Popups.Close("new");
+		tc.Ctx->Yield();
+	});
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "keybinds_table_headers");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("keybinds");
-		ImGui::OpenPopup("Keybinds");
-		ctx->Yield();
 
-		IM_CHECK(ImGui::IsPopupOpen("Keybinds"));
+	ImTest("rotate_dialog", [](ImTestCtx& tc) {
+		tc.Popups.Open("rotate");
+		tc.Ctx->Yield();
+		IM_CHECK(ImGui::IsPopupOpen("Rotate##rotate"));
+		tc.Popups.Close("rotate");
+		tc.Ctx->Yield();
+	});
 
-		app->GetUiManager().GetPopups().Close("keybinds");
-		ctx->Yield();
-	};
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "new_project_dialog_inputs");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("new");
-		ImGui::OpenPopup("New project");
-		ctx->Yield();
-
-		IM_CHECK(ImGui::IsPopupOpen("New project"));
-
-		app->GetUiManager().GetPopups().Close("new");
-		ctx->Yield();
-	};
-
-	t = IM_REGISTER_TEST(e, "funcdoodle", "rotate_dialog");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("rotate");
-		ImGui::OpenPopup("Rotate");
-		ctx->Yield();
-
-		IM_CHECK(ImGui::IsPopupOpen("Rotate"));
-
-		app->GetUiManager().GetPopups().Close("rotate");
-		ctx->Yield();
-	};
-
-	t = IM_REGISTER_TEST(e, "funcdoodle", "export_dialog");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		FuncDoodle::Application* app = GetApp();
-		app->GetUiManager().GetPopups().Open("export");
-		ImGui::OpenPopup("Export##export");
-		ctx->Yield();
-
-		ctx->SetRef("Export##export");
+	ImTest("export_dialog", [](ImTestCtx& tc) {
+		tc.Popups.Open("export");
+		tc.Ctx->Yield();
 		IM_CHECK(ImGui::IsPopupOpen("Export##export"));
+		tc.Popups.Close("export");
+		tc.Ctx->Yield();
+	});
 
-		app->GetUiManager().GetPopups().Close("export");
-		ctx->Yield();
-	};
 
-	t = IM_REGISTER_TEST(e, "funcdoodle", "test_engine_window");
-	t->GuiFunc = [](ImGuiTestContext*) {};
-	t->TestFunc = [](ImGuiTestContext* ctx) {
-		ctx->SetRef("Dear ImGui Test Engine");
+	ImTest("test_engine_window", [](ImTestCtx& tc) {
+		(void)tc.Popups;
+		tc.Ctx->SetRef("Dear ImGui Test Engine");
 		ImGuiWindow* window = ImGui::FindWindowByName("Dear ImGui Test Engine");
 		IM_CHECK(window != nullptr);
-	};
+	});
 }
 
 int FuncDoodle_RegisterImTests() {
 	if (s_TestEngine == nullptr)
 		return 0;
-	RegisterTests_FuncDoodle(s_TestEngine);
+	RegisterTests_FuncDoodle();
 	return 0;
 }

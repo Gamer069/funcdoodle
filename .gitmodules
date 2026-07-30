@@ -14,3 +14,9 @@
 [submodule "lib/portaudio"]
 	path = lib/portaudio
 	url = https://github.com/portaudio/portaudio
+[submodule "lib/libav"]
+	path = lib/libav
+	url = https://github.com/libav/libav
+[submodule "lib/avcpp"]
+	path = lib/avcpp
+	url = https://www.github.com/h4tr3d/avcpp

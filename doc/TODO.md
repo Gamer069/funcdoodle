@@ -24,6 +24,7 @@
 - [x] implement selection invertion
 - [x] mouse scroll = canvas zoom
 - [x] implement animations application-wide
+- [x] avcpp instetad of system(ffmpeg)
 - [ ] qol stuff
 - [ ] use a mime image protocol for copy & pastnig frames rather than an arbitrary made-up format that's slow and unusual
 - [ ] i18n

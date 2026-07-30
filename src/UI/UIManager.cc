@@ -931,14 +931,15 @@ namespace FuncDoodle {
 		Application* app = Application::Get();
 
 		m_Popups.Popup("Export", "export", app->GetDt(), [&]() {
-			const char* formats[] = {"PNGs", "MP4"};
-			ImGui::Combo("Export Format", &app->GetExportFormatPtr(), formats,
-				IM_ARRAYSIZE(formats));
+			ImUtil::Combo("Format", &app->GetExportFormatPtr(), g_ExportFormats);
+
 			ImUtil::ButtonRowResult choice = ImUtil::ExportCloseButtons();
 			if (choice == ImUtil::ButtonRowResult::Primary ||
 				ImUtil::EnterPressed()) {
-				FileDialog dialog;
-				std::filesystem::path path = dialog.Dir();
+
+				FileDialog dialog = "mp4";
+
+				std::filesystem::path path = app->GetExportFormat() == ExportFormat::PNGSequence ? dialog.Dir() : dialog.Save();
 
 				if (app->GetSettings().Sfx)
 					app->GetAssetLoader()->PlaySound(s_ExportSound);
@@ -946,7 +947,9 @@ namespace FuncDoodle {
 				FUNC_INF("Exporting to {}", path.string());
 
 				app->GetCurProj()->Export(
-					path.string().c_str(), app->GetExportFormat());
+					path.string().c_str(),
+					app->GetExportFormat()
+				);
 
 				ImGui::CloseCurrentPopup();
 			}

@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <imgui.h>
+#include <string_view>
 
 /**
  * @file Constants.h
@@ -281,4 +282,12 @@ namespace FuncDoodle {
 		ImGuiKey_Menu,
 		ImGuiKey_RightCtrl,
 	};
+
+	constexpr std::array<std::string_view, 2> g_ExportFormats = {"PNGs", "MP4"};
+
+	enum class ExportFormat : int {
+		PNGSequence = 0,
+		MP4 = 1
+	};
+
 }  // namespace FuncDoodle

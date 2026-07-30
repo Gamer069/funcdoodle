@@ -26,6 +26,8 @@ endfunction()
 
 function(funcdoodle_sources)
 	add_subdirectory(lib/glfw)
+	add_subdirectory(lib/avcpp)
+
 	file(GLOB_RECURSE SRC "src/*.cc")
 
 	file(GLOB IMGUI_TEST_ENGINE_SOURCES
@@ -42,6 +44,8 @@ function(funcdoodle_sources)
 		${SRC}
 	)
 
+	target_link_libraries(FuncDoodle PRIVATE avcpp::avcpp)
+
 	if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   		target_link_libraries(FuncDoodle PRIVATE stdc++exp) # std:: print, println, ...
 	endif()
@@ -49,4 +53,12 @@ function(funcdoodle_sources)
 	target_precompile_headers(FuncDoodle PRIVATE
 		"$<$<COMPILE_LANGUAGE:CXX>:Conf/FuncPCH.h>"
 	)
+
+	if(UNIX)
+		target_compile_options(FuncDoodle PRIVATE
+			-Wno-error=deprecated-declarations 
+			-Werror
+		)
+	endif()
+
 endfunction()

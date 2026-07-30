@@ -239,7 +239,7 @@ namespace FuncDoodle {
 		 * @param filePath Output path.
 		 * @param format Export format identifier.
 		 */
-		void Export(const char* filePath, int format);
+		void Export(const char* filePath, ExportFormat format);
 		/**
 		 * @fn Window
 		 * @brief Returns the owning application window.

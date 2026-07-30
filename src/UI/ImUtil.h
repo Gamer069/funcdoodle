@@ -20,6 +20,8 @@
 #include <fstream>
 
 #include "Anim/Anim.h"
+#include "imgui.h"
+#include <string_view>
 #include <unordered_map>
 
 namespace FuncDoodle {
@@ -325,6 +327,21 @@ namespace FuncDoodle::ImUtil {
 		}
 
 		return username;
+	}
+
+	template<typename T>
+	concept IntEnum =
+		std::is_enum_v<T> &&
+		std::same_as<std::underlying_type_t<T>, int> &&
+		!std::convertible_to<T, int>;
+
+	template<IntEnum T, size_t N>
+	inline bool Combo(const char* title, T* buf, std::array<std::string_view, N> names) {
+		std::array<const char*, N> ptrs{};
+		for (size_t i = 0; i < N; ++i)
+			ptrs[i] = names[i].data();
+
+		return ImGui::Combo(title, reinterpret_cast<int*>(buf), ptrs.data(), names.size());
 	}
 
 	struct ImVec2iHash {

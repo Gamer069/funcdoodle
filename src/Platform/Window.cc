@@ -194,9 +194,6 @@ namespace FuncDoodle::Platform {
 	}
 
 	void Window::InitGlfw() {
-		// fix some leak regarding libdecor
-		glfwInitHint(GLFW_WAYLAND_LIBDECOR, GLFW_WAYLAND_DISABLE_LIBDECOR);
-
 		if (!glfwInit()) {
 			const char* description;
 			int error = glfwGetError(&description);

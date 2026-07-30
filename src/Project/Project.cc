@@ -1,3 +1,5 @@
+#include "Conf/FuncPCH.h"
+
 #include "Project.h"
 
 #include "Conf/Constants.h"
@@ -13,8 +15,18 @@
 #include <stack>
 #include <utility>
 #include <vector>
-
-#include "Conf/FuncPCH.h"
+#include <av.h>
+#include <codec.h>
+#include <codeccontext.h>
+#include <format.h>
+#include <formatcontext.h>
+#include <frame.h>
+#include <packet.h>
+#include <pixelformat.h>
+#include <rational.h>
+#include <stream.h>
+#include <timestamp.h>
+#include <videorescaler.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
@@ -56,62 +68,142 @@ namespace FuncDoodle {
 		strcpy(m_Name, name);
 	}
 
-	void ProjectFile::Export(const char* filePath, int format) {
-		FUNC_GRAY("Exporting to {}", filePath);
-
-		auto frames = AnimFrames();
-
-		char curFilePath[g_FilePathBufferSize];
-
-		for (uint64_t i = 0; i < AnimFrameCount(); i++) {
+	void ProjectFile::Export(const char* filePath, ExportFormat format) {
+		if (format == ExportFormat::PNGSequence) {
+			auto frames = AnimFrames();
+			char curFilePath[g_FilePathBufferSize];
+			for (uint64_t i = 0; i < AnimFrameCount(); i++) {
 #ifndef _WIN32
-			snprintf(curFilePath, sizeof(curFilePath), "%s/frame_%lu.png",
-				filePath, i);
+				snprintf(curFilePath, sizeof(curFilePath), "%s/frame_%lu.png",
+					filePath, i);
 #else
-			snprintf(curFilePath, sizeof(curFilePath), "%s\\frame_%lu.png",
-				filePath, i);
+				snprintf(curFilePath, sizeof(curFilePath), "%s\\frame_%lu.png",
+					filePath, i);
 #endif
-			frames->Get(i)->Export(curFilePath);
-		}
+				frames->Get(i)->Export(curFilePath);
+			}
+		} else if (format == ExportFormat::MP4) {
+			bool oldSaved = m_Saved;
 
-		if (format == 1) {
-			FUNC_GRAY("Exporting to mp4...");
-			// TODO: properly implement video exporting...
-			// now that im looking back on this, HOW DID I EVER THINK THIS WAS A
-			// GOOD SOLUTION?????????? WAS I STUPID???? apparently yes i was
-			// ...
-			//
-			// if anyone's looking at this comment, please - do NOT use the
-			// solution i'm using here its overwhelmingly hacky, breaks when
-			// ffmpeg updates, is very horrible for UX
-			//
-			// i think the only reason i wrote this code was to avoid using a
-			// ffmpeg wrapper lib thing but like really..?
-			//
-			// so yea sorry about that
-			// idk if/when i'll fix this
-			// see you until then
-			char cmd[g_LargeBufferSize];
-#ifndef _WIN32
-			snprintf(cmd, sizeof(cmd),
-				"ffmpeg -framerate %d -pattern_type glob -i \"%s/frame_*.png\" "
-				"-c:v libx264 -preset veryslow -crf 0 %s/result.mp4 -y",
-				m_FPS, filePath, filePath);
-#else
-			snprintf(cmd, sizeof(cmd),
-				"ffmpeg.exe -framerate %d -pattern_type glob -i "
-				"\"%s/frame_*.png\" "
-				"-c:v libx264 -preset veryslow -crf 0 %s\\result.mp4 -y",
-				m_FPS, filePath, filePath, filePath);
-#endif
+			// HACK: avcpp REFUSES to properly encode the last frame for some reason, so i just push an empty one then cleanup afterwards
+			m_Frames->PushBackEmpty();
 
-			system(cmd);
-		}
+			av::init();
 
-		if (format > 1) {
-			FUNC_FATAL("Failed to export animation -- format not yet "
-					   "supported, this shouldn't normally occur unless "
-					   "there's a bug. Submit a github issue");
+			av::OutputFormat ofrmt;
+			ofrmt.setFormat({}, filePath);
+
+			av::FormatContext octx;
+			octx.setFormat(ofrmt);
+
+			av::Codec codec = av::findEncodingCodec("libx264");
+
+			if (codec.isNull()) {
+				FUNC_ERR("libx264 codec not installed, so mp4 export is unsupported. plz install it");
+				return;
+			}
+
+			av::VideoEncoderContext encoder(codec);
+
+			int w = m_Width;
+			int h = m_Height;
+			encoder.setWidth(w);
+			encoder.setHeight(h);
+			encoder.setPixelFormat(AV_PIX_FMT_YUV420P);
+			encoder.setTimeBase(av::Rational(1, m_FPS));
+			encoder.setOption("preset", "veryslow");
+			encoder.setOption("crf", "0");
+
+			encoder.setGopSize(m_FPS);
+
+			std::error_code ec;
+			encoder.open(ec);
+			if (ec) {
+				FUNC_ERR("Failed to open encoder: {}", ec.message());
+				return;
+			}
+
+			av::Stream stream = octx.addStream(encoder, ec);
+			if (ec) {
+				FUNC_ERR("Failed to add stream: {}", ec.message());
+				return;
+			}
+			stream.setFrameRate(av::Rational(m_FPS, 1));
+
+			octx.openOutput(filePath, ec);
+			if (ec) {
+				FUNC_ERR("Failed to open output: {}", ec.message());
+				return;
+			}
+
+			octx.writeHeader(ec);
+
+			if (ec) {
+				FUNC_ERR("Failed to write header: {}", ec.message());
+				return;
+			}
+
+			octx.dump();
+
+			av::VideoRescaler rescaler(w, h, AV_PIX_FMT_YUV420P, w, h,
+				AV_PIX_FMT_RGB24, SWS_BILINEAR);
+
+			for (uint64_t i = 0; i < AnimFrameCount(); i++) {
+				auto* frame = m_Frames->Get(i);
+				const auto& pixelData = frame->Pixels()->Data();
+
+				av::VideoFrame srcFrame = av::VideoFrame::wrap(
+					pixelData.data(), pixelData.size() * sizeof(Col),
+					AV_PIX_FMT_RGB24, w, h);
+
+				av::VideoFrame yuvFrame = rescaler.rescale(srcFrame, ec);
+				if (ec) {
+					FUNC_ERR("Failed to rescale frame {}: {}", i, ec.message());
+					return;
+				}
+
+				yuvFrame.setTimeBase(av::Rational(1, m_FPS));
+				yuvFrame.setPts(
+					av::Timestamp(static_cast<int64_t>(i), av::Rational(1, m_FPS)));
+
+				av::Packet pkt = encoder.encode(yuvFrame, ec);
+				if (ec) {
+					FUNC_ERR("Failed to encode frame {}: {}", i, ec.message());
+					return;
+				}
+
+				if (pkt) {
+					pkt.setStreamIndex(stream.index());
+					pkt.setTimeBase(av::Rational(1, m_FPS));
+					pkt.setDuration(1, av::Rational(1, m_FPS));
+					octx.writePacket(pkt, ec);
+
+					if (ec) {
+						FUNC_ERR("Failed to write packet: {}", ec.message());
+						return;
+					}
+				}
+			}
+
+			// Flush encoder: drain all buffered frames
+			while (true) {
+				std::error_code flushEc;
+				av::Packet pkt = encoder.encode(flushEc);
+				if (!pkt)
+					break;
+				pkt.setStreamIndex(stream.index());
+				octx.writePacket(pkt, flushEc);
+			}
+
+			octx.writeTrailer(ec);
+			octx.close();
+
+			FUNC_INF("mp4 export complete: {}", filePath);
+
+			m_Frames->Remove(m_Frames->Size()-1);
+			m_Saved = oldSaved;
+		} else {
+			FUNC_FATAL("Failed to export animation; format not supported.");
 		}
 	}
 
@@ -247,7 +339,8 @@ namespace FuncDoodle {
 			}
 		}
 
-		if (count(uniqueColors.begin(), uniqueColors.end(), m_BG) < 0) {
+		if (count(uniqueColors.begin(), uniqueColors.end(), m_BG) == 0) {
+			colorToIndex[m_BG] = uniqueColors.size();
 			uniqueColors.push_back(m_BG);
 		}
 
@@ -336,14 +429,14 @@ namespace FuncDoodle {
 
 		file.getline(m_Author, sizeof(m_Author), '\0');
 
-		unsigned char bgR = g_MaxColorValue;
-		unsigned char bgG = g_MaxColorValue;
-		unsigned char bgB = g_MaxColorValue;
+		m_BG.r = g_MaxColorValue;
+		m_BG.g = g_MaxColorValue;
+		m_BG.b = g_MaxColorValue;
 
 		if (verMajor >= 0 && verMinor >= 1) {
-			file.read(reinterpret_cast<char*>(&bgR), sizeof(bgR));
-			file.read(reinterpret_cast<char*>(&bgG), sizeof(bgG));
-			file.read(reinterpret_cast<char*>(&bgB), sizeof(bgB));
+			file.read(reinterpret_cast<char*>(&m_BG.r), sizeof(m_BG.r));
+			file.read(reinterpret_cast<char*>(&m_BG.g), sizeof(m_BG.g));
+			file.read(reinterpret_cast<char*>(&m_BG.b), sizeof(m_BG.b));
 			unsigned char null;
 			file.read(reinterpret_cast<char*>(&null), 1);
 		} else {

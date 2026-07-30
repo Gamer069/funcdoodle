@@ -10,6 +10,7 @@ function(funcdoodle_includes)
 		lib/stb/
 		lib/
 		lib/toml++/
+		lib/avcpp/src/avcpp
 		src/
 		test/
 	)
